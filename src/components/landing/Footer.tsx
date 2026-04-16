@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="border-t border-border py-12">
@@ -6,9 +8,9 @@ const Footer = () => {
           webready<span className="text-muted-foreground">.</span>
         </span>
         <div className="flex gap-6">
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy</a>
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms</a>
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+          <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+          <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+          <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
         </div>
         <p className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} webready. All rights reserved.
