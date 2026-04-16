@@ -1,65 +1,306 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Upload, Check } from "lucide-react";
+import { Check, Monitor, RotateCcw, Smartphone, Sparkles, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-const colorPresets = [
-  { name: "Midnight", primary: "#111111", accent: "#ffffff" },
-  { name: "Ocean", primary: "#1e40af", accent: "#dbeafe" },
-  { name: "Forest", primary: "#166534", accent: "#dcfce7" },
-  { name: "Sunset", primary: "#c2410c", accent: "#fff7ed" },
-  { name: "Violet", primary: "#7c3aed", accent: "#ede9fe" },
-];
+const isValidHex = (value: string) => /^#([0-9A-Fa-f]{6})$/.test(value);
+
+const rgbToHex = (r: number, g: number, b: number) =>
+  `#${[r, g, b]
+    .map((value) => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, "0"))
+    .join("")}`;
+
+const mixWithWhite = (hex: string, amount: number) => {
+  const normalized = hex.replace("#", "");
+  const r = parseInt(normalized.slice(0, 2), 16);
+  const g = parseInt(normalized.slice(2, 4), 16);
+  const b = parseInt(normalized.slice(4, 6), 16);
+
+  return rgbToHex(
+    r + (255 - r) * amount,
+    g + (255 - g) * amount,
+    b + (255 - b) * amount,
+  );
+};
+
+const getColorScore = (r: number, g: number, b: number, count: number) => {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const saturation = max === 0 ? 0 : (max - min) / max;
+  const brightness = (r + g + b) / 3 / 255;
+  return count * (0.55 + saturation * 0.7 + (1 - Math.abs(brightness - 0.45)) * 0.35);
+};
+
+const extractLogoColors = async (imageUrl: string) => {
+  const image = new Image();
+  image.src = imageUrl;
+  await image.decode();
+
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  if (!context) {
+    return null;
+  }
+
+  const size = 48;
+  canvas.width = size;
+  canvas.height = size;
+  context.clearRect(0, 0, size, size);
+  context.drawImage(image, 0, 0, size, size);
+
+  const { data } = context.getImageData(0, 0, size, size);
+  const colorBuckets = new Map<string, { r: number; g: number; b: number; count: number }>();
+
+  for (let index = 0; index < data.length; index += 4) {
+    const r = data[index];
+    const g = data[index + 1];
+    const b = data[index + 2];
+    const alpha = data[index + 3];
+
+    if (alpha < 180) continue;
+    if (r > 245 && g > 245 && b > 245) continue;
+    if (r < 12 && g < 12 && b < 12) continue;
+
+    // Group nearby shades together so dominant brand colors beat tiny accents.
+    const bucketR = Math.round(r / 24) * 24;
+    const bucketG = Math.round(g / 24) * 24;
+    const bucketB = Math.round(b / 24) * 24;
+    const key = `${bucketR}-${bucketG}-${bucketB}`;
+    const current = colorBuckets.get(key);
+
+    if (current) {
+      current.r += r;
+      current.g += g;
+      current.b += b;
+      current.count += 1;
+    } else {
+      colorBuckets.set(key, { r, g, b, count: 1 });
+    }
+  }
+
+  let bestScore = -1;
+  let bestColor = { r: 124, g: 58, b: 237 };
+
+  colorBuckets.forEach((bucket) => {
+    const averageR = bucket.r / bucket.count;
+    const averageG = bucket.g / bucket.count;
+    const averageB = bucket.b / bucket.count;
+    const score = getColorScore(averageR, averageG, averageB, bucket.count);
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestColor = { r: averageR, g: averageG, b: averageB };
+    }
+  });
+
+  const primary = rgbToHex(bestColor.r, bestColor.g, bestColor.b);
+  const secondary = mixWithWhite(primary, 0.88);
+
+  return { primary, secondary };
+};
 
 const CustomizationPreview = () => {
-  const [selected, setSelected] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [logoName, setLogoName] = useState("");
-  const preset = colorPresets[selected];
+  const [logoPreview, setLogoPreview] = useState("");
+  const [brandName, setBrandName] = useState("YourBrand");
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
+  const [primaryColor, setPrimaryColor] = useState("#183b63");
+  const [secondaryColor, setSecondaryColor] = useState("#edf3f8");
+  const [primaryHex, setPrimaryHex] = useState("#183b63");
+  const [secondaryHex, setSecondaryHex] = useState("#edf3f8");
+  const brandLabel = logoName ? brandName : "Logo";
+  const accentColor = "#ffffff";
+  /** Secondary tint for one small accent chip only—rest of mock stays neutral */
+  const tone = useMemo(
+    () => ({
+      accentChipBg: `${secondaryColor}99`,
+    }),
+    [secondaryColor],
+  );
 
-  const handleUpload = () => {
-    setLogoName("mylogo.svg");
+  /** Neutral page canvas */
+  const mockPageBackground = useMemo(
+    () =>
+      `linear-gradient(180deg, rgb(255,255,255) 0%, rgb(248,250,252) 42%, rgb(241,245,249) 100%)`,
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (logoPreview) {
+        URL.revokeObjectURL(logoPreview);
+      }
+    };
+  }, [logoPreview]);
+
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (logoPreview) {
+      URL.revokeObjectURL(logoPreview);
+    }
+
+    const nextPreview = URL.createObjectURL(file);
+    setLogoName(file.name);
+    setLogoPreview(nextPreview);
+    if (!brandName || brandName === "YourBrand") {
+      setBrandName(file.name.replace(/\.[^.]+$/, ""));
+    }
+
+    try {
+      const extractedColors = await extractLogoColors(nextPreview);
+      if (extractedColors) {
+        setPrimaryColor(extractedColors.primary);
+        setPrimaryHex(extractedColors.primary);
+        setSecondaryColor(extractedColors.secondary);
+        setSecondaryHex(extractedColors.secondary);
+      }
+    } catch {
+      // Keep current colors if the uploaded file can't be sampled.
+    }
   };
 
+  const applyHexColor = (
+    value: string,
+    fallback: string,
+    setColor: (value: string) => void,
+    setHex: (value: string) => void,
+  ) => {
+    const normalized = value.trim();
+    if (isValidHex(normalized)) {
+      const lower = normalized.toLowerCase();
+      setColor(lower);
+      setHex(lower);
+      return;
+    }
+
+    setHex(fallback);
+  };
+
+  const resetPreview = () => {
+    if (logoPreview) {
+      URL.revokeObjectURL(logoPreview);
+    }
+    setLogoName("");
+    setLogoPreview("");
+    setBrandName("YourBrand");
+    setPrimaryColor("#183b63");
+    setSecondaryColor("#edf3f8");
+    setPrimaryHex("#183b63");
+    setSecondaryHex("#edf3f8");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const steps = [
+    { n: 1, label: "Upload" },
+    { n: 2, label: "Brand" },
+    { n: 3, label: "Colors" },
+  ] as const;
+
   return (
-    <section className="py-28 bg-secondary/50">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="live-preview" className="py-20 lg:py-24" aria-labelledby="live-preview-heading">
+      <div className="mx-auto w-full max-w-7xl px-6 xl:max-w-[90rem] xl:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="mb-10 text-center md:mb-12"
         >
-          <p className="text-sm uppercase tracking-[0.15em] text-muted-foreground mb-3">
-            Try it yourself
+          <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Live brand preview
           </p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">
-            See it come to life
+          <h2
+            id="live-preview-heading"
+            className="text-3xl font-bold tracking-tight text-foreground md:text-5xl md:leading-[1.1]"
+          >
+            Preview your site before you commit
           </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            Upload a logo, set your palette, and switch between desktop and mobile. Everything updates
+            in real time so you can judge alignment, contrast, and readability—no guesswork.
+          </p>
+
+          <div className="mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
+            {steps.map((s, i) => (
+              <div key={s.n} className="flex items-center gap-3">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-muted/40 text-xs font-semibold text-foreground">
+                  {s.n}
+                </span>
+                <span className="font-medium text-foreground">{s.label}</span>
+                {i < steps.length - 1 ? (
+                  <span className="hidden text-border sm:inline" aria-hidden>
+                    →
+                  </span>
+                ) : null}
+              </div>
+            ))}
+          </div>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-10 items-start">
+        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)] lg:gap-10">
           {/* Controls */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="space-y-8"
+            className="glass-panel flex flex-col space-y-6 rounded-[1.75rem] border border-white/60 p-6 lg:p-7"
           >
+            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border/60 pb-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Controls
+                </p>
+                <p className="mt-1 text-sm leading-snug text-muted-foreground">
+                  Changes apply instantly to the preview on the right.
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="shrink-0 gap-2 rounded-lg border-slate-200 bg-white/80 text-xs font-medium"
+                onClick={resetPreview}
+              >
+                <RotateCcw className="h-3.5 w-3.5" aria-hidden />
+                Reset
+              </Button>
+            </div>
+
             {/* Logo Upload */}
             <div>
-              <label className="text-sm font-medium text-foreground mb-3 block">
-                1. Upload your logo
-              </label>
-              <button
-                onClick={handleUpload}
-                className="w-full border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center gap-3 hover:border-foreground/30 transition-colors bg-background"
-              >
+              <Label className="mb-3 block text-sm font-semibold text-foreground">1. Logo</Label>
+              <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
+                PNG or SVG with transparency usually works best. We auto-suggest colors from your
+                artwork.
+              </p>
+              <label className="flex w-full cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-slate-200 bg-white/80 p-6 transition-colors hover:border-slate-400 focus-within:ring-2 focus-within:ring-slate-400/30 focus-within:ring-offset-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp"
+                  className="sr-only"
+                  onChange={handleUpload}
+                  aria-label="Upload logo image"
+                />
                 {logoName ? (
                   <>
-                    <Check size={24} className="text-foreground" />
-                    <span className="text-sm text-muted-foreground">{logoName}</span>
+                    {logoPreview ? (
+                      <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-border/60 bg-transparent shadow-sm">
+                        <img src={logoPreview} alt={logoName} className="h-full w-full object-contain p-2" />
+                      </div>
+                    ) : (
+                      <Check size={24} className="text-foreground" />
+                    )}
+                    <span className="text-sm font-medium text-foreground">{logoName}</span>
+                    <span className="text-xs text-muted-foreground">Click to replace logo</span>
                   </>
                 ) : (
                   <>
@@ -67,35 +308,98 @@ const CustomizationPreview = () => {
                     <span className="text-sm text-muted-foreground">
                       Click to upload your logo
                     </span>
+                    <span className="text-xs text-muted-foreground">PNG, JPG, SVG, or WebP. Transparent PNG works best.</span>
                   </>
                 )}
-              </button>
+              </label>
+            </div>
+
+            <div>
+              <Label htmlFor="brand-name" className="mb-3 block text-sm font-semibold text-foreground">
+                2. Brand name
+              </Label>
+              <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
+                Shown in the preview header when no logo is uploaded.
+              </p>
+              <input
+                id="brand-name"
+                value={brandName}
+                onChange={(e) => setBrandName(e.target.value || "YourBrand")}
+                placeholder="e.g. Acme Studio"
+                autoComplete="organization"
+                className="w-full rounded-xl border border-border bg-white/90 px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/70 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+              />
             </div>
 
             {/* Color Picker */}
             <div>
-              <label className="text-sm font-medium text-foreground mb-3 block">
-                2. Choose your colors
-              </label>
-              <div className="flex flex-wrap gap-3">
-                {colorPresets.map((c, i) => (
-                  <button
-                    key={c.name}
-                    onClick={() => setSelected(i)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm transition-all ${
-                      selected === i
-                        ? "border-foreground bg-foreground text-primary-foreground"
-                        : "border-border hover:border-foreground/30 text-foreground"
-                    }`}
-                  >
-                    <span
-                      className="w-3.5 h-3.5 rounded-full border border-border"
-                      style={{ backgroundColor: c.primary }}
+              <Label className="mb-3 block text-sm font-semibold text-foreground">3. Colours</Label>
+              <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
+                Fine-tune after upload, or set manually. Hex values accept six-digit codes.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="rounded-xl border border-border bg-white/75 p-3">
+                  <span className="mb-2 block text-xs font-medium text-muted-foreground">Primary</span>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={primaryColor}
+                      onChange={(e) => {
+                        setPrimaryColor(e.target.value);
+                        setPrimaryHex(e.target.value);
+                      }}
+                      className="h-10 w-12 cursor-pointer rounded-lg border border-border bg-transparent p-1"
                     />
-                    {c.name}
-                  </button>
-                ))}
+                    <input
+                      type="text"
+                      value={primaryHex}
+                      onChange={(e) => setPrimaryHex(e.target.value)}
+                      onBlur={() => applyHexColor(primaryHex, primaryColor, setPrimaryColor, setPrimaryHex)}
+                      placeholder="#183b63"
+                      className="h-10 flex-1 rounded-lg border border-border bg-white px-3 text-sm text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+                </label>
+                <label className="rounded-xl border border-border bg-white/75 p-3">
+                  <span className="mb-2 block text-xs font-medium text-muted-foreground">Secondary</span>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={secondaryColor}
+                      onChange={(e) => {
+                        setSecondaryColor(e.target.value);
+                        setSecondaryHex(e.target.value);
+                      }}
+                      className="h-10 w-12 cursor-pointer rounded-lg border border-border bg-transparent p-1"
+                    />
+                    <input
+                      type="text"
+                      value={secondaryHex}
+                      onChange={(e) => setSecondaryHex(e.target.value)}
+                      onBlur={() => applyHexColor(secondaryHex, secondaryColor, setSecondaryColor, setSecondaryHex)}
+                      placeholder="#edf3f8"
+                      className="h-10 flex-1 rounded-lg border border-border bg-white px-3 text-sm text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+                </label>
               </div>
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                The mock is mostly neutral.{" "}
+                <span className="font-medium text-foreground/90">Primary</span> shows on the main button (and nav when
+                there is no logo). <span className="font-medium text-foreground/90">Secondary</span> appears on the small
+                label chip—so you see the palette without a rainbow page.
+              </p>
+            </div>
+
+            <div className="mt-auto rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-50/90 to-cyan-50/30 p-4">
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Sparkles size={16} className="text-cyan-700" aria-hidden />
+                Real-time preview
+              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                The mock site on the right reflects every change—no refresh required. Use the device toggle to
+                compare layouts.
+              </p>
             </div>
           </motion.div>
 
@@ -105,83 +409,252 @@ const CustomizationPreview = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="rounded-2xl border border-border overflow-hidden bg-background shadow-lg"
+            className="flex w-full flex-col overflow-hidden rounded-[1.75rem] border border-slate-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_22px_48px_-28px_rgba(15,23,42,0.1)]"
           >
-            {/* Browser chrome */}
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-secondary/50">
-              <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/20" />
-              <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/20" />
-              <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/20" />
-              <span className="flex-1 mx-4 h-5 bg-muted rounded-md" />
-            </div>
-
-            {/* Simulated website */}
-            <div className="transition-colors duration-500" style={{ backgroundColor: preset.accent }}>
-              {/* Nav */}
-              <div
-                className="flex items-center justify-between px-6 py-4 transition-colors duration-500"
-                style={{ backgroundColor: preset.primary }}
-              >
-                <span className="text-sm font-bold" style={{ color: preset.accent }}>
-                  {logoName ? "YourBrand" : "Logo"}
-                </span>
-                <div className="flex gap-4">
-                  {["Home", "About", "Contact"].map((l) => (
-                    <span key={l} className="text-xs" style={{ color: preset.accent + "99" }}>
-                      {l}
+            <div className="flex flex-col bg-transparent px-4 py-4 md:px-5 md:py-4">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-foreground">Device preview</p>
+                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-800">
+                      Live
                     </span>
-                  ))}
+                  </div>
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
+                    Same content, responsive layout—pick a viewport to compare.
+                  </p>
                 </div>
-              </div>
-
-              {/* Hero */}
-              <div className="px-6 py-12 text-center">
                 <div
-                  className="text-2xl font-bold mb-2 transition-colors duration-500"
-                  style={{ color: preset.primary }}
+                  role="tablist"
+                  aria-label="Preview viewport"
+                  className="flex shrink-0 items-center gap-1 rounded-full border border-slate-200/90 bg-white p-1 shadow-sm"
                 >
-                  Welcome to Your Site
+                  <button
+                    type="button"
+                    role="tab"
+                    id="preview-tab-desktop"
+                    aria-selected={previewMode === "desktop"}
+                    aria-controls="preview-panel-desktop"
+                    onClick={() => setPreviewMode("desktop")}
+                    className={cn(
+                      "flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                      previewMode === "desktop"
+                        ? "bg-foreground text-background shadow-sm"
+                        : "text-muted-foreground hover:bg-muted/60",
+                    )}
+                  >
+                    <Monitor size={14} aria-hidden />
+                    Desktop
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    id="preview-tab-mobile"
+                    aria-selected={previewMode === "mobile"}
+                    aria-controls="preview-panel-mobile"
+                    onClick={() => setPreviewMode("mobile")}
+                    className={cn(
+                      "flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                      previewMode === "mobile"
+                        ? "bg-foreground text-background shadow-sm"
+                        : "text-muted-foreground hover:bg-muted/60",
+                    )}
+                  >
+                    <Smartphone size={14} aria-hidden />
+                    Mobile
+                  </button>
                 </div>
-                <p className="text-sm mb-6" style={{ color: preset.primary + "88" }}>
-                  Built just for you, ready in 48 hours.
-                </p>
-                <span
-                  className="inline-block px-5 py-2 rounded-full text-xs font-medium transition-colors duration-500"
-                  style={{
-                    backgroundColor: preset.primary,
-                    color: preset.accent,
-                  }}
-                >
-                  Learn More
-                </span>
               </div>
 
-              {/* Cards */}
-              <div className="px-6 pb-8 grid grid-cols-3 gap-3">
-                {[1, 2, 3].map((n) => (
-                  <div
-                    key={n}
-                    className="rounded-lg p-4 transition-colors duration-500"
-                    style={{
-                      backgroundColor: preset.primary + "0D",
-                      borderColor: preset.primary + "1A",
-                    }}
+              {previewMode === "desktop" ? (
+                <div
+                  role="tabpanel"
+                  id="preview-panel-desktop"
+                  aria-labelledby="preview-tab-desktop"
+                  className="flex flex-col bg-transparent"
+                >
+                  <div className="flex items-center gap-2 rounded-t-2xl border border-slate-200/90 bg-white px-3 py-2.5 shadow-sm">
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/20" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/20" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/20" />
+                    <span className="mx-4 h-5 flex-1 rounded-md bg-muted" />
+                  </div>
+
+                  <motion.div
+                    key="desktop-preview"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col bg-transparent pb-3"
                   >
                     <div
-                      className="w-6 h-6 rounded mb-2 transition-colors duration-500"
-                      style={{ backgroundColor: preset.primary + "22" }}
-                    />
-                    <div
-                      className="h-2 rounded w-3/4 mb-1.5"
-                      style={{ backgroundColor: preset.primary + "22" }}
-                    />
-                    <div
-                      className="h-2 rounded w-1/2"
-                      style={{ backgroundColor: preset.primary + "11" }}
-                    />
+                      className="overflow-hidden rounded-b-[1.35rem] border border-t-0 border-slate-200/90 shadow-sm transition-colors duration-500"
+                      style={{ background: mockPageBackground }}
+                    >
+                      <div
+                        className="flex items-center justify-between px-5 py-3 transition-colors duration-500"
+                        style={{ backgroundColor: logoPreview ? "#ffffff" : primaryColor }}
+                      >
+                        {logoPreview ? (
+                          <div className="flex h-10 items-center rounded-xl bg-transparent px-1 py-1.5">
+                            <img src={logoPreview} alt={brandLabel} className="h-full max-w-[120px] object-contain" />
+                          </div>
+                        ) : (
+                          <span className="text-sm font-bold" style={{ color: accentColor }}>
+                            {brandLabel}
+                          </span>
+                        )}
+                        <div className="flex gap-4">
+                          {["Home", "Services", "Contact"].map((l) => (
+                            <span
+                              key={l}
+                              className={logoPreview ? "text-xs text-slate-500" : "text-xs text-white/80"}
+                            >
+                              {l}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid gap-4 px-5 py-5 md:grid-cols-[1.15fr_0.85fr]">
+                        <div className="text-left">
+                          <div
+                            className="mb-3 inline-flex rounded-full px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em]"
+                            style={{ backgroundColor: tone.accentChipBg, color: primaryColor }}
+                          >
+                            Built for serious brands
+                          </div>
+                          <h3 className="mb-3 text-3xl font-bold leading-tight text-slate-900">
+                            A polished homepage that feels credible from the first click.
+                          </h3>
+                          <p className="mb-6 max-w-md text-sm leading-relaxed text-slate-600">
+                            Clean structure, modern layout, and responsive sections designed to present your business with clarity.
+                          </p>
+                          <div className="flex flex-wrap gap-3">
+                            <Button
+                              size="sm"
+                              className="rounded-full px-4 text-xs shadow-md"
+                              style={{ backgroundColor: primaryColor, color: accentColor }}
+                            >
+                              Book a call
+                            </Button>
+                            <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600">
+                              Fully responsive
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="relative min-h-[150px] overflow-hidden rounded-[1.1rem] bg-slate-100 p-3 md:min-h-[160px]">
+                          <motion.div
+                            className="absolute right-6 top-6 h-24 w-24 rounded-full bg-slate-300/35 blur-2xl"
+                            animate={{ scale: [1, 1.12, 1], opacity: [0.55, 0.95, 0.55] }}
+                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+                          />
+                          <div className="relative z-10 space-y-3">
+                            {[0, 1, 2].map((item) => (
+                              <motion.div
+                                key={item}
+                                className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm"
+                                animate={{ y: [0, item % 2 === 0 ? -4 : 4, 0] }}
+                                transition={{ repeat: Infinity, duration: 4 + item, ease: "easeInOut" }}
+                              >
+                                <div className="mb-2 h-2 w-20 rounded-full bg-slate-200" />
+                                <div className="mb-2 h-2 w-28 rounded-full bg-slate-200" />
+                                <div className="h-10 rounded-xl bg-slate-100" />
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 px-5 pb-5">
+                        {["Fast launch", "Modern design", "Built for mobile"].map((item, n) => (
+                          <motion.div
+                            key={item}
+                            className="rounded-xl border border-slate-200/80 bg-slate-50 p-4"
+                            animate={{ y: [0, n % 2 === 0 ? -6 : 6, 0] }}
+                            transition={{ repeat: Infinity, duration: 4 + n, ease: "easeInOut" }}
+                          >
+                            <div className="mb-3 h-8 w-8 rounded-lg bg-slate-200/90" />
+                            <div className="text-xs font-medium text-slate-700">{item}</div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              ) : (
+                <div
+                  role="tabpanel"
+                  id="preview-panel-mobile"
+                  aria-labelledby="preview-tab-mobile"
+                  className="flex flex-col bg-transparent"
+                >
+                <motion.div
+                  key="mobile-preview"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col bg-transparent px-4 py-4 md:px-5 md:py-4"
+                >
+                  <div className="mx-auto w-full max-w-[260px]">
+                    <div className="rounded-[2rem] border border-slate-300 bg-slate-950 p-2.5 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.7)]">
+                      <div
+                        className="overflow-hidden rounded-[1.6rem] transition-colors duration-500"
+                        style={{ background: mockPageBackground }}
+                      >
+                        <div className="flex items-center justify-between px-4 py-3" style={{ backgroundColor: logoPreview ? "#ffffff" : primaryColor }}>
+                          {logoPreview ? (
+                            <div className="flex h-7 items-center rounded-lg bg-transparent px-1 py-1">
+                              <img src={logoPreview} alt={brandLabel} className="h-full max-w-[84px] object-contain" />
+                            </div>
+                          ) : (
+                            <span className="text-xs font-semibold" style={{ color: accentColor }}>
+                              {brandLabel}
+                            </span>
+                          )}
+                          <span
+                            className={`h-2 w-2 rounded-full ${logoPreview ? "bg-slate-400" : "bg-white/70"}`}
+                          />
+                        </div>
+
+                        <div className="px-4 py-5">
+                          <div
+                            className="mb-3 inline-flex rounded-full px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em]"
+                            style={{ backgroundColor: tone.accentChipBg, color: primaryColor }}
+                          >
+                            Mobile ready
+                          </div>
+                          <h4 className="mb-2 text-lg font-bold leading-tight text-slate-900">
+                            Professional experience on every screen.
+                          </h4>
+                          <p className="mb-4 text-xs leading-relaxed text-slate-600">
+                            Same brand, same polish, just optimized for thumbs and smaller screens.
+                          </p>
+
+                          <Button
+                            size="sm"
+                            className="mb-4 h-8 w-full rounded-full text-xs"
+                            style={{ backgroundColor: primaryColor, color: accentColor }}
+                          >
+                            Book a call
+                          </Button>
+
+                          <div className="space-y-2">
+                            {[1, 2, 3].map((item) => (
+                              <div key={item} className="rounded-2xl border border-slate-200/80 bg-white p-3">
+                                <div className="mb-2 h-2 w-16 rounded-full bg-slate-200" />
+                                <div className="h-8 rounded-xl bg-slate-100" />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
+                </motion.div>
+                </div>
+              )}
             </div>
           </motion.div>
         </div>

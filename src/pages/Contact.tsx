@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Mail, MapPin, Phone } from "lucide-react";
+import { motion } from "framer-motion";
+import { CheckCircle2, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import SiteLayout from "@/components/layout/SiteLayout";
+import PageHeader from "@/components/layout/PageHeader";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -14,68 +18,148 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-5xl mx-auto px-6 py-20">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-10">
-          <ArrowLeft size={14} /> Back to Home
-        </Link>
+    <SiteLayout>
+      <PageHeader
+        breadcrumb={[{ label: "Home", to: "/" }, { label: "Contact" }]}
+        title="Contact"
+        description="Reach our team for project questions, partnership inquiries, or support. We typically respond within one business day."
+      />
 
-        <div className="grid md:grid-cols-2 gap-16">
-          {/* Left */}
-          <div>
-            <h1 className="text-4xl font-bold tracking-tight text-foreground mb-4">Get in touch</h1>
-            <p className="text-muted-foreground mb-10">
-              Have a question or want to learn more? We'd love to hear from you.
-            </p>
-
-            <div className="space-y-6">
-              <div className="flex items-start gap-3">
-                <Mail size={18} className="text-foreground mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Email</p>
-                  <p className="text-sm text-muted-foreground">hello@webready.com</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Phone size={18} className="text-foreground mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Phone</p>
-                  <p className="text-sm text-muted-foreground">+1 (555) 000-0000</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <MapPin size={18} className="text-foreground mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Office</p>
-                  <p className="text-sm text-muted-foreground">123 Web Street, Internet City</p>
-                </div>
-              </div>
+      <div className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14 lg:items-start">
+          <aside className="space-y-6">
+            <div className="rounded-2xl border border-border/70 bg-muted/20 p-8 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Direct lines
+              </p>
+              <ul className="mt-6 space-y-6">
+                <li className="flex gap-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background text-foreground">
+                    <Mail className="h-4 w-4" aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Email</p>
+                    <a
+                      href="mailto:hello@webready.com"
+                      className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      hello@webready.com
+                    </a>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background text-foreground">
+                    <Phone className="h-4 w-4" aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Phone</p>
+                    <a
+                      href="tel:+15550000000"
+                      className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      +1 (555) 000-0000
+                    </a>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background text-foreground">
+                    <MapPin className="h-4 w-4" aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Office</p>
+                    <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+                      123 Web Street
+                      <br />
+                      Internet City, IC 00000
+                    </p>
+                  </div>
+                </li>
+              </ul>
             </div>
-          </div>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              For privacy-related requests, please reference our{" "}
+              <Link
+                to="/privacy"
+                className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+              >
+                Privacy policy
+              </Link>
+              .
+            </p>
+          </aside>
 
-          {/* Right — Form */}
-          <div>
+          <div className="rounded-2xl border border-border/70 bg-card/40 p-8 shadow-sm md:p-10">
             {submitted ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <CheckCircle2 size={48} className="text-foreground mb-4" />
-                <h3 className="text-xl font-bold text-foreground mb-2">Message sent!</h3>
-                <p className="text-sm text-muted-foreground">We'll get back to you shortly.</p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="flex flex-col items-center justify-center py-10 text-center md:min-h-[320px]"
+                role="status"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600/10 text-emerald-700">
+                  <CheckCircle2 className="h-7 w-7" strokeWidth={2} aria-hidden />
+                </div>
+                <h2 className="mt-6 text-xl font-semibold tracking-tight text-foreground">
+                  Message received
+                </h2>
+                <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+                  Thank you for reaching out. A member of our team will follow up shortly.
+                </p>
+              </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <Input placeholder="Your name *" required className="h-12 rounded-xl" />
-                <Input type="email" placeholder="Email address *" required className="h-12 rounded-xl" />
-                <Input placeholder="Subject" className="h-12 rounded-xl" />
-                <Textarea placeholder="Your message *" required className="rounded-xl min-h-[140px] resize-none" />
-                <Button type="submit" className="w-full h-12 rounded-xl text-base">
-                  Send Message
+              <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-name">Full name</Label>
+                  <Input
+                    id="contact-name"
+                    name="name"
+                    autoComplete="name"
+                    placeholder="Jordan Smith"
+                    required
+                    className="h-11 rounded-lg"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-email">Work email</Label>
+                  <Input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@company.com"
+                    required
+                    className="h-11 rounded-lg"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-subject">Subject</Label>
+                  <Input
+                    id="contact-subject"
+                    name="subject"
+                    placeholder="Project inquiry"
+                    className="h-11 rounded-lg"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-message">Message</Label>
+                  <Textarea
+                    id="contact-message"
+                    name="message"
+                    placeholder="Tell us briefly about your goals, timeline, and how we can help."
+                    required
+                    className="min-h-[140px] resize-y rounded-lg"
+                  />
+                </div>
+                <Button type="submit" className="h-11 w-full rounded-lg text-base font-semibold md:w-auto md:px-10">
+                  Send message
                 </Button>
               </form>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </SiteLayout>
   );
 };
 

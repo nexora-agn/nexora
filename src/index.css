@@ -4,33 +4,34 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
+    /* Cool slate-tinted canvas—reads less “flat white” than pure neutral */
+    --background: 220 26% 97%;
+    --foreground: 235 30% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
+    --card-foreground: 235 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
+    --popover-foreground: 235 30% 12%;
 
-    --primary: 0 0% 5%;
+    --primary: 217 61% 22%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 5%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 235 30% 12%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 215 25% 95%;
+    --muted-foreground: 240 14% 44%;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 5%;
+    --accent: 195 45% 90%;
+    --accent-foreground: 235 30% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 5%;
+    --border: 214 26% 87%;
+    --input: 214 26% 87%;
+    --ring: 217 61% 22%;
 
     --radius: 0.75rem;
 
@@ -89,10 +90,76 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse 100% 70% at 50% -15%, rgba(59, 130, 246, 0.09), transparent 52%),
+      radial-gradient(ellipse 70% 55% at 100% 8%, rgba(14, 116, 144, 0.11), transparent 48%),
+      radial-gradient(ellipse 65% 50% at 0% 25%, rgba(99, 102, 241, 0.07), transparent 50%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(148, 163, 184, 0.16), transparent 55%),
+      radial-gradient(circle at 80% 60%, rgba(15, 23, 42, 0.04), transparent 40%),
+      linear-gradient(
+        180deg,
+        hsl(220 28% 98%) 0%,
+        hsl(218 22% 96.5%) 38%,
+        hsl(215 20% 95%) 72%,
+        hsl(220 18% 93.5%) 100%
+      );
+    background-attachment: fixed;
   }
 
   html {
     scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply border border-white/35 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.16)] backdrop-blur-xl;
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.78) 0%,
+      rgba(248, 250, 252, 0.72) 45%,
+      rgba(241, 245, 249, 0.65) 100%
+    );
+  }
+
+  .animated-grid {
+    background-image:
+      linear-gradient(to right, rgba(100, 116, 139, 0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(100, 116, 139, 0.09) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse 70% 55% at 50% 35%, black 35%, transparent 78%);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-slate-900 via-slate-700 to-cyan-800 bg-clip-text text-transparent;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.03);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }

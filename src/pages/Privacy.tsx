@@ -1,39 +1,121 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import SiteLayout from "@/components/layout/SiteLayout";
+import PageHeader from "@/components/layout/PageHeader";
+
+const effectiveDate = new Date().toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+const sections = [
+  {
+    title: "Information we collect",
+    body: (
+      <>
+        <p>
+          We collect information you choose to provide—such as your name, work email, company name,
+          and phone number—when you request a consultation, submit a contact form, or otherwise
+          communicate with us about our services.
+        </p>
+        <p className="mt-3">
+          We may also collect limited technical data automatically (for example, browser type and
+          general usage signals) as needed to operate and secure our website.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "How we use information",
+    body: (
+      <p>
+        We use personal information to respond to inquiries, deliver and improve our services,
+        communicate about your project or account, and—where you have opted in—send relevant updates.
+        We do not use your data for unrelated profiling beyond what is necessary to operate our
+        business.
+      </p>
+    ),
+  },
+  {
+    title: "Sharing and processors",
+    body: (
+      <p>
+        We do not sell your personal information. We may share data with trusted subprocessors
+        (such as hosting, email, or analytics providers) who perform services on our behalf under
+        appropriate confidentiality and security obligations.
+      </p>
+    ),
+  },
+  {
+    title: "Security",
+    body: (
+      <p>
+        We implement reasonable administrative, technical, and organizational measures designed to
+        protect personal information against unauthorized access, loss, or misuse. No method of
+        transmission over the internet is completely secure; we encourage you to use strong
+        credentials and to contact us if you suspect unauthorized access.
+      </p>
+    ),
+  },
+  {
+    title: "Your choices",
+    body: (
+      <p>
+        Depending on your location, you may have rights to access, correct, delete, or restrict
+        certain processing of your personal information. To exercise these rights, contact us using
+        the details on our{" "}
+        <Link to="/contact" className="font-medium text-foreground underline underline-offset-4 hover:no-underline">
+          contact page
+        </Link>
+        .
+      </p>
+    ),
+  },
+  {
+    title: "Updates",
+    body: (
+      <p>
+        We may revise this policy from time to time. The &quot;Last updated&quot; date at the top
+        reflects the latest version. Continued use of our site after changes constitutes acceptance
+        of the updated policy where permitted by law.
+      </p>
+    ),
+  },
+];
 
 const Privacy = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-3xl mx-auto px-6 py-20">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-10">
-          <ArrowLeft size={14} /> Back to Home
-        </Link>
+    <SiteLayout>
+      <PageHeader
+        breadcrumb={[{ label: "Home", to: "/" }, { label: "Privacy policy" }]}
+        title="Privacy policy"
+        description="How we collect, use, and protect personal information when you use webready."
+      />
 
-        <h1 className="text-4xl font-bold tracking-tight text-foreground mb-8">Privacy Policy</h1>
+      <article className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
+        <div className="rounded-2xl border border-border/70 bg-muted/15 px-8 py-10 shadow-sm md:px-10 md:py-12">
+          <p className="text-sm font-medium text-muted-foreground">
+            Last updated: <time dateTime={new Date().toISOString().slice(0, 10)}>{effectiveDate}</time>
+          </p>
 
-        <div className="prose-sm text-muted-foreground space-y-6 leading-relaxed">
-          <p>Last updated: {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
-
-          <h2 className="text-lg font-semibold text-foreground pt-4">1. Information We Collect</h2>
-          <p>We collect information you provide directly, such as your name, email address, company name, and phone number when you request a demo or contact us.</p>
-
-          <h2 className="text-lg font-semibold text-foreground pt-4">2. How We Use Your Information</h2>
-          <p>We use the information to provide our services, communicate with you, improve our offerings, and send relevant updates if you've opted in.</p>
-
-          <h2 className="text-lg font-semibold text-foreground pt-4">3. Data Sharing</h2>
-          <p>We do not sell your personal data. We may share information with trusted service providers who assist us in operating our platform.</p>
-
-          <h2 className="text-lg font-semibold text-foreground pt-4">4. Data Security</h2>
-          <p>We implement industry-standard security measures to protect your personal information from unauthorized access or disclosure.</p>
-
-          <h2 className="text-lg font-semibold text-foreground pt-4">5. Your Rights</h2>
-          <p>You have the right to access, update, or delete your personal information at any time by contacting us.</p>
-
-          <h2 className="text-lg font-semibold text-foreground pt-4">6. Contact</h2>
-          <p>If you have questions about this policy, please reach out via our <Link to="/contact" className="text-foreground underline">contact page</Link>.</p>
+          <div className="mt-10 space-y-10">
+            {sections.map((section, index) => (
+              <section key={section.title} aria-labelledby={`privacy-section-${index}`}>
+                <h2
+                  id={`privacy-section-${index}`}
+                  className="text-lg font-semibold tracking-tight text-foreground"
+                >
+                  {index + 1}. {section.title}
+                </h2>
+                <div className="mt-3 space-y-3 text-sm leading-relaxed text-muted-foreground md:text-[0.9375rem]">
+                  {section.body}
+                </div>
+              </section>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
+      </article>
+    </SiteLayout>
   );
 };
 
