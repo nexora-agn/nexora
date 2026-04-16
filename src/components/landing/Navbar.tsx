@@ -5,8 +5,8 @@ import { Menu, X } from "lucide-react";
 
 const sectionLinks = [
   { href: "/#how-it-works", label: "How it works" },
-  { href: "/#benefits", label: "Benefits" },
   { href: "/#what-you-get", label: "What you get" },
+  { href: "/#benefits", label: "Benefits" },
 ] as const;
 
 interface NavbarProps {
