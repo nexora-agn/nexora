@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
-const Navbar = () => {
+interface NavbarProps {
+  onRequestDemo?: () => void;
+}
+
+const Navbar = ({ onRequestDemo }: NavbarProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,7 +26,7 @@ const Navbar = () => {
           <a href="#what-you-get" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             What You Get
           </a>
-          <Button size="sm" className="rounded-full px-6">
+          <Button size="sm" className="rounded-full px-6" onClick={onRequestDemo}>
             Get Started
           </Button>
         </div>
@@ -37,7 +41,7 @@ const Navbar = () => {
           <a href="#how-it-works" onClick={() => setOpen(false)} className="text-sm text-muted-foreground">How It Works</a>
           <a href="#benefits" onClick={() => setOpen(false)} className="text-sm text-muted-foreground">Benefits</a>
           <a href="#what-you-get" onClick={() => setOpen(false)} className="text-sm text-muted-foreground">What You Get</a>
-          <Button size="sm" className="rounded-full w-fit px-6">Get Started</Button>
+          <Button size="sm" className="rounded-full w-fit px-6" onClick={() => { setOpen(false); onRequestDemo?.(); }}>Get Started</Button>
         </div>
       )}
     </nav>

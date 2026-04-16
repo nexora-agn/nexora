@@ -2,7 +2,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-const Hero = () => {
+interface HeroProps {
+  onRequestDemo?: () => void;
+}
+
+const Hero = ({ onRequestDemo }: HeroProps) => {
   return (
     <section className="min-h-screen flex items-center justify-center pt-16">
       <div className="max-w-4xl mx-auto px-6 text-center">
@@ -24,10 +28,10 @@ const Hero = () => {
             In as little as 48 hours. No stress. No coding.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="rounded-full px-8 text-base h-12 gap-2">
+            <Button size="lg" className="rounded-full px-8 text-base h-12 gap-2" onClick={onRequestDemo}>
               Get Started <ArrowRight size={18} />
             </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 text-base h-12">
+            <Button size="lg" variant="outline" className="rounded-full px-8 text-base h-12" onClick={onRequestDemo}>
               Request Demo
             </Button>
           </div>
