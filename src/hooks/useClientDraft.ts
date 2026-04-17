@@ -12,6 +12,7 @@ export function useClientDraft(clientId: string | undefined) {
   const [error, setError] = useState<string | null>(null);
   const pendingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dirtyRef = useRef(false);
+  const latestStateRef = useRef<DraftState>(DEFAULT_DRAFT_STATE);
 
   useEffect(() => {
     if (!clientId) return;
@@ -21,6 +22,7 @@ export function useClientDraft(clientId: string | undefined) {
     getDraft(clientId)
       .then(next => {
         if (!active) return;
+        latestStateRef.current = next;
         setState(next);
         setLoading(false);
       })
@@ -47,7 +49,7 @@ export function useClientDraft(clientId: string | undefined) {
       setStatus("saving");
       pendingTimeout.current = setTimeout(async () => {
         try {
-          await saveDraft(clientId, next);
+          await saveDraft(clientId, latestStateRef.current);
           setStatus("saved");
           dirtyRef.current = false;
           setError(null);
@@ -64,6 +66,7 @@ export function useClientDraft(clientId: string | undefined) {
     (updater: (prev: DraftState) => DraftState) => {
       setState(prev => {
         const next = updater(prev);
+        latestStateRef.current = next;
         dirtyRef.current = true;
         scheduleSave(next);
         return next;
@@ -73,18 +76,23 @@ export function useClientDraft(clientId: string | undefined) {
   );
 
   const flush = useCallback(async () => {
-    if (!clientId || !dirtyRef.current) return;
-    if (pendingTimeout.current) clearTimeout(pendingTimeout.current);
+    if (!clientId) return;
+    if (pendingTimeout.current) {
+      clearTimeout(pendingTimeout.current);
+      pendingTimeout.current = null;
+    }
+    if (!dirtyRef.current) return;
     setStatus("saving");
     try {
-      await saveDraft(clientId, state);
+      await saveDraft(clientId, latestStateRef.current);
       setStatus("saved");
       dirtyRef.current = false;
+      setError(null);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Save failed");
     }
-  }, [clientId, state]);
+  }, [clientId]);
 
   return { state, setState: update, loading, status, error, flush };
 }

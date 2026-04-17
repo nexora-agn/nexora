@@ -185,6 +185,19 @@ const server = http.createServer(async (req, res) => {
         console.warn("[export-api] Could not strip CustomizationPanel:", e.message);
       }
 
+      // Patch the bundled template's context providers to fix a preexisting
+      // race condition: both ThemeContext and SiteContentContext share the same
+      // localStorage "applied" marker key, so whichever useEffect runs first
+      // marks the export as applied and the other provider skips. That's why
+      // users saw logo + colors update but services/projects/team/section-
+      // visibility stay at the template defaults after unzipping.
+      //
+      // We (a) give each provider its own marker key, and (b) drop the "already
+      // applied" early-return entirely — since the exported ZIP has no editor
+      // sidebar, re-applying the export JSON on every page load is the
+      // desired behaviour.
+      await patchTemplateContexts(tempProject);
+
       await fs.writeFile(
         path.join(tempProject, "EXPORT_README.md"),
         [
@@ -231,6 +244,43 @@ const server = http.createServer(async (req, res) => {
 
   sendJson(res, 404, { error: "Not found" });
 });
+
+async function patchTemplateContexts(tempProject) {
+  const sitePath = path.join(tempProject, "src/contexts/SiteContentContext.tsx");
+  const themePath = path.join(tempProject, "src/contexts/ThemeContext.tsx");
+
+  try {
+    let siteSrc = await fs.readFile(sitePath, "utf8");
+    siteSrc = siteSrc
+      .replace(
+        /EXPORT_MARKER_KEY\s*=\s*"constructco-export-applied-at"/,
+        'EXPORT_MARKER_KEY = "constructco-site-export-applied-at"',
+      )
+      .replace(
+        /if\s*\(\s*generatedAt\s*&&\s*alreadyApplied\s*===\s*generatedAt\s*\)\s*return;?/,
+        "// applied guard removed during export so every page load re-hydrates the content",
+      );
+    await fs.writeFile(sitePath, siteSrc, "utf8");
+  } catch (e) {
+    console.warn("[export-api] Could not patch SiteContentContext:", e.message);
+  }
+
+  try {
+    let themeSrc = await fs.readFile(themePath, "utf8");
+    themeSrc = themeSrc
+      .replace(
+        /EXPORT_MARKER_KEY\s*=\s*"constructco-export-applied-at"/,
+        'EXPORT_MARKER_KEY = "constructco-theme-export-applied-at"',
+      )
+      .replace(
+        /if\s*\(\s*generatedAt\s*&&\s*alreadyApplied\s*===\s*generatedAt\s*\)\s*return;?/,
+        "// applied guard removed during export so every page load re-hydrates the theme",
+      );
+    await fs.writeFile(themePath, themeSrc, "utf8");
+  } catch (e) {
+    console.warn("[export-api] Could not patch ThemeContext:", e.message);
+  }
+}
 
 function sanitizeFilename(name) {
   return String(name || "website")
