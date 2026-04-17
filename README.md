@@ -16,7 +16,12 @@ One Vite app, three zones:
 
 Data: **Supabase** — auth, Postgres (`profiles`, `clients`, `drafts`), storage (`client-assets` bucket). Row Level Security ensures each sales rep only sees their own clients.
 
-ZIP export: a Node server (`server/export-api.mjs`) fetches the client's draft via the service-role key, bakes it into a clone of the construction template, and returns a downloadable ZIP.
+ZIP export: shared logic in `server/export-logic.mjs` builds the customized site. Two front-ends expose it:
+
+- `server/export-api.mjs` — local Node dev server on port 8787.
+- `api/export-site.mjs` — Vercel serverless function for production deployments.
+
+Both fetch the draft via the service-role key, bake the customizations into a clone of the construction template (colors, logo, favicon, all copy + lists, etc.), and stream a ZIP back.
 
 ## One-time setup
 
@@ -26,13 +31,15 @@ ZIP export: a Node server (`server/export-api.mjs`) fetches the client's draft v
 npm install
 ```
 
-### 2. Clone the construction template (required for ZIP export)
+### 2. Construction template source
+
+The template source lives in [`template-source/`](./template-source) and is committed so cloud deployments can bundle it. If you need to refresh it from the upstream repo:
 
 ```bash
-git clone https://github.com/andisbajrami/construction-template tmp/construction-template
+rm -rf template-source
+git clone --depth=1 https://github.com/andisbajrami/construction-template template-source
+rm -rf template-source/.git template-source/node_modules template-source/dist
 ```
-
-`tmp/` is gitignored and only used at export time as the source tree that gets zipped.
 
 ### 3. Supabase
 
@@ -76,8 +83,65 @@ npm run preview
 
 ## Deployment
 
-- The front-end (`dist/`) deploys to any static host (Vercel, Netlify, Hostinger, Cloudflare Pages).
-- The ZIP export server (`server/export-api.mjs`) needs a Node host (Railway, Render, Fly, or a small VPS). It requires `SUPABASE_SERVICE_ROLE_KEY` as an environment variable and must be reachable at `/api/export-site` from the front-end origin (configure `SITE_ALLOWED_ORIGIN`).
+You have two production paths depending on what kind of host you want to use.
+
+### Option A — Vercel (recommended, single deploy)
+
+Vercel runs the Vite front-end AND the `api/export-site.mjs` serverless function together, so you don't need a separate Node server. [`vercel.json`](./vercel.json) is already configured.
+
+1. Push this repo to GitHub (or import via the Vercel CLI).
+2. In Vercel → New Project → import this repo. The build command (`vite build`) and output directory (`dist`) are picked up automatically.
+3. Add the following **Environment Variables** (Production + Preview):
+
+   | Name | Value |
+   | --- | --- |
+   | `VITE_SUPABASE_URL` | your Supabase project URL |
+   | `VITE_SUPABASE_ANON_KEY` | Supabase anon key |
+   | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (server only) |
+
+4. Deploy. The admin dashboard will call `/api/export-site` on the same origin — no extra config needed.
+
+### Option B — Hostinger / static host + external export API
+
+Hostinger's shared hosting can serve the static `dist/` output but cannot run Node, so you host the export API separately.
+
+1. **Deploy the export API** (`server/export-api.mjs`) to any Node host (Railway, Render, Fly.io, a small VPS). Set:
+   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+   - `SITE_ALLOWED_ORIGIN` = your Hostinger site URL (e.g. `https://linen-shark-973947.hostingersite.com`)
+   - `SITE_API_PORT` if your host requires a specific port.
+
+   Make sure `template-source/` is copied up alongside `server/` — the API resolves it as `../template-source` relative to the repo root.
+
+2. **Build the front-end with the API URL baked in**:
+
+   ```bash
+   cp .env.example .env.production
+   # Add your Supabase values + the export API origin you just deployed
+   echo "VITE_EXPORT_API_URL=https://your-export-api.example.com/api/export-site" >> .env.production
+   npm run build
+   ```
+
+3. Upload the contents of `dist/` to Hostinger (File Manager → `public_html`). Make sure SPA routing falls back to `index.html` (Hostinger → Website → Edit `.htaccess`):
+
+   ```apache
+   <IfModule mod_rewrite.c>
+     RewriteEngine On
+     RewriteBase /
+     RewriteRule ^index\.html$ - [L]
+     RewriteCond %{REQUEST_FILENAME} !-f
+     RewriteCond %{REQUEST_FILENAME} !-d
+     RewriteRule . /index.html [L]
+   </IfModule>
+   ```
+
+4. In the admin dashboard, clicking **Download client ZIP** will now call `VITE_EXPORT_API_URL` directly instead of a co-located function.
+
+### Production checklist
+
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` is set **only** on the server / function, never in a `VITE_*` var.
+- [ ] `SITE_ALLOWED_ORIGIN` on the export API matches the deployed front-end origin exactly.
+- [ ] `template-source/` is committed (no `.git`, no `node_modules`, no `dist`) so deployments can reach it.
+- [ ] Supabase Storage bucket `client-assets` is public-read (or you've added a signed-URL policy) so exported sites can load logos/hero images.
 
 ## Tests
 

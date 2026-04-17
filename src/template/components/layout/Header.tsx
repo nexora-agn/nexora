@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, Facebook, Twitter, Instagram, Linkedin, Search, ChevronDown } from "lucide-react";
 import { useTheme } from "@template/contexts/ThemeContext";
-import { NAV_LINKS, COMPANY, SITE_TOP } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,8 +24,11 @@ function navItemActive(pathname: string, path: string) {
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logoUrl } = useTheme();
-  const { services } = useSiteContent();
+  const { services, navLinks: NAV_LINKS, company: COMPANY, siteTop: SITE_TOP } = useSiteContent();
   const location = useLocation();
+  const logoLetter = (COMPANY.name || "C").charAt(0).toUpperCase();
+  const [logoWordPrimary, ...logoWordRest] = (COMPANY.legalName || COMPANY.name || "").split(" ");
+  const logoWordSecondary = logoWordRest.join(" ") || COMPANY.tagline;
 
   return (
     <>
@@ -72,14 +74,14 @@ const Header = () => {
             ) : (
               <>
                 <span className="flex h-11 w-11 md:h-[52px] md:w-[52px] items-center justify-center rounded-md bg-secondary text-secondary-foreground text-2xl font-black shrink-0 shadow-sm">
-                  C
+                  {logoLetter}
                 </span>
                 <div className="flex flex-col min-w-0">
                   <span className="text-base md:text-lg font-extrabold tracking-tight text-primary leading-tight truncate">
-                    CONSTRUCTO
+                    {logoWordPrimary || COMPANY.name}
                   </span>
                   <span className="text-[10px] md:text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase truncate">
-                    Premium Builders
+                    {logoWordSecondary}
                   </span>
                 </div>
               </>

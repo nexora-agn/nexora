@@ -12,6 +12,35 @@ export const DEFAULT_DRAFT_STATE: DraftState = {
   content: SITE_CONTENT_DEFAULTS,
 };
 
+/** Deep-merge saved content over current defaults so older drafts missing
+ *  newer fields still hydrate correctly when the schema grows. */
+export function mergeContent(partial: Partial<SiteContentState> | null | undefined): SiteContentState {
+  const p = partial ?? {};
+  return {
+    ...SITE_CONTENT_DEFAULTS,
+    ...p,
+    company: { ...SITE_CONTENT_DEFAULTS.company, ...(p.company ?? {}) },
+    siteTop: { ...SITE_CONTENT_DEFAULTS.siteTop, ...(p.siteTop ?? {}) },
+    homeHero: {
+      ...SITE_CONTENT_DEFAULTS.homeHero,
+      ...(p.homeHero ?? {}),
+      primaryCta: {
+        ...SITE_CONTENT_DEFAULTS.homeHero.primaryCta,
+        ...(p.homeHero?.primaryCta ?? {}),
+      },
+      secondaryCta: {
+        ...SITE_CONTENT_DEFAULTS.homeHero.secondaryCta,
+        ...(p.homeHero?.secondaryCta ?? {}),
+      },
+    },
+    leadForm: { ...SITE_CONTENT_DEFAULTS.leadForm, ...(p.leadForm ?? {}) },
+    sectionVisibility: {
+      ...SITE_CONTENT_DEFAULTS.sectionVisibility,
+      ...(p.sectionVisibility ?? {}),
+    },
+  };
+}
+
 export async function getDraft(clientId: string): Promise<DraftState> {
   const { data, error } = await supabase
     .from("drafts")
@@ -22,7 +51,7 @@ export async function getDraft(clientId: string): Promise<DraftState> {
   const row = data as Draft | null;
   return {
     theme: { ...THEME_DEFAULTS, ...((row?.theme as Partial<ThemeConfig>) ?? {}) },
-    content: { ...SITE_CONTENT_DEFAULTS, ...((row?.content as Partial<SiteContentState>) ?? {}) },
+    content: mergeContent(row?.content as Partial<SiteContentState> | null),
   };
 }
 

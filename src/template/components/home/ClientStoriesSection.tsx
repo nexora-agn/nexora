@@ -1,7 +1,8 @@
 import { Star } from "lucide-react";
-import { TESTIMONIALS } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const ClientStoriesSection = () => {
+  const { testimonials: TESTIMONIALS } = useSiteContent();
   const stories = TESTIMONIALS.slice(0, 2);
 
   return (

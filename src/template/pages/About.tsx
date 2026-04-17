@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Layout from "@template/components/layout/Layout";
 import PageHeader from "@template/components/sections/PageHeader";
 import CTASection from "@template/components/sections/CTASection";
-import { COMPANY, ABOUT_STATS, CORE_VALUES, CERTIFICATIONS } from "@template/data/siteData";
 import ProcessSection from "@template/components/home/ProcessSection";
 import Reveal from "@template/components/animations/Reveal";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
@@ -12,7 +11,7 @@ import { Award, Eye, Handshake, Shield } from "lucide-react";
 const valueIcons = { Award, Eye, Handshake, Shield } as const;
 
 const About = () => {
-  const { team, sectionVisibility } = useSiteContent();
+  const { team, sectionVisibility, company: COMPANY, aboutStats: ABOUT_STATS, coreValues: CORE_VALUES, certifications: CERTIFICATIONS } = useSiteContent();
   const directors = team.slice(0, 3);
 
   return (
@@ -59,7 +58,7 @@ const About = () => {
       <div className="container-custom px-4 md:px-8">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {CORE_VALUES.map(v => {
-            const Icon = valueIcons[v.icon];
+            const Icon = valueIcons[v.icon as keyof typeof valueIcons] ?? Award;
             return (
               <article key={v.id} className="rounded-xl bg-card border border-border p-6 shadow-sm">
                 <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-secondary/15 text-secondary">

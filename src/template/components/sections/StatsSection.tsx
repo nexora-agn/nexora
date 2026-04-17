@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { STATS } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -28,17 +28,20 @@ const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
   return <div ref={ref} className="text-3xl md:text-4xl font-bold text-secondary">{count}{suffix}</div>;
 };
 
-const StatsSection = () => (
-  <section className="bg-primary text-primary-foreground section-padding">
-    <div className="container-custom grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-      {STATS.map(stat => (
-        <div key={stat.label}>
-          <Counter target={stat.value} suffix={stat.suffix} />
-          <p className="mt-2 text-sm opacity-80">{stat.label}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-);
+const StatsSection = () => {
+  const { stats: STATS } = useSiteContent();
+  return (
+    <section className="bg-primary text-primary-foreground section-padding">
+      <div className="container-custom grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        {STATS.map(stat => (
+          <div key={stat.label}>
+            <Counter target={stat.value} suffix={stat.suffix} />
+            <p className="mt-2 text-sm opacity-80">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export default StatsSection;

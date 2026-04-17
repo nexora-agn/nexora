@@ -2,12 +2,11 @@ import { Helmet } from "react-helmet-async";
 import Layout from "@template/components/layout/Layout";
 import PageHeader from "@template/components/sections/PageHeader";
 import CTASection from "@template/components/sections/CTASection";
-import { COMPANY } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { Linkedin, Twitter } from "lucide-react";
 
 const Team = () => {
-  const { team: members, sectionVisibility } = useSiteContent();
+  const { team: members, sectionVisibility, company: COMPANY } = useSiteContent();
 
   return (
     <Layout>

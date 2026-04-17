@@ -8,15 +8,13 @@ import CTASection from "@template/components/sections/CTASection";
 import Reveal from "@template/components/animations/Reveal";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import {
-  COMPANY,
-  PROJECTS_PAGE_STATS,
   SIGNATURE_PROJECT_COUNT,
   PROJECTS_LATEST_PAGE_SIZE,
 } from "@template/data/siteData";
 import { clampPage, parsePageParam, slicePage, totalPages as totalPagesCount } from "@template/lib/pagination";
 
 const Projects = () => {
-  const { projects, sectionVisibility } = useSiteContent();
+  const { projects, sectionVisibility, company: COMPANY, projectsPageStats: PROJECTS_PAGE_STATS } = useSiteContent();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const signature = projects.slice(0, SIGNATURE_PROJECT_COUNT);

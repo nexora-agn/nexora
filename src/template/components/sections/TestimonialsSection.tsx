@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { TESTIMONIALS } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const TestimonialsSection = () => {
+  const { testimonials: TESTIMONIALS } = useSiteContent();
+  const safeLength = Math.max(1, TESTIMONIALS.length);
   const [index, setIndex] = useState(0);
-  const t = TESTIMONIALS[index];
+  const t = TESTIMONIALS[index % safeLength] ?? TESTIMONIALS[0];
+  if (!t) return null;
 
   return (
     <section className="section-padding bg-muted">
@@ -17,10 +20,10 @@ const TestimonialsSection = () => {
           <p className="font-semibold text-foreground">{t.name}</p>
           <p className="text-sm text-muted-foreground">{t.role}</p>
           <div className="flex justify-center gap-4 mt-8">
-            <button onClick={() => setIndex(i => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)} className="h-10 w-10 rounded-full border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Previous">
+            <button onClick={() => setIndex(i => (i - 1 + safeLength) % safeLength)} className="h-10 w-10 rounded-full border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Previous">
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <button onClick={() => setIndex(i => (i + 1) % TESTIMONIALS.length)} className="h-10 w-10 rounded-full border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Next">
+            <button onClick={() => setIndex(i => (i + 1) % safeLength)} className="h-10 w-10 rounded-full border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Next">
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>

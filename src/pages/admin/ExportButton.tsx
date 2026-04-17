@@ -29,10 +29,16 @@ export const ExportButton = ({ clientId, clientName, onBeforeExport }: Props) =>
       const token = data.session?.access_token;
       if (!token) throw new Error("Not signed in");
 
+      const isLocalhost =
+        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      const explicit = (import.meta.env.VITE_EXPORT_API_URL as string | undefined)?.trim();
+
       const endpoints = [
-        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-          ? "http://localhost:8787/api/export-site"
-          : null,
+        // 1. explicit override (set in .env.production for e.g. Hostinger builds)
+        explicit || null,
+        // 2. local dev API
+        isLocalhost ? "http://localhost:8787/api/export-site" : null,
+        // 3. co-located serverless function (Vercel/Netlify deployment of this app)
         "/api/export-site",
       ].filter(Boolean) as string[];
 

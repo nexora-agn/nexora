@@ -10,11 +10,10 @@ import ClientStoriesSection from "@template/components/home/ClientStoriesSection
 import WhyTeamSection from "@template/components/home/WhyTeamSection";
 import LeadContactSection from "@template/components/home/LeadContactSection";
 import Reveal from "@template/components/animations/Reveal";
-import { COMPANY } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const Index = () => {
-  const { sectionVisibility } = useSiteContent();
+  const { sectionVisibility, company: COMPANY } = useSiteContent();
   return (
     <Layout>
     <Helmet>

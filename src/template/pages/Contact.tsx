@@ -3,7 +3,6 @@ import { useState, FormEvent } from "react";
 import Layout from "@template/components/layout/Layout";
 import PageHeader from "@template/components/sections/PageHeader";
 import Reveal from "@template/components/animations/Reveal";
-import { COMPANY, OFFICE_HOURS, MAP_EMBED_URL } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
   const { toast } = useToast();
-  const { services, sectionVisibility } = useSiteContent();
+  const { services, sectionVisibility, company: COMPANY, officeHours: OFFICE_HOURS, mapEmbedUrl: MAP_EMBED_URL } = useSiteContent();
   const [projectType, setProjectType] = useState("");
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {

@@ -3,11 +3,6 @@ import { Link } from "react-router-dom";
 import Layout from "@template/components/layout/Layout";
 import PageHeader from "@template/components/sections/PageHeader";
 import CTASection from "@template/components/sections/CTASection";
-import {
-  COMPANY,
-  COMMERCIAL_FITOUT_CARDS,
-  SERVICES_PAGE_INTRO,
-} from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import Reveal from "@template/components/animations/Reveal";
 import { ArrowRight, Building2, Hammer, ClipboardList, Ruler, Paintbrush, Leaf, Check, Zap, Package, FileText } from "lucide-react";
@@ -24,7 +19,14 @@ const iconMap: Record<string, React.FC<{ className?: string }>> = {
 const fitoutIcons = { Zap, Package, FileText } as const;
 
 const Services = () => {
-  const { services, serviceSections: deepDives, sectionVisibility } = useSiteContent();
+  const {
+    services,
+    serviceSections: deepDives,
+    sectionVisibility,
+    company: COMPANY,
+    commercialFitoutCards: COMMERCIAL_FITOUT_CARDS,
+    servicesPageIntro: SERVICES_PAGE_INTRO,
+  } = useSiteContent();
 
   return (
     <Layout>
@@ -105,7 +107,7 @@ const Services = () => {
         <h2 className="text-center text-sm font-black tracking-[0.25em] text-foreground mb-10">COMMERCIAL FIT-OUTS</h2>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {COMMERCIAL_FITOUT_CARDS.map(card => {
-            const Icon = fitoutIcons[card.icon as keyof typeof fitoutIcons];
+            const Icon = fitoutIcons[card.icon as keyof typeof fitoutIcons] ?? Zap;
             return (
               <article key={card.id} className="text-center rounded-xl border border-border p-8 bg-card">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-secondary/15 text-secondary">

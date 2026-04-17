@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, ChevronRight, ArrowUp } from "lucide-react";
 import { useTheme } from "@template/contexts/ThemeContext";
-import { COMPANY, FOOTER_SERVICE_LINKS, FOOTER_COMPANY_LINKS } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const Footer = () => {
   const { logoUrl } = useTheme();
+  const { company: COMPANY, footerServiceLinks: FOOTER_SERVICE_LINKS, footerCompanyLinks: FOOTER_COMPANY_LINKS } = useSiteContent();
+  const logoLetter = (COMPANY.name || "C").charAt(0).toUpperCase();
   const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const Footer = () => {
             ) : (
               <div className="flex items-center gap-2 mb-4">
                 <span className="flex h-10 w-10 items-center justify-center rounded bg-secondary text-secondary-foreground text-lg font-black">
-                  C
+                  {logoLetter}
                 </span>
                 <span className="font-extrabold text-lg">{COMPANY.name}</span>
               </div>

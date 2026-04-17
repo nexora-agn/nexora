@@ -15,6 +15,7 @@ import {
   SITE_CONTENT_DEFAULTS,
   type SiteContentState,
 } from "@template/contexts/SiteContentContext";
+import { mergeContent } from "@/lib/drafts";
 import ScrollToTop from "@template/components/ScrollToTop";
 import LoadingScreen from "@template/components/layout/LoadingScreen";
 
@@ -142,7 +143,7 @@ const PreviewApp = () => {
     const applyDraft = (draft: Draft | null) => {
       if (!active || !draft) return;
       setTheme({ ...THEME_DEFAULTS, ...(draft.theme as Partial<ThemeConfig>) });
-      setContent({ ...SITE_CONTENT_DEFAULTS, ...(draft.content as Partial<SiteContentState>) });
+      setContent(mergeContent(draft.content as Partial<SiteContentState> | null));
     };
 
     (async () => {

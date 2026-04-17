@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { HOME_HERO } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
-const HomeHero = () => (
+const HomeHero = () => {
+  const { homeHero: HOME_HERO } = useSiteContent();
+  return (
   <section className="relative overflow-hidden bg-gradient-to-br from-muted/90 via-background to-background section-padding">
     <div className="container-custom px-4 md:px-8">
       <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -61,6 +63,7 @@ const HomeHero = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default HomeHero;

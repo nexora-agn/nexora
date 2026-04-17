@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Home, Wrench, Building2, DraftingCompass } from "lucide-react";
-import { CAPABILITIES } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const iconMap = {
   Home,
@@ -9,7 +9,9 @@ const iconMap = {
   DraftingCompass,
 } as const;
 
-const CapabilitiesSection = () => (
+const CapabilitiesSection = () => {
+  const { capabilities: CAPABILITIES } = useSiteContent();
+  return (
   <section className="section-padding bg-background">
     <div className="container-custom px-4 md:px-8">
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary max-w-3xl mb-12 md:mb-16">
@@ -17,7 +19,7 @@ const CapabilitiesSection = () => (
       </h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {CAPABILITIES.map(cap => {
-          const Icon = iconMap[cap.icon];
+          const Icon = iconMap[cap.icon as keyof typeof iconMap] ?? Building2;
           return (
             <article
               key={cap.id}
@@ -41,6 +43,7 @@ const CapabilitiesSection = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default CapabilitiesSection;

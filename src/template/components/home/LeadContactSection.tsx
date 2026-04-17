@@ -12,11 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LEAD_FORM } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const LeadContactSection = () => {
-  const { services } = useSiteContent();
+  const { services, leadForm: LEAD_FORM } = useSiteContent();
   const [service, setService] = useState<string>("");
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {

@@ -5,7 +5,7 @@ import Layout from "@template/components/layout/Layout";
 import Reveal from "@template/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Home, Compass, Phone } from "lucide-react";
-import { COMPANY } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const QUICK_LINKS: Array<{ label: string; to: string; description: string }> = [
   { label: "Services", to: "/services", description: "What we build and how we deliver." },
@@ -16,6 +16,7 @@ const QUICK_LINKS: Array<{ label: string; to: string; description: string }> = [
 
 const NotFound = () => {
   const location = useLocation();
+  const { company: COMPANY } = useSiteContent();
 
   useEffect(() => {
     console.warn("404 — route not found:", location.pathname);

@@ -1,33 +1,123 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { PROJECTS, SERVICES, SERVICE_DEEP_DIVES, TEAM } from "@template/data/siteData";
+import {
+  PROJECTS,
+  SERVICES,
+  SERVICE_DEEP_DIVES,
+  TEAM,
+  COMPANY,
+  SITE_TOP,
+  OFFICE_HOURS,
+  MAP_EMBED_URL,
+  HOME_HERO,
+  SERVICES_RIBBON,
+  CAPABILITIES,
+  PROCESS_STEPS,
+  HOME_STATS,
+  WHY_BENEFITS,
+  TESTIMONIALS,
+  STATS,
+  FAQ_ITEMS,
+  NAV_LINKS,
+  FOOTER_SERVICE_LINKS,
+  FOOTER_COMPANY_LINKS,
+  PROJECTS_PAGE_STATS,
+  ABOUT_STATS,
+  CORE_VALUES,
+  CERTIFICATIONS,
+  SERVICES_PAGE_INTRO,
+  COMMERCIAL_FITOUT_CARDS,
+  LEAD_FORM,
+  BLOG_TAGS,
+} from "@template/data/siteData";
 
 type Service = (typeof SERVICES)[number];
 type ServiceSection = (typeof SERVICE_DEEP_DIVES)[number];
 type TeamMember = (typeof TEAM)[number];
 type Project = (typeof PROJECTS)[number];
 
+type Company = typeof COMPANY;
+type SiteTop = typeof SITE_TOP;
+type OfficeHours = typeof OFFICE_HOURS;
+type HomeHero = typeof HOME_HERO;
+type ServicesRibbon = typeof SERVICES_RIBBON;
+type Capability = (typeof CAPABILITIES)[number];
+type ProcessStep = (typeof PROCESS_STEPS)[number];
+type HomeStat = (typeof HOME_STATS)[number];
+type WhyBenefit = (typeof WHY_BENEFITS)[number];
+type Testimonial = (typeof TESTIMONIALS)[number];
+type Stat = (typeof STATS)[number];
+type FaqItem = (typeof FAQ_ITEMS)[number];
+type NavLink = (typeof NAV_LINKS)[number];
+type FooterLink = (typeof FOOTER_SERVICE_LINKS)[number];
+type ProjectsPageStat = (typeof PROJECTS_PAGE_STATS)[number];
+type AboutStat = (typeof ABOUT_STATS)[number];
+type CoreValue = (typeof CORE_VALUES)[number];
+type Certification = (typeof CERTIFICATIONS)[number];
+type CommercialFitoutCard = (typeof COMMERCIAL_FITOUT_CARDS)[number];
+type LeadForm = typeof LEAD_FORM;
+
 export interface SiteContentState {
+  /* repeatable lists */
   services: Service[];
   serviceSections: ServiceSection[];
   team: TeamMember[];
   projects: Project[];
   sectionVisibility: Record<string, boolean>;
+
+  /* site-wide copy */
+  company: Company;
+  siteTop: SiteTop;
+  officeHours: OfficeHours;
+  mapEmbedUrl: string;
+
+  /* homepage */
+  homeHero: HomeHero;
+  servicesRibbon: ServicesRibbon;
+  capabilities: Capability[];
+  processSteps: ProcessStep[];
+  homeStats: HomeStat[];
+  whyBenefits: WhyBenefit[];
+  testimonials: Testimonial[];
+  leadForm: LeadForm;
+
+  /* other pages */
+  stats: Stat[];
+  projectsPageStats: ProjectsPageStat[];
+  aboutStats: AboutStat[];
+  coreValues: CoreValue[];
+  certifications: Certification[];
+  servicesPageIntro: string;
+  commercialFitoutCards: CommercialFitoutCard[];
+  faqItems: FaqItem[];
+
+  /* navigation */
+  navLinks: NavLink[];
+  footerServiceLinks: FooterLink[];
+  footerCompanyLinks: FooterLink[];
+  blogTags: string[];
 }
 
 interface SiteContentContextType extends SiteContentState {
+  /* service CRUD */
   addService: () => void;
   updateService: (id: string, patch: Partial<Service>) => void;
   removeService: (id: string) => void;
+  /* service section CRUD */
   addServiceSection: () => void;
   updateServiceSection: (id: string, patch: Partial<ServiceSection>) => void;
   removeServiceSection: (id: string) => void;
+  /* team CRUD */
   addTeamMember: () => void;
   updateTeamMember: (id: string, patch: Partial<TeamMember>) => void;
   removeTeamMember: (id: string) => void;
+  /* projects CRUD */
   addProject: () => void;
   updateProject: (id: string, patch: Partial<Project>) => void;
   removeProject: (id: string) => void;
+  /* sections visibility */
   setSectionVisibility: (sectionId: string, visible: boolean) => void;
+  /* generic patcher for simple objects/fields */
+  patch: (patch: Partial<SiteContentState>) => void;
   resetContent: () => void;
 }
 
@@ -73,6 +163,30 @@ export const SITE_CONTENT_DEFAULTS: SiteContentState = {
     "faq.main": true,
     "faq.cta": true,
   },
+  company: COMPANY,
+  siteTop: SITE_TOP,
+  officeHours: OFFICE_HOURS,
+  mapEmbedUrl: MAP_EMBED_URL,
+  homeHero: HOME_HERO,
+  servicesRibbon: SERVICES_RIBBON,
+  capabilities: CAPABILITIES,
+  processSteps: PROCESS_STEPS,
+  homeStats: HOME_STATS,
+  whyBenefits: WHY_BENEFITS,
+  testimonials: TESTIMONIALS,
+  leadForm: LEAD_FORM,
+  stats: STATS,
+  projectsPageStats: PROJECTS_PAGE_STATS,
+  aboutStats: ABOUT_STATS,
+  coreValues: CORE_VALUES,
+  certifications: CERTIFICATIONS,
+  servicesPageIntro: SERVICES_PAGE_INTRO,
+  commercialFitoutCards: COMMERCIAL_FITOUT_CARDS,
+  faqItems: FAQ_ITEMS,
+  navLinks: NAV_LINKS,
+  footerServiceLinks: FOOTER_SERVICE_LINKS,
+  footerCompanyLinks: FOOTER_COMPANY_LINKS,
+  blogTags: BLOG_TAGS,
 };
 
 const uid = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
@@ -93,6 +207,32 @@ interface ProviderProps {
   external?: boolean;
 }
 
+/** Deep-merge a partial snapshot over the defaults so old drafts missing newer
+ *  fields (added after the draft was saved) still render correctly. */
+const mergeWithDefaults = (partial: Partial<SiteContentState> | undefined): SiteContentState => ({
+  ...SITE_CONTENT_DEFAULTS,
+  ...(partial ?? {}),
+  company: { ...SITE_CONTENT_DEFAULTS.company, ...(partial?.company ?? {}) },
+  siteTop: { ...SITE_CONTENT_DEFAULTS.siteTop, ...(partial?.siteTop ?? {}) },
+  homeHero: {
+    ...SITE_CONTENT_DEFAULTS.homeHero,
+    ...(partial?.homeHero ?? {}),
+    primaryCta: {
+      ...SITE_CONTENT_DEFAULTS.homeHero.primaryCta,
+      ...(partial?.homeHero?.primaryCta ?? {}),
+    },
+    secondaryCta: {
+      ...SITE_CONTENT_DEFAULTS.homeHero.secondaryCta,
+      ...(partial?.homeHero?.secondaryCta ?? {}),
+    },
+  },
+  leadForm: { ...SITE_CONTENT_DEFAULTS.leadForm, ...(partial?.leadForm ?? {}) },
+  sectionVisibility: {
+    ...SITE_CONTENT_DEFAULTS.sectionVisibility,
+    ...(partial?.sectionVisibility ?? {}),
+  },
+});
+
 export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, onChange, external }) => {
   const isControlled = value !== undefined && typeof onChange === "function";
 
@@ -102,7 +242,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return SITE_CONTENT_DEFAULTS;
-      return { ...SITE_CONTENT_DEFAULTS, ...JSON.parse(saved) };
+      return mergeWithDefaults(JSON.parse(saved));
     } catch {
       return SITE_CONTENT_DEFAULTS;
     }
@@ -119,7 +259,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     } catch {
-      // ignore quota errors — non-critical
+      // ignore quota errors
     }
   };
 
@@ -133,7 +273,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
         const generatedAt = String(data?.generatedAt || "");
         const alreadyApplied = localStorage.getItem(EXPORT_MARKER_KEY);
         if (generatedAt && alreadyApplied === generatedAt) return;
-        const next = { ...SITE_CONTENT_DEFAULTS, ...data.content };
+        const next = mergeWithDefaults(data.content as Partial<SiteContentState>);
         setInternalState(next);
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
@@ -149,11 +289,8 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
   }, [isControlled, external]);
 
   const api = useMemo<SiteContentContextType>(() => ({
-    services: state.services,
-    serviceSections: state.serviceSections,
-    team: state.team,
-    projects: state.projects,
-    sectionVisibility: state.sectionVisibility,
+    ...state,
+
     addService: () =>
       save({
         ...state,
@@ -236,6 +373,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
     removeProject: id => save({ ...state, projects: state.projects.filter(p => p.id !== id) }),
     setSectionVisibility: (sectionId, visible) =>
       save({ ...state, sectionVisibility: { ...state.sectionVisibility, [sectionId]: visible } }),
+    patch: (patch) => save({ ...state, ...patch }),
     resetContent: () => save(SITE_CONTENT_DEFAULTS),
   }), [state, isControlled]);
 

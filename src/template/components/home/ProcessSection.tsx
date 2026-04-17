@@ -1,6 +1,6 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { Search, PenLine, Calendar, BrickWall, KeyRound, Headphones } from "lucide-react";
-import { COMPANY, PROCESS_STEPS } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
 const icons = [Search, PenLine, Calendar, BrickWall, KeyRound, Headphones];
@@ -10,13 +10,14 @@ interface ProcessSectionProps {
 }
 
 const ProcessSection = ({ className }: ProcessSectionProps) => {
+  const { company: COMPANY, processSteps: PROCESS_STEPS } = useSiteContent();
   const sectionRef = useRef<HTMLElement | null>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [lineProgress, setLineProgress] = useState(0);
 
   const maxScrollableHeight = useMemo(
     () => `${Math.max(200, PROCESS_STEPS.length * 42)}vh`,
-    [],
+    [PROCESS_STEPS.length],
   );
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const ProcessSection = ({ className }: ProcessSectionProps) => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [PROCESS_STEPS.length]);
 
   return (
     <section

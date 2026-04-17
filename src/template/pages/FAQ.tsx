@@ -6,14 +6,20 @@ import PageHeader from "@template/components/sections/PageHeader";
 import Reveal from "@template/components/animations/Reveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { COMPANY, FAQ_BY_CATEGORY, FAQ_TABS, type FaqTabId } from "@template/data/siteData";
+import { FAQ_BY_CATEGORY, FAQ_TABS, FAQ_ITEMS as DEFAULT_FAQ_ITEMS, type FaqTabId } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
 const FAQ = () => {
-  const { sectionVisibility } = useSiteContent();
+  const { sectionVisibility, company: COMPANY, faqItems } = useSiteContent();
   const [tab, setTab] = useState<FaqTabId>("projects");
-  const items = FAQ_BY_CATEGORY[tab];
+  // Keep the tabbed experience when the admin hasn't customized the FAQ (defaults still
+  // match). Once they start editing the flat list from the dashboard, switch to a single
+  // flat list so their edits show up.
+  const customized =
+    faqItems.length !== DEFAULT_FAQ_ITEMS.length ||
+    faqItems.some((it, i) => it.question !== DEFAULT_FAQ_ITEMS[i]?.question || it.answer !== DEFAULT_FAQ_ITEMS[i]?.answer);
+  const items = customized ? faqItems : FAQ_BY_CATEGORY[tab];
 
   return (
     <Layout>
@@ -36,21 +42,23 @@ const FAQ = () => {
       {sectionVisibility["faq.main"] && <Reveal delay={70}>
         <section className="section-padding bg-background">
         <div className="container-custom px-4 md:px-8 max-w-3xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10 border-b border-border pb-4 mb-8">
-            {FAQ_TABS.map(t => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setTab(t.id)}
-                className={cn(
-                  "text-xs md:text-sm font-bold tracking-widest pb-2 -mb-px border-b-2 transition-colors",
-                  tab === t.id ? "text-secondary border-secondary" : "text-muted-foreground border-transparent hover:text-foreground",
-                )}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          {!customized && (
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10 border-b border-border pb-4 mb-8">
+              {FAQ_TABS.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setTab(t.id)}
+                  className={cn(
+                    "text-xs md:text-sm font-bold tracking-widest pb-2 -mb-px border-b-2 transition-colors",
+                    tab === t.id ? "text-secondary border-secondary" : "text-muted-foreground border-transparent hover:text-foreground",
+                  )}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           <Accordion key={tab} type="single" collapsible defaultValue="0" className="w-full">
             {items.map((faq, i) => (

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ClipboardCheck, Users } from "lucide-react";
-import { COMPANY, WHY_BENEFITS } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const benefitIcons = {
@@ -9,7 +8,7 @@ const benefitIcons = {
 } as const;
 
 const WhyTeamSection = () => {
-  const { team } = useSiteContent();
+  const { team, company: COMPANY, whyBenefits: WHY_BENEFITS } = useSiteContent();
   const leadership = team.slice(0, 3);
 
   return (
@@ -22,7 +21,7 @@ const WhyTeamSection = () => {
           </h2>
           <ul className="space-y-8">
             {WHY_BENEFITS.map(b => {
-              const Icon = benefitIcons[b.icon];
+              const Icon = benefitIcons[b.icon as keyof typeof benefitIcons] ?? ClipboardCheck;
               return (
                 <li key={b.title} className="flex gap-4">
                   <div className="shrink-0 flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/15 text-secondary">

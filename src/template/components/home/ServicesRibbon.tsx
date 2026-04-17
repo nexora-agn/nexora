@@ -6,7 +6,7 @@ import {
   Hammer,
   Ruler,
 } from "lucide-react";
-import { SERVICES_RIBBON } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const iconMap = {
   Compass,
@@ -16,12 +16,14 @@ const iconMap = {
   Ruler,
 } as const;
 
-const ServicesRibbon = () => (
+const ServicesRibbon = () => {
+  const { servicesRibbon: SERVICES_RIBBON } = useSiteContent();
+  return (
   <section className="border-y border-border bg-card py-8">
     <div className="container-custom px-4 md:px-8">
       <div className="flex flex-wrap justify-center md:justify-between gap-6 md:gap-4">
         {SERVICES_RIBBON.map(item => {
-          const Icon = iconMap[item.icon];
+          const Icon = iconMap[item.icon as keyof typeof iconMap] ?? Compass;
           const featured = "featured" in item && item.featured;
           return (
             <div
@@ -51,6 +53,7 @@ const ServicesRibbon = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default ServicesRibbon;

@@ -3,14 +3,13 @@ import { useParams, Link } from "react-router-dom";
 import Layout from "@template/components/layout/Layout";
 import PageHeader from "@template/components/sections/PageHeader";
 import CTASection from "@template/components/sections/CTASection";
-import { COMPANY } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { CheckCircle2 } from "lucide-react";
 
 const benefits = ["Experienced professionals", "On-time project delivery", "Transparent pricing", "Quality materials", "Safety compliance", "Post-project support"];
 
 const ServiceDetail = () => {
-  const { services, projects } = useSiteContent();
+  const { services, projects, company: COMPANY } = useSiteContent();
   const { id } = useParams();
   const service = services.find(s => s.id === id);
   if (!service) return <Layout><div className="section-padding container-custom px-4 md:px-8 text-center"><h1 className="text-2xl font-bold">Service not found</h1><Link to="/services" className="text-primary hover:underline mt-4 block">Back to Services</Link></div></Layout>;

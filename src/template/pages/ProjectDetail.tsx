@@ -2,12 +2,11 @@ import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@template/components/layout/Layout";
 import CTASection from "@template/components/sections/CTASection";
-import { COMPANY } from "@template/data/siteData";
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { MapPin, Calendar, User, DollarSign, ArrowLeft } from "lucide-react";
 
 const ProjectDetail = () => {
-  const { projects } = useSiteContent();
+  const { projects, company: COMPANY } = useSiteContent();
   const { id } = useParams();
   const project = projects.find(p => p.id === id);
   if (!project) return <Layout><div className="section-padding container-custom px-4 md:px-8 text-center"><h1 className="text-2xl font-bold">Project not found</h1><Link to="/projects" className="text-primary hover:underline mt-4 block">Back to Projects</Link></div></Layout>;

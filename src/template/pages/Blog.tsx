@@ -5,7 +5,7 @@ import Layout from "@template/components/layout/Layout";
 import PageHeader from "@template/components/sections/PageHeader";
 import PaginationControls from "@template/components/layout/PaginationControls";
 import Reveal from "@template/components/animations/Reveal";
-import { BLOG_POSTS, BLOG_LIST_PAGE_SIZE, getBlogCategoryCounts, BLOG_TAGS, COMPANY } from "@template/data/siteData";
+import { BLOG_POSTS, BLOG_LIST_PAGE_SIZE, getBlogCategoryCounts } from "@template/data/siteData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Search } from "lucide-react";
@@ -13,7 +13,7 @@ import { clampPage, parsePageParam, slicePage, totalPages as totalPagesCount } f
 import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 const Blog = () => {
-  const { sectionVisibility } = useSiteContent();
+  const { sectionVisibility, company: COMPANY, blogTags: BLOG_TAGS } = useSiteContent();
   const [searchParams, setSearchParams] = useSearchParams();
   const [q, setQ] = useState("");
   const [activeCat, setActiveCat] = useState<string | null>(null);

@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { COMPANY } from "@template/data/siteData";
-
-const phoneHref = () => COMPANY.phone.replace(/[^\d+]/g, "");
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 
 interface CTASectionProps {
   title?: string;
@@ -21,10 +19,12 @@ const CTASection = ({
   primaryLabel = "REQUEST ESTIMATE",
   secondaryLabel = "BOOK A CALL",
   primaryTo = "/contact",
-  secondaryTo = `tel:${phoneHref()}`,
+  secondaryTo,
   tone = "plain",
 }: CTASectionProps) => {
-  const secondaryIsTel = secondaryTo.startsWith("tel:");
+  const { company: COMPANY } = useSiteContent();
+  const resolvedSecondary = secondaryTo ?? `tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`;
+  const secondaryIsTel = resolvedSecondary.startsWith("tel:");
 
   return (
     <section
@@ -45,11 +45,11 @@ const CTASection = ({
           </Button>
           {secondaryIsTel ? (
             <Button asChild size="lg" variant="outline" className="rounded-sm px-8 font-bold border-primary text-primary hover:bg-muted">
-              <a href={secondaryTo}>{secondaryLabel}</a>
+              <a href={resolvedSecondary}>{secondaryLabel}</a>
             </Button>
           ) : (
             <Button asChild size="lg" variant="outline" className="rounded-sm px-8 font-bold border-primary text-primary hover:bg-muted">
-              <Link to={secondaryTo}>{secondaryLabel}</Link>
+              <Link to={resolvedSecondary}>{secondaryLabel}</Link>
             </Button>
           )}
         </div>

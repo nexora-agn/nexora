@@ -2,11 +2,13 @@ import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@template/components/layout/Layout";
 import PageHeader from "@template/components/sections/PageHeader";
-import { BLOG_POSTS, COMPANY } from "@template/data/siteData";
+import { BLOG_POSTS } from "@template/data/siteData";
+import { useSiteContent } from "@template/contexts/SiteContentContext";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 
 const BlogPost = () => {
   const { id } = useParams();
+  const { company: COMPANY } = useSiteContent();
   const post = BLOG_POSTS.find(p => p.id === id);
   if (!post) return <Layout><div className="section-padding container-custom text-center"><h1 className="text-2xl font-bold">Post not found</h1><Link to="/blog" className="text-primary hover:underline mt-4 block">Back to Blog</Link></div></Layout>;
 
