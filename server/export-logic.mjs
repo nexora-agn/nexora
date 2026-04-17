@@ -92,9 +92,64 @@ async function stripCustomizationPanel(tempProject) {
 }
 
 /**
+ * Parse the value expression of an `export const NAME = <value>;` block out of
+ * the template's siteData.ts source. We strip TypeScript-only `as const`
+ * assertions and evaluate the resulting expression in an isolated Function so
+ * we get the real default as a JS value. Returns `undefined` if the block
+ * cannot be located / parsed (caller will fall back to the draft value).
+ */
+function readExistingExport(source, name) {
+  const patterns = [
+    new RegExp(`export const ${name} = (\\{[\\s\\S]*?\\n\\});`, "m"),
+    new RegExp(`export const ${name}: [^=\\n]+= (\\{[\\s\\S]*?\\n\\});`, "m"),
+    new RegExp(`export const ${name} = (\\[[\\s\\S]*?\\]);`, "m"),
+    new RegExp(`export const ${name}: [^=\\n]+= (\\[[\\s\\S]*?\\]);`, "m"),
+    new RegExp(`export const ${name} =\\s*\\n?\\s*("[^"]*");`, "m"),
+  ];
+  for (const re of patterns) {
+    const m = re.exec(source);
+    if (!m) continue;
+    const body = m[1]
+      .replace(/\s+as\s+const\b/g, "") // drop TS `as const`
+      .replace(/([,{]\s*)(\w+)\s*:/g, '$1"$2":') // quote unquoted keys
+      .replace(/,(\s*[\]}])/g, "$1"); // strip trailing commas
+    try {
+      // eslint-disable-next-line no-new-func
+      return new Function(`return (${body});`)();
+    } catch (err) {
+      console.warn(`[export] Could not parse existing ${name}:`, err.message);
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Deep-merge `patch` over `base`. Arrays from the patch fully replace arrays
+ * from the base (so the sales team can reorder / delete items without the
+ * original defaults reappearing). Plain objects are merged key-by-key.
+ */
+function deepMerge(base, patch) {
+  if (patch === undefined || patch === null) return base;
+  if (Array.isArray(patch)) return patch; // arrays replace wholesale
+  if (typeof patch !== "object") return patch;
+  if (base === undefined || base === null || typeof base !== "object" || Array.isArray(base)) {
+    // Nothing to merge against; just return patch.
+    return patch;
+  }
+  const out = { ...base };
+  for (const [k, v] of Object.entries(patch)) {
+    out[k] = deepMerge(base[k], v);
+  }
+  return out;
+}
+
+/**
  * Replace top-level `export const NAME = { ... };` (or `= [ ... ];`, or `= "...";`)
  * blocks in the template's siteData.ts with values from the customized draft.
- * Any section the draft doesn't override is left untouched.
+ * Values are deep-merged with the existing defaults so partial drafts never
+ * wipe required fields. Any section the draft doesn't override is left
+ * untouched.
  */
 async function patchSiteDataTs(tempProject, content) {
   const siteDataPath = path.join(tempProject, "src/data/siteData.ts");
@@ -137,13 +192,14 @@ async function patchSiteDataTs(tempProject, content) {
   };
 
   let patched = source;
-  for (const [name, value] of Object.entries(mapping)) {
-    if (value === undefined || value === null) continue;
+  let patchedCount = 0;
+  for (const [name, draftValue] of Object.entries(mapping)) {
+    if (draftValue === undefined || draftValue === null) continue;
 
-    const literal = JSON.stringify(value, null, 2);
+    const existing = readExistingExport(patched, name);
+    const merged = deepMerge(existing, draftValue);
+    const literal = JSON.stringify(merged, null, 2);
 
-    // Match either object `{...};`, array `[...];`, or string `"...";` (non-greedy,
-    // multi-line). Anchored to the first occurrence of `export const NAME =`.
     const patterns = [
       new RegExp(`export const ${name} = \\{[\\s\\S]*?\\n\\};`, "m"),
       new RegExp(`export const ${name}: [^=\\n]+= \\{[\\s\\S]*?\\n\\};`, "m"),
@@ -157,15 +213,16 @@ async function patchSiteDataTs(tempProject, content) {
       if (re.test(patched)) {
         patched = patched.replace(re, `export const ${name} = ${literal};`);
         replaced = true;
+        patchedCount += 1;
         break;
       }
     }
     if (!replaced) {
-      // Log once so deployment can detect regressions if the template shape changes.
       console.warn(`[export] Could not patch ${name} in siteData.ts (pattern not found)`);
     }
   }
 
+  console.log(`[export] Patched ${patchedCount} constant(s) in siteData.ts`);
   await fs.writeFile(siteDataPath, patched, "utf8");
 }
 
