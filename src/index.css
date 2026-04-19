@@ -108,9 +108,6 @@
     background-attachment: fixed;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
 }
 
 @layer utilities {

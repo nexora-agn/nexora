@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 const sectionLinks = [
-  { href: "/#how-it-works", label: "How it works" },
-  { href: "/#what-you-get", label: "What you get" },
-  { href: "/#benefits", label: "Benefits" },
+  { id: "how-it-works", label: "How it works" },
+  { id: "what-you-get", label: "What you get" },
+  { id: "benefits", label: "Benefits" },
 ] as const;
 
 interface NavbarProps {
@@ -15,11 +15,36 @@ interface NavbarProps {
 
 const Navbar = ({ onRequestDemo }: NavbarProps) => {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 96;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
+  const handleSectionClick =
+    (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      setOpen(false);
+      if (location.pathname !== "/") {
+        navigate("/", { state: { scrollTo: id } });
+        return;
+      }
+      e.preventDefault();
+      scrollToSection(id);
+    };
 
   const NavLinks = ({ className }: { className?: string }) => (
     <>
-      {sectionLinks.map(({ href, label }) => (
-        <a key={href} href={href} onClick={() => setOpen(false)} className={className}>
+      {sectionLinks.map(({ id, label }) => (
+        <a
+          key={id}
+          href={`/#${id}`}
+          onClick={handleSectionClick(id)}
+          className={className}
+        >
           {label}
         </a>
       ))}

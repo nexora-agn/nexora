@@ -58,7 +58,18 @@ const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
                 className="h-12 rounded-xl border-slate-600/90 bg-transparent px-8 text-base font-medium text-slate-200 hover:bg-white/5 hover:text-white"
                 asChild
               >
-                <a href="#how-it-works">View the process</a>
+                <a
+                  href="#how-it-works"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById("how-it-works");
+                    if (!el) return;
+                    const top = el.getBoundingClientRect().top + window.scrollY - 96;
+                    window.scrollTo({ top, behavior: "smooth" });
+                  }}
+                >
+                  View the process
+                </a>
               </Button>
             </div>
           </div>
