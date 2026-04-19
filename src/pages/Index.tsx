@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import TrustSection from "@/components/landing/TrustSection";
@@ -12,6 +13,21 @@ import RequestDemoModal from "@/components/landing/RequestDemoModal";
 
 const Index = () => {
   const [demoOpen, setDemoOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const scrollState = (location.state as { scrollTo?: string } | null)?.scrollTo;
+    const target = scrollState || (location.hash ? location.hash.slice(1) : "");
+    if (!target) return;
+    const scroll = () => {
+      const el = document.getElementById(target);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top, behavior: "smooth" });
+    };
+    const id = window.setTimeout(scroll, 50);
+    return () => window.clearTimeout(id);
+  }, [location.hash, location.state]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">

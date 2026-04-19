@@ -120,6 +120,16 @@ const server = http.createServer(async (req, res) => {
   sendJson(res, 404, { error: "Not found" });
 });
 
+server.on("error", err => {
+  if (err && err.code === "EADDRINUSE") {
+    console.error(
+      `[export-api] Port ${port} is already in use. Stop the other process (e.g. \`lsof -i :${port}\`) or set SITE_API_PORT in .env.local.`,
+    );
+    process.exit(1);
+  }
+  throw err;
+});
+
 server.listen(port, () => {
   console.log(`[export-api] running on http://localhost:${port} (origin: ${allowOrigin})`);
 });
