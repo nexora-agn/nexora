@@ -365,6 +365,57 @@ async function patchTemplateContexts(tempProject) {
 }
 
 /**
+ * When the prod/Vercel bundler compiles TypeScript it strips types but keeps
+ * JSX, writing files as .js. Vite's SWC plugin only enables JSX for .jsx/.tsx
+ * by default, so these .js files fail to parse.
+ *
+ * This function:
+ *  1. Renames every src/**\/*.js → .jsx so Vite/SWC handles JSX automatically.
+ *  2. Rewrites explicit relative extension imports (./Foo.tsx → ./Foo.jsx,
+ *     ./bar.ts → ./bar.js) across all source files so module resolution works.
+ *
+ * In the normal case (localhost, all files already .tsx/.ts) the walkFiles loop
+ * finds zero .js files and exits immediately — no-op, safe to always call.
+ */
+async function normalizeJsExtensions(tempProject) {
+  const srcDir = path.join(tempProject, "src");
+
+  // --- Step 1: collect .js files and rename to .jsx ---
+  const renamed = new Set(); // basename stems that were renamed (for logging)
+  for await (const filePath of walkFiles(srcDir)) {
+    if (!filePath.endsWith(".js")) continue;
+    const newPath = filePath.slice(0, -3) + ".jsx";
+    await fs.rename(filePath, newPath);
+    renamed.add(path.relative(srcDir, filePath));
+  }
+
+  if (renamed.size === 0) return; // nothing to fix, bail early
+  console.log(`[export] Renamed ${renamed.size} .js file(s) to .jsx`);
+
+  // --- Step 2: fix explicit extension imports in all source files ---
+  // After the rename above, any import like `from "./App.tsx"` or
+  // `from "./App.js"` is stale and must be updated.
+  for await (const filePath of walkFiles(srcDir)) {
+    if (!/\.(tsx|ts|jsx|js|mjs|cjs)$/.test(filePath)) continue;
+    try {
+      const original = await fs.readFile(filePath, "utf8");
+      const patched = original
+        // ./Foo.tsx → ./Foo.jsx  (relative only)
+        .replace(/(from\s+['"])(\.\.?\/[^'"]*?)\.tsx(['"])/g, "$1$2.jsx$3")
+        // ./bar.ts → ./bar.js   (relative only, not .tsx)
+        .replace(/(from\s+['"])(\.\.?\/[^'"]*?)\.ts(?!x)(['"])/g, "$1$2.js$3")
+        // ./Foo.js → ./Foo.jsx  (was renamed above, relative only)
+        .replace(/(from\s+['"])(\.\.?\/[^'"]*?)\.js(['"])/g, "$1$2.jsx$3");
+      if (patched !== original) {
+        await fs.writeFile(filePath, patched, "utf8");
+      }
+    } catch (e) {
+      console.warn(`[export] Could not patch imports in ${path.relative(tempProject, filePath)}:`, e.message);
+    }
+  }
+}
+
+/**
  * 1. Expand Tailwind content globs to cover {js,ts,jsx,tsx} — without this,
  *    any .jsx/.js file in the project produces unstyled output.
  * 2. Sync the index.html <script src> with whichever main.* entry file
@@ -493,8 +544,11 @@ export async function buildSiteZip({ templateRoot, liveTemplateRoot, clientId, c
   // the template's src/data/siteData.ts so components that import those
   // constants render the client's values without needing runtime context wiring.
   await patchSiteDataTs(tempProject, draft.content || {});
+  // If prod compiled .tsx → .js, rename those to .jsx and fix extension imports
+  // so Vite's SWC plugin can parse JSX without any extra config.
+  await normalizeJsExtensions(tempProject);
   // Ensure Tailwind content globs cover all file extensions and index.html
-  // entry matches the real main.* file — guards against compiled .js/.jsx output.
+  // entry matches the real main.* file (after any .js → .jsx renames above).
   await patchTailwindAndEntry(tempProject);
 
   const notesBlock = exportPayload.notes.trim()
