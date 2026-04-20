@@ -364,6 +364,63 @@ async function patchTemplateContexts(tempProject) {
   }
 }
 
+/**
+ * 1. Expand Tailwind content globs to cover {js,ts,jsx,tsx} — without this,
+ *    any .jsx/.js file in the project produces unstyled output.
+ * 2. Sync the index.html <script src> with whichever main.* entry file
+ *    actually exists on disk after the overlay, so Vite never throws
+ *    "Does the file exist?".
+ */
+async function patchTailwindAndEntry(tempProject) {
+  // --- tailwind config ---
+  const tailwindCandidates = [
+    "tailwind.config.ts",
+    "tailwind.config.js",
+    "tailwind.config.cjs",
+    "tailwind.config.mjs",
+  ];
+  for (const name of tailwindCandidates) {
+    const cfgPath = path.join(tempProject, name);
+    try {
+      let src = await fs.readFile(cfgPath, "utf8");
+      // Normalise every content-glob extension set to {js,ts,jsx,tsx}
+      src = src.replace(/\{ts,tsx\}/g, "{js,ts,jsx,tsx}");
+      src = src.replace(/\{js,jsx,ts,tsx\}/g, "{js,ts,jsx,tsx}");
+      await fs.writeFile(cfgPath, src, "utf8");
+      console.log(`[export] Patched tailwind content globs in ${name}`);
+    } catch {
+      // file doesn't exist, skip
+    }
+  }
+
+  // --- index.html entry ---
+  const indexPath = path.join(tempProject, "index.html");
+  try {
+    let html = await fs.readFile(indexPath, "utf8");
+    const entryCandidates = ["main.tsx", "main.ts", "main.jsx", "main.js"];
+    let actualEntry = null;
+    for (const name of entryCandidates) {
+      try {
+        await fs.access(path.join(tempProject, "src", name));
+        actualEntry = name;
+        break;
+      } catch { /* not found */ }
+    }
+    if (actualEntry) {
+      const patched = html.replace(
+        /(<script[^>]+src=["'])\/src\/main\.[a-zA-Z]+x?(["'])/,
+        `$1/src/${actualEntry}$2`,
+      );
+      if (patched !== html) {
+        await fs.writeFile(indexPath, patched, "utf8");
+        console.log(`[export] Patched index.html entry → /src/${actualEntry}`);
+      }
+    }
+  } catch (e) {
+    console.warn("[export] Could not patch index.html:", e.message);
+  }
+}
+
 function zipDirectory(directory, outputFile) {
   return new Promise((resolve, reject) => {
     const output = createWriteStream(outputFile);
@@ -436,6 +493,9 @@ export async function buildSiteZip({ templateRoot, liveTemplateRoot, clientId, c
   // the template's src/data/siteData.ts so components that import those
   // constants render the client's values without needing runtime context wiring.
   await patchSiteDataTs(tempProject, draft.content || {});
+  // Ensure Tailwind content globs cover all file extensions and index.html
+  // entry matches the real main.* file — guards against compiled .js/.jsx output.
+  await patchTailwindAndEntry(tempProject);
 
   const notesBlock = exportPayload.notes.trim()
     ? [
