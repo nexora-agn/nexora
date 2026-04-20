@@ -20,6 +20,10 @@ const templateRootCandidates = [
   path.resolve(process.cwd(), "tmp/construction-template"),
 ];
 
+// Live admin template (src/template) — overlaid so the ZIP renders
+// exactly like the admin preview on Vercel too.
+const liveTemplateRootPath = path.resolve(process.cwd(), "src/template");
+
 async function resolveTemplateRoot() {
   for (const p of templateRootCandidates) {
     try {
@@ -32,6 +36,15 @@ async function resolveTemplateRoot() {
   throw new Error(
     `Template source not found on server. Commit the template-source/ directory so Vercel can bundle it.`,
   );
+}
+
+async function resolveLiveTemplateRoot() {
+  try {
+    await fs.access(liveTemplateRootPath);
+    return liveTemplateRootPath;
+  } catch {
+    return null;
+  }
 }
 
 // Allow preflight + JSON body on Vercel
@@ -70,9 +83,11 @@ export default async function handler(req, res) {
     const client = await verifyClientAccess(userSb, clientId);
     const draft = await loadDraft(clientId, env);
     const templateRoot = await resolveTemplateRoot();
+    const liveTemplateRoot = await resolveLiveTemplateRoot();
 
     const built = await buildSiteZip({
       templateRoot,
+      liveTemplateRoot,
       clientId,
       clientName: client.name,
       draft,

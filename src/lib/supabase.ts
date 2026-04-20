@@ -59,6 +59,7 @@ export type Draft = {
   client_id: string;
   theme: Partial<DraftThemeConfig>;
   content: DraftContent;
+  notes: string | null;
   version: number;
   updated_at: string;
 };

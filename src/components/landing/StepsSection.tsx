@@ -1,6 +1,6 @@
-import { useCallback, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, ChevronDown, ChevronUp, ImageIcon, Palette, FileText, Rocket } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, ImageIcon, Palette, FileText, Plug, Rocket } from "lucide-react";
 
 const steps = [
   {
@@ -29,6 +29,16 @@ const steps = [
   },
   {
     num: "04",
+    icon: Plug,
+    title: "ERP integration",
+    desc: "Once your ERP integration is finalised, your products upload to the site automatically.",
+    detail:
+      "We connect to the construction ERPs you already run—so your catalog, pricing, and stock stay in sync without anyone copy-pasting spreadsheets.",
+    tags: ["Automatic sync", "Product catalog", "Inventory-aware"],
+    erpPreview: true,
+  },
+  {
+    num: "05",
     icon: Rocket,
     title: "Build & launch",
     desc: "We assemble, refine, and publish a responsive site that is ready to go live.",
@@ -41,6 +51,215 @@ const steps = [
     },
   },
 ];
+
+type ERPBrand = {
+  name: string;
+  src: string;
+  color: string;
+  mono: boolean;
+  logoHeight?: number;
+};
+
+const erpBrands: ERPBrand[] = [
+  { name: "Oracle NetSuite", src: "/erp-logos/oracle.svg", color: "#C74634", mono: false, logoHeight: 20 },
+  { name: "SAP", src: "/erp-logos/sap.svg", color: "#0FAAFF", mono: false, logoHeight: 28 },
+  { name: "Microsoft Dynamics 365", src: "/erp-logos/microsoft.svg", color: "#5E5E5E", mono: false, logoHeight: 20 },
+  { name: "Sage", src: "/erp-logos/sage.svg", color: "#00D639", mono: true, logoHeight: 28 },
+  { name: "Trimble Viewpoint", src: "/erp-logos/trimble.svg", color: "#005F9E", mono: true, logoHeight: 28 },
+  { name: "Autodesk", src: "/erp-logos/autodesk.svg", color: "#0696D7", mono: true, logoHeight: 28 },
+  { name: "Odoo", src: "/erp-logos/odoo.svg", color: "#714B67", mono: true, logoHeight: 28 },
+  { name: "QuickBooks", src: "/erp-logos/quickbooks.svg", color: "#2CA01C", mono: true, logoHeight: 28 },
+  { name: "Xero", src: "/erp-logos/xero.svg", color: "#13B5EA", mono: true, logoHeight: 28 },
+];
+
+const ERPLogo = ({
+  brand,
+  height,
+  className = "",
+}: {
+  brand: ERPBrand;
+  height?: number;
+  className?: string;
+}) => {
+  const h = height ?? brand.logoHeight ?? 24;
+  if (brand.mono) {
+    return (
+      <div
+        role="img"
+        aria-label={brand.name}
+        className={className}
+        style={{
+          width: `${h}px`,
+          height: `${h}px`,
+          backgroundColor: brand.color,
+          WebkitMaskImage: `url(${brand.src})`,
+          maskImage: `url(${brand.src})`,
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+        }}
+      />
+    );
+  }
+  return (
+    <img
+      src={brand.src}
+      alt={brand.name}
+      className={className}
+      style={{ height: `${h}px`, width: "auto" }}
+      loading="lazy"
+    />
+  );
+};
+
+const ERPIntegrationPreview = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % erpBrands.length);
+    }, 2200);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const brand = erpBrands[index];
+
+  return (
+    <div
+      className="relative flex flex-col items-stretch gap-3 rounded-[1.4rem] border border-slate-200/70 bg-white/85 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] md:border-l md:border-l-slate-200/80 md:pl-6"
+      aria-hidden
+    >
+      <div className="mb-1 flex items-center justify-between">
+        <div className="h-2 w-20 rounded-full bg-slate-200" />
+        <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+          ERP sync
+        </div>
+      </div>
+
+      <motion.div
+        animate={{ y: [0, -4, 0] }}
+        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
+        className="relative rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-[0_6px_18px_-10px_rgba(15,23,42,0.25)]"
+      >
+        <div className="flex h-10 items-center justify-center overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={brand.name}
+              initial={{ opacity: 0, y: 8, filter: "blur(2px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="flex items-center justify-center"
+            >
+              <ERPLogo brand={brand} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="mt-1.5 h-3 text-center">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={`${brand.name}-label`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-[9px] font-medium uppercase tracking-[0.16em] text-slate-500"
+            >
+              {brand.name}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </motion.div>
+
+      <div className="relative mx-auto h-6 w-[2px] overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom, rgb(148 163 184) 50%, transparent 50%)",
+            backgroundSize: "2px 5px",
+            backgroundRepeat: "repeat-y",
+          }}
+        />
+        <motion.div
+          className="absolute left-0 right-0 h-2 rounded-full bg-cyan-500/80"
+          animate={{ y: [-8, 28] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeIn" }}
+        />
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm">
+        <div className="mb-2 flex items-center gap-1.5">
+          <div className="h-1.5 w-1.5 rounded-full bg-rose-300" />
+          <div className="h-1.5 w-1.5 rounded-full bg-amber-300" />
+          <div className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+          <div className="ml-auto h-1.5 w-16 rounded-full bg-slate-100" />
+        </div>
+        <div className="mb-2 h-2 w-20 rounded-full bg-slate-200" />
+        <div className="grid grid-cols-3 gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="aspect-square rounded-lg bg-gradient-to-br from-slate-100 to-slate-200/70"
+              animate={{ opacity: [0.35, 1, 0.35] }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                delay: i * 0.35,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+        <div className="mt-2 flex items-center gap-1.5">
+          <div className="h-1.5 flex-1 rounded-full bg-slate-100" />
+          <div className="h-1.5 w-6 rounded-full bg-slate-100" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const GenericStepPreview = () => (
+  <motion.div
+    animate={{ opacity: 1, y: -2 }}
+    transition={{ duration: 0.3 }}
+    className="rounded-[1.4rem] border border-slate-200/70 bg-white/85 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] md:border-l md:border-l-slate-200/80 md:pl-6"
+    aria-hidden
+  >
+    <div className="mb-3 flex items-center justify-between">
+      <div className="h-2 w-20 rounded-full bg-slate-200" />
+      <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+        Preview
+      </div>
+    </div>
+    <div className="mb-3 rounded-2xl bg-[rgba(15,23,42,0.06)] p-3">
+      <div className="mb-2 h-2 w-16 rounded-full bg-slate-200" />
+      <div className="mb-2 h-10 rounded-xl bg-[rgba(15,23,42,0.08)]" />
+      <div className="h-2 w-10 rounded-full bg-slate-100" />
+    </div>
+    <div className="mb-2 h-2 w-24 rounded-full bg-slate-200" />
+    <div className="mb-3 h-2 w-16 rounded-full bg-slate-100" />
+    <div className="flex gap-2">
+      <div className="h-8 flex-1 rounded-xl bg-slate-100" />
+      <div className="h-8 w-10 rounded-xl bg-slate-50" />
+    </div>
+  </motion.div>
+);
+
+const ERPLogoChip = ({ brand }: { brand: ERPBrand }) => (
+  <div className="flex h-16 shrink-0 items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/90 px-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] backdrop-blur-sm">
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+      <ERPLogo brand={brand} height={brand.mono ? 24 : 18} />
+    </div>
+    <span className="whitespace-nowrap text-sm font-semibold tracking-tight text-slate-800">
+      {brand.name}
+    </span>
+  </div>
+);
 
 const StepCompletionBanner = ({ title, subtitle }: { title: string; subtitle: string }) => (
   <motion.div
@@ -120,11 +339,11 @@ const StepsSection = () => {
               How it works
             </p>
             <h2 className="mb-5 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
-              Four steps from input to launch
+              Five steps from input to launch
             </h2>
             <p className="max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
-              A single production flow that stays light on your side: you supply brand and content,
-              we handle structure, design, and deployment.
+              A single production flow that stays light on your side: you supply brand, content,
+              and ERP access—we handle structure, design, sync, and deployment.
             </p>
 
             <div className="mt-10 hidden items-start gap-5 lg:flex">
@@ -235,7 +454,7 @@ const StepsSection = () => {
                         </div>
                         <div>
                           <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                            Step {steps[activeIndex].num} of 04
+                            Step {steps[activeIndex].num} of {String(steps.length).padStart(2, "0")}
                           </div>
                           <h3 className="text-xl font-semibold text-foreground">{steps[activeIndex].title}</h3>
                         </div>
@@ -269,30 +488,11 @@ const StepsSection = () => {
                           </div>
                         </div>
 
-                        <motion.div
-                          animate={{ opacity: 1, y: -2 }}
-                          transition={{ duration: 0.3 }}
-                          className="rounded-[1.4rem] border border-slate-200/70 bg-white/85 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] md:border-l md:border-l-slate-200/80 md:pl-6"
-                          aria-hidden
-                        >
-                          <div className="mb-3 flex items-center justify-between">
-                            <div className="h-2 w-20 rounded-full bg-slate-200" />
-                            <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
-                              Preview
-                            </div>
-                          </div>
-                          <div className="mb-3 rounded-2xl bg-[rgba(15,23,42,0.06)] p-3">
-                            <div className="mb-2 h-2 w-16 rounded-full bg-slate-200" />
-                            <div className="mb-2 h-10 rounded-xl bg-[rgba(15,23,42,0.08)]" />
-                            <div className="h-2 w-10 rounded-full bg-slate-100" />
-                          </div>
-                          <div className="mb-2 h-2 w-24 rounded-full bg-slate-200" />
-                          <div className="mb-3 h-2 w-16 rounded-full bg-slate-100" />
-                          <div className="flex gap-2">
-                            <div className="h-8 flex-1 rounded-xl bg-slate-100" />
-                            <div className="h-8 w-10 rounded-xl bg-slate-50" />
-                          </div>
-                        </motion.div>
+                        {steps[activeIndex].erpPreview ? (
+                          <ERPIntegrationPreview />
+                        ) : (
+                          <GenericStepPreview />
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -340,6 +540,40 @@ const StepsSection = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-16 lg:mt-24">
+        <div className="mx-auto mb-6 max-w-6xl px-6 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+            Compatible with leading construction ERPs
+          </p>
+          <h3 className="mt-2 text-lg font-semibold tracking-tight text-foreground md:text-xl">
+            Sync with the tools your operation already runs
+          </h3>
+        </div>
+        <div
+          className="relative overflow-hidden py-2"
+          style={{
+            maskImage:
+              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+          }}
+          aria-hidden
+        >
+          <div
+            className="flex w-max gap-4"
+            style={{ animation: "marquee 38s linear infinite" }}
+          >
+            {[...erpBrands, ...erpBrands].map((brand, i) => (
+              <ERPLogoChip key={`${brand.name}-${i}`} brand={brand} />
+            ))}
+          </div>
+        </div>
+        <p className="mx-auto mt-6 max-w-2xl px-6 text-center text-sm leading-relaxed text-muted-foreground">
+          Don't see yours? We integrate with most construction ERPs, PIMs, and inventory systems—so
+          catalog changes on your side flow straight to the site.
+        </p>
       </div>
     </section>
   );

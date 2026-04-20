@@ -12,6 +12,21 @@ import { createClient } from "@supabase/supabase-js";
 const IGNORED_DIRS = new Set(["node_modules", ".git", "dist", ".vite", ".cursor", ".idea"]);
 const IGNORED_FILES = new Set(["site-builder-export.json", "bun.lockb"]);
 
+// Files we never want to overlay from src/template (admin-only scaffolding).
+const LIVE_TEMPLATE_SKIP_FILES = new Set([
+  "PreviewApp.tsx",
+  "main.tsx",
+  "_tailwind-reference.ts",
+  "template.css",
+  "template-app.css",
+  // The settings gear button should never ship with the client ZIP.
+  "CustomizationPanel.tsx",
+]);
+
+// Directories relative to src/template that we overlay into the exported site.
+// These are the only places that diverge between admin preview and ZIP output.
+const LIVE_TEMPLATE_OVERLAY_DIRS = ["components", "contexts", "data", "pages", "lib"];
+
 export function resolveEnv() {
   return {
     SUPABASE_URL: process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL,
@@ -83,12 +98,98 @@ async function stripCustomizationPanel(tempProject) {
   try {
     const appSource = await fs.readFile(appPath, "utf8");
     const updated = appSource
-      .replace(/import\s+CustomizationPanel\s+from\s+"@\/components\/CustomizationPanel";\n/, "")
-      .replace(/\s*<CustomizationPanel\s*\/>\s*\n/, "\n");
+      .replace(/import\s+CustomizationPanel\s+from\s+"@\/components\/CustomizationPanel";\s*\n/g, "")
+      .replace(/\s*<CustomizationPanel\s*\/>\s*\n?/g, "\n");
     await fs.writeFile(appPath, updated, "utf8");
   } catch (e) {
     console.warn("[export] Could not strip CustomizationPanel:", e.message);
   }
+
+  // Also delete the file itself so the settings panel code never ships.
+  const panelPath = path.join(tempProject, "src/components/CustomizationPanel.tsx");
+  try {
+    await fs.rm(panelPath, { force: true });
+  } catch (e) {
+    console.warn("[export] Could not remove CustomizationPanel.tsx:", e.message);
+  }
+}
+
+/**
+ * Walk `dir` recursively, yielding every file path (absolute).
+ */
+async function* walkFiles(dir) {
+  let entries;
+  try {
+    entries = await fs.readdir(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (IGNORED_DIRS.has(entry.name)) continue;
+      yield* walkFiles(full);
+    } else if (entry.isFile()) {
+      if (IGNORED_FILES.has(entry.name)) continue;
+      yield full;
+    }
+  }
+}
+
+/**
+ * Replace `@template/...` imports with `@/...` so the file works inside the
+ * exported standalone project (where only `@ -> src` is aliased).
+ */
+function rewriteTemplateImports(source) {
+  return source
+    .replace(/(["'])@template\//g, "$1@/")
+    .replace(/(["'])@template(["'])/g, "$1@$2");
+}
+
+/**
+ * Overlay the live admin template (src/template) on top of the scaffold copy
+ * that was just dropped into tempProject. This is how all customizable
+ * components (hero, capabilities, testimonials, company info, etc.) flow
+ * from the preview into the downloaded ZIP.
+ *
+ * Only `components/contexts/data/pages/lib` get overlaid; everything else
+ * (package.json, vite.config.ts, index.html, App.tsx, main.tsx, ui
+ * primitives, hooks, etc.) stays as shipped in template-source.
+ */
+async function overlayLiveTemplate(tempProject, liveTemplateRoot) {
+  if (!liveTemplateRoot) return { overlaid: 0 };
+  try {
+    await fs.access(liveTemplateRoot);
+  } catch {
+    console.warn(`[export] liveTemplateRoot missing, skipping overlay: ${liveTemplateRoot}`);
+    return { overlaid: 0 };
+  }
+
+  let overlaid = 0;
+  for (const subdir of LIVE_TEMPLATE_OVERLAY_DIRS) {
+    const sourceDir = path.join(liveTemplateRoot, subdir);
+    const targetDir = path.join(tempProject, "src", subdir);
+    for await (const srcFile of walkFiles(sourceDir)) {
+      const rel = path.relative(sourceDir, srcFile);
+      const base = path.basename(srcFile);
+      if (LIVE_TEMPLATE_SKIP_FILES.has(base)) continue;
+
+      const destFile = path.join(targetDir, rel);
+      await fs.mkdir(path.dirname(destFile), { recursive: true });
+
+      // Code files get their `@template/` imports rewritten; everything else
+      // (css, svg, etc.) is copied byte-for-byte.
+      if (/\.(ts|tsx|js|jsx|mjs|cjs)$/.test(base)) {
+        const source = await fs.readFile(srcFile, "utf8");
+        await fs.writeFile(destFile, rewriteTemplateImports(source), "utf8");
+      } else {
+        await fs.copyFile(srcFile, destFile);
+      }
+      overlaid += 1;
+    }
+  }
+  console.log(`[export] Overlaid ${overlaid} live template file(s) from src/template`);
+  return { overlaid };
 }
 
 /**
@@ -288,13 +389,17 @@ export function sanitizeFilename(name) {
  * Build a customised site ZIP for a given client draft.
  *
  * @param {object} opts
- * @param {string} opts.templateRoot - absolute path to the construction-template source
+ * @param {string} opts.templateRoot - absolute path to the construction-template scaffold
+ * @param {string} [opts.liveTemplateRoot] - absolute path to the live src/template
+ *   directory used by the admin preview. When provided, its components,
+ *   contexts, data, pages and lib files are overlaid on top of the scaffold
+ *   so the ZIP renders exactly like the preview.
  * @param {string} opts.clientId
  * @param {string} opts.clientName
  * @param {object} opts.draft - { theme, content }
  * @returns {Promise<{ zipPath: string, cleanup: () => Promise<void>, filename: string, exportPayload: object }>}
  */
-export async function buildSiteZip({ templateRoot, clientId, clientName, draft }) {
+export async function buildSiteZip({ templateRoot, liveTemplateRoot, clientId, clientName, draft }) {
   await fs.access(templateRoot); // will throw if missing
 
   const exportPayload = {
@@ -303,6 +408,7 @@ export async function buildSiteZip({ templateRoot, clientId, clientName, draft }
     clientName,
     theme: draft.theme || {},
     content: draft.content || {},
+    notes: typeof draft.notes === "string" ? draft.notes : "",
   };
 
   const tempBase = await fs.mkdtemp(path.join(os.tmpdir(), "webready-export-"));
@@ -310,6 +416,13 @@ export async function buildSiteZip({ templateRoot, clientId, clientName, draft }
   const outputZip = path.join(tempBase, "website.zip");
 
   await copyFiltered(templateRoot, tempProject);
+
+  // Overlay the live admin template so every edit visible in the preview
+  // (hero copy, capabilities, testimonials, company info, etc.) is baked
+  // into the ZIP. Without this, only logo/colors/services/team reach the
+  // downloaded site because the scaffold's old components hardcode strings.
+  await overlayLiveTemplate(tempProject, liveTemplateRoot);
+
   await fs.mkdir(path.join(tempProject, "public"), { recursive: true });
   await fs.writeFile(
     path.join(tempProject, "public/site-builder-export.json"),
@@ -324,6 +437,20 @@ export async function buildSiteZip({ templateRoot, clientId, clientName, draft }
   // constants render the client's values without needing runtime context wiring.
   await patchSiteDataTs(tempProject, draft.content || {});
 
+  const notesBlock = exportPayload.notes.trim()
+    ? [
+        "## Notes from the sales team",
+        "",
+        "The sales agent captured the following notes while working with this client.",
+        "These cover feature requests and details the template editor couldn't capture directly.",
+        "",
+        "```",
+        exportPayload.notes.trim(),
+        "```",
+        "",
+      ]
+    : [];
+
   await fs.writeFile(
     path.join(tempProject, "EXPORT_README.md"),
     [
@@ -335,6 +462,7 @@ export async function buildSiteZip({ templateRoot, clientId, clientName, draft }
       "`public/site-builder-export.json` is loaded automatically on first run.",
       "The editor sidebar has been removed for client delivery.",
       "",
+      ...notesBlock,
       "## Run locally",
       "```bash",
       "npm install",

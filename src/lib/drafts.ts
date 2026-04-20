@@ -5,11 +5,14 @@ import { SITE_CONTENT_DEFAULTS, type SiteContentState } from "@template/contexts
 export interface DraftState {
   theme: ThemeConfig;
   content: SiteContentState;
+  /** Sales-agent notes for the dev team (extra client requests, follow-ups, etc.). */
+  notes: string;
 }
 
 export const DEFAULT_DRAFT_STATE: DraftState = {
   theme: THEME_DEFAULTS,
   content: SITE_CONTENT_DEFAULTS,
+  notes: "",
 };
 
 /** Deep-merge saved content over current defaults so older drafts missing
@@ -52,6 +55,7 @@ export async function getDraft(clientId: string): Promise<DraftState> {
   return {
     theme: { ...THEME_DEFAULTS, ...((row?.theme as Partial<ThemeConfig>) ?? {}) },
     content: mergeContent(row?.content as Partial<SiteContentState> | null),
+    notes: typeof row?.notes === "string" ? row.notes : "",
   };
 }
 
@@ -63,6 +67,7 @@ export async function saveDraft(clientId: string, state: DraftState): Promise<vo
         client_id: clientId,
         theme: state.theme,
         content: state.content,
+        notes: state.notes ?? "",
       },
       { onConflict: "client_id" },
     );

@@ -23,6 +23,10 @@ const TEMPLATE_CANDIDATES = [
   path.resolve(projectRoot, "tmp/construction-template"),
 ];
 
+// Live admin template (src/template) — overlaid on top of template-source so
+// the ZIP renders exactly like the admin preview.
+const LIVE_TEMPLATE_ROOT = path.resolve(projectRoot, "src/template");
+
 async function resolveTemplateRoot() {
   for (const p of TEMPLATE_CANDIDATES) {
     try {
@@ -35,6 +39,15 @@ async function resolveTemplateRoot() {
   throw new Error(
     `Template source not found. Expected one of: ${TEMPLATE_CANDIDATES.join(", ")}`,
   );
+}
+
+async function resolveLiveTemplateRoot() {
+  try {
+    await fs.access(LIVE_TEMPLATE_ROOT);
+    return LIVE_TEMPLATE_ROOT;
+  } catch {
+    return null;
+  }
 }
 
 const port = Number(process.env.SITE_API_PORT || 8787);
@@ -91,9 +104,11 @@ const server = http.createServer(async (req, res) => {
       const client = await verifyClientAccess(userSb, clientId);
       const draft = await loadDraft(clientId, env);
       const templateRoot = await resolveTemplateRoot();
+      const liveTemplateRoot = await resolveLiveTemplateRoot();
 
       const built = await buildSiteZip({
         templateRoot,
+        liveTemplateRoot,
         clientId,
         clientName: client.name,
         draft,

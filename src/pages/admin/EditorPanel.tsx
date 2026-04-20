@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { Plus, RotateCcw, Trash2, Upload } from "lucide-react";
+import { NotebookPen, Plus, RotateCcw, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -99,8 +99,30 @@ const EditorPanel = ({ state, onChange, clientId }: EditorPanelProps) => {
   const setLeadForm = (patch: Partial<DraftState["content"]["leadForm"]>) =>
     setContent({ leadForm: { ...content.leadForm, ...patch } });
 
+  const setNotes = useCallback(
+    (value: string) => onChange(prev => ({ ...prev, notes: value })),
+    [onChange],
+  );
+
   return (
     <div className="p-4 space-y-6">
+      {/* NOTES FOR DEV TEAM */}
+      <section className="space-y-2 rounded-md border border-amber-200 bg-amber-50/60 p-3 dark:border-amber-400/30 dark:bg-amber-500/5">
+        <div className="flex items-center gap-2">
+          <NotebookPen className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+            Notes for dev team
+          </h3>
+        </div>
+        <Textarea
+          rows={5}
+          value={state.notes ?? ""}
+          onChange={e => setNotes(e.target.value)}
+          placeholder="e.g. Client wants a multilingual blog; booking system integration; custom newsletter signup in the footer…"
+          className="bg-background/80 text-sm"
+        />
+      </section>
+
       {/* BRANDING */}
       <section className="space-y-4">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Branding</h3>

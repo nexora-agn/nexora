@@ -58,9 +58,17 @@ create table if not exists public.drafts (
   client_id   uuid not null unique references public.clients(id) on delete cascade,
   theme       jsonb not null default '{}'::jsonb,
   content     jsonb not null default '{}'::jsonb,
+  -- Free-form notes from the sales agent for the dev team (extra features
+  -- a client asked for, edge cases, follow-ups, etc.). Visible on the admin
+  -- panel so devs see it when preparing the final delivery.
+  notes       text  not null default '',
   version     int   not null default 1,
   updated_at  timestamptz not null default now()
 );
+
+-- Safe to re-run on an existing deployment: add the column if it's missing.
+alter table public.drafts
+  add column if not exists notes text not null default '';
 
 -- bump updated_at on row changes
 create or replace function public.touch_updated_at()
