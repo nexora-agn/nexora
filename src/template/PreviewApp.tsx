@@ -38,7 +38,7 @@ const queryClient = new QueryClient();
 
 const RouteLoading = () => (
   <div className="flex items-center justify-center min-h-[45vh]">
-    <div className="h-9 w-9 border-4 border-primary/30 border-t-secondary rounded-full animate-spin" />
+    <div className="h-9 w-9 border-4 border-primary/30 border-t-foreground/40 rounded-full animate-spin" />
   </div>
 );
 
@@ -184,7 +184,11 @@ const PreviewApp = () => {
     );
   }
   if (loading) {
-    return <LoadingScreen />;
+    return (
+      <div className="fixed inset-0 z-[120] bg-background flex items-center justify-center">
+        <div className="h-9 w-9 border-4 border-primary/30 border-t-foreground/40 rounded-full animate-spin" />
+      </div>
+    );
   }
   if (error) {
     return <PreviewMessage title="Preview error" body={error} />;

@@ -551,29 +551,32 @@ const StepsSection = () => {
             Sync with the tools your operation already runs
           </h3>
         </div>
-        <div
-          className="relative overflow-hidden py-2"
-          style={{
-            maskImage:
-              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
-          }}
-          aria-hidden
-        >
+        <div className="mx-auto w-full max-w-6xl px-6">
           <div
-            className="flex w-max gap-4"
-            style={{ animation: "marquee 38s linear infinite" }}
+            className="relative overflow-hidden py-2"
+            style={{
+              maskImage:
+                "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+              WebkitMaskImage:
+                "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+            }}
+            aria-hidden
           >
-            {[...erpBrands, ...erpBrands].map((brand, i) => (
-              <ERPLogoChip key={`${brand.name}-${i}`} brand={brand} />
-            ))}
+            <div
+              className="flex w-max gap-4"
+              style={{ animation: "marquee 38s linear infinite" }}
+            >
+              {[...erpBrands, ...erpBrands].map((brand, i) => (
+                <ERPLogoChip key={`${brand.name}-${i}`} brand={brand} />
+              ))}
+            </div>
           </div>
+
+          <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
+            Don't see yours? We integrate with most construction ERPs, PIMs, and inventory systems—so
+            catalog changes on your side flow straight to the site.
+          </p>
         </div>
-        <p className="mx-auto mt-6 max-w-2xl px-6 text-center text-sm leading-relaxed text-muted-foreground">
-          Don't see yours? We integrate with most construction ERPs, PIMs, and inventory systems—so
-          catalog changes on your side flow straight to the site.
-        </p>
       </div>
     </section>
   );
