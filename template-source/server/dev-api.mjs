@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { handleChatRequest, resolveChatEnv } from "./chat-logic.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,8 +12,7 @@ const projectRoot = path.resolve(__dirname, "..");
 const port = Number(process.env.SITE_API_PORT || 8787);
 const allowOrigin = process.env.SITE_ALLOWED_ORIGIN || "http://localhost:8080";
 
-const flowiseApiUrl = process.env.FLOWISE_API_URL;
-const flowiseApiKey = process.env.FLOWISE_API_KEY;
+const chatEnv = resolveChatEnv();
 
 const ignoredDirs = new Set(["node_modules", ".git", "dist", ".vite", ".cursor", ".idea"]);
 const ignoredFiles = new Set(["site-builder-export.json"]);
@@ -139,24 +139,15 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.url === "/api/chat" && req.method === "POST") {
-    if (!flowiseApiUrl) {
-      sendJson(res, 501, { error: "FLOWISE_API_URL not configured. Use local chat mode." });
-      return;
-    }
     try {
       const body = await parseBody(req);
-      const message = String(body.message || "").trim();
-      const history = Array.isArray(body.history) ? body.history : [];
-      const headers = { "Content-Type": "application/json" };
-      if (flowiseApiKey) headers.Authorization = `Bearer ${flowiseApiKey}`;
-      const flowiseRes = await fetch(flowiseApiUrl, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ question: message, history }),
+      const result = await handleChatRequest({
+        message: body.message,
+        history: body.history,
+        siteData: body.siteData,
+        env: chatEnv,
       });
-      const data = await flowiseRes.json();
-      const reply = typeof data === "string" ? data : data.text || data.answer || "";
-      sendJson(res, 200, { reply });
+      sendJson(res, 200, result);
     } catch (error) {
       sendJson(res, 500, { error: error instanceof Error ? error.message : "Chat request failed" });
     }

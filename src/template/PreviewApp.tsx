@@ -18,6 +18,7 @@ import {
 import { mergeContent } from "@/lib/drafts";
 import ScrollToTop from "@template/components/ScrollToTop";
 import LoadingScreen from "@template/components/layout/LoadingScreen";
+import ChatbotWidget from "@template/components/Chatbot/ChatbotWidget";
 
 import Index from "@template/pages/Index";
 import NotFound from "@template/pages/NotFound";
@@ -103,6 +104,7 @@ const TemplateShell = () => {
       <Suspense fallback={<RouteLoading />}>
         <AnimatedRoutes />
       </Suspense>
+      <ChatbotWidget />
     </HashRouter>
   );
 };
