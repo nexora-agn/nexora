@@ -12,7 +12,7 @@ const sections = [
     title: "Agreement",
     body: (
       <p>
-        These Terms of Service (&quot;Terms&quot;) govern your access to Nexora Solution&apos;s website
+        These Terms of Service (&quot;Terms&quot;) govern your access to Nexora&apos;s website
         and any services we agree to provide in writing. By submitting a request, using our site, or
         engaging us for work, you agree to these Terms.
       </p>
@@ -59,10 +59,10 @@ const sections = [
     title: "Limitation of liability",
     body: (
       <p>
-        To the maximum extent permitted by law, Nexora Solution shall not be liable for any indirect,
+        To the maximum extent permitted by law, Nexora shall not be liable for any indirect,
         incidental, special, consequential, or punitive damages, or for loss of profits, data, or
         goodwill. Our aggregate liability arising out of these Terms or the services shall not
-        exceed the fees paid to Nexora Solution for the services giving rise to the claim during the six
+        exceed the fees paid to Nexora for the services giving rise to the claim during the six
         (6) months preceding the event.
       </p>
     ),
@@ -86,7 +86,7 @@ const Terms = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Terms of service" }]}
         title="Terms of service"
-        description="The terms that apply when you use our website and engage Nexora Solution for services."
+        description="The terms that apply when you use our website and engage Nexora for services."
       />
 
       <article className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">

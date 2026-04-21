@@ -25,7 +25,7 @@ const Footer = () => {
               to="/"
               className="inline-block text-base font-bold tracking-tight text-white transition-opacity hover:opacity-85"
             >
-              Nexora<span className="font-semibold text-neutral-500"> Solution</span>
+              Nexora
             </Link>
             <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-400">
               Serious sites for teams who outgrew DIY—without hiring a full dev shop.
@@ -62,7 +62,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <p className="text-sm text-neutral-500 lg:text-right lg:pt-0.5">© {year} Nexora Solution. All rights reserved.</p>
+          <p className="text-sm text-neutral-500 lg:text-right lg:pt-0.5">© {year} Nexora. All rights reserved.</p>
         </div>
       </div>
     </footer>

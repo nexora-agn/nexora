@@ -61,7 +61,7 @@ const ClientEditor = () => {
   const [viewport, setViewport] = useState<Viewport>("desktop");
 
   useEffect(() => {
-    document.title = client ? `${client.name} — editor — Nexora Solution` : "Client editor — Nexora Solution";
+    document.title = client ? `${client.name} — editor — Nexora` : "Client editor — Nexora";
   }, [client]);
 
   useEffect(() => {

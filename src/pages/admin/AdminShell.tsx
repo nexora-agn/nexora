@@ -19,7 +19,7 @@ export const AdminShell = ({ children, rightSlot }: { children: ReactNode; right
       <header className="border-b bg-card sticky top-0 z-40">
         <div className="flex items-center gap-4 px-4 sm:px-6 h-14">
           <Link to="/admin/clients" className="font-bold tracking-tight text-base">
-            Nexora Solution <span className="text-muted-foreground font-medium">admin</span>
+            Nexora <span className="text-muted-foreground font-medium">admin</span>
           </Link>
 
           <nav className="ml-4 hidden sm:flex items-center gap-1 text-sm">

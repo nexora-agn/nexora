@@ -89,7 +89,7 @@ const Privacy = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Privacy policy" }]}
         title="Privacy policy"
-        description="How we collect, use, and protect personal information when you use Nexora Solution."
+        description="How we collect, use, and protect personal information when you use Nexora."
       />
 
       <article className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">

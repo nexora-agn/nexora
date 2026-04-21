@@ -40,10 +40,10 @@ const Contact = () => {
                   <div>
                     <p className="text-sm font-semibold text-foreground">Email</p>
                     <a
-                      href="mailto:hello@nexorasolution.com"
+                      href="mailto:hello@nexora.com"
                       className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      hello@nexorasolution.com
+                      hello@nexora.com
                     </a>
                   </div>
                 </li>

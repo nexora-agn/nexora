@@ -71,7 +71,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
             className="text-xl font-bold tracking-tight text-neutral-950"
             onClick={() => setOpen(false)}
           >
-            Nexora<span className="font-semibold text-neutral-500"> Solution</span>
+            Nexora
           </Link>
 
           <div className="hidden items-center gap-7 lg:flex">
