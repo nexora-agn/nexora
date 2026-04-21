@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Monitor, RotateCcw, Smartphone, Sparkles, Upload } from "lucide-react";
+import { Check, Monitor, RotateCcw, Smartphone, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -201,6 +201,7 @@ const CustomizationPreview = () => {
     { n: 1, label: "Upload" },
     { n: 2, label: "Brand" },
     { n: 3, label: "Colors" },
+    { n: 4, label: "ERP" },
   ] as const;
 
   return (
@@ -214,53 +215,53 @@ const CustomizationPreview = () => {
           className="mb-10 text-center md:mb-12"
         >
           <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            Live brand preview
+            Try it live
           </p>
           <h2
             id="live-preview-heading"
             className="text-3xl font-bold tracking-tight text-foreground md:text-5xl md:leading-[1.1]"
           >
-            Preview your site before you commit
+            See your brand before you buy in
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-            Upload a logo, set your palette, and switch between desktop and mobile. Everything updates
-            in real time so you can judge alignment, contrast, and readability—no guesswork.
+          <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-relaxed text-muted-foreground md:text-lg">
+            Logo, colours, desktop or mobile—updates instantly. No guesswork.
           </p>
 
-          <div className="mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
+          <div className="mx-auto mt-6 flex max-w-2xl flex-wrap items-center justify-center gap-x-3 gap-y-3 text-sm text-muted-foreground">
             {steps.map((s, i) => (
               <div key={s.n} className="flex items-center gap-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-muted/40 text-xs font-semibold text-foreground">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-xs font-semibold text-neutral-950 shadow-sm">
                   {s.n}
                 </span>
-                <span className="font-medium text-foreground">{s.label}</span>
+                <span className="font-medium text-neutral-950">{s.label}</span>
                 {i < steps.length - 1 ? (
-                  <span className="hidden text-border sm:inline" aria-hidden>
+                  <span className="hidden text-neutral-300 sm:inline" aria-hidden>
                     →
                   </span>
                 ) : null}
               </div>
             ))}
           </div>
+          <p className="mx-auto mt-3 max-w-md text-center text-xs font-medium text-neutral-500">
+            Step 4 = connect your systems after sign-off. Minutes to preview, days to wire data.
+          </p>
         </motion.div>
 
-        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)] lg:gap-10">
+        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)] lg:items-start lg:gap-10">
           {/* Controls */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="glass-panel flex flex-col space-y-6 rounded-[1.75rem] border border-white/60 p-6 lg:p-7"
+            className="glass-panel flex min-h-0 w-full min-w-0 flex-col space-y-6 self-start rounded-[1.75rem] border border-white/60 p-6 lg:p-7"
           >
             <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border/60 pb-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   Controls
                 </p>
-                <p className="mt-1 text-sm leading-snug text-muted-foreground">
-                  Changes apply instantly to the preview on the right.
-                </p>
+                <p className="mt-1 text-sm font-medium text-muted-foreground">Updates the preview live.</p>
               </div>
               <Button
                 type="button"
@@ -277,10 +278,7 @@ const CustomizationPreview = () => {
             {/* Logo Upload */}
             <div>
               <Label className="mb-3 block text-sm font-semibold text-foreground">1. Logo</Label>
-              <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
-                PNG or SVG with transparency usually works best. We auto-suggest colors from your
-                artwork.
-              </p>
+              <p className="mb-3 text-xs font-medium text-muted-foreground">PNG/SVG best. We suggest colours from your file.</p>
               <label className="flex w-full cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-slate-200 bg-white/80 p-6 transition-colors hover:border-slate-400 focus-within:ring-2 focus-within:ring-slate-400/30 focus-within:ring-offset-2">
                 <input
                   ref={fileInputRef}
@@ -318,9 +316,7 @@ const CustomizationPreview = () => {
               <Label htmlFor="brand-name" className="mb-3 block text-sm font-semibold text-foreground">
                 2. Brand name
               </Label>
-              <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
-                Shown in the preview header when no logo is uploaded.
-              </p>
+              <p className="mb-3 text-xs font-medium text-muted-foreground">Shows in the header if there’s no logo yet.</p>
               <input
                 id="brand-name"
                 value={brandName}
@@ -334,11 +330,9 @@ const CustomizationPreview = () => {
             {/* Color Picker */}
             <div>
               <Label className="mb-3 block text-sm font-semibold text-foreground">3. Colours</Label>
-              <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
-                Fine-tune after upload, or set manually. Hex values accept six-digit codes.
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="rounded-xl border border-border bg-white/75 p-3">
+              <p className="mb-3 text-xs font-medium text-muted-foreground">Tweak by hand or after upload (6-digit hex).</p>
+              <div className="grid gap-3 sm:grid-cols-2 sm:items-stretch">
+                <label className="flex min-h-0 flex-col rounded-xl border border-border bg-white/75 p-3">
                   <span className="mb-2 block text-xs font-medium text-muted-foreground">Primary</span>
                   <div className="flex items-center gap-3">
                     <input
@@ -360,7 +354,7 @@ const CustomizationPreview = () => {
                     />
                   </div>
                 </label>
-                <label className="rounded-xl border border-border bg-white/75 p-3">
+                <label className="flex min-h-0 flex-col rounded-xl border border-border bg-white/75 p-3">
                   <span className="mb-2 block text-xs font-medium text-muted-foreground">Secondary</span>
                   <div className="flex items-center gap-3">
                     <input
@@ -383,22 +377,8 @@ const CustomizationPreview = () => {
                   </div>
                 </label>
               </div>
-              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                The mock is mostly neutral.{" "}
-                <span className="font-medium text-foreground/90">Primary</span> shows on the main button (and nav when
-                there is no logo). <span className="font-medium text-foreground/90">Secondary</span> appears on the small
-                label chip—so you see the palette without a rainbow page.
-              </p>
-            </div>
-
-            <div className="mt-auto rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-50/90 to-cyan-50/30 p-4">
-              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Sparkles size={16} className="text-cyan-700" aria-hidden />
-                Real-time preview
-              </div>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                The mock site on the right reflects every change—no refresh required. Use the device toggle to
-                compare layouts.
+              <p className="mt-3 text-xs font-medium text-muted-foreground">
+                <span className="text-foreground/90">Primary</span> = main button. <span className="text-foreground/90">Secondary</span> = small chip.
               </p>
             </div>
           </motion.div>
@@ -408,21 +388,19 @@ const CustomizationPreview = () => {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex w-full flex-col overflow-hidden rounded-[1.75rem] border border-slate-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_22px_48px_-28px_rgba(15,23,42,0.1)]"
+            transition={{ duration: 0.5 }}
+            className="flex min-h-0 w-full min-w-0 flex-col self-start overflow-hidden rounded-[1.75rem] border border-slate-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_22px_48px_-28px_rgba(15,23,42,0.1)]"
           >
             <div className="flex flex-col bg-transparent px-4 py-4 md:px-5 md:py-4">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-semibold text-foreground">Device preview</p>
-                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-800">
+                    <span className="rounded-full border border-brand/35 bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-950">
                       Live
                     </span>
                   </div>
-                  <p className="mt-1 text-xs font-medium text-muted-foreground">
-                    Same content, responsive layout—pick a viewport to compare.
-                  </p>
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">Toggle desktop vs mobile.</p>
                 </div>
                 <div
                   role="tablist"
@@ -516,7 +494,7 @@ const CustomizationPreview = () => {
                         </div>
                       </div>
 
-                      <div className="grid gap-4 px-5 py-5 md:grid-cols-[1.15fr_0.85fr]">
+                      <div className="grid items-start gap-4 px-5 py-5 md:grid-cols-[1.15fr_0.85fr]">
                         <div className="text-left">
                           <div
                             className="mb-3 inline-flex rounded-full px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em]"
@@ -544,19 +522,19 @@ const CustomizationPreview = () => {
                           </div>
                         </div>
 
-                        <div className="relative min-h-[150px] overflow-hidden rounded-[1.1rem] bg-slate-100 p-3 md:min-h-[160px]">
+                        <div className="relative flex min-h-[150px] flex-col overflow-hidden rounded-[1.1rem] bg-slate-100 p-3 md:min-h-[160px]">
                           <motion.div
                             className="absolute right-6 top-6 h-24 w-24 rounded-full bg-slate-300/35 blur-2xl"
                             animate={{ scale: [1, 1.12, 1], opacity: [0.55, 0.95, 0.55] }}
                             transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
                           />
-                          <div className="relative z-10 space-y-3">
+                          <div className="relative z-10 flex flex-1 flex-col justify-start space-y-3">
                             {[0, 1, 2].map((item) => (
                               <motion.div
                                 key={item}
                                 className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm"
-                                animate={{ y: [0, item % 2 === 0 ? -4 : 4, 0] }}
-                                transition={{ repeat: Infinity, duration: 4 + item, ease: "easeInOut" }}
+                                animate={{ y: [0, -3, 0] }}
+                                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                               >
                                 <div className="mb-2 h-2 w-20 rounded-full bg-slate-200" />
                                 <div className="mb-2 h-2 w-28 rounded-full bg-slate-200" />
@@ -567,16 +545,16 @@ const CustomizationPreview = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-2 px-5 pb-5">
+                      <div className="grid grid-cols-3 gap-2 px-5 pb-5 md:items-stretch">
                         {["Fast launch", "Modern design", "Built for mobile"].map((item, n) => (
                           <motion.div
                             key={item}
-                            className="rounded-xl border border-slate-200/80 bg-slate-50 p-4"
-                            animate={{ y: [0, n % 2 === 0 ? -6 : 6, 0] }}
-                            transition={{ repeat: Infinity, duration: 4 + n, ease: "easeInOut" }}
+                            className="flex h-full min-h-[5.5rem] flex-col rounded-xl border border-slate-200/80 bg-slate-50 p-4"
+                            animate={{ opacity: [0.88, 1, 0.88] }}
+                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: n * 0.2 }}
                           >
-                            <div className="mb-3 h-8 w-8 rounded-lg bg-slate-200/90" />
-                            <div className="text-xs font-medium text-slate-700">{item}</div>
+                            <div className="mb-3 h-8 w-8 shrink-0 rounded-lg bg-slate-200/90" />
+                            <div className="mt-auto text-xs font-medium leading-snug text-slate-700">{item}</div>
                           </motion.div>
                         ))}
                       </div>

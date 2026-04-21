@@ -7,9 +7,9 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-slate-800/80 bg-slate-950">
+    <footer className="relative overflow-hidden border-t border-neutral-800 bg-neutral-950">
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_50%_120%,rgba(14,116,144,0.12),transparent_50%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_50%_120%,rgba(148,163,184,0.1),transparent_50%)]"
         aria-hidden
       />
       <div
@@ -25,23 +25,20 @@ const Footer = () => {
               to="/"
               className="inline-block text-base font-bold tracking-tight text-white transition-opacity hover:opacity-85"
             >
-              webready<span className="text-slate-500">.</span>
+              Nexora<span className="font-semibold text-neutral-500"> Solution</span>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-slate-400">
-              Structured website delivery—clear scope, responsive build, and a launch-ready handoff
-              without your team owning engineering.
+            <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-400">
+              Serious sites for teams who outgrew DIY—without hiring a full dev shop.
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-              Legal &amp; contact
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Legal &amp; contact</p>
             <ul className="mt-4 space-y-2.5">
               <li>
                 <Link
                   to="/privacy"
-                  className="text-sm text-slate-300 transition-colors hover:text-white"
+                  className="text-sm text-neutral-300 transition-colors hover:text-white"
                 >
                   Privacy policy
                 </Link>
@@ -49,7 +46,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/terms"
-                  className="text-sm text-slate-300 transition-colors hover:text-white"
+                  className="text-sm text-neutral-300 transition-colors hover:text-white"
                 >
                   Terms of service
                 </Link>
@@ -57,7 +54,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/contact"
-                  className="text-sm text-slate-300 transition-colors hover:text-white"
+                  className="text-sm text-neutral-300 transition-colors hover:text-white"
                 >
                   Contact
                 </Link>
@@ -65,7 +62,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <p className="text-sm text-slate-500 lg:text-right lg:pt-0.5">© {year} webready. All rights reserved.</p>
+          <p className="text-sm text-neutral-500 lg:text-right lg:pt-0.5">© {year} Nexora Solution. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -4,9 +4,12 @@ import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import TrustSection from "@/components/landing/TrustSection";
 import StepsSection from "@/components/landing/StepsSection";
+import ErpIntegrationSection from "@/components/landing/ErpIntegrationSection";
 import CustomizationPreview from "@/components/landing/CustomizationPreview";
+import AiLandingSection from "@/components/landing/AiLandingSection";
+import ProjectsShowcase from "@/components/landing/ProjectsShowcase";
 import WhatYouGet from "@/components/landing/WhatYouGet";
-import BenefitsSection from "@/components/landing/BenefitsSection";
+import PricingSection from "@/components/landing/PricingSection";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
 import RequestDemoModal from "@/components/landing/RequestDemoModal";
@@ -33,38 +36,35 @@ const Index = () => {
     <div className="relative min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div
-          className="absolute left-[-10%] top-20 h-80 w-80 rounded-full bg-violet-400/[0.22] blur-3xl"
-          style={{ animation: "float 10s ease-in-out infinite" }}
+          className="absolute left-[-12%] top-24 h-72 w-72 rounded-full bg-slate-300/20 blur-3xl"
+          style={{ animation: "float 11s ease-in-out infinite" }}
         />
         <div
-          className="absolute right-[-8%] top-[22rem] h-[22rem] w-[22rem] rounded-full bg-cyan-400/[0.2] blur-3xl"
-          style={{ animation: "float 12s ease-in-out infinite" }}
+          className="absolute right-[-10%] top-[22rem] h-[20rem] w-[20rem] rounded-full bg-neutral-900/[0.05] blur-3xl"
+          style={{ animation: "float 13s ease-in-out infinite" }}
         />
         <div
-          className="absolute bottom-[-5%] left-[15%] h-96 w-96 rounded-full bg-slate-400/[0.14] blur-3xl"
-          style={{ animation: "float 14s ease-in-out infinite reverse" }}
+          className="absolute bottom-[-8%] left-[18%] h-80 w-80 rounded-full bg-slate-200/30 blur-3xl"
+          style={{ animation: "float 15s ease-in-out infinite reverse" }}
         />
-        <div
-          className="absolute right-[5%] top-[45%] h-64 w-64 rounded-full bg-blue-400/[0.1] blur-3xl"
-        />
-        <div
-          className="absolute inset-x-0 top-0 h-[38rem] animated-grid opacity-[0.55]"
-          style={{ animation: "pulseGlow 7s ease-in-out infinite" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-200/[0.07] via-transparent to-slate-300/[0.12]" />
+        <div className="absolute inset-x-0 top-0 h-[36rem] animated-grid opacity-[0.35]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-neutral-950/[0.02]" />
       </div>
 
       <div className="relative">
-      <Navbar onRequestDemo={() => setDemoOpen(true)} />
-      <Hero onRequestDemo={() => setDemoOpen(true)} />
-      <TrustSection />
-      <StepsSection />
-      <CustomizationPreview />
-      <WhatYouGet />
-      <BenefitsSection />
-      <FinalCTA onRequestDemo={() => setDemoOpen(true)} />
-      <Footer />
-      <RequestDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
+        <Navbar onRequestDemo={() => setDemoOpen(true)} />
+        <Hero onRequestDemo={() => setDemoOpen(true)} />
+        <TrustSection />
+        <StepsSection />
+        <ErpIntegrationSection />
+        <CustomizationPreview />
+        <AiLandingSection />
+        <ProjectsShowcase />
+        <WhatYouGet />
+        <PricingSection onRequestDemo={() => setDemoOpen(true)} />
+        <FinalCTA onRequestDemo={() => setDemoOpen(true)} />
+        <Footer />
+        <RequestDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
       </div>
     </div>
   );

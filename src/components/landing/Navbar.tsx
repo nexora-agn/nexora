@@ -5,8 +5,11 @@ import { Menu, X } from "lucide-react";
 
 const sectionLinks = [
   { id: "how-it-works", label: "How it works" },
-  { id: "what-you-get", label: "What you get" },
-  { id: "benefits", label: "Benefits" },
+  { id: "erp-sync", label: "ERP" },
+  { id: "ai", label: "AI" },
+  { id: "projects", label: "Work" },
+  { id: "pricing", label: "Pricing" },
+  { id: "what-you-get", label: "Platform" },
 ] as const;
 
 interface NavbarProps {
@@ -48,40 +51,43 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
           {label}
         </a>
       ))}
+      <Link to="/blog" onClick={() => setOpen(false)} className={className}>
+        Blog
+      </Link>
       <Link to="/contact" onClick={() => setOpen(false)} className={className}>
         Contact
       </Link>
     </>
   );
 
-  const linkClass = "text-sm text-muted-foreground transition-colors hover:text-foreground";
+  const linkClass = "text-sm text-neutral-600 transition-colors hover:text-neutral-950";
 
   return (
     <nav className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-4">
-      <div className="mx-auto w-full max-w-6xl rounded-2xl border border-white/45 bg-background/75 shadow-[0_18px_40px_-24px_rgba(15,23,42,0.35)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+      <div className="mx-auto w-full max-w-6xl rounded-2xl border border-neutral-200/80 bg-white/80 shadow-[0_18px_40px_-28px_rgba(10,10,10,0.2)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
         <div className="flex h-16 w-full items-center justify-between px-5 md:px-6">
           <Link
             to="/"
-            className="text-xl font-bold tracking-tight text-foreground"
+            className="text-xl font-bold tracking-tight text-neutral-950"
             onClick={() => setOpen(false)}
           >
-            webready<span className="text-muted-foreground">.</span>
+            Nexora<span className="font-semibold text-neutral-500"> Solution</span>
           </Link>
 
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-7 lg:flex">
             <NavLinks className={linkClass} />
             <Button
               size="sm"
-              className="rounded-full border border-slate-800/80 bg-slate-950 px-6 font-semibold text-white shadow-sm hover:bg-slate-900 hover:text-white"
+              className="rounded-xl border-0 bg-brand px-6 font-semibold text-brand-foreground shadow-sm hover:bg-brand-muted"
               onClick={onRequestDemo}
             >
-              Get started
+              Book a Demo
             </Button>
           </div>
 
           <button
             type="button"
-            className="rounded-xl border border-transparent p-2 text-foreground transition-colors hover:bg-white/70 md:hidden"
+            className="rounded-xl border border-transparent p-2 text-neutral-950 transition-colors hover:bg-neutral-100 lg:hidden"
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen(!open)}
@@ -91,17 +97,17 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
         </div>
 
         {open ? (
-          <div className="mx-3 mb-3 flex flex-col gap-1 rounded-xl border border-white/55 bg-white/75 p-3 shadow-[0_10px_30px_-20px_rgba(15,23,42,0.35)] backdrop-blur-xl md:hidden">
-            <NavLinks className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-white hover:text-foreground" />
+          <div className="mx-3 mb-3 flex flex-col gap-1 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg lg:hidden">
+            <NavLinks className="rounded-lg px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-950" />
             <Button
               size="sm"
-              className="mt-2 w-full rounded-full border border-slate-800/80 bg-slate-950 font-semibold text-white hover:bg-slate-900 hover:text-white"
+              className="mt-2 w-full rounded-xl border-0 bg-brand font-semibold text-brand-foreground hover:bg-brand-muted"
               onClick={() => {
                 setOpen(false);
                 onRequestDemo?.();
               }}
             >
-              Get started
+              Book a Demo
             </Button>
           </div>
         ) : null}

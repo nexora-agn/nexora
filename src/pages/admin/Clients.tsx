@@ -31,7 +31,7 @@ const AdminClients = () => {
   const [editing, setEditing] = useState<Client | null>(null);
 
   useEffect(() => {
-    document.title = "Clients — Webready admin";
+    document.title = "Clients — Nexora Solution admin";
   }, []);
 
   const reload = async () => {

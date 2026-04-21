@@ -8,17 +8,17 @@ interface FinalCTAProps {
 
 const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
   return (
-    <section id="cta" className="relative py-24 md:py-32">
+    <section id="cta" className="relative scroll-mt-28 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-950 shadow-[0_32px_64px_-24px_rgba(15,23,42,0.55)] md:rounded-[2rem]"
+          className="relative overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-950 shadow-[0_32px_64px_-24px_rgba(10,10,10,0.45)] md:rounded-[2rem]"
         >
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_50%_-30%,rgba(14,116,144,0.22),transparent_55%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_-25%,rgba(148,163,184,0.12),transparent_55%)]"
             aria-hidden
           />
           <div
@@ -29,46 +29,43 @@ const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
             aria-hidden
           />
 
-          <div className="relative grid gap-12 px-8 py-14 md:grid-cols-[1.15fr_0.85fr] md:items-center md:gap-16 md:px-14 md:py-16 lg:gap-20">
-            <div className="border-l-2 border-cyan-500/40 pl-6 md:pl-8">
-              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
-                Next step
-              </p>
+          <div className="relative grid gap-10 px-8 py-14 md:grid-cols-[1.15fr_0.85fr] md:items-center md:gap-16 md:px-14 md:py-16 lg:gap-20">
+            <div className="border-l-[3px] border-brand pl-6 md:pl-8">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-neutral-500">Next step</p>
               <h2 className="mb-5 text-3xl font-bold tracking-tight text-white md:text-4xl md:leading-[1.15] lg:text-[2.5rem]">
-                Ready to turn your brand into a live site
+                Live in days—not months
               </h2>
-              <p className="max-w-xl text-base leading-relaxed text-slate-400 md:text-[1.0625rem]">
-                Share your positioning, assets, and goals—we map them into a structured build with
-                clear milestones. You review; we execute. No engineering queue on your side.
+              <p className="max-w-md text-base font-medium leading-relaxed text-neutral-400 md:text-[1.0625rem]">
+                15-minute walkthrough. See preview, timeline, and launch. No fluff.
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center md:flex-col md:items-stretch lg:flex-row lg:items-center lg:justify-end">
               <Button
                 size="lg"
-                className="h-12 rounded-xl border-0 bg-white px-8 text-base font-semibold text-slate-950 shadow-none hover:bg-slate-100"
+                className="h-12 rounded-xl border-0 bg-brand px-8 text-base font-semibold text-brand-foreground shadow-none hover:bg-brand-muted"
                 onClick={onRequestDemo}
               >
-                Get started
+                Book a Demo
                 <ArrowRight className="h-4 w-4" strokeWidth={2} />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="h-12 rounded-xl border-slate-600/90 bg-transparent px-8 text-base font-medium text-slate-200 hover:bg-white/5 hover:text-white"
+                className="h-12 rounded-xl border-neutral-600/90 bg-transparent px-8 text-base font-medium text-neutral-200 hover:bg-white/5 hover:text-white"
                 asChild
               >
                 <a
-                  href="#how-it-works"
+                  href="#live-preview"
                   onClick={(e) => {
                     e.preventDefault();
-                    const el = document.getElementById("how-it-works");
+                    const el = document.getElementById("live-preview");
                     if (!el) return;
                     const top = el.getBoundingClientRect().top + window.scrollY - 96;
                     window.scrollTo({ top, behavior: "smooth" });
                   }}
                 >
-                  View the process
+                  Preview Your Site
                 </a>
               </Button>
             </div>

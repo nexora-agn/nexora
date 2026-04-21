@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
 import Contact from "./pages/Contact.tsx";
+import Blog from "./pages/Blog.tsx";
+import BlogArticle from "./pages/BlogArticle.tsx";
 
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
 const AdminClients = lazy(() => import("./pages/admin/Clients"));
@@ -56,6 +58,8 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogArticle />} />
 
               <Route path="/admin" element={<Navigate to="/admin/clients" replace />} />
               <Route path="/admin/login" element={<AdminLogin />} />

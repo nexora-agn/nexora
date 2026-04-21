@@ -5,13 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const benefits = [
-  "Get a fully custom website in 48 hours",
-  "No coding or technical skills required",
-  "Dedicated team handles everything",
-  "Ongoing support after launch",
+  "Custom site + preview before you commit",
+  "We ship—you don’t manage devs",
+  "Ongoing support on your plan",
 ];
-
-const logos = ["Acme Corp", "Globex", "Initech", "Umbrella", "Stark Inc"];
 
 interface RequestDemoModalProps {
   open: boolean;
@@ -57,49 +54,30 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
             {/* Left side — Benefits */}
             <div className="p-8 md:p-10 flex flex-col justify-center">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight mb-6">
-                Let us build
+                Book a demo
                 <br />
-                your website.
+                <span className="text-neutral-600">See it in 15 minutes.</span>
               </h2>
 
               <div className="space-y-3 mb-8">
                 {benefits.map((b) => (
                   <div key={b} className="flex items-start gap-2.5">
-                    <CheckCircle2 size={18} className="text-foreground mt-0.5 shrink-0" />
+                    <CheckCircle2 size={18} className="text-neutral-950 mt-0.5 shrink-0" />
                     <span className="text-sm text-muted-foreground">{b}</span>
                   </div>
                 ))}
               </div>
 
-              <div>
-                <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-4">
-                  Don't just take our word for it
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  {logos.map((name) => (
-                    <span
-                      key={name}
-                      className="text-sm font-semibold text-muted-foreground/30 select-none"
-                    >
-                      {name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-4 mt-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-foreground">500+</span>
-                  <span className="text-xs text-muted-foreground">Sites launched</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-foreground">48h</span>
-                  <span className="text-xs text-muted-foreground">Avg delivery</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-foreground">99%</span>
-                  <span className="text-xs text-muted-foreground">Satisfaction</span>
-                </div>
+              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-3">Typical verticals</p>
+              <div className="flex flex-wrap gap-2">
+                {["Construction", "Real estate", "Field services", "Distribution"].map((name) => (
+                  <span
+                    key={name}
+                    className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground"
+                  >
+                    {name}
+                  </span>
+                ))}
               </div>
             </div>
 
@@ -160,8 +138,11 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                     </span>
                   </label>
 
-                  <Button type="submit" className="w-full h-12 rounded-xl text-base">
-                    Submit
+                  <Button
+                    type="submit"
+                    className="h-12 w-full rounded-xl border-0 bg-brand text-base font-semibold text-brand-foreground hover:bg-brand-muted"
+                  >
+                    Request demo
                   </Button>
                 </form>
               )}

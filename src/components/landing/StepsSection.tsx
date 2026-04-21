@@ -1,53 +1,43 @@
 import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, ChevronDown, ChevronUp, ImageIcon, Palette, FileText, Plug, Rocket } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, Palette, FileText, Plug, Rocket } from "lucide-react";
 
 const steps = [
   {
     num: "01",
-    icon: ImageIcon,
-    title: "Your logo",
-    desc: "Upload your logo so the site reflects your brand from the first pixel.",
-    detail: "We anchor the experience on your visual identity before layering layout and content.",
-    tags: ["Brand anchor", "Header & favicon", "Consistent placement"],
+    icon: Palette,
+    title: "Logo & colors",
+    desc: "Upload your logo and pick a palette—we apply it everywhere.",
+    detail: "Header, favicon, surfaces, and type stay one cohesive system with readable contrast.",
+    tags: ["Brand-first", "One palette"],
   },
   {
     num: "02",
-    icon: Palette,
-    title: "Your colors",
-    desc: "Pick a palette and we apply it across the interface in one coherent system.",
-    detail: "Typography, surfaces, and accents stay aligned so nothing feels patched together.",
-    tags: ["Color system", "UI surfaces", "Readable contrast"],
+    icon: FileText,
+    title: "Your content",
+    desc: "Tell us what you do—we shape the story.",
+    detail: "Clear sections, proof, and CTAs that convert.",
+    tags: ["Messaging", "Conversion"],
   },
   {
     num: "03",
-    icon: FileText,
-    title: "Your content",
-    desc: "Share what you do—we shape it into clear sections and a confident narrative.",
-    detail: "Messaging, proof points, and calls to action are structured for clarity and trust.",
-    tags: ["Positioning", "Structure", "Conversion flow"],
-  },
-  {
-    num: "04",
     icon: Plug,
     title: "ERP integration",
-    desc: "Once your ERP integration is finalised, your products upload to the site automatically.",
-    detail:
-      "We connect to the construction ERPs you already run—so your catalog, pricing, and stock stay in sync without anyone copy-pasting spreadsheets.",
-    tags: ["Automatic sync", "Product catalog", "Inventory-aware"],
+    desc: "Products flow to the site automatically.",
+    detail: "Connect the systems you already run—catalog, pricing, stock stay aligned.",
+    tags: ["Auto sync", "Live catalog"],
     erpPreview: true,
   },
   {
-    num: "05",
+    num: "04",
     icon: Rocket,
     title: "Build & launch",
-    desc: "We assemble, refine, and publish a responsive site that is ready to go live.",
-    detail: "You get a polished build with a straightforward path from review to launch.",
-    tags: ["Responsive build", "Review & polish", "Ready to publish"],
+    desc: "We polish, you approve, you go live.",
+    detail: "Responsive build, review rounds, then publish—on your timeline.",
+    tags: ["Responsive", "Review & launch"],
     completion: {
-      title: "You're all set",
-      subtitle:
-        "Your website is built, refined, and ready to publish. We hand off a complete, responsive site you can take live on your timeline.",
+      title: "Ready to go live",
+      subtitle: "Full site in hand. Flip the switch when you’re ready—no loose ends.",
     },
   },
 ];
@@ -185,7 +175,7 @@ const ERPIntegrationPreview = () => {
           }}
         />
         <motion.div
-          className="absolute left-0 right-0 h-2 rounded-full bg-cyan-500/80"
+          className="absolute left-0 right-0 h-2 rounded-full bg-brand"
           animate={{ y: [-8, 28] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeIn" }}
         />
@@ -194,8 +184,8 @@ const ERPIntegrationPreview = () => {
       <div className="rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm">
         <div className="mb-2 flex items-center gap-1.5">
           <div className="h-1.5 w-1.5 rounded-full bg-rose-300" />
-          <div className="h-1.5 w-1.5 rounded-full bg-amber-300" />
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+          <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+          <div className="h-1.5 w-1.5 rounded-full bg-slate-300" />
           <div className="ml-auto h-1.5 w-16 rounded-full bg-slate-100" />
         </div>
         <div className="mb-2 h-2 w-20 rounded-full bg-slate-200" />
@@ -266,10 +256,10 @@ const StepCompletionBanner = ({ title, subtitle }: { title: string; subtitle: st
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-    className="mb-6 flex gap-4 rounded-2xl border border-emerald-200/45 bg-gradient-to-br from-emerald-50/90 via-white/80 to-slate-50/70 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] ring-1 ring-emerald-100/60"
+    className="mb-6 flex gap-4 rounded-2xl border border-neutral-200 border-l-4 border-l-brand bg-neutral-50/90 p-4 shadow-sm"
   >
     <div
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-600/[0.09] text-emerald-700"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-neutral-900 text-brand"
       aria-hidden
     >
       <CheckCircle2 className="h-5 w-5" strokeWidth={2} />
@@ -339,17 +329,16 @@ const StepsSection = () => {
               How it works
             </p>
             <h2 className="mb-5 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
-              Five steps from input to launch
+              Four steps. One clear path.
             </h2>
-            <p className="max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
-              A single production flow that stays light on your side: you supply brand, content,
-              and ERP access—we handle structure, design, sync, and deployment.
+            <p className="max-w-md text-base font-medium leading-relaxed text-muted-foreground md:text-lg">
+              You bring brand and content. We build, connect, and ship.
             </p>
 
             <div className="mt-10 hidden items-start gap-5 lg:flex">
               <div className="relative h-44 w-[3px] overflow-hidden rounded-full bg-slate-200/55 shadow-[inset_0_1px_2px_rgba(15,23,42,0.06)]">
                 <motion.div
-                  className="absolute inset-x-0 top-0 rounded-full bg-gradient-to-b from-slate-900 via-slate-600 to-cyan-700 shadow-[0_0_0_1px_rgba(255,255,255,0.5),0_2px_10px_-2px_rgba(14,116,144,0.3)]"
+                  className="absolute inset-x-0 top-0 rounded-full bg-gradient-to-b from-neutral-950 via-neutral-700 to-slate-600 shadow-[0_0_0_1px_rgba(255,255,255,0.5),0_2px_10px_-2px_rgba(15,23,42,0.15)]"
                   animate={{ height: progressHeight }}
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 />
@@ -418,7 +407,7 @@ const StepsSection = () => {
                 aria-hidden
               />
               <motion.div
-                className="pointer-events-none absolute left-5 top-0 w-[3px] -translate-x-px rounded-full bg-gradient-to-b from-slate-900 via-slate-600 to-cyan-700 shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_2px_12px_-2px_rgba(14,116,144,0.35)]"
+                className="pointer-events-none absolute left-5 top-0 w-[3px] -translate-x-px rounded-full bg-gradient-to-b from-neutral-950 via-neutral-700 to-slate-600 shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_2px_12px_-2px_rgba(15,23,42,0.2)]"
                 animate={{ height: progressHeight }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               />
@@ -439,14 +428,14 @@ const StepsSection = () => {
                     <div className="absolute left-[-31px] top-10 h-4 w-4 -translate-x-1/2 rounded-full border-4 border-slate-100 bg-slate-900 shadow-[0_0_0_8px_rgba(255,255,255,0.8)]" />
 
                     <div className="glass-panel group relative overflow-hidden rounded-[1.9rem] p-8">
-                      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-slate-900 via-slate-700 to-cyan-800" />
-                      <div className="absolute -right-10 top-10 h-28 w-28 rounded-full bg-cyan-100/70 blur-2xl transition-all duration-500" />
+                      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-neutral-950 via-neutral-700 to-slate-600" />
+                      <div className="absolute -right-10 top-10 h-28 w-28 rounded-full bg-slate-200/40 blur-2xl transition-all duration-500" />
                       <span className="absolute right-6 top-4 text-5xl font-bold tracking-tight text-slate-300/35">
                         {steps[activeIndex].num}
                       </span>
 
                       <div className="mb-6 flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-cyan-800 text-white shadow-lg shadow-slate-900/15">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-neutral-950 to-neutral-800 text-white shadow-lg shadow-neutral-950/20">
                           {(() => {
                             const Icon = steps[activeIndex].icon;
                             return <Icon size={20} aria-hidden />;
@@ -504,12 +493,12 @@ const StepsSection = () => {
               {steps.map((step) => (
                 <div key={step.num}>
                   <div className="glass-panel relative overflow-hidden rounded-[1.9rem] p-8">
-                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-slate-900 via-slate-700 to-cyan-800" />
+                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-neutral-950 via-neutral-700 to-slate-600" />
                     <span className="absolute right-6 top-4 text-5xl font-bold text-slate-300/35">
                       {step.num}
                     </span>
                     <div className="mb-5 flex items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-cyan-800 text-white shadow-lg shadow-slate-900/15">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-neutral-950 to-neutral-800 text-white shadow-lg shadow-neutral-950/20">
                         <step.icon size={20} aria-hidden />
                       </div>
                       <div>
@@ -545,10 +534,10 @@ const StepsSection = () => {
       <div className="mt-16 lg:mt-24">
         <div className="mx-auto mb-6 max-w-6xl px-6 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-            Compatible with leading construction ERPs
+            Plays nice with
           </p>
           <h3 className="mt-2 text-lg font-semibold tracking-tight text-foreground md:text-xl">
-            Sync with the tools your operation already runs
+            The tools you already use
           </h3>
         </div>
         <div className="mx-auto w-full max-w-6xl px-6">
@@ -572,9 +561,8 @@ const StepsSection = () => {
             </div>
           </div>
 
-          <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
-            Don't see yours? We integrate with most construction ERPs, PIMs, and inventory systems—so
-            catalog changes on your side flow straight to the site.
+          <p className="mx-auto mt-6 max-w-lg text-center text-sm font-medium text-muted-foreground">
+            Don’t see yours? Ask—we connect most major systems.
           </p>
         </div>
       </div>

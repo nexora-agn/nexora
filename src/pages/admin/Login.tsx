@@ -18,7 +18,7 @@ const AdminLogin = () => {
   const redirectTo = (location.state as { from?: string } | null)?.from ?? "/admin/clients";
 
   useEffect(() => {
-    document.title = "Admin login — Webready";
+    document.title = "Admin login — Nexora Solution";
   }, []);
 
   if (!loading && session) {
@@ -43,7 +43,7 @@ const AdminLogin = () => {
       <div className="w-full max-w-sm bg-card border rounded-xl shadow-sm p-6 space-y-6">
         <div className="space-y-1 text-center">
           <Link to="/" className="inline-block font-bold text-xl tracking-tight">
-            Webready
+            Nexora Solution
           </Link>
           <h1 className="text-lg font-semibold">Sales team sign in</h1>
           <p className="text-sm text-muted-foreground">

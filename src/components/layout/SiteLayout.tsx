@@ -13,9 +13,9 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
   return (
     <div className="relative min-h-screen bg-background">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <div className="absolute left-[-12%] top-0 h-80 w-80 rounded-full bg-violet-400/[0.16] blur-3xl" />
-        <div className="absolute right-[-10%] top-40 h-72 w-72 rounded-full bg-cyan-400/[0.14] blur-3xl" />
-        <div className="absolute bottom-0 left-[10%] h-72 w-72 rounded-full bg-slate-400/[0.12] blur-3xl" />
+        <div className="absolute left-[-12%] top-0 h-80 w-80 rounded-full bg-slate-300/20 blur-3xl" />
+        <div className="absolute right-[-10%] top-40 h-72 w-72 rounded-full bg-neutral-900/[0.06] blur-3xl" />
+        <div className="absolute bottom-0 left-[10%] h-72 w-72 rounded-full bg-slate-200/25 blur-3xl" />
         <div className="absolute inset-x-0 top-0 h-[min(42rem,55vh)] opacity-50">
           <div
             className="mx-auto h-full w-full max-w-6xl bg-[linear-gradient(to_right,rgba(100,116,139,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(100,116,139,0.07)_1px,transparent_1px)]"
