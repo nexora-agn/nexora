@@ -88,6 +88,12 @@
     @apply border-border;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     @apply text-foreground font-sans antialiased;
     background-color: hsl(var(--background));

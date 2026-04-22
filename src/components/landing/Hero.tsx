@@ -67,7 +67,8 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
             </Link>
             <span className="text-neutral-500">
               {" "}
-              — a short guided flow for a new site or migration. We follow up fast.
+              — a short guided flow for a new site or migration.<br />
+              We follow up fast.
             </span>
           </p>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">
