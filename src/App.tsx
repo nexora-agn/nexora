@@ -13,10 +13,12 @@ import Terms from "./pages/Terms.tsx";
 import Contact from "./pages/Contact.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogArticle from "./pages/BlogArticle.tsx";
+import StartProject from "./pages/StartProject.tsx";
 
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
 const AdminClients = lazy(() => import("./pages/admin/Clients"));
 const AdminClientEditor = lazy(() => import("./pages/admin/ClientEditor"));
+const AdminProjectRequests = lazy(() => import("./pages/admin/ProjectRequests"));
 
 const queryClient = new QueryClient();
 
@@ -58,6 +60,7 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/start" element={<StartProject />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogArticle />} />
 
@@ -76,6 +79,14 @@ const App = () => (
                 element={
                   <RequireAuth>
                     <AdminClientEditor />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/admin/requests"
+                element={
+                  <RequireAuth>
+                    <AdminProjectRequests />
                   </RequireAuth>
                 }
               />

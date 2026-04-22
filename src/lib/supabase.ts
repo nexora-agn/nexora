@@ -17,6 +17,26 @@ export const supabase: SupabaseClient = createClient(
   },
 );
 
+/** No persisted session — requests use the anon key only. Avoids 401s when a stale staff JWT is in localStorage. */
+const publicAuthStorage = {
+  getItem: (_key: string) => null as string | null,
+  setItem: (_key: string, _value: string) => {},
+  removeItem: (_key: string) => {},
+};
+
+export const supabasePublic: SupabaseClient = createClient(
+  supabaseUrl ?? "https://missing-supabase-url.supabase.co",
+  supabaseAnonKey ?? "missing-anon-key",
+  {
+    auth: {
+      storage: publicAuthStorage,
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  },
+);
+
 export type Profile = {
   id: string;
   full_name: string | null;
@@ -61,5 +81,42 @@ export type Draft = {
   content: DraftContent;
   notes: string | null;
   version: number;
+  updated_at: string;
+};
+
+export type ProjectRequestType = "new_website" | "migrate";
+
+export type ProjectRequestStatus = "new" | "in_progress" | "completed";
+
+export type NewWebsiteRequestPayload = {
+  contact_email: string;
+  business_name: string;
+  industry: string;
+  erp_integration: boolean;
+  ai_chatbot: boolean;
+  preferred_features: string[];
+  additional_notes: string;
+};
+
+export type MigrateRequestPayload = {
+  contact_email: string;
+  website_url: string;
+  erp_system: string;
+  erp_has_api: boolean;
+  /** When `erp_has_api` is false, whether we should build an API. Null when not applicable. */
+  build_api: boolean | null;
+  ai_chatbot: boolean;
+  migration_requirements: string;
+  additional_notes: string;
+};
+
+export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload;
+
+export type ProjectRequest = {
+  id: string;
+  request_type: ProjectRequestType;
+  status: ProjectRequestStatus;
+  payload: ProjectRequestPayload;
+  created_at: string;
   updated_at: string;
 };

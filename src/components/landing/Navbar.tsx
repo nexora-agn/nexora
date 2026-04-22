@@ -54,6 +54,9 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
       <Link to="/blog" onClick={() => setOpen(false)} className={className}>
         Blog
       </Link>
+      <Link to="/start" onClick={() => setOpen(false)} className={className}>
+        Start a project
+      </Link>
       <Link to="/contact" onClick={() => setOpen(false)} className={className}>
         Contact
       </Link>

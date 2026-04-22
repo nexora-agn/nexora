@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LogOut, Users } from "lucide-react";
+import { LayoutGrid, LogOut, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import type { ReactNode } from "react";
@@ -33,6 +33,17 @@ export const AdminShell = ({ children, rightSlot }: { children: ReactNode; right
             >
               <Users className="h-4 w-4" />
               Clients
+            </Link>
+            <Link
+              to="/admin/requests"
+              className={`px-3 py-1.5 rounded-md inline-flex items-center gap-2 ${
+                pathname.startsWith("/admin/requests")
+                  ? "bg-muted text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <LayoutGrid className="h-4 w-4" />
+              Requests
             </Link>
           </nav>
 

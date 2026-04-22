@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe2, LayoutTemplate, Smartphone } from "lucide-react";
 
@@ -28,7 +29,7 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
           <p className="mb-8 max-w-lg text-base font-medium leading-relaxed text-neutral-600 md:text-lg lg:mx-0">
             Logo, colours, story—built to convert. No generic templates. No dev team on your payroll.
           </p>
-          <div className="mb-10 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
+          <div className="mb-6 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
             <Button
               size="lg"
               className="h-12 gap-2 rounded-xl border-0 bg-neutral-950 px-8 text-base font-semibold text-white shadow-lg shadow-neutral-900/15 transition-transform hover:scale-[1.01] hover:bg-neutral-800"
@@ -57,6 +58,18 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
               </a>
             </Button>
           </div>
+          <p className="mb-3 max-w-lg text-center text-sm leading-relaxed text-neutral-600 lg:mx-0 lg:text-left">
+            <Link
+              to="/start"
+              className="font-semibold text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-950"
+            >
+              Start a project
+            </Link>
+            <span className="text-neutral-500">
+              {" "}
+              — a short guided flow for a new site or migration. We follow up fast.
+            </span>
+          </p>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">
             Preview first · Launch when you say go
           </p>

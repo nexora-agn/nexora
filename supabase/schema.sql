@@ -202,3 +202,46 @@ create policy "assets_owner_delete"
         and (c.owner_id = auth.uid() or public.is_admin())
     )
   );
+
+-- project_requests: inbound project inquiries from the public onboarding flow
+create table if not exists public.project_requests (
+  id             uuid primary key default gen_random_uuid(),
+  request_type   text not null check (request_type in ('new_website', 'migrate')),
+  status         text not null default 'new' check (status in ('new', 'in_progress', 'completed')),
+  payload        jsonb not null default '{}'::jsonb,
+  created_at     timestamptz not null default now(),
+  updated_at     timestamptz not null default now()
+);
+
+create index if not exists project_requests_status_idx on public.project_requests(status, created_at desc);
+create index if not exists project_requests_created_idx on public.project_requests(created_at desc);
+
+drop trigger if exists project_requests_touch on public.project_requests;
+create trigger project_requests_touch before update on public.project_requests
+  for each row execute function public.touch_updated_at();
+
+alter table public.project_requests enable row level security;
+
+drop policy if exists "project_requests_insert_public" on public.project_requests;
+drop policy if exists "project_requests_staff_select" on public.project_requests;
+drop policy if exists "project_requests_staff_update" on public.project_requests;
+
+-- Public marketing site submits with the anon key; staff use the authenticated role.
+create policy "project_requests_insert_public"
+  on public.project_requests for insert
+  to anon, authenticated
+  with check (
+    status = 'new'
+    and request_type in ('new_website', 'migrate')
+  );
+
+create policy "project_requests_staff_select"
+  on public.project_requests for select
+  to authenticated
+  using (true);
+
+create policy "project_requests_staff_update"
+  on public.project_requests for update
+  to authenticated
+  using (true)
+  with check (status in ('new', 'in_progress', 'completed'));

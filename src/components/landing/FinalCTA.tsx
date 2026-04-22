@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -37,6 +38,16 @@ const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
               </h2>
               <p className="max-w-md text-base font-medium leading-relaxed text-neutral-400 md:text-[1.0625rem]">
                 15-minute walkthrough. See preview, timeline, and launch. No fluff.
+              </p>
+              <p className="mt-5 max-w-md text-sm leading-relaxed text-neutral-500">
+                Prefer to share details first?{" "}
+                <Link
+                  to="/start"
+                  className="font-medium text-brand underline decoration-brand/40 underline-offset-4 transition-colors hover:decoration-brand"
+                >
+                  Start a project
+                </Link>{" "}
+                in our short online flow.
               </p>
             </div>
 
