@@ -106,6 +106,22 @@ $$;
 
 grant execute on function public.is_admin() to authenticated, anon;
 
+-- True when the current user is admin or sales (inbound leads, project requests, etc.)
+create or replace function public.is_staff()
+returns boolean
+language sql
+security definer
+stable
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role in ('admin', 'sales')
+  );
+$$;
+
+grant execute on function public.is_staff() to authenticated, anon;
+
 -- profiles: a user can read/update only their own row; admins can read all
 drop policy if exists "profiles_self_read"   on public.profiles;
 drop policy if exists "profiles_self_update" on public.profiles;
@@ -203,7 +219,11 @@ create policy "assets_owner_delete"
     )
   );
 
--- project_requests: inbound project inquiries from the public onboarding flow
+-- project_requests: inbound project inquiries from the public marketing "start project" wizard.
+-- `payload` is the full form submission (JSON). Expected keys include contact fields, plan,
+-- payment_preference (card | paypal | stripe), and either new-website or migration fields—see
+-- `NewWebsiteRequestPayload` / `MigrateRequestPayload` in src/lib/supabase.ts. Do not drop
+-- or truncate: staff rely on the admin dashboard to read the complete payload.
 create table if not exists public.project_requests (
   id             uuid primary key default gen_random_uuid(),
   request_type   text not null check (request_type in ('new_website', 'migrate')),
@@ -216,6 +236,9 @@ create table if not exists public.project_requests (
 create index if not exists project_requests_status_idx on public.project_requests(status, created_at desc);
 create index if not exists project_requests_created_idx on public.project_requests(created_at desc);
 
+comment on table public.project_requests is
+  'Inbound start-project form submissions. payload stores the full wizard JSON; keep for admin display.';
+
 drop trigger if exists project_requests_touch on public.project_requests;
 create trigger project_requests_touch before update on public.project_requests
   for each row execute function public.touch_updated_at();
@@ -226,7 +249,7 @@ drop policy if exists "project_requests_insert_public" on public.project_request
 drop policy if exists "project_requests_staff_select" on public.project_requests;
 drop policy if exists "project_requests_staff_update" on public.project_requests;
 
--- Public marketing site submits with the anon key; staff use the authenticated role.
+-- Public marketing site submits with the anon key (no JWT). Staff (admin or sales) read/update.
 create policy "project_requests_insert_public"
   on public.project_requests for insert
   to anon, authenticated
@@ -238,10 +261,10 @@ create policy "project_requests_insert_public"
 create policy "project_requests_staff_select"
   on public.project_requests for select
   to authenticated
-  using (true);
+  using (public.is_staff());
 
 create policy "project_requests_staff_update"
   on public.project_requests for update
   to authenticated
-  using (true)
-  with check (status in ('new', 'in_progress', 'completed'));
+  using (public.is_staff())
+  with check (public.is_staff() and status in ('new', 'in_progress', 'completed'));

@@ -37,21 +37,21 @@ const Projects = () => {
     }, { replace: true });
   }, [rawPage, latestPage, setSearchParams]);
 
-  const titleBase = `Signature Projects — ${COMPANY.name}`;
-  const docTitle = latestPage > 1 ? `${titleBase} — Page ${latestPage}` : titleBase;
+  const titleBase = `Signature Projects | ${COMPANY.name}`;
+  const docTitle = latestPage > 1 ? `${titleBase} | Page ${latestPage}` : titleBase;
 
   return (
     <Layout>
       <Helmet>
         <title>{docTitle}</title>
-        <meta name="description" content={`Explore ${COMPANY.name} portfolio — residential, commercial, and infrastructure.`} />
+        <meta name="description" content={`Explore the ${COMPANY.name} portfolio: residential, commercial, and infrastructure projects.`} />
       </Helmet>
 
       <Reveal direction="zoom" duration={650}>
         <PageHeader
           eyebrow="PROJECTS"
           title="Signature Projects"
-          subtitle="Explore our finest achievements across high-end residential, commercial, and mission-critical builds — delivered with precision and transparency."
+          subtitle="Explore our finest achievements across high-end residential, commercial, and mission-critical builds, delivered with precision and transparency."
         />
       </Reveal>
 

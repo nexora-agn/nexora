@@ -18,7 +18,7 @@ const FAQ = () => {
   return (
     <Layout>
       <Helmet>
-        <title>FAQ — {COMPANY.name}</title>
+        <title>FAQ | {COMPANY.name}</title>
         <meta
           name="description"
           content={`Answers about ${COMPANY.name} services, pricing, timelines, process, and warranty.`}
@@ -71,7 +71,7 @@ const FAQ = () => {
         <div className="container-custom px-4 md:px-8 max-w-2xl mx-auto text-center">
           <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">Still have questions?</h2>
           <p className="text-muted-foreground mb-8 leading-relaxed">
-            Can&apos;t find the answer you&apos;re looking for? Please reach out to our team — we&apos;re happy to discuss your specific needs.
+            Can&apos;t find the answer you&apos;re looking for? Please reach out to our team. We&apos;re happy to discuss your specific needs.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild variant="outline" size="lg" className="rounded-sm px-8 font-bold border-primary text-primary bg-background">

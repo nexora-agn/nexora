@@ -17,7 +17,7 @@ const BlogPost = () => {
   return (
     <Layout>
       <Helmet>
-        <title>{post.title} — {COMPANY.name}</title>
+        <title>{post.title} | {COMPANY.name}</title>
         <meta name="description" content={post.excerpt} />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />

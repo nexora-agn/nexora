@@ -72,7 +72,7 @@ const ProcessSection = ({ className }: ProcessSectionProps) => {
             <span className="text-secondary">Process</span>
           </h2>
           <p className="mt-5 text-muted-foreground leading-relaxed">
-            One accountable team from first sketch to warranty — with clarity
+            One accountable team from first sketch to warranty, with clarity
             and communication at every gate.
           </p>
         </div>

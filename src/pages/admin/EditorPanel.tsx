@@ -1120,8 +1120,8 @@ const EditorPanel = ({ state, onChange, clientId }: EditorPanelProps) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Reset this client's entire draft?</AlertDialogTitle>
               <AlertDialogDescription>
-                Every customization — logo, favicon, colors, company info, hero, sections,
-                services, projects, team, FAQ, nav, footer, everything — will be restored to
+                Every customization (logo, favicon, colors, company info, hero, sections,
+                services, projects, team, FAQ, nav, footer, everything) will be restored to
                 the original template defaults. This cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>

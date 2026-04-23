@@ -1,13 +1,13 @@
 /**
  * Chatbot site-data layer.
  *
- * The widget never reads the raw SiteContentContext directly — it reads from a
+ * The widget never reads the raw SiteContentContext directly. It reads from a
  * single structured snapshot so the same code works in three environments:
  *
- *   1. Admin preview — built live from SiteContentContext on every render.
- *   2. Exported ZIP (dev)  — same shape, hydrated from /chatbot/site-data.json
+ *   1. Admin preview, built live from SiteContentContext on every render.
+ *   2. Exported ZIP (dev): same shape, hydrated from /chatbot/site-data.json
  *      during the first fetch; falls back to the in-memory snapshot until then.
- *   3. Exported ZIP (production) — /chatbot/site-data.json is written at export
+ *   3. Exported ZIP (production): /chatbot/site-data.json is written at export
  *      time by server/export-logic.mjs so the chatbot answers with the client's
  *      content the moment the site boots, with zero backend dependency.
  */
@@ -120,7 +120,7 @@ export const AVAILABLE_ACTIONS: ChatbotSiteData["actions"] = [
       "Scroll to a specific section of the current page. Prefer this over 'navigate' when the section is on the page the user is viewing.",
     args: {
       target:
-        "hero | services | projects | pricing | testimonials | team | about | contact | faq | process",
+        "hero, services, projects, pricing, testimonials, team, about, contact, faq, process",
     },
   },
   {
@@ -142,7 +142,7 @@ export const AVAILABLE_ACTIONS: ChatbotSiteData["actions"] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Builder — takes the live SiteContentState and collapses it into the shape
+// Builder: takes the live SiteContentState and collapses it into the shape
 // the chatbot consumes. Keep this pure & defensive so it also works against
 // raw JSON from /chatbot/site-data.json at runtime.
 // ---------------------------------------------------------------------------

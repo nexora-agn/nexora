@@ -24,8 +24,8 @@ const SignatureProjectsSection = () => {
             </h2>
           </div>
           <p className="text-muted-foreground max-w-md md:text-right">
-            A look at recent builds — each delivered on time, on budget, and to
-            our clients' exacting standards.
+            A look at recent builds, each delivered on time, on budget, and to
+            our clients&apos; exacting standards.
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 /**
  * Tiny rule-based fallback "AI" used when the remote /api/chat endpoint is
  * unreachable. Keeps the widget useful in the preview + in ZIP exports that
- * haven't wired up an OpenAI/Claude key yet — so clients always see a working
+ * haven't wired up an OpenAI/Claude key yet, so clients always see a working
  * chatbot the moment they open the site.
  *
  * The brain parses the question, searches the ChatbotSiteData snapshot for
@@ -110,7 +110,7 @@ export function localReply(question: string, data: ChatbotSiteData): ChatReply {
 
   // Services ----------------------------------------------------------------
   if (containsAny(q, ["service", "services", "what do you do", "offer", "capabilities"])) {
-    const top = data.services.slice(0, 5).map(s => `• ${s.title} — ${s.description}`).join("\n");
+    const top = data.services.slice(0, 5).map(s => `• ${s.title}: ${s.description}`).join("\n");
     return {
       message: `${data.site.name} offers:\n${top}\n\nWant me to take you to the services page for the full list?`,
       action: { id: "navigate", args: { path: "/services" } },
@@ -130,7 +130,7 @@ export function localReply(question: string, data: ChatbotSiteData): ChatReply {
 
   // Team --------------------------------------------------------------------
   if (containsAny(q, ["team", "staff", "people", "who runs", "founder", "ceo", "leadership"])) {
-    const top = data.team.slice(0, 3).map(m => `• ${m.name} — ${m.role}`).join("\n");
+    const top = data.team.slice(0, 3).map(m => `• ${m.name}: ${m.role}`).join("\n");
     return {
       message: `Meet the team:\n${top}\n\nI can take you to the full team page.`,
       action: { id: "navigate", args: { path: "/team" } },
@@ -141,7 +141,7 @@ export function localReply(question: string, data: ChatbotSiteData): ChatReply {
   // About -------------------------------------------------------------------
   if (containsAny(q, ["about", "company", "who are you", "history", "story"])) {
     const lines = [
-      `${data.site.legalName} — ${data.site.tagline || data.about.intro}`,
+      `${data.site.legalName}. ${data.site.tagline || data.about.intro}`,
     ];
     if (data.about.stats.length) {
       lines.push("", bulletList(data.about.stats.map(s => `${s.value} ${s.label}`)));
@@ -189,7 +189,7 @@ export function localReply(question: string, data: ChatbotSiteData): ChatReply {
   const svcHit = data.services.find(s => q && normalize(s.title).split(" ").some(t => q.includes(t)));
   if (svcHit) {
     return {
-      message: `${svcHit.title} — ${svcHit.description}`,
+      message: `${svcHit.title}. ${svcHit.description}`,
       action: { id: "navigate", args: { path: svcHit.detailPath } },
       suggestions: ["Open details", "Show pricing", "Contact team"],
     };
@@ -215,7 +215,7 @@ export function localReply(question: string, data: ChatbotSiteData): ChatReply {
   // Fallback ---------------------------------------------------------------
   const topLinks = data.pages
     .slice(0, 4)
-    .map(p => `• ${p.label} — ${p.path}`)
+    .map(p => `• ${p.label}: ${p.path}`)
     .join("\n");
   return {
     message: [

@@ -18,13 +18,13 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.warn("404 — route not found:", location.pathname);
+    console.warn("404: route not found:", location.pathname);
   }, [location.pathname]);
 
   return (
     <Layout>
       <Helmet>
-        <title>Page not found — {COMPANY.name}</title>
+        <title>Page not found | {COMPANY.name}</title>
         <meta name="robots" content="noindex, nofollow" />
         <meta
           name="description"
@@ -137,7 +137,7 @@ const NotFound = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground md:max-w-sm leading-relaxed">
-                A few quick paths back into the site — or call us directly at{" "}
+                A few quick paths back into the site, or call us directly at{" "}
                 <a
                   href={`tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`}
                   className="font-semibold text-foreground hover:text-secondary"

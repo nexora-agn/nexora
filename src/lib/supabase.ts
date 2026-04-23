@@ -89,25 +89,47 @@ export type ProjectRequestType = "new_website" | "migrate";
 export type ProjectRequestStatus = "new" | "in_progress" | "completed";
 
 export type NewWebsiteRequestPayload = {
+  full_name: string;
   contact_email: string;
-  business_name: string;
+  contact_phone: string;
+  company: string;
+  /** Selected option id from `ONBOARDING_TIMELINE_OPTIONS`. */
+  timeline: string;
   industry: string;
   erp_integration: boolean;
+  /** When `erp_integration` is true, which ERP they use (for research). */
+  current_erp_system: string | null;
   ai_chatbot: boolean;
+  /** When `ai_chatbot` is true, what the chatbot should do. */
+  ai_chatbot_requirements: string | null;
   preferred_features: string[];
+  /** Free-text “other” features in addition to the checkboxes. */
+  other_preferred_features: string;
   additional_notes: string;
+  /** Marketing plan the user selected before the rest of the flow. */
+  selected_plan: "starter" | "growth" | "custom";
+  /** How they want to pay once checkout is available. `card` is legacy; prefer `stripe` for new card checkouts. */
+  payment_preference: "card" | "paypal" | "stripe";
 };
 
 export type MigrateRequestPayload = {
+  full_name: string;
   contact_email: string;
+  contact_phone: string;
+  company: string;
+  timeline: string;
   website_url: string;
   erp_system: string;
   erp_has_api: boolean;
   /** When `erp_has_api` is false, whether we should build an API. Null when not applicable. */
   build_api: boolean | null;
   ai_chatbot: boolean;
+  /** When `ai_chatbot` is true, what the chatbot should do. */
+  ai_chatbot_requirements: string | null;
   migration_requirements: string;
   additional_notes: string;
+  selected_plan: "starter" | "growth" | "custom";
+  payment_preference: "card" | "paypal" | "stripe";
 };
 
 export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload;

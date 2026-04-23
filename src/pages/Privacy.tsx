@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
+import { COMPANY_LEGAL } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -10,12 +11,34 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
 
 const sections = [
   {
+    title: "Data controller",
+    body: (
+      <p>
+        The operator of this website, and the controller of your personal data described in this
+        policy, is <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
+        {COMPANY_LEGAL.legalForm}. Commercial registration (CR) no.{" "}
+        <span className="whitespace-nowrap">{COMPANY_LEGAL.commercialRegistration}</span>
+        {COMPANY_LEGAL.addressLines.length > 0 ? (
+          <>
+            . Registered address:{" "}
+            <span className="mt-1 block whitespace-pre-line text-foreground">
+              {COMPANY_LEGAL.addressLines.join("\n")}, {COMPANY_LEGAL.jurisdiction}
+            </span>
+            .
+          </>
+        ) : (
+          <> · Principal place of business: {COMPANY_LEGAL.jurisdiction}.</>
+        )}
+      </p>
+    ),
+  },
+  {
     title: "Information we collect",
     body: (
       <>
         <p>
-          We collect information you choose to provide—such as your name, work email, company name,
-          and phone number—when you request a consultation, submit a contact form, or otherwise
+          We collect information you choose to provide, such as your name, work email, company name,
+          and phone number, when you request a consultation, submit a contact form, or otherwise
           communicate with us about our services.
         </p>
         <p className="mt-3">
@@ -30,7 +53,7 @@ const sections = [
     body: (
       <p>
         We use personal information to respond to inquiries, deliver and improve our services,
-        communicate about your project or account, and—where you have opted in—send relevant updates.
+        communicate about your project or account, and, where you have opted in, send relevant updates.
         We do not use your data for unrelated profiling beyond what is necessary to operate our
         business.
       </p>

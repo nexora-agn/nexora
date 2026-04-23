@@ -17,7 +17,7 @@ interface CTASectionProps {
 
 const CTASection = ({
   title = "Ready to start your project?",
-  subtitle = "Tell us about your timeline and goals — we’ll respond with clear next steps.",
+  subtitle = "Tell us about your timeline and goals, and we’ll respond with clear next steps.",
   primaryLabel = "REQUEST ESTIMATE",
   secondaryLabel = "BOOK A CALL",
   primaryTo = "/contact",

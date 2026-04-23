@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
 
 const benefits = [
   "Custom site + preview before you commit",
-  "We ship—you don’t manage devs",
+  "We ship. You don’t manage devs",
   "Ongoing support on your plan",
 ];
+
+const industries = [
+  { value: "", label: "Industry *" },
+  { value: "e-commerce", label: "E-commerce" },
+  { value: "saas", label: "SaaS" },
+  { value: "agency", label: "Agency" },
+  { value: "restaurant", label: "Restaurant" },
+  { value: "real-estate", label: "Real estate" },
+  { value: "construction", label: "Construction" },
+  { value: "other", label: "Other" },
+] as const;
 
 interface RequestDemoModalProps {
   open: boolean;
@@ -17,9 +31,63 @@ interface RequestDemoModalProps {
 
 const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
   const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [phone, setPhone] = useState("");
+  const [hasWebsite, setHasWebsite] = useState<"yes" | "no" | "">("");
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (open) return;
+    setSubmitted(false);
+    setName("");
+    setEmail("");
+    setCompany("");
+    setIndustry("");
+    setPhone("");
+    setHasWebsite("");
+    setErrors({});
+  }, [open]);
+
+  const clear = (k: string) => {
+    setErrors(prev => {
+      if (!prev[k]) return prev;
+      const n = { ...prev };
+      delete n[k];
+      return n;
+    });
+  };
+
+  const setDemoError = (key: string, message: string | undefined) => {
+    setErrors(prev => {
+      const n = { ...prev };
+      if (message) n[key] = message;
+      else delete n[key];
+      return n;
+    });
+  };
+
+  const onFieldGroupBlur = (e: React.FocusEvent, run: () => void) => {
+    if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+    run();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const next: Record<string, string> = {};
+    if (!name.trim()) next.name = "Add your name.";
+    const emailErr = getWorkEmailError(email, "Add your work email.");
+    if (emailErr) next.email = emailErr;
+    if (!phone.trim()) next.phone = "Add a phone number we can call.";
+    if (!industry) next.industry = "Select an industry.";
+    if (hasWebsite !== "yes" && hasWebsite !== "no") {
+      next.hasWebsite = "Let us know if you already have a website (yes or no).";
+    }
+    setErrors(next);
+    if (Object.keys(next).length) return;
     setSubmitted(true);
   };
 
@@ -32,109 +100,232 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[100] flex items-center justify-center p-4"
         >
-          {/* Backdrop */}
           <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="relative bg-background rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto grid md:grid-cols-2"
+            className="relative grid w-full max-w-4xl max-h-[90vh] grid-cols-1 overflow-y-auto rounded-2xl bg-background shadow-2xl md:max-h-[90vh] md:grid-cols-2"
           >
-            {/* Close button */}
             <button
+              type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
               <X size={18} />
             </button>
 
-            {/* Left side — Benefits */}
-            <div className="p-8 md:p-10 flex flex-col justify-center">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight mb-6">
+            <div className="flex flex-col justify-center p-8 md:p-10">
+              <h2 className="mb-6 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
                 Book a demo
                 <br />
                 <span className="text-neutral-600">See it in 15 minutes.</span>
               </h2>
 
-              <div className="space-y-3 mb-8">
-                {benefits.map((b) => (
+              <div className="mb-8 space-y-3">
+                {benefits.map(b => (
                   <div key={b} className="flex items-start gap-2.5">
-                    <CheckCircle2 size={18} className="text-neutral-950 mt-0.5 shrink-0" />
+                    <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-neutral-950" />
                     <span className="text-sm text-muted-foreground">{b}</span>
                   </div>
                 ))}
               </div>
 
-              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-3">Typical verticals</p>
+              <p className="mb-3 text-xs uppercase tracking-[0.15em] text-muted-foreground">Typical verticals</p>
               <div className="flex flex-wrap gap-2">
-                {["Construction", "Real estate", "Field services", "Distribution"].map((name) => (
+                {["Construction", "Real estate", "Field services", "Distribution"].map(n => (
                   <span
-                    key={name}
+                    key={n}
                     className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground"
                   >
-                    {name}
+                    {n}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Right side — Form */}
-            <div className="p-8 md:p-10 bg-secondary/30 rounded-r-2xl">
+            <div className="rounded-b-2xl bg-secondary/30 p-8 md:rounded-b-none md:rounded-r-2xl md:p-10">
               {submitted ? (
-                <div className="h-full flex flex-col items-center justify-center text-center">
-                  <CheckCircle2 size={48} className="text-foreground mb-4" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Thank you!</h3>
-                  <p className="text-sm text-muted-foreground">
-                    We'll be in touch within 24 hours.
-                  </p>
+                <div className="flex h-full min-h-[280px] flex-col items-center justify-center text-center">
+                  <CheckCircle2 size={48} className="mb-4 text-foreground" />
+                  <h3 className="mb-2 text-xl font-bold text-foreground">Thank you!</h3>
+                  <p className="text-sm text-muted-foreground">We&apos;ll be in touch within 24 hours.</p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                   <div>
-                    <Input placeholder="Full Name *" required className="h-12 rounded-xl bg-background" />
+                    <Label htmlFor="demo-name" className="text-foreground">
+                      Full name
+                    </Label>
+                    <Input
+                      id="demo-name"
+                      placeholder="Your name *"
+                      value={name}
+                      onChange={e => {
+                        setName(e.target.value);
+                        clear("name");
+                      }}
+                      onBlur={() => setDemoError("name", !name.trim() ? "Add your name." : undefined)}
+                      className={cn("mt-1.5 h-12 rounded-xl bg-background", errors.name && "border-destructive")}
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? "e-name" : undefined}
+                    />
+                    {errors.name && (
+                      <p id="e-name" className="mt-1 text-sm text-destructive" role="alert">
+                        {errors.name}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <Input type="email" placeholder="Email address *" required className="h-12 rounded-xl bg-background" />
+                    <Label htmlFor="demo-email" className="text-foreground">
+                      Email
+                    </Label>
+                    <Input
+                      id="demo-email"
+                      type="email"
+                      autoComplete="email"
+                      maxLength={WORK_EMAIL_MAX_LENGTH}
+                      placeholder="name@company.com *"
+                      value={email}
+                      onChange={e => {
+                        setEmail(e.target.value);
+                        clear("email");
+                      }}
+                      onBlur={() => setDemoError("email", getWorkEmailError(email, "Add your work email.") ?? undefined)}
+                      className={cn("mt-1.5 h-12 rounded-xl bg-background", errors.email && "border-destructive")}
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? "e-email" : undefined}
+                    />
+                    {errors.email && (
+                      <p id="e-email" className="mt-1 text-sm text-destructive" role="alert">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Input placeholder="Company Name" className="h-12 rounded-xl bg-background" />
-                    <select className="h-12 rounded-xl bg-background border border-input px-3 text-sm text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                      <option value="">Industry</option>
-                      <option>E-commerce</option>
-                      <option>SaaS</option>
-                      <option>Agency</option>
-                      <option>Restaurant</option>
-                      <option>Real Estate</option>
-                      <option>Other</option>
-                    </select>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <Label htmlFor="demo-company">Company</Label>
+                      <Input
+                        id="demo-company"
+                        placeholder="Company name"
+                        value={company}
+                        onChange={e => setCompany(e.target.value)}
+                        className="mt-1.5 h-12 rounded-xl bg-background"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="demo-industry">Industry</Label>
+                      <select
+                        id="demo-industry"
+                        value={industry}
+                      onChange={e => {
+                        setIndustry(e.target.value);
+                        clear("industry");
+                      }}
+                      onBlur={() => setDemoError("industry", !industry ? "Select an industry." : undefined)}
+                      className={cn(
+                        "mt-1.5 h-12 w-full rounded-xl border border-input bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring",
+                        !industry && "text-muted-foreground",
+                        errors.industry && "border-destructive",
+                      )}
+                      aria-invalid={!!errors.industry}
+                      aria-describedby={errors.industry ? "e-ind" : undefined}
+                    >
+                        {industries.map(o => (
+                          <option key={o.value || "empty"} value={o.value}>
+                            {o.label}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.industry && (
+                        <p id="e-ind" className="mt-1 text-sm text-destructive" role="alert">
+                          {errors.industry}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <div>
-                    <Input type="tel" placeholder="Phone number *" required className="h-12 rounded-xl bg-background" />
+                    <Label htmlFor="demo-phone" className="text-foreground">
+                      Phone
+                    </Label>
+                    <Input
+                      id="demo-phone"
+                      type="tel"
+                      autoComplete="tel"
+                      placeholder="+1 (555) 000-0000"
+                      value={phone}
+                      onChange={e => {
+                        setPhone(e.target.value);
+                        clear("phone");
+                      }}
+                      onBlur={() => setDemoError("phone", !phone.trim() ? "Add a phone number we can call." : undefined)}
+                      className={cn("mt-1.5 h-12 rounded-xl bg-background", errors.phone && "border-destructive")}
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? "e-phone" : undefined}
+                    />
+                    {errors.phone && (
+                      <p id="e-phone" className="mt-1 text-sm text-destructive" role="alert">
+                        {errors.phone}
+                      </p>
+                    )}
                   </div>
 
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Do you already have a website? *
-                    </p>
-                    <div className="flex gap-6">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="hasWebsite" value="yes" className="accent-foreground" />
+                  <fieldset
+                    onBlur={e =>
+                      onFieldGroupBlur(e, () => {
+                        setDemoError(
+                          "hasWebsite",
+                          hasWebsite !== "yes" && hasWebsite !== "no"
+                            ? "Let us know if you already have a website (yes or no)."
+                            : undefined,
+                        );
+                      })
+                    }
+                  >
+                    <legend className="text-sm text-foreground">Do you already have a website? *</legend>
+                    <div
+                      className={cn("mt-2 flex flex-wrap gap-6", errors.hasWebsite && "rounded-md p-1 ring-1 ring-destructive/50")}
+                    >
+                      <label className="flex cursor-pointer items-center gap-2">
+                        <input
+                          type="radio"
+                          name="hasWebsite"
+                          checked={hasWebsite === "yes"}
+                          onChange={() => {
+                            setHasWebsite("yes");
+                            clear("hasWebsite");
+                          }}
+                          className="accent-foreground"
+                        />
                         <span className="text-sm text-foreground">Yes</span>
                       </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="hasWebsite" value="no" defaultChecked className="accent-foreground" />
+                      <label className="flex cursor-pointer items-center gap-2">
+                        <input
+                          type="radio"
+                          name="hasWebsite"
+                          checked={hasWebsite === "no"}
+                          onChange={() => {
+                            setHasWebsite("no");
+                            clear("hasWebsite");
+                          }}
+                          className="accent-foreground"
+                        />
                         <span className="text-sm text-foreground">No</span>
                       </label>
                     </div>
-                  </div>
+                    {errors.hasWebsite && (
+                      <p className="mt-1 text-sm text-destructive" role="alert">
+                        {errors.hasWebsite}
+                      </p>
+                    )}
+                  </fieldset>
 
-                  <label className="flex items-start gap-2.5 cursor-pointer pt-1">
-                    <input type="checkbox" className="accent-foreground mt-1" />
-                    <span className="text-xs text-muted-foreground leading-relaxed">
-                      I'd like to receive updates and tips about building a great website.
+                  <label className="flex cursor-pointer items-start gap-2.5 pt-1">
+                    <input type="checkbox" className="mt-1 accent-foreground" />
+                    <span className="text-xs leading-relaxed text-muted-foreground">
+                      I&apos;d like to receive updates and tips about building a great website.
                     </span>
                   </label>
 

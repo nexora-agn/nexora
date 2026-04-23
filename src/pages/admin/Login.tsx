@@ -18,7 +18,7 @@ const AdminLogin = () => {
   const redirectTo = (location.state as { from?: string } | null)?.from ?? "/admin/clients";
 
   useEffect(() => {
-    document.title = "Admin login — Nexora";
+    document.title = "Admin login | Nexora";
   }, []);
 
   if (!loading && session) {

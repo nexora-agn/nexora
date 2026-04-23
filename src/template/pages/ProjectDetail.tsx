@@ -14,7 +14,7 @@ const ProjectDetail = () => {
   return (
     <Layout>
       <Helmet>
-        <title>{project.title} — {COMPANY.name}</title>
+        <title>{project.title} | {COMPANY.name}</title>
         <meta name="description" content={project.description} />
       </Helmet>
 

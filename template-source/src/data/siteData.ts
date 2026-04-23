@@ -9,7 +9,7 @@ export const COMPANY = {
   hours: "Mon - Fri: 8:00 AM - 6:00 PM",
 };
 
-/** Slim top bar (header) — line + locations */
+/** Slim top bar (header): line + locations */
 export const SITE_TOP = {
   line: "Design-Build Studio Since 2008",
   locations: "London · New York · Dubai",
@@ -21,11 +21,11 @@ export const OFFICE_HOURS = [
   { days: "Sunday", hours: "Closed" },
 ];
 
-/** OpenStreetMap embed (NYC) — replace with your Google Maps iframe if needed */
+/** OpenStreetMap embed (NYC). Replace with your Google Maps iframe if needed. */
 export const MAP_EMBED_URL =
   "https://www.openstreetmap.org/export/embed.html?bbox=-74.06%2C40.72%2C-73.94%2C40.78&layer=mapnik&marker=40.7484,-74.00";
 
-/** Homepage — edit copy here; colors come from the Customize panel (CSS variables). */
+/** Homepage. Edit copy here; colors come from the Customize panel (CSS variables). */
 export const HOME_HERO = {
   headlineBefore: "Build better.",
   headlineHighlight: "Faster.",
@@ -104,7 +104,7 @@ export const WHY_BENEFITS = [
   },
   {
     title: "Senior-led sites",
-    description: "Experienced supers on every job — not rotating rookies.",
+    description: "Experienced supers on every job, not rotating rookies.",
     icon: "Users" as const,
   },
 ];
@@ -150,11 +150,11 @@ export const TESTIMONIALS = [
 ];
 
 export const BLOG_POSTS = [
-  { id: "future-of-construction", title: "The Future of Sustainable Construction", excerpt: "Exploring how green building practices are reshaping the construction industry.", date: "March 15, 2024", author: "Sarah Chen", category: "Sustainability", image: "https://images.unsplash.com/photo-1518005068251-37900150dfca?w=600&h=400&fit=crop", content: "Sustainable construction is no longer a trend — it's the future. From recycled materials to energy-efficient designs, the industry is evolving rapidly. At CONSTRUCTO, we've embraced LEED certification standards across all our new projects.\n\nKey innovations include solar-integrated building materials, smart energy management systems, and water recycling infrastructure. These technologies not only reduce environmental impact but also lower long-term operational costs for building owners.\n\nOur Green Office Park project in Jersey City stands as a testament to what's possible when sustainability meets modern design. The LEED Platinum certified campus features rooftop solar arrays, rainwater harvesting, and natural ventilation systems." },
+  { id: "future-of-construction", title: "The Future of Sustainable Construction", excerpt: "Exploring how green building practices are reshaping the construction industry.", date: "March 15, 2024", author: "Sarah Chen", category: "Sustainability", image: "https://images.unsplash.com/photo-1518005068251-37900150dfca?w=600&h=400&fit=crop", content: "Sustainable construction is no longer a trend. It's the future. From recycled materials to energy-efficient designs, the industry is evolving rapidly. At CONSTRUCTO, we've embraced LEED certification standards across all our new projects.\n\nKey innovations include solar-integrated building materials, smart energy management systems, and water recycling infrastructure. These technologies not only reduce environmental impact but also lower long-term operational costs for building owners.\n\nOur Green Office Park project in Jersey City stands as a testament to what's possible when sustainability meets modern design. The LEED Platinum certified campus features rooftop solar arrays, rainwater harvesting, and natural ventilation systems." },
   { id: "choosing-contractor", title: "How to Choose the Right Contractor", excerpt: "Key factors to consider when selecting a construction partner for your project.", date: "February 28, 2024", author: "John Mitchell", category: "Tips", image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=400&fit=crop", content: "Choosing the right contractor can make or break your construction project. Here are the essential factors to consider.\n\nFirst, verify credentials and insurance. A reputable contractor should have proper licensing, bonding, and comprehensive insurance coverage.\n\nSecond, review their portfolio. Look for projects similar in scope and complexity to yours. Ask for references and actually contact them.\n\nThird, get detailed written estimates. Compare not just the bottom line, but the specifics of what's included.\n\nFinally, trust your communication instincts. A good contractor communicates clearly, responds promptly, and keeps you informed throughout the process." },
   { id: "smart-buildings", title: "Smart Building Technologies in 2024", excerpt: "How IoT and automation are transforming modern construction and building management.", date: "January 10, 2024", author: "David Park", category: "Technology", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop", content: "Smart building technologies are revolutionizing how we design, construct, and manage buildings. From IoT sensors to AI-powered energy management, the possibilities are endless.\n\nBuilding Information Modeling (BIM) has transformed the design phase, allowing teams to create detailed 3D models that detect conflicts before construction begins.\n\nDuring construction, drones and robotics are improving safety and efficiency. Post-construction, smart systems monitor everything from HVAC performance to occupancy patterns.\n\nAt CONSTRUCTO, we integrate smart technologies from the design phase, ensuring buildings are future-ready from day one." },
-  { id: "prefab-momentum", title: "Prefab Momentum in Urban Infill", excerpt: "Why modular assemblies are winning on tight city lots without sacrificing design intent.", date: "December 5, 2023", author: "Sarah Chen", category: "Technology", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&h=400&fit=crop", content: "Prefabrication is shedding its industrial-only reputation. On constrained sites, volumetric modules cut calendar time while holding tolerances that stick-built crews struggle to repeat.\n\nWe coordinate MEP penetrations in the factory so field work is mostly connection and commissioning — fewer surprises, cleaner inspections." },
-  { id: "site-safety-culture", title: "Building a Site Safety Culture That Sticks", excerpt: "Leading indicators, toolbox talks, and accountability from the GC down.", date: "November 18, 2023", author: "Michael Rodriguez", category: "Tips", image: "https://images.unsplash.com/photo-1581092160562-40aa08e2c586?w=600&h=400&fit=crop", content: "Safety is not a poster — it is a daily choice reinforced by how we plan lifts, sequence trades, and debrief near misses.\n\nOur supers run joint walks with subs before high-risk activities. If the plan does not feel crisp, we pause and rewrite it." },
+  { id: "prefab-momentum", title: "Prefab Momentum in Urban Infill", excerpt: "Why modular assemblies are winning on tight city lots without sacrificing design intent.", date: "December 5, 2023", author: "Sarah Chen", category: "Technology", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&h=400&fit=crop", content: "Prefabrication is shedding its industrial-only reputation. On constrained sites, volumetric modules cut calendar time while holding tolerances that stick-built crews struggle to repeat.\n\nWe coordinate MEP penetrations in the factory so field work is mostly connection and commissioning, with fewer surprises and cleaner inspections." },
+  { id: "site-safety-culture", title: "Building a Site Safety Culture That Sticks", excerpt: "Leading indicators, toolbox talks, and accountability from the GC down.", date: "November 18, 2023", author: "Michael Rodriguez", category: "Tips", image: "https://images.unsplash.com/photo-1581092160562-40aa08e2c586?w=600&h=400&fit=crop", content: "Safety is not a poster. It is a daily choice reinforced by how we plan lifts, sequence trades, and debrief near misses.\n\nOur supers run joint walks with subs before high-risk activities. If the plan does not feel crisp, we pause and rewrite it." },
   { id: "cost-certainty", title: "Cost Certainty in Volatile Markets", excerpt: "How we lock allowances, hedge long-lead buys, and communicate trade-offs early.", date: "October 2, 2023", author: "John Mitchell", category: "Tips", image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop", content: "Owners deserve numbers they can plan around. We pair milestone pricing with transparent contingency bands and weekly burn reports so decisions happen before variances compound." },
   { id: "mass-timber", title: "Mass Timber: Where Code and Craft Meet", excerpt: "A primer on hybrid structures, fire design, and supplier coordination.", date: "September 12, 2023", author: "Sarah Chen", category: "Sustainability", image: "https://images.unsplash.com/photo-1518005068251-37900150dfca?w=600&h=400&fit=crop", content: "Timber is no longer niche. With updated code paths and experienced fabricators, we deliver exposed structure without apologizing for performance.\n\nEarly supplier engagement keeps CNC files aligned with field surveys." },
 ];
@@ -206,7 +206,7 @@ export const FOOTER_COMPANY_LINKS: { label: string; to: string }[] = [
 /** List posts per page (below the featured article on page 1). */
 export const BLOG_LIST_PAGE_SIZE = 2;
 
-/** Category sidebar counts — derived from `BLOG_POSTS`. */
+/** Category sidebar counts, derived from `BLOG_POSTS`. */
 export function getBlogCategoryCounts(): { label: string; count: number }[] {
   const m = new Map<string, number>();
   for (const p of BLOG_POSTS) {
@@ -243,7 +243,7 @@ export const CORE_VALUES = [
   {
     id: "transparency",
     title: "Transparency",
-    description: "Open books on allowances, schedules, and decisions — no black boxes.",
+    description: "Open books on allowances, schedules, and decisions. No black boxes.",
     icon: "Eye" as const,
   },
   {
@@ -297,7 +297,7 @@ export const FAQ_BY_CATEGORY: Record<FaqTabId, { question: string; answer: strin
     {
       question: "Can you work with my architect?",
       answer:
-        "Absolutely. We integrate early with your architect and engineers, or provide full design-build under one contract — whichever fits your project.",
+        "Absolutely. We integrate early with your architect and engineers, or provide full design-build under one contract, whichever fits your project.",
     },
   ],
   pricing: [
@@ -309,7 +309,7 @@ export const FAQ_BY_CATEGORY: Record<FaqTabId, { question: string; answer: strin
     {
       question: "How are change orders handled?",
       answer:
-        "Every change is written, priced, and approved before work proceeds. No verbal-only changes — protecting both sides.",
+        "Every change is written, priced, and approved before work proceeds. No verbal-only changes, which protects both sides.",
     },
     {
       question: "What payment structure do you use?",
@@ -350,13 +350,13 @@ export const FAQ_BY_CATEGORY: Record<FaqTabId, { question: string; answer: strin
     {
       question: "Who do I call after move-in?",
       answer:
-        "A dedicated aftercare line and portal ticket — same team that built it, not a call center.",
+        "A dedicated aftercare line and portal ticket. Same team that built it, not a call center.",
     },
   ],
 };
 
 export const SERVICES_PAGE_INTRO =
-  "End-to-end design and construction — from feasibility through handover — with one accountable partner and clear communication at every stage.";
+  "End-to-end design and construction, from feasibility through handover, with one accountable partner and clear communication at every stage.";
 
 export const COMMERCIAL_FITOUT_CARDS = [
   {
@@ -368,7 +368,7 @@ export const COMMERCIAL_FITOUT_CARDS = [
   {
     id: "sourcing",
     title: "Material Sourcing",
-    description: "Global vendor network with QA at receipt — fewer surprises on site.",
+    description: "Global vendor network with QA at receipt, for fewer surprises on site.",
     icon: "Package" as const,
   },
   {
@@ -392,9 +392,9 @@ export const SERVICE_DEEP_DIVES: {
     id: "new-builds",
     category: "REAL ESTATE",
     title: "New Builds & Estates",
-    subtitle: "DELIVERED IN 12–24 MONTHS TYPICALLY — SITE AND PROGRAM DEPENDENT",
+    subtitle: "DELIVERED IN 12–24 MONTHS TYPICALLY, SITE- AND PROGRAM-DEPENDENT",
     body: [
-      "We orchestrate architecture, structure, MEP, and interiors as a single thread — reducing gaps between design intent and field execution.",
+      "We orchestrate architecture, structure, MEP, and interiors as a single thread, reducing gaps between design intent and field execution.",
       "Expect fixed milestone pricing options where scope allows, plus a single point of contact from groundbreaking through certificate of occupancy.",
     ],
     image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&h=700&fit=crop",
@@ -413,7 +413,7 @@ export const SERVICE_DEEP_DIVES: {
     title: "Renovations & Additions",
     subtitle: "PHASED WORK WHEN YOU NEED TO REMAIN IN-PLACE",
     body: [
-      "Structural modifications, envelope upgrades, and full interior reimagining — sequenced to protect livability and schedule.",
+      "Structural modifications, envelope upgrades, and full interior reimagining, sequenced to protect livability and schedule.",
       "Dust control, temporary kitchens/baths, and daily cleanup standards are part of the plan, not an afterthought.",
     ],
     image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=900&h=700&fit=crop",
@@ -432,7 +432,7 @@ export const SERVICE_DEEP_DIVES: {
     title: "Commercial Fit-Outs",
     subtitle: "OFFICE · RETAIL · HOSPITALITY",
     body: [
-      "Tenant improvements delivered to landlord specs with aggressive timelines — BIM coordination, mockups, and commissioning included.",
+      "Tenant improvements delivered to landlord specs with aggressive timelines, including BIM coordination, mockups, and commissioning.",
       "We align with your operations team so openings land on marketing dates, not “whenever construction finishes.”",
     ],
     image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&h=700&fit=crop",

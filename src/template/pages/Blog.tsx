@@ -65,8 +65,8 @@ const Blog = () => {
 
   const showFeatured = listPage === 1 && featured !== null;
 
-  const titleBase = `News — ${COMPANY.name}`;
-  const docTitle = listPage > 1 ? `${titleBase} — Page ${listPage}` : titleBase;
+  const titleBase = `News | ${COMPANY.name}`;
+  const docTitle = listPage > 1 ? `${titleBase} | Page ${listPage}` : titleBase;
 
   return (
     <Layout>
@@ -183,7 +183,7 @@ const Blog = () => {
 
               <div className="rounded-xl bg-secondary p-6 text-secondary-foreground">
                 <h3 className="font-bold text-lg mb-2">Need help with a project?</h3>
-                <p className="text-sm opacity-95 mb-5 leading-relaxed">Tell us your timeline — we&apos;ll propose next steps within one business day.</p>
+                <p className="text-sm opacity-95 mb-5 leading-relaxed">Tell us your timeline, and we&apos;ll propose next steps within one business day.</p>
                 <Button asChild className="w-full rounded-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90">
                   <Link to="/contact">REQUEST ESTIMATE</Link>
                 </Button>
@@ -229,7 +229,7 @@ const Blog = () => {
         <div className="container-custom px-4 md:px-8 max-w-3xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <div className="flex-1">
             <h2 className="font-bold text-foreground text-lg mb-1">Subscribe to our newsletter</h2>
-            <p className="text-sm text-muted-foreground">Occasional updates — no spam.</p>
+            <p className="text-sm text-muted-foreground">Occasional updates, no spam.</p>
           </div>
           <form
             className="flex flex-col sm:flex-row gap-2 flex-1"

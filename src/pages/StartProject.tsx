@@ -5,7 +5,7 @@ import ProjectOnboardingWizard from "@/components/onboarding/ProjectOnboardingWi
 
 const StartProject = () => {
   useEffect(() => {
-    document.title = "Start a project — Nexora";
+    document.title = "Start a project | Nexora";
   }, []);
 
   return (
@@ -13,9 +13,9 @@ const StartProject = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Start a project" }]}
         title="Start a project"
-        description="A short, guided flow to capture what you need—whether you are launching fresh or migrating an existing site."
+        description="Choose your path (new site or migration), add your details, then review, including how you’d like to pay when checkout is ready."
       />
-      <div className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
+      <div className="mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6 lg:px-8 py-10 md:py-14">
         <ProjectOnboardingWizard />
       </div>
     </SiteLayout>

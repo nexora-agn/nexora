@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import { listProjectRequests, updateProjectRequestStatus } from "@/lib/projectRequests";
 import type { ProjectRequest, ProjectRequestStatus } from "@/lib/supabase";
-import { PREFERRED_FEATURE_OPTIONS } from "@/lib/projectOnboardingConstants";
+import { onboardingTimelineLabel, PREFERRED_FEATURE_OPTIONS } from "@/lib/projectOnboardingConstants";
+import { planLabelById } from "@/lib/pricingPlans";
 import { cn } from "@/lib/utils";
 
 const COLUMNS: { status: ProjectRequestStatus; title: string; description: string }[] = [
-  { status: "new", title: "New", description: "Just in—needs triage" },
+  { status: "new", title: "New", description: "Just in, needs triage" },
   { status: "in_progress", title: "In progress", description: "Actively being worked" },
   { status: "completed", title: "Completed", description: "Wrapped up" },
 ];
@@ -39,8 +40,10 @@ const featureLabel = (id: string) => PREFERRED_FEATURE_OPTIONS.find(f => f.id ==
 function cardTitle(req: ProjectRequest): string {
   const p = req.payload as Record<string, unknown>;
   if (req.request_type === "new_website") {
-    const name = p.business_name;
-    if (typeof name === "string" && name.trim()) return name.trim();
+    const co = p.company;
+    if (typeof co === "string" && co.trim()) return co.trim();
+    const legacy = p.business_name;
+    if (typeof legacy === "string" && legacy.trim()) return legacy.trim();
   } else {
     const url = p.website_url;
     if (typeof url === "string" && url.trim()) return url.trim();
@@ -50,42 +53,125 @@ function cardTitle(req: ProjectRequest): string {
   return "Project request";
 }
 
+function str(v: unknown): string {
+  if (v === undefined || v === null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v === "number" || typeof v === "bigint") return String(v);
+  return "";
+}
+
+/** Show every field from the public onboarding payload, including empty values (as N/A), for the admin team. */
 function formatPayloadLines(req: ProjectRequest): { label: string; value: string }[] {
   const p = req.payload as Record<string, unknown>;
   const lines: { label: string; value: string }[] = [];
 
-  const push = (label: string, value: unknown) => {
-    if (value === undefined || value === null || value === "") return;
-    if (typeof value === "boolean") {
-      lines.push({ label, value: value ? "Yes" : "No" });
-      return;
-    }
-    if (Array.isArray(value)) {
-      if (value.length === 0) return;
-      const mapped = value.map(v => (typeof v === "string" ? featureLabel(v) : String(v)));
-      lines.push({ label, value: mapped.join(", ") });
-      return;
-    }
-    lines.push({ label, value: String(value) });
+  const cell = (label: string, value: string) => {
+    lines.push({ label, value: value.trim() ? value : "N/A" });
   };
 
-  push("Work email", p.contact_email);
+  const payLabel = (v: unknown) => {
+    if (v === "card" || v === "paypal" || v === "stripe") {
+      return v === "card" ? "Card (legacy)" : v === "stripe" ? "Card (Stripe)" : "PayPal";
+    }
+    return str(v) || "N/A";
+  };
+
+  // Shared contact & checkout (all submission types)
+  cell("Full name", str(p.full_name));
+  cell("Work email", str(p.contact_email));
+  cell("Phone", str(p.contact_phone));
+  const companyValue =
+    str(p.company).trim() || str(p.business_name).trim();
+  cell("Company", companyValue);
+  {
+    const t = str(p.timeline);
+    cell("Timeline", t ? onboardingTimelineLabel(t) : "");
+  }
+  {
+    const plan = str(p.selected_plan);
+    cell("Plan", plan ? planLabelById(plan) : "");
+  }
+  cell("Payment preference", payLabel(p.payment_preference));
 
   if (req.request_type === "new_website") {
-    push("Business name", p.business_name);
-    push("Industry", p.industry);
-    push("ERP integration", p.erp_integration);
-    push("AI chatbot", p.ai_chatbot);
-    push("Preferred features", p.preferred_features);
-    push("Additional notes", p.additional_notes);
+    cell("Industry", str(p.industry));
+    {
+      const erp = p.erp_integration;
+      if (typeof erp === "boolean") {
+        lines.push({ label: "ERP integration", value: erp ? "Yes" : "No" });
+        if (erp) {
+          cell("Current ERP system", str(p.current_erp_system));
+        } else {
+          cell("Current ERP system", "Not applicable");
+        }
+      } else {
+        cell("ERP integration", "");
+        cell("Current ERP system", "");
+      }
+    }
+    {
+      const ai = p.ai_chatbot;
+      if (typeof ai === "boolean") {
+        lines.push({ label: "AI chatbot", value: ai ? "Yes" : "No" });
+        if (ai) {
+          cell("Chatbot requirements", str(p.ai_chatbot_requirements));
+        } else {
+          cell("Chatbot requirements", "Not applicable");
+        }
+      } else {
+        cell("AI chatbot", "");
+        cell("Chatbot requirements", "");
+      }
+    }
+    {
+      const pf = p.preferred_features;
+      if (Array.isArray(pf) && pf.length > 0) {
+        const mapped = pf.map(x => (typeof x === "string" ? featureLabel(x) : String(x)));
+        cell("Preferred features", mapped.join(", "));
+      } else {
+        cell("Preferred features", "");
+      }
+    }
+    cell("Other preferred features", str(p.other_preferred_features));
+    cell("Additional notes", str(p.additional_notes));
   } else {
-    push("Current website URL", p.website_url);
-    push("ERP system", p.erp_system);
-    push("ERP has API", p.erp_has_api);
-    if (p.erp_has_api === false) push("Build API for you", p.build_api);
-    push("AI chatbot", p.ai_chatbot);
-    push("Migration requirements", p.migration_requirements);
-    push("Additional notes", p.additional_notes);
+    cell("Current website URL", str(p.website_url));
+    cell("ERP system", str(p.erp_system));
+    {
+      const hasApi = p.erp_has_api;
+      if (typeof hasApi === "boolean") {
+        lines.push({ label: "ERP has API", value: hasApi ? "Yes" : "No" });
+        if (hasApi === false) {
+          const b = p.build_api;
+          if (typeof b === "boolean") {
+            lines.push({ label: "Build API for you", value: b ? "Yes" : "No" });
+          } else {
+            cell("Build API for you", "");
+          }
+        } else {
+          cell("Build API for you", "Not applicable");
+        }
+      } else {
+        cell("ERP has API", "");
+        cell("Build API for you", "");
+      }
+    }
+    {
+      const ai = p.ai_chatbot;
+      if (typeof ai === "boolean") {
+        lines.push({ label: "AI chatbot", value: ai ? "Yes" : "No" });
+        if (ai) {
+          cell("Chatbot requirements", str(p.ai_chatbot_requirements));
+        } else {
+          cell("Chatbot requirements", "Not applicable");
+        }
+      } else {
+        cell("AI chatbot", "");
+        cell("Chatbot requirements", "");
+      }
+    }
+    cell("Migration requirements", str(p.migration_requirements));
+    cell("Additional notes", str(p.additional_notes));
   }
 
   return lines;
@@ -112,7 +198,7 @@ const ProjectRequests = () => {
   }, []);
 
   useEffect(() => {
-    document.title = "Project requests — Nexora admin";
+    document.title = "Project requests | Nexora admin";
   }, []);
 
   useEffect(() => {
@@ -260,7 +346,7 @@ const ProjectRequests = () => {
       </div>
 
       <Dialog open={!!detail} onOpenChange={open => !open && setDetail(null)}>
-        <DialogContent className="max-w-lg max-h-[85vh] flex flex-col">
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>{detail ? cardTitle(detail) : "Request"}</DialogTitle>
           </DialogHeader>
@@ -272,7 +358,11 @@ const ProjectRequests = () => {
                   {detail.status.replace("_", " ")}
                 </Badge>
               </div>
-              <dl className="space-y-3">
+              <dl className="space-y-2">
+                <div>
+                  <dt className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Request ID</dt>
+                  <dd className="mt-0.5 font-mono text-xs break-all text-foreground">{detail.id}</dd>
+                </div>
                 <div>
                   <dt className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Submitted</dt>
                   <dd className="mt-0.5">{fmtDateTime(detail.created_at)}</dd>
@@ -282,14 +372,21 @@ const ProjectRequests = () => {
                   <dd className="mt-0.5">{fmtDateTime(detail.updated_at)}</dd>
                 </div>
               </dl>
+              <p className="text-xs text-muted-foreground">Full payload as submitted from the start-project flow (all fields below).</p>
               <div className="rounded-lg border bg-muted/20 divide-y divide-border/80">
-                {formatPayloadLines(detail).map(row => (
-                  <div key={row.label} className="px-3 py-2.5 space-y-0.5">
+                {formatPayloadLines(detail).map((row, i) => (
+                  <div key={`${row.label}-${i}`} className="px-3 py-2.5 space-y-0.5">
                     <p className="text-xs font-medium text-muted-foreground">{row.label}</p>
                     <p className="text-sm whitespace-pre-wrap break-words">{row.value}</p>
                   </div>
                 ))}
               </div>
+              <details className="rounded-lg border border-border/60 bg-background/50 px-3 py-2 text-xs">
+                <summary className="cursor-pointer font-medium text-muted-foreground">Raw JSON (payload)</summary>
+                <pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap break-words rounded-md bg-muted/40 p-2 font-mono text-[11px] leading-relaxed">
+                  {JSON.stringify(detail.payload, null, 2)}
+                </pre>
+              </details>
               <div className="flex flex-wrap gap-2 pt-2">
                 {COLUMNS.filter(c => c.status !== detail.status).map(c => (
                   <Button key={c.status} type="button" size="sm" variant="outline" onClick={() => void move(detail.id, c.status)}>

@@ -1,13 +1,21 @@
 import { motion } from "framer-motion";
 
-const industries = ["Construction", "Real estate", "Field services", "Distribution", "Professional services"];
+const TRUST_SLIDER_HEADING = "Trusted by construction companies across the U.S.";
+
+const TRUST_SLIDER_NAMES = [
+  "True North Builders",
+  "Hardhat Construction",
+  "Summit Construction",
+  "Pioneer Builders",
+  "Ironcrest Companies",
+] as const;
 
 const TrustSection = () => {
-  const scrolling = [...industries, ...industries];
+  const scrolling = [...TRUST_SLIDER_NAMES, ...TRUST_SLIDER_NAMES];
 
   return (
     <section
-      className="relative overflow-hidden border-y border-neutral-900 bg-neutral-950 py-14 md:py-16"
+      className="relative overflow-hidden border-y border-neutral-900 bg-neutral-950 py-12 md:py-14"
       aria-labelledby="trust-heading"
     >
       <div
@@ -15,7 +23,7 @@ const TrustSection = () => {
         aria-hidden
       />
 
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="relative mx-auto max-w-6xl px-5 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -25,24 +33,21 @@ const TrustSection = () => {
         >
           <p
             id="trust-heading"
-            className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500"
+            className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500"
           >
-            Built for teams that move
-          </p>
-          <p className="mx-auto mb-3 max-w-md text-sm font-medium text-neutral-400 md:text-base">
-            Serious websites—without hiring a full product team.
+            {TRUST_SLIDER_HEADING}
           </p>
           <div className="mx-auto mb-8 h-0.5 w-10 bg-brand" aria-hidden />
 
           <div className="overflow-hidden py-2">
             <div
-              className="flex w-max items-center gap-8 md:gap-12"
+              className="flex w-max items-center gap-10 md:gap-14"
               style={{ animation: "marquee 22s linear infinite" }}
             >
               {scrolling.map((name, index) => (
                 <span
                   key={`${name}-${index}`}
-                  className="select-none whitespace-nowrap text-sm font-medium uppercase tracking-[0.18em] text-neutral-500"
+                  className="select-none whitespace-nowrap text-xs font-bold uppercase tracking-[0.12em] text-neutral-500 sm:text-sm sm:tracking-[0.16em]"
                 >
                   {name}
                 </span>

@@ -5,7 +5,7 @@ const industries = [
   {
     icon: Building2,
     title: "Construction & supply",
-    copy: "Pricing and stock match your warehouse—no double entry.",
+    copy: "Pricing and stock match your warehouse. No double entry.",
   },
   {
     icon: Home,
@@ -22,7 +22,7 @@ const industries = [
 const questions = [
   {
     q: "Already have a site?",
-    a: "Refresh or start fresh—we plan the data path upfront.",
+    a: "Refresh or start fresh. We plan the data path upfront.",
   },
   {
     q: "Migrating or new?",
@@ -59,13 +59,13 @@ const ErpIntegrationSection = () => {
 
             <ul className="mt-8 space-y-3 border-l-[3px] border-brand pl-5">
               <li className="text-sm font-medium text-neutral-800 md:text-base">
-                <span className="text-neutral-950">Catalog &amp; pricing</span> — matches your live rules.
+                <span className="text-neutral-950">Catalog &amp; pricing</span> matches your live rules.
               </li>
               <li className="text-sm font-medium text-neutral-800 md:text-base">
-                <span className="text-neutral-950">Orders</span> — land where fulfilment already looks.
+                <span className="text-neutral-950">Orders</span> land where fulfilment already looks.
               </li>
               <li className="text-sm font-medium text-neutral-800 md:text-base">
-                <span className="text-neutral-950">One trail</span> — finance and ops see the same story.
+                <span className="text-neutral-950">One trail</span>: finance and ops see the same story.
               </li>
             </ul>
           </motion.div>

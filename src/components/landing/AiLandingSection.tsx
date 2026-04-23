@@ -4,7 +4,7 @@ import { Bot, MessageCircle, Sparkles, Timer } from "lucide-react";
 const forBusiness = [
   {
     title: "Faster answers",
-    line: "Visitors get stock, areas, and next steps—without waiting on an inbox.",
+    line: "Visitors get stock, areas, and next steps, without waiting on an inbox.",
   },
   {
     title: "Smarter hand-offs",
@@ -12,7 +12,7 @@ const forBusiness = [
   },
   {
     title: "Always on",
-    line: "After-hours bookings still hit your queue—with timestamps.",
+    line: "After-hours bookings still hit your queue, with timestamps.",
   },
 ];
 
@@ -20,7 +20,7 @@ const forYou = [
   {
     icon: Bot,
     title: "On-brand assistant",
-    line: "Trained on your services—not a generic bot.",
+    line: "Trained on your services, not a generic bot.",
   },
   {
     icon: MessageCircle,
@@ -50,7 +50,7 @@ const AiLandingSection = () => {
             Automation that actually helps
           </h2>
           <p className="mt-3 text-base font-medium text-neutral-600 md:text-lg">
-            Routing, qualification, first-line answers—you stay in control.
+            Routing, qualification, first-line answers. You stay in control.
           </p>
         </motion.div>
 

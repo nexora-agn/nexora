@@ -25,7 +25,7 @@ const LeadContactSection = () => {
       toast.error("Please select a service.");
       return;
     }
-    toast.success("Thanks — we'll be in touch within one business day.");
+    toast.success("Thanks. We’ll be in touch within one business day.");
     (e.target as HTMLFormElement).reset();
     setService("");
   };

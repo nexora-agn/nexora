@@ -31,8 +31,8 @@ const Services = () => {
   return (
     <Layout>
     <Helmet>
-      <title>Our Services — {COMPANY.name}</title>
-      <meta name="description" content={`${COMPANY.name} — design-build, renovations, commercial, and advisory services.`} />
+      <title>Our Services | {COMPANY.name}</title>
+      <meta name="description" content={`${COMPANY.name}: design-build, renovations, commercial, and advisory services.`} />
     </Helmet>
 
     <Reveal direction="zoom" duration={650}>
@@ -126,7 +126,7 @@ const Services = () => {
     {sectionVisibility["services.cta"] && <Reveal delay={220}>
       <CTASection
         title="Planning a new build or renovation?"
-        subtitle="Share your goals — we’ll propose a realistic path, budget band, and timeline."
+        subtitle="Share your goals, and we’ll propose a realistic path, budget band, and timeline."
         primaryLabel="REQUEST ESTIMATE"
         secondaryLabel="BOOK A CALL"
       />

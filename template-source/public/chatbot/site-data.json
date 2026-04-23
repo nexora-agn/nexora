@@ -35,7 +35,7 @@
     ],
     "values": [
       { "title": "Quality", "description": "Materials, trades, and inspections held to a single uncompromising standard." },
-      { "title": "Transparency", "description": "Open books on allowances, schedules, and decisions — no black boxes." }
+      { "title": "Transparency", "description": "Open books on allowances, schedules, and decisions. No black boxes." }
     ],
     "certifications": [
       { "label": "ISO 9001", "sub": "Quality management" },

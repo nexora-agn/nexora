@@ -34,7 +34,7 @@ const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
             <div className="border-l-[3px] border-brand pl-6 md:pl-8">
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-neutral-500">Next step</p>
               <h2 className="mb-5 text-3xl font-bold tracking-tight text-white md:text-4xl md:leading-[1.15] lg:text-[2.5rem]">
-                Live in days—not months
+                Live in days, not months
               </h2>
               <p className="max-w-md text-base font-medium leading-relaxed text-neutral-400 md:text-[1.0625rem]">
                 15-minute walkthrough. See preview, timeline, and launch. No fluff.

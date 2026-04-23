@@ -22,6 +22,48 @@ const AdminProjectRequests = lazy(() => import("./pages/admin/ProjectRequests"))
 
 const queryClient = new QueryClient();
 
+const DEFAULT_SITE_TITLE = "Nexora | Custom websites, delivered fast";
+
+/** Resets the tab title on client navigation (admin pages set their own; public routes were not updating). */
+const MarketingDocumentTitle = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname.startsWith("/admin")) {
+      return;
+    }
+    if (pathname === "/") {
+      document.title = DEFAULT_SITE_TITLE;
+      return;
+    }
+    if (pathname === "/contact") {
+      document.title = "Contact | Nexora";
+      return;
+    }
+    if (pathname === "/start") {
+      document.title = "Start a project | Nexora";
+      return;
+    }
+    if (pathname === "/blog") {
+      document.title = "Blog | Nexora";
+      return;
+    }
+    if (pathname.startsWith("/blog/")) {
+      document.title = "Blog | Nexora";
+      return;
+    }
+    if (pathname === "/privacy") {
+      document.title = "Privacy policy | Nexora";
+      return;
+    }
+    if (pathname === "/terms") {
+      document.title = "Terms of service | Nexora";
+      return;
+    }
+    document.title = "Page not found | Nexora";
+  }, [pathname]);
+  return null;
+};
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -54,6 +96,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <ScrollToTop />
+          <MarketingDocumentTitle />
           <Suspense fallback={<RouteLoading />}>
             <Routes>
               <Route path="/" element={<Index />} />

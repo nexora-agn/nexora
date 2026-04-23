@@ -18,8 +18,8 @@ const About = () => {
   return (
     <Layout>
     <Helmet>
-      <title>About Us — {COMPANY.name}</title>
-      <meta name="description" content={`${COMPANY.name} company profile — legacy, values, and how we work.`} />
+      <title>About Us | {COMPANY.name}</title>
+      <meta name="description" content={`${COMPANY.name} company profile: legacy, values, and how we work.`} />
     </Helmet>
 
     <Reveal direction="zoom" duration={650}>
@@ -36,12 +36,12 @@ const About = () => {
         <div>
           <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">Building legacy, brick by brick</h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
-            Since 2008 we&apos;ve partnered with owners, developers, and design teams who expect clarity — not chaos — when budgets
+            Since 2008 we&apos;ve partnered with owners, developers, and design teams who expect clarity, not chaos, when budgets
             and schedules are on the line. Our teams integrate early so decisions made on paper survive contact with reality.
           </p>
           <p className="text-muted-foreground leading-relaxed">
             From New York to Dubai, we bring the same playbook: senior leadership on site, milestone-based transparency, and
-            craftsmanship that holds up to inspection — and time.
+            craftsmanship that holds up to inspection and time.
           </p>
         </div>
         <img

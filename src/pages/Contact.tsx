@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
+import { companyAddressDisplay, COMPANY_LEGAL } from "@/lib/companyLegal";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -22,7 +23,7 @@ const Contact = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Contact" }]}
         title="Contact"
-        description="Questions or demos—we reply within one business day."
+        description="Questions or demos. We reply within one business day."
       />
 
       <div className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
@@ -66,11 +67,12 @@ const Contact = () => {
                     <MapPin className="h-4 w-4" aria-hidden />
                   </span>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Office</p>
-                    <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
-                      123 Web Street
-                      <br />
-                      Internet City, IC 00000
+                    <p className="text-sm font-semibold text-foreground">Registered office</p>
+                    <p className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                      {companyAddressDisplay()}
+                    </p>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                      {COMPANY_LEGAL.legalName} · CR {COMPANY_LEGAL.commercialRegistration}
                     </p>
                   </div>
                 </li>

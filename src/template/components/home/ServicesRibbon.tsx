@@ -31,7 +31,7 @@ const ServicesRibbon = () => {
             </h2>
           </div>
           <p className="text-sm text-muted-foreground md:max-w-sm">
-            One accountable partner for every phase — from initial drawings to
+            One accountable partner for every phase, from initial drawings to
             final walkthrough.
           </p>
         </div>

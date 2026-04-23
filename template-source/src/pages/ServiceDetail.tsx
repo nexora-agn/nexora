@@ -22,7 +22,7 @@ const ServiceDetail = () => {
   return (
     <Layout>
       <Helmet>
-        <title>{service.title} — {COMPANY.name}</title>
+        <title>{service.title} | {COMPANY.name}</title>
         <meta name="description" content={service.description} />
       </Helmet>
       <PageHeader eyebrow="SERVICES" title={service.title} subtitle={service.description} />

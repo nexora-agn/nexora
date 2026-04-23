@@ -15,7 +15,7 @@ const Blog = () => {
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Blog</p>
         <h1 className="mt-3 text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Insights</h1>
         <p className="mt-3 text-base font-medium text-neutral-600">
-          How we ship sites—and how you can too.
+          How we ship sites, and how you can too.
         </p>
 
         <ul className="mt-12 space-y-12 border-t border-neutral-200 pt-12">

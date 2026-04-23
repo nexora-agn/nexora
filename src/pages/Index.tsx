@@ -8,7 +8,6 @@ import ErpIntegrationSection from "@/components/landing/ErpIntegrationSection";
 import CustomizationPreview from "@/components/landing/CustomizationPreview";
 import AiLandingSection from "@/components/landing/AiLandingSection";
 import ProjectsShowcase from "@/components/landing/ProjectsShowcase";
-import WhatYouGet from "@/components/landing/WhatYouGet";
 import PricingSection from "@/components/landing/PricingSection";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
@@ -56,12 +55,11 @@ const Index = () => {
         <Hero onRequestDemo={() => setDemoOpen(true)} />
         <TrustSection />
         <StepsSection />
-        <ErpIntegrationSection />
         <CustomizationPreview />
+        <ErpIntegrationSection />
         <AiLandingSection />
         <ProjectsShowcase />
-        <WhatYouGet />
-        <PricingSection onRequestDemo={() => setDemoOpen(true)} />
+        <PricingSection />
         <FinalCTA onRequestDemo={() => setDemoOpen(true)} />
         <Footer />
         <RequestDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />

@@ -11,10 +11,10 @@ const Team = () => {
   return (
     <Layout>
     <Helmet>
-      <title>Our Team — {COMPANY.name}</title>
+      <title>Our Team | {COMPANY.name}</title>
       <meta name="description" content={`Meet the leadership and experts behind ${COMPANY.name}.`} />
     </Helmet>
-    <PageHeader eyebrow="COMPANY" title="Our Team" subtitle="Senior-led teams on every project — design, engineering, and field operations working as one." />
+    <PageHeader eyebrow="COMPANY" title="Our Team" subtitle="Senior-led teams on every project: design, engineering, and field operations working as one." />
 
     {sectionVisibility["team.grid"] && <section className="section-padding bg-background">
       <div className="container-custom px-4 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">

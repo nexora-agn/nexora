@@ -70,7 +70,7 @@ function relativeLuminanceFromHex(hex: string): number {
   return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
-/** Text/icon color that contrasts with the accent (secondary) background — not always white. */
+/** Text/icon color that contrasts with the accent (secondary) background, not always white. */
 function secondaryForegroundHex(secondaryHex: string, primaryHex: string): string {
   const L = relativeLuminanceFromHex(secondaryHex);
   if (L > 0.45) return primaryHex;

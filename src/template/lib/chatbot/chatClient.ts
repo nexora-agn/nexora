@@ -4,13 +4,12 @@
  * Endpoint resolution (in order):
  *   1. `VITE_CHAT_API_URL` at build time (explicit override for hosted templates)
  *   2. `window.__CHATBOT_API_URL__` at runtime (allows overriding per deployment
- *      without rebuilding the bundle — set it in index.html / Vercel edge)
+ *      without rebuilding the bundle; set it in index.html or Vercel edge config)
  *   3. Default to `/api/chat` (works under Vercel + the bundled dev-api.mjs)
  *
  * Response contract (server should return one of):
  *   { message: string, action?: { id, args }, suggestions?: string[] }
- *   — OR —
- *   { reply: string }  (legacy Flowise-style responses also work)
+ *   or { reply: string } (legacy Flowise-style responses also work)
  */
 
 import type { ChatbotSiteData } from "./siteData";
@@ -57,7 +56,7 @@ function parseStructured(raw: string): { message: string; action?: ChatApiRespon
       return { message: parsed.message, action: parsed.action };
     }
   } catch {
-    /* fall through — treat as plain text */
+    /* fall through: treat as plain text */
   }
   return { message: trimmed };
 }

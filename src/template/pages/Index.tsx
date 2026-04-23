@@ -17,12 +17,12 @@ const Index = () => {
   return (
     <Layout>
     <Helmet>
-      <title>{COMPANY.name} — Construction &amp; Design</title>
+      <title>{COMPANY.name} | Construction &amp; Design</title>
       <meta
         name="description"
-        content={`${COMPANY.name} — ${COMPANY.tagline} Residential and commercial builds with a transparent process.`}
+        content={`${COMPANY.name}. ${COMPANY.tagline} Residential and commercial builds with a transparent process.`}
       />
-      <meta property="og:title" content={`${COMPANY.name} — Construction & Design`} />
+      <meta property="og:title" content={`${COMPANY.name} | Construction & Design`} />
       <meta property="og:description" content={COMPANY.tagline} />
     </Helmet>
 

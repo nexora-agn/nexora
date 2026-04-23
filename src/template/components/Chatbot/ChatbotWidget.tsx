@@ -1,5 +1,5 @@
 /**
- * ChatbotWidget — floating AI assistant rendered at the template root.
+ * ChatbotWidget: floating AI assistant rendered at the template root.
  *
  * Design goals:
  *   • Looks native to the template (uses CSS variables `--primary` / `--secondary`).
@@ -7,7 +7,7 @@
  *     answers from the template's own site-data.
  *   • Streams text visually (typewriter) so the empty bubble never looks dead.
  *   • Dispatches structured actions for the rest of the template to consume.
- *   • Tiny footprint — pure React + Tailwind + lucide-react icons, no extra deps.
+ *   • Tiny footprint: pure React + Tailwind + lucide-react icons, no extra deps.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -48,7 +48,7 @@ const DEFAULT_SUGGESTIONS = [
 const greetingFor = (siteName: string): UiMessage => ({
   id: uid(),
   role: "assistant",
-  content: `Hi! I'm the ${siteName || "website"} assistant. Ask me about our services, projects, pricing or anything else — I can also jump you to the right page.`,
+  content: `Hi! I'm the ${siteName || "website"} assistant. Ask me about our services, projects, pricing or anything else. I can also jump you to the right page.`,
   suggestions: DEFAULT_SUGGESTIONS,
 });
 
@@ -148,7 +148,7 @@ const ChatbotWidget = () => {
         i === 0 && m.role === "assistant" && !m.pending
           ? {
               ...m,
-              content: `Hi! I'm the ${siteData.site.name || "website"} assistant. Ask me about our services, projects, pricing or anything else — I can also jump you to the right page.`,
+              content: `Hi! I'm the ${siteData.site.name || "website"} assistant. Ask me about our services, projects, pricing or anything else. I can also jump you to the right page.`,
             }
           : m,
       ),
@@ -241,7 +241,7 @@ const ChatbotWidget = () => {
                   ...m,
                   pending: false,
                   content:
-                    "Sorry — I'm having trouble reaching the server. Please try again in a moment, or use the contact form to reach us directly.",
+                    "Sorry, I'm having trouble reaching the server. Please try again in a moment, or use the contact form to reach us directly.",
                   suggestions: ["Open contact form"],
                   action: { id: "open_contact_form" },
                 }
@@ -393,7 +393,7 @@ const ChatbotWidget = () => {
               </button>
             </div>
             <p className="mt-1.5 text-[10px] text-muted-foreground text-center">
-              AI answers are generated — double-check anything important.
+              AI answers are generated. Double-check anything important.
             </p>
           </form>
         </div>

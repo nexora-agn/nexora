@@ -31,8 +31,8 @@ const Contact = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Contact Us — {COMPANY.name}</title>
-        <meta name="description" content={`Contact ${COMPANY.name} — New York office, hours, and project inquiries.`} />
+        <title>Contact Us | {COMPANY.name}</title>
+        <meta name="description" content={`Contact ${COMPANY.name}: New York office, hours, and project inquiries.`} />
       </Helmet>
 
       <Reveal direction="zoom" duration={650}>

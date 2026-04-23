@@ -5,7 +5,7 @@ const benefits = [
   {
     icon: Clock,
     title: "Accelerated timeline",
-    desc: "A guided process replaces open-ended scoping—so approvals and build work stay on a predictable cadence.",
+    desc: "A guided process replaces open-ended scoping, so approvals and build work stay on a predictable cadence.",
   },
   {
     icon: Code2,
@@ -15,7 +15,7 @@ const benefits = [
   {
     icon: BadgeCheck,
     title: "Identity you own",
-    desc: "Creative decisions map to your positioning—not a one-size-fits-all theme—so the result feels credibly yours.",
+    desc: "Creative decisions map to your positioning, not a one-size-fits-all theme, so the result feels credibly yours.",
   },
   {
     icon: Rocket,
@@ -61,7 +61,7 @@ const BenefitsSection = () => {
                 Operating model
               </div>
               <h3 className="mb-4 text-2xl font-semibold tracking-tight text-foreground md:text-3xl md:leading-snug">
-                From brand inputs to a live site—without the typical agency noise.
+                From brand inputs to a live site, without the typical agency noise.
               </h3>
               <p className="mb-8 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
                 You should always know what is in scope, what happens next, and when you can expect

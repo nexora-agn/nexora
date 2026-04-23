@@ -67,7 +67,7 @@ function focusFirstInput(selector: string) {
 /**
  * Execute the action. Returns `true` if it was handled (so the widget can
  * display a lightweight confirmation) or `false` if nothing happened (e.g.
- * unknown action id — still dispatched as an event so the host can handle it).
+ * unknown action id, but it is still dispatched as an event so the host can handle it).
  */
 export function runChatAction(action: ChatAction, navigate: NavigateFunction): boolean {
   dispatchAction(action);

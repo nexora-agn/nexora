@@ -9,7 +9,6 @@ const sectionLinks = [
   { id: "ai", label: "AI" },
   { id: "projects", label: "Work" },
   { id: "pricing", label: "Pricing" },
-  { id: "what-you-get", label: "Platform" },
 ] as const;
 
 interface NavbarProps {
@@ -30,12 +29,12 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
 
   const handleSectionClick =
     (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
       setOpen(false);
       if (location.pathname !== "/") {
         navigate("/", { state: { scrollTo: id } });
         return;
       }
-      e.preventDefault();
       scrollToSection(id);
     };
 
@@ -44,7 +43,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
       {sectionLinks.map(({ id, label }) => (
         <a
           key={id}
-          href={`/#${id}`}
+          href="/"
           onClick={handleSectionClick(id)}
           className={className}
         >

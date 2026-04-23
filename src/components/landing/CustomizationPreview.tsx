@@ -224,7 +224,7 @@ const CustomizationPreview = () => {
             See your brand before you buy in
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-relaxed text-muted-foreground md:text-lg">
-            Logo, colours, desktop or mobile—updates instantly. No guesswork.
+            Logo, colours, desktop or mobile. Updates instantly. No guesswork.
           </p>
 
           <div className="mx-auto mt-6 flex max-w-2xl flex-wrap items-center justify-center gap-x-3 gap-y-3 text-sm text-muted-foreground">

@@ -20,7 +20,7 @@ const ProjectsShowcase = () => {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">From the blog</p>
             <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Short reads. Real tactics.</h2>
             <p className="mt-3 text-base font-medium text-neutral-600">
-              Leads, ops, and how we think—no filler.
+              Leads, ops, and how we think. No filler.
             </p>
             <Link
               to="/blog"

@@ -16,8 +16,8 @@ const ClientStoriesSection = () => {
             Trusted by owners who <span className="text-secondary">don't compromise.</span>
           </h2>
           <p className="mt-5 text-muted-foreground leading-relaxed">
-            Real words from real projects — developers, homeowners and
-            institutions we've built for.
+            Real words from real projects: developers, homeowners, and
+            institutions we&apos;ve built for.
           </p>
         </div>
 

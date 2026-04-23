@@ -7,7 +7,7 @@ const steps = [
     num: "01",
     icon: Palette,
     title: "Logo & colors",
-    desc: "Upload your logo and pick a palette—we apply it everywhere.",
+    desc: "Upload your logo and pick a palette. We apply it everywhere.",
     detail: "Header, favicon, surfaces, and type stay one cohesive system with readable contrast.",
     tags: ["Brand-first", "One palette"],
   },
@@ -15,7 +15,7 @@ const steps = [
     num: "02",
     icon: FileText,
     title: "Your content",
-    desc: "Tell us what you do—we shape the story.",
+    desc: "Tell us what you do. We shape the story.",
     detail: "Clear sections, proof, and CTAs that convert.",
     tags: ["Messaging", "Conversion"],
   },
@@ -24,7 +24,7 @@ const steps = [
     icon: Plug,
     title: "ERP integration",
     desc: "Products flow to the site automatically.",
-    detail: "Connect the systems you already run—catalog, pricing, stock stay aligned.",
+    detail: "Connect the systems you already run. Catalog, pricing, stock stay aligned.",
     tags: ["Auto sync", "Live catalog"],
     erpPreview: true,
   },
@@ -33,11 +33,11 @@ const steps = [
     icon: Rocket,
     title: "Build & launch",
     desc: "We polish, you approve, you go live.",
-    detail: "Responsive build, review rounds, then publish—on your timeline.",
+    detail: "Responsive build, review rounds, then publish, on your timeline.",
     tags: ["Responsive", "Review & launch"],
     completion: {
       title: "Ready to go live",
-      subtitle: "Full site in hand. Flip the switch when you’re ready—no loose ends.",
+      subtitle: "Full site in hand. Flip the switch when you’re ready. No loose ends.",
     },
   },
 ];
@@ -562,7 +562,7 @@ const StepsSection = () => {
           </div>
 
           <p className="mx-auto mt-6 max-w-lg text-center text-sm font-medium text-muted-foreground">
-            Don’t see yours? Ask—we connect most major systems.
+            Don’t see yours? Ask. We connect most major systems.
           </p>
         </div>
       </div>

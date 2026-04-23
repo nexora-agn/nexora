@@ -31,7 +31,7 @@ const AdminClients = () => {
   const [editing, setEditing] = useState<Client | null>(null);
 
   useEffect(() => {
-    document.title = "Clients — Nexora admin";
+    document.title = "Clients | Nexora admin";
   }, []);
 
   const reload = async () => {
@@ -138,7 +138,7 @@ const AdminClients = () => {
                       {c.notes && <div className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{c.notes}</div>}
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
-                      {c.contact_email || c.contact_phone || <span className="text-muted-foreground/60">—</span>}
+                      {c.contact_email || c.contact_phone || <span className="text-muted-foreground/60">N/A</span>}
                     </td>
                     <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground">{fmtDate(c.updated_at)}</td>
                     <td className="px-4 py-3">
