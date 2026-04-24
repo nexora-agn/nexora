@@ -75,6 +75,37 @@
         }
       }
     </script>
+    <script>
+      (function () {
+        var o = typeof location !== "undefined" && location.protocol && location.protocol !== "file:" ? location.origin : "";
+        if (!o) return;
+        function a(sel, attr, v) {
+          var e = document.querySelector(sel);
+          if (e) e.setAttribute(attr, v);
+        }
+        a('link[rel="canonical"]', "href", o + "/");
+        a('meta[property="og:url"]', "content", o + "/");
+        a('meta[property="og:image"]', "content", o + "/og-image.png");
+        a('meta[property="og:image:secure_url"]', "content", o + "/og-image.png");
+        a('meta[name="twitter:image"]', "content", o + "/og-image.png");
+        document.querySelectorAll('script[type="application/ld+json"]').forEach(function (s) {
+          try {
+            var j = JSON.parse(s.textContent);
+            if (j["@type"] === "Organization") {
+              j.url = o + "/";
+              j.logo = o + "/nexora-logo.png";
+            }
+            if (j["@type"] === "WebSite") {
+              j.url = o + "/";
+              if (j.potentialAction && j.potentialAction.target) {
+                j.potentialAction.target = o + "/contact";
+              }
+            }
+            s.textContent = JSON.stringify(j);
+          } catch (e) {}
+        });
+      })();
+    </script>
   </head>
 
   <body>
