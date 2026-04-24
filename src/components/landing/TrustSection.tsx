@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 
-const TRUST_SLIDER_HEADING = "Trusted by construction companies across the U.S.";
+const TRUST_SLIDER_HEADING = "Trusted by local businesses";
 
 const TRUST_SLIDER_NAMES = [
-  "True North Builders",
-  "Hardhat Construction",
-  "Summit Construction",
-  "Pioneer Builders",
-  "Ironcrest Companies",
+  "F.Morina Bauunternehmen",
+  "Arizona Roof Doctors",
+  "Boss Roofing & Siding",
+  "The Honest Guys",
+  "Go Prime Electric",
+  "Pro Lawn & Pest Control",
+  "Indy Precision Painters",
 ] as const;
 
 /** Sits at the bottom of the landing hero (white background, above the dark feature bar). */

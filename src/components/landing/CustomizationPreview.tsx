@@ -106,11 +106,13 @@ const CustomizationPreview = () => {
   const [logoName, setLogoName] = useState("");
   const [logoPreview, setLogoPreview] = useState("");
   const [brandName, setBrandName] = useState("YourBrand");
-  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
-  const [primaryColor, setPrimaryColor] = useState("#183b63");
-  const [secondaryColor, setSecondaryColor] = useState("#edf3f8");
-  const [primaryHex, setPrimaryHex] = useState("#183b63");
-  const [secondaryHex, setSecondaryHex] = useState("#edf3f8");
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">(() =>
+    typeof window !== "undefined" && window.innerWidth < 768 ? "mobile" : "desktop",
+  );
+  const [primaryColor, setPrimaryColor] = useState("#0a0a0a");
+  const [secondaryColor, setSecondaryColor] = useState("#f5c517");
+  const [primaryHex, setPrimaryHex] = useState("#0a0a0a");
+  const [secondaryHex, setSecondaryHex] = useState("#f5c517");
   const brandLabel = logoName ? brandName : "Logo";
   const accentColor = "#ffffff";
   /** Secondary tint for one small accent chip only—rest of mock stays neutral */
@@ -188,10 +190,10 @@ const CustomizationPreview = () => {
     setLogoName("");
     setLogoPreview("");
     setBrandName("YourBrand");
-    setPrimaryColor("#183b63");
-    setSecondaryColor("#edf3f8");
-    setPrimaryHex("#183b63");
-    setSecondaryHex("#edf3f8");
+    setPrimaryColor("#0a0a0a");
+    setSecondaryColor("#f5c517");
+    setPrimaryHex("#0a0a0a");
+    setSecondaryHex("#f5c517");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -205,46 +207,63 @@ const CustomizationPreview = () => {
   ] as const;
 
   return (
-    <section id="live-preview" className="py-20 lg:py-24" aria-labelledby="live-preview-heading">
-      <div className="mx-auto w-full max-w-7xl px-6 xl:max-w-[90rem] xl:px-8">
+    <section
+      id="live-preview"
+      className="relative overflow-hidden border-y border-white/5 bg-[#0A0A0A] py-20 text-neutral-100 lg:py-28"
+      aria-labelledby="live-preview-heading"
+    >
+      <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <div className="absolute -left-1/3 top-[-20%] h-[min(32rem,50vw)] w-[min(32rem,50vw)] rounded-full bg-brand/12 blur-3xl" />
+        <div className="absolute -right-1/4 top-1/3 h-[28rem] w-[28rem] rounded-full bg-brand-muted/8 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 h-64 w-[120%] -translate-x-1/2 bg-gradient-to-t from-black/40 to-transparent" />
+        <div
+          className="absolute inset-0 opacity-[0.2]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            backgroundSize: "180px 180px",
+          }}
+        />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-7xl px-6 xl:max-w-[90rem] xl:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-10 text-center md:mb-12"
+          className="mb-12 text-center md:mb-14"
         >
-          <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="mb-3 inline-block rounded-full border border-brand/30 bg-brand/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Try it live
           </p>
           <h2
             id="live-preview-heading"
-            className="text-3xl font-bold tracking-tight text-foreground md:text-5xl md:leading-[1.1]"
+            className="text-balance text-3xl font-bold tracking-tight text-white md:text-5xl md:leading-[1.1]"
           >
             See your brand before you buy in
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-relaxed text-neutral-400 md:text-lg">
             Logo, colours, desktop or mobile. Updates instantly. No guesswork.
           </p>
 
-          <div className="mx-auto mt-6 flex max-w-2xl flex-wrap items-center justify-center gap-x-3 gap-y-3 text-sm text-muted-foreground">
-            {steps.map((s, i) => (
-              <div key={s.n} className="flex items-center gap-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-xs font-semibold text-neutral-950 shadow-sm">
+          <ol className="mx-auto mt-8 grid w-full max-w-2xl list-none grid-cols-2 gap-2.5 p-0 sm:max-w-3xl sm:grid-cols-4 sm:gap-3">
+            {steps.map((s) => (
+              <li
+                key={s.n}
+                className="group flex min-w-0 flex-col items-center gap-2.5 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] px-2 py-3.5 text-center shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset,0_12px_32px_-12px_rgba(0,0,0,0.5)] transition hover:border-white/[0.16] sm:gap-3 sm:py-4"
+              >
+                <span
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-brand to-brand-muted text-sm font-bold tabular-nums text-brand-foreground shadow-[0_1px_0_0_rgba(255,255,255,0.35)_inset,0_4px_14px_-2px_rgba(245,197,23,0.45)] ring-1 ring-white/25"
+                  aria-hidden
+                >
                   {s.n}
                 </span>
-                <span className="font-medium text-neutral-950">{s.label}</span>
-                {i < steps.length - 1 ? (
-                  <span className="hidden text-neutral-300 sm:inline" aria-hidden>
-                    →
-                  </span>
-                ) : null}
-              </div>
+                <span className="px-1 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-neutral-300 sm:px-0 sm:text-xs sm:tracking-[0.1em]">
+                  {s.label}
+                </span>
+              </li>
             ))}
-          </div>
-          <p className="mx-auto mt-3 max-w-md text-center text-xs font-medium text-neutral-500">
-            Step 4 = connect your systems after sign-off. Minutes to preview, days to wire data.
-          </p>
+          </ol>
         </motion.div>
 
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)] lg:items-start lg:gap-10">
@@ -254,20 +273,18 @@ const CustomizationPreview = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="glass-panel flex min-h-0 w-full min-w-0 flex-col space-y-6 self-start rounded-[1.75rem] border border-white/60 p-6 lg:p-7"
+            className="flex min-h-0 w-full min-w-0 flex-col space-y-6 self-start rounded-3xl border border-white/10 bg-neutral-900/50 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_32px_64px_-20px_rgba(0,0,0,0.65),inset_0_1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-2xl lg:p-7"
           >
-            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border/60 pb-4">
+            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 pb-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  Controls
-                </p>
-                <p className="mt-1 text-sm font-medium text-muted-foreground">Updates the preview live.</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">Controls</p>
+                <p className="mt-1 text-sm font-medium text-neutral-400">Updates the preview live.</p>
               </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="shrink-0 gap-2 rounded-lg border-slate-200 bg-white/80 text-xs font-medium"
+                className="shrink-0 gap-2 rounded-lg border-neutral-600 bg-neutral-950/80 text-xs font-medium text-neutral-200 hover:border-neutral-500 hover:bg-neutral-900 hover:text-white"
                 onClick={resetPreview}
               >
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden />
@@ -277,9 +294,9 @@ const CustomizationPreview = () => {
 
             {/* Logo Upload */}
             <div>
-              <Label className="mb-3 block text-sm font-semibold text-foreground">1. Logo</Label>
-              <p className="mb-3 text-xs font-medium text-muted-foreground">PNG/SVG best. We suggest colours from your file.</p>
-              <label className="flex w-full cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-slate-200 bg-white/80 p-6 transition-colors hover:border-slate-400 focus-within:ring-2 focus-within:ring-slate-400/30 focus-within:ring-offset-2">
+              <Label className="mb-3 block text-sm font-semibold text-neutral-100">1. Logo</Label>
+              <p className="mb-3 text-xs font-medium text-neutral-500">PNG/SVG best. We suggest colours from your file.</p>
+              <label className="flex w-full cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-white/15 bg-white/[0.04] p-6 transition-colors hover:border-brand/35 hover:bg-white/[0.06] focus-within:ring-2 focus-within:ring-brand/25 focus-within:ring-offset-0 focus-within:ring-offset-neutral-950">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -291,49 +308,47 @@ const CustomizationPreview = () => {
                 {logoName ? (
                   <>
                     {logoPreview ? (
-                      <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-border/60 bg-transparent shadow-sm">
+                      <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-neutral-950/50 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
                         <img src={logoPreview} alt={logoName} className="h-full w-full object-contain p-2" />
                       </div>
                     ) : (
-                      <Check size={24} className="text-foreground" />
+                      <Check size={24} className="text-brand" />
                     )}
-                    <span className="text-sm font-medium text-foreground">{logoName}</span>
-                    <span className="text-xs text-muted-foreground">Click to replace logo</span>
+                    <span className="text-sm font-medium text-neutral-100">{logoName}</span>
+                    <span className="text-xs text-neutral-500">Click to replace logo</span>
                   </>
                 ) : (
                   <>
-                    <Upload size={24} className="text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      Click to upload your logo
-                    </span>
-                    <span className="text-xs text-muted-foreground">PNG, JPG, SVG, or WebP. Transparent PNG works best.</span>
+                    <Upload size={24} className="text-neutral-500" />
+                    <span className="text-sm text-neutral-400">Click to upload your logo</span>
+                    <span className="text-xs text-neutral-500">PNG, JPG, SVG, or WebP. Transparent PNG works best.</span>
                   </>
                 )}
               </label>
             </div>
 
             <div>
-              <Label htmlFor="brand-name" className="mb-3 block text-sm font-semibold text-foreground">
+              <Label htmlFor="brand-name" className="mb-3 block text-sm font-semibold text-neutral-100">
                 2. Brand name
               </Label>
-              <p className="mb-3 text-xs font-medium text-muted-foreground">Shows in the header if there’s no logo yet.</p>
+              <p className="mb-3 text-xs font-medium text-neutral-500">Shows in the header if there’s no logo yet.</p>
               <input
                 id="brand-name"
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value || "YourBrand")}
                 placeholder="e.g. Acme Studio"
                 autoComplete="organization"
-                className="w-full rounded-xl border border-border bg-white/90 px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/70 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                className="w-full rounded-xl border border-white/10 bg-neutral-950/50 px-4 py-3 text-sm text-neutral-100 outline-none transition placeholder:text-neutral-500 focus:border-brand/50 focus:ring-2 focus:ring-brand/20"
               />
             </div>
 
             {/* Color Picker */}
             <div>
-              <Label className="mb-3 block text-sm font-semibold text-foreground">3. Colours</Label>
-              <p className="mb-3 text-xs font-medium text-muted-foreground">Tweak by hand or after upload (6-digit hex).</p>
+              <Label className="mb-3 block text-sm font-semibold text-neutral-100">3. Colours</Label>
+              <p className="mb-3 text-xs font-medium text-neutral-500">Tweak by hand or after upload (6-digit hex).</p>
               <div className="grid gap-3 sm:grid-cols-2 sm:items-stretch">
-                <label className="flex min-h-0 flex-col rounded-xl border border-border bg-white/75 p-3">
-                  <span className="mb-2 block text-xs font-medium text-muted-foreground">Primary</span>
+                <label className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-neutral-950/40 p-3">
+                  <span className="mb-2 block text-xs font-medium text-neutral-500">Primary</span>
                   <div className="flex items-center gap-3">
                     <input
                       type="color"
@@ -342,20 +357,20 @@ const CustomizationPreview = () => {
                         setPrimaryColor(e.target.value);
                         setPrimaryHex(e.target.value);
                       }}
-                      className="h-10 w-12 cursor-pointer rounded-lg border border-border bg-transparent p-1"
+                      className="h-10 w-12 cursor-pointer rounded-lg border border-white/20 bg-neutral-900 p-1"
                     />
                     <input
                       type="text"
                       value={primaryHex}
                       onChange={(e) => setPrimaryHex(e.target.value)}
                       onBlur={() => applyHexColor(primaryHex, primaryColor, setPrimaryColor, setPrimaryHex)}
-                      placeholder="#183b63"
-                      className="h-10 flex-1 rounded-lg border border-border bg-white px-3 text-sm text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                      placeholder="#0a0a0a"
+                      className="h-10 flex-1 rounded-lg border border-white/10 bg-neutral-950/80 px-3 text-sm text-neutral-100 outline-none transition focus:border-brand/50 focus:ring-2 focus:ring-brand/20"
                     />
                   </div>
                 </label>
-                <label className="flex min-h-0 flex-col rounded-xl border border-border bg-white/75 p-3">
-                  <span className="mb-2 block text-xs font-medium text-muted-foreground">Secondary</span>
+                <label className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-neutral-950/40 p-3">
+                  <span className="mb-2 block text-xs font-medium text-neutral-500">Secondary</span>
                   <div className="flex items-center gap-3">
                     <input
                       type="color"
@@ -364,21 +379,21 @@ const CustomizationPreview = () => {
                         setSecondaryColor(e.target.value);
                         setSecondaryHex(e.target.value);
                       }}
-                      className="h-10 w-12 cursor-pointer rounded-lg border border-border bg-transparent p-1"
+                      className="h-10 w-12 cursor-pointer rounded-lg border border-white/20 bg-neutral-900 p-1"
                     />
                     <input
                       type="text"
                       value={secondaryHex}
                       onChange={(e) => setSecondaryHex(e.target.value)}
                       onBlur={() => applyHexColor(secondaryHex, secondaryColor, setSecondaryColor, setSecondaryHex)}
-                      placeholder="#edf3f8"
-                      className="h-10 flex-1 rounded-lg border border-border bg-white px-3 text-sm text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                      placeholder="#f5c517"
+                      className="h-10 flex-1 rounded-lg border border-white/10 bg-neutral-950/80 px-3 text-sm text-neutral-100 outline-none transition focus:border-brand/50 focus:ring-2 focus:ring-brand/20"
                     />
                   </div>
                 </label>
               </div>
-              <p className="mt-3 text-xs font-medium text-muted-foreground">
-                <span className="text-foreground/90">Primary</span> = main button. <span className="text-foreground/90">Secondary</span> = small chip.
+              <p className="mt-3 text-xs font-medium text-neutral-500">
+                <span className="text-neutral-200">Primary</span> = main button. <span className="text-neutral-200">Secondary</span> = small chip.
               </p>
             </div>
           </motion.div>
@@ -389,23 +404,25 @@ const CustomizationPreview = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="flex min-h-0 w-full min-w-0 flex-col self-start overflow-hidden rounded-[1.75rem] border border-slate-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_22px_48px_-28px_rgba(15,23,42,0.1)]"
+            className="relative flex min-h-0 w-full min-w-0 flex-col self-start overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-neutral-800/50 to-neutral-950/90 p-1 shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_32px_80px_-24px_rgba(0,0,0,0.75),inset_0_1px_0_0_rgba(255,255,255,0.08)] ring-1 ring-inset ring-white/5"
           >
+            <div className="absolute -right-20 top-8 h-40 w-40 rounded-full bg-brand/10 blur-3xl" aria-hidden />
+            <div className="flex min-h-0 w-full min-w-0 flex-col overflow-hidden rounded-[1.4rem] border border-white/5 bg-neutral-900/30">
             <div className="flex flex-col bg-transparent px-4 py-4 md:px-5 md:py-4">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-foreground">Device preview</p>
-                    <span className="rounded-full border border-brand/35 bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-foreground">
+                    <p className="text-sm font-semibold text-neutral-100">Device preview</p>
+                    <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300 shadow-sm shadow-emerald-500/10">
                       Live
                     </span>
                   </div>
-                  <p className="mt-1 text-xs font-medium text-muted-foreground">Toggle desktop vs mobile.</p>
+                  <p className="mt-1 text-xs font-medium text-neutral-500">Toggle desktop vs mobile.</p>
                 </div>
                 <div
                   role="tablist"
                   aria-label="Preview viewport"
-                  className="flex shrink-0 items-center gap-1 rounded-full border border-slate-200/90 bg-white p-1 shadow-sm"
+                  className="flex shrink-0 items-center gap-0.5 rounded-full border border-white/10 bg-neutral-950/80 p-0.5 shadow-inner"
                 >
                   <button
                     type="button"
@@ -415,10 +432,10 @@ const CustomizationPreview = () => {
                     aria-controls="preview-panel-desktop"
                     onClick={() => setPreviewMode("desktop")}
                     className={cn(
-                      "flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                      "flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-all",
                       previewMode === "desktop"
-                        ? "bg-foreground text-background shadow-sm"
-                        : "text-muted-foreground hover:bg-muted/60",
+                        ? "bg-brand text-brand-foreground shadow-sm shadow-brand/25"
+                        : "text-neutral-500 hover:bg-white/5 hover:text-neutral-300",
                     )}
                   >
                     <Monitor size={14} aria-hidden />
@@ -432,10 +449,10 @@ const CustomizationPreview = () => {
                     aria-controls="preview-panel-mobile"
                     onClick={() => setPreviewMode("mobile")}
                     className={cn(
-                      "flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                      "flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-all",
                       previewMode === "mobile"
-                        ? "bg-foreground text-background shadow-sm"
-                        : "text-muted-foreground hover:bg-muted/60",
+                        ? "bg-brand text-brand-foreground shadow-sm shadow-brand/25"
+                        : "text-neutral-500 hover:bg-white/5 hover:text-neutral-300",
                     )}
                   >
                     <Smartphone size={14} aria-hidden />
@@ -633,6 +650,7 @@ const CustomizationPreview = () => {
                 </motion.div>
                 </div>
               )}
+            </div>
             </div>
           </motion.div>
         </div>
