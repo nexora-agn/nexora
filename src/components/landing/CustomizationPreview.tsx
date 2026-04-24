@@ -396,7 +396,7 @@ const CustomizationPreview = () => {
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-semibold text-foreground">Device preview</p>
-                    <span className="rounded-full border border-brand/35 bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-950">
+                    <span className="rounded-full border border-brand/35 bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-foreground">
                       Live
                     </span>
                   </div>

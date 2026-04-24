@@ -62,7 +62,7 @@ export function PlanPopularBadge({ darkBg }: { darkBg: boolean }) {
     <span
       className={cn(
         "absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border-2 border-brand px-3 py-1 text-[10px] font-bold uppercase tracking-wider",
-        darkBg ? "bg-neutral-950 text-brand" : "bg-white text-amber-700",
+        darkBg ? "bg-neutral-950 text-brand" : "bg-white text-brand-foreground",
       )}
     >
       Most popular

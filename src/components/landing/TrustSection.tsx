@@ -10,36 +10,27 @@ const TRUST_SLIDER_NAMES = [
   "Ironcrest Companies",
 ] as const;
 
-const TrustSection = () => {
+/** Sits at the bottom of the landing hero (white background, above the dark feature bar). */
+const HeroTrustStrip = () => {
   const scrolling = [...TRUST_SLIDER_NAMES, ...TRUST_SLIDER_NAMES];
 
   return (
-    <section
-      className="relative overflow-hidden border-y border-neutral-900 bg-neutral-950 py-12 md:py-14"
-      aria-labelledby="trust-heading"
-    >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-25%,rgba(148,163,184,0.08),transparent_55%)]"
-        aria-hidden
-      />
-
-      <div className="relative mx-auto max-w-6xl px-5 md:px-6">
+    <div className="relative w-full shrink-0 overflow-hidden bg-background" aria-labelledby="trust-heading">
+      <div className="relative mx-auto max-w-6xl px-5 py-8 md:px-6 md:py-9">
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="text-center"
         >
           <p
             id="trust-heading"
-            className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500"
+            className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500"
           >
             {TRUST_SLIDER_HEADING}
           </p>
-          <div className="mx-auto mb-8 h-0.5 w-10 bg-brand" aria-hidden />
 
-          <div className="overflow-hidden py-2">
+          <div className="overflow-hidden py-1">
             <div
               className="flex w-max items-center gap-10 md:gap-14"
               style={{ animation: "marquee 22s linear infinite" }}
@@ -47,7 +38,7 @@ const TrustSection = () => {
               {scrolling.map((name, index) => (
                 <span
                   key={`${name}-${index}`}
-                  className="select-none whitespace-nowrap text-xs font-bold uppercase tracking-[0.12em] text-neutral-500 sm:text-sm sm:tracking-[0.16em]"
+                  className="select-none whitespace-nowrap text-xs font-bold uppercase tracking-[0.12em] text-neutral-400 sm:text-sm sm:tracking-[0.16em]"
                 >
                   {name}
                 </span>
@@ -56,8 +47,8 @@ const TrustSection = () => {
           </div>
         </motion.div>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default TrustSection;
+export default HeroTrustStrip;

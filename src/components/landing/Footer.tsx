@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
+import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 
 const gridPattern =
   "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.035'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")";
@@ -24,9 +25,16 @@ const Footer = () => {
           <div className="max-w-sm">
             <Link
               to="/"
-              className="inline-block text-base font-bold tracking-tight text-white transition-opacity hover:opacity-85"
+              className="inline-flex max-w-[160px] transition-opacity hover:opacity-85"
             >
-              Nexora
+              <img
+                src={NEXORA_LOGO_SRC}
+                alt="Nexora"
+                className="h-8 w-auto object-contain object-left brightness-0 invert"
+                width={160}
+                height={40}
+                decoding="async"
+              />
             </Link>
             <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-400">
               We build business websites. Small team. You’re with the same people from kickoff to launch.

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 
 const sectionLinks = [
   { id: "how-it-works", label: "How it works" },
@@ -70,10 +71,17 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
         <div className="flex h-16 w-full items-center justify-between px-5 md:px-6">
           <Link
             to="/"
-            className="text-xl font-bold tracking-tight text-neutral-950"
+            className="flex shrink-0 items-center"
             onClick={() => setOpen(false)}
           >
-            Nexora
+            <img
+              src={NEXORA_LOGO_SRC}
+              alt="Nexora"
+              className="h-8 w-auto max-w-[140px] object-contain object-left md:h-9 md:max-w-[160px]"
+              width={160}
+              height={40}
+              decoding="async"
+            />
           </Link>
 
           <div className="hidden items-center gap-7 lg:flex">

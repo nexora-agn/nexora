@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
-import TrustSection from "@/components/landing/TrustSection";
 import StepsSection from "@/components/landing/StepsSection";
 import ErpIntegrationSection from "@/components/landing/ErpIntegrationSection";
 import CustomizationPreview from "@/components/landing/CustomizationPreview";
@@ -53,7 +52,6 @@ const Index = () => {
       <div className="relative">
         <Navbar onRequestDemo={() => setDemoOpen(true)} />
         <Hero onRequestDemo={() => setDemoOpen(true)} />
-        <TrustSection />
         <StepsSection />
         <CustomizationPreview />
         <ErpIntegrationSection />

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { COMPANY, HOME_HERO, HOME_STATS, NAV_LINKS, PROJECTS, SITE_TOP } from "@template/data/siteData";
 import { THEME_DEFAULTS } from "@template/contexts/ThemeContext";
+import HeroTrustStrip from "@/components/landing/TrustSection";
 import constructionBg from "@/assets/construction.png";
 
 const scrollToId = (id: string) => {
@@ -76,7 +77,7 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
           aria-hidden
         />
       </div>
-      <div className="relative z-10 flex w-full min-h-0 flex-1 flex-col justify-start px-3 pb-8 pt-[calc(5.5rem+env(safe-area-inset-top,0px))] sm:justify-center sm:px-0 sm:pb-0 sm:pt-0 md:px-4 md:py-12">
+      <div className="relative z-10 flex w-full min-h-0 flex-1 flex-col justify-start px-3 pb-8 pt-[calc(7.5rem+env(safe-area-inset-top,0px))] sm:justify-center sm:px-0 sm:pb-0 sm:pt-14 md:px-4 md:pb-12 md:pt-[5.5rem] lg:pt-[6.5rem] xl:pt-[7.5rem]">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 sm:px-5 sm:py-2 md:gap-14 md:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -89,8 +90,7 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
           </p>
 
           <h1 className="mt-3 text-balance text-3xl font-bold leading-[1.12] tracking-tight text-neutral-950 sm:mt-4 sm:text-4xl sm:leading-[1.1] md:text-5xl md:leading-[1.08] lg:text-[3.1rem]">
-            <span className="block">We Build Your</span>
-            <span className="block">Website.</span>
+            <span className="block">We Build Your Website.</span>
             <span className="block text-neutral-600">You Preview It.</span>
             <span className="block text-neutral-600">
               Then You{" "}
@@ -113,7 +113,7 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
             <button
               type="button"
               onClick={() => scrollToId("live-preview")}
-              className="group flex min-h-[3.25rem] w-full flex-1 items-center gap-3 rounded-2xl border-0 bg-brand px-4 py-3.5 text-left text-brand-foreground shadow-lg shadow-brand/15 transition active:scale-[0.99] hover:bg-[#e6b400] sm:min-w-0"
+              className="group flex min-h-[3.25rem] w-full flex-1 items-center gap-3 rounded-2xl border-0 bg-brand px-4 py-3.5 text-left text-brand-foreground shadow-lg shadow-brand/15 transition active:scale-[0.99] hover:bg-brand-muted sm:min-w-0"
             >
               <Calendar
                 className="h-6 w-6 shrink-0 opacity-90"
@@ -241,6 +241,7 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
       </div>
 
       <div className="mt-auto w-full shrink-0">
+        <HeroTrustStrip />
         <div className="border-t border-neutral-800/80 bg-neutral-950 text-white">
           <div className="mx-auto max-w-6xl px-4 py-6 sm:px-5 sm:py-7 md:px-6 md:py-8">
             <ul className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-5 sm:gap-y-6 md:grid-cols-4 md:gap-6 lg:gap-8">
@@ -397,7 +398,7 @@ function TemplateSiteChrome({ constructionHeroSrc }: { constructionHeroSrc: stri
             className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/20"
           />
           <div className="absolute inset-0 flex flex-col justify-end p-2.5 sm:p-3.5">
-            <p className="text-[0.45rem] font-bold uppercase tracking-[0.16em] text-amber-200/95 sm:text-[0.5rem] sm:tracking-[0.18em]">
+            <p className="text-[0.45rem] font-bold uppercase tracking-[0.16em] text-brand/90 sm:text-[0.5rem] sm:tracking-[0.18em]">
               {COMPANY.name} · {SITE_TOP.line}
             </p>
             <h2

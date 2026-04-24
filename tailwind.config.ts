@@ -18,9 +18,14 @@ export default {
       },
       colors: {
         brand: {
-          DEFAULT: "#f5c518",
-          muted: "#fde047",
-          foreground: "#0a0a0a",
+          DEFAULT: "#F5C517",
+          /** Slightly darker yellow for hovers (buttons, links). */
+          muted: "#D9B000",
+          foreground: "#0A0A0A",
+        },
+        /** Align “black” UI and headlines with brand black. */
+        neutral: {
+          950: "#0A0A0A",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
