@@ -22,6 +22,14 @@ const DEFAULT_INTERNAL_NOTIFY = "info@nexora-agn.com";
  */
 const DEFAULT_RESEND_FROM = "Nexora <info@nexora-agn.com>";
 
+/**
+ * When the team notify address and `RESEND_FROM` use the *same* mailbox, many systems treat the
+ * internal “notification” as a self-sent message and it never appears in the inbox.
+ * In that case we send **internal** mail from this address instead (any address @ your verified domain works).
+ * Override: `RESEND_FROM_INTERNAL` or `NEXORA_TRANSACTIONAL_FROM`.
+ */
+const DEFAULT_INTERNAL_RESEND_FROM = "Nexora <no-reply@nexora-agn.com>";
+
 const EMAIL_IN_LABEL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
@@ -47,6 +55,15 @@ function normalizeResendFrom(raw) {
     if (EMAIL_IN_LABEL.test(addr)) return `${name} <${addr}>`;
   }
   return DEFAULT_RESEND_FROM;
+}
+
+/** Returns lowercase `email@domain` from a normalized `from` (supports `Name <a@b>`). */
+function extractResendFromAddress(normalizedFrom) {
+  const s = String(normalizedFrom ?? "").trim();
+  if (EMAIL_IN_LABEL.test(s)) return s.toLowerCase();
+  const m = s.match(/<\s*([^\s>]+@[^\s>]+)\s*>/);
+  if (m) return m[1].trim().toLowerCase();
+  return "";
 }
 
 /**
@@ -112,10 +129,31 @@ function siteHomeHref(ctx) {
   return ctx?.siteOrigin || DEFAULT_SITE_ORIGIN;
 }
 
-const FOOTER_TAGLINE = "Custom websites, delivered fast";
+/** Match landing Hero headline + `tailwind.config` brand (yellow underline on “Decide”). */
+const HERO_TEXT_N950 = "#0A0A0A";
+const HERO_TEXT_N600 = "#52525B";
+const HERO_BRAND_GOLD = "#F5C517";
 
 /**
- * Custom email banner: light background (dark-text logo) + `nexora-logo.png` + tagline.
+ * Three-line hero headline (same copy as `Hero.tsx` / marketing).
+ * @param {"header" | "footer"} variant
+ */
+function heroTaglineEmailHtml(variant) {
+  const header = variant === "header";
+  const fs1 = header ? "24px" : "14px";
+  const fs23 = header ? "22px" : "13px";
+  const mt = header ? "20px" : "12px";
+  return `<div style="margin-top:${mt};text-align:center;padding:0 4px;max-width:22rem;margin-left:auto;margin-right:auto;">
+    <p style="margin:0 0 8px 0;padding:0;font-size:${fs1};font-weight:700;letter-spacing:-0.03em;line-height:1.12;color:${HERO_TEXT_N950};">We Build Your Website.</p>
+    <p style="margin:0 0 8px 0;padding:0;font-size:${fs23};font-weight:600;letter-spacing:-0.02em;line-height:1.18;color:${HERO_TEXT_N600};">You Preview It.</p>
+    <p style="margin:0;padding:0;font-size:${fs23};font-weight:600;letter-spacing:-0.02em;line-height:1.2;color:${HERO_TEXT_N600};">Then You
+      <span style="font-weight:800;color:${HERO_TEXT_N950};border-bottom:3px solid ${HERO_BRAND_GOLD};padding-bottom:1px;">Decide</span>.
+    </p>
+  </div>`;
+}
+
+/**
+ * Custom email banner: light background (dark-text logo) + `nexora-logo.png` + hero tagline.
  */
 function brandHeaderWithLogo(logoSrc, siteOrigin) {
   if (!logoSrc) return "";
@@ -128,7 +166,7 @@ function brandHeaderWithLogo(logoSrc, siteOrigin) {
             <a href="${escapeHtml(home)}" style="text-decoration:none;border:0;display:inline-block;" target="_blank" rel="noopener noreferrer">
               <img src="${escapeHtml(logoSrc)}" width="200" alt="Nexora" style="display:block;max-width:200px;width:100%;height:auto;margin:0 auto;border:0;outline:none;"/>
             </a>
-            <p style="margin:16px 0 0 0;padding:0;font-size:12px;font-weight:500;letter-spacing:0.04em;color:#64748b;">${escapeHtml(FOOTER_TAGLINE)}</p>
+            ${heroTaglineEmailHtml("header")}
           </td>
         </tr>
       </table>
@@ -180,21 +218,13 @@ function isValidEmail(v) {
 function emailFooterRows(logoSrc, siteOrigin) {
   const home = (siteOrigin || DEFAULT_SITE_ORIGIN).replace(/\/$/, "");
   const nameLine = logoSrc
-    ? `<table role="presentation" align="center" cellspacing="0" cellpadding="0" style="margin:0 auto 8px auto;">
-    <tr>
-      <td style="padding:0 6px 0 0;vertical-align:middle;line-height:0;">
-        <a href="${escapeHtml(home)}/" style="text-decoration:none;border:0;" target="_blank" rel="noopener noreferrer">
-          <img src="${escapeHtml(logoSrc)}" width="100" alt="Nexora" style="display:block;max-width:100px;width:100px;height:auto;border:0;"/>
+    ? `<div style="margin:0 0 10px 0;">
+        <a href="${escapeHtml(home)}/" style="text-decoration:none;border:0;display:inline-block;" target="_blank" rel="noopener noreferrer">
+          <img src="${escapeHtml(logoSrc)}" width="100" alt="Nexora" style="display:block;max-width:100px;width:100px;height:auto;margin:0 auto 0 auto;border:0;"/>
         </a>
-      </td>
-      <td style="vertical-align:middle;padding:0;font-size:12px;line-height:1.45;color:#64748b;">
-        <span style="color:#cbd5e1;padding:0 2px 0 0;" aria-hidden="true">·</span>${escapeHtml(FOOTER_TAGLINE)}
-      </td>
-    </tr>
-  </table>`
-    : `<p style="margin:0 0 8px 0;font-size:12px;line-height:1.5;color:#64748b;text-align:center;">
-        <strong style="color:#0f172a;font-weight:600;">Nexora</strong> · ${escapeHtml(FOOTER_TAGLINE)}
-      </p>`;
+        ${heroTaglineEmailHtml("footer")}
+      </div>`
+    : heroTaglineEmailHtml("footer");
 
   return `<tr>
     <td style="padding:20px 28px 22px 28px;background:#fafafa;border-top:1px solid #e2e8f0;">
@@ -550,6 +580,16 @@ export async function handleSendFormEmails(body, env) {
 
   const notifyTo = (env.NEXORA_INTERNAL_EMAIL || env.VITE_NEXORA_INTERNAL_EMAIL || DEFAULT_INTERNAL_NOTIFY).trim();
   const fromRaw = normalizeResendFrom(env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM);
+  const fromEmail = extractResendFromAddress(fromRaw);
+  const internalFrom =
+    fromEmail && fromEmail === notifyTo.toLowerCase()
+      ? normalizeResendFrom(
+          env.RESEND_FROM_INTERNAL ||
+            env.NEXORA_TRANSACTIONAL_FROM ||
+            env.VITE_NEXORA_TRANSACTIONAL_FROM ||
+            DEFAULT_INTERNAL_RESEND_FROM
+        )
+      : fromRaw;
 
   const siteOrigin = getPublicSiteOrigin(env);
   const { logoImgSrc, attachments: emailAttachments } = await resolveEmailImages(env);
@@ -597,21 +637,22 @@ export async function handleSendFormEmails(body, env) {
 
   const resend = new Resend(apiKey);
 
-  const sendOpts = {
+  const clientSendOpts = {
     from: fromRaw,
     ...(emailAttachments ? { attachments: emailAttachments } : {}),
   };
 
   const [internalResult, clientResult] = await Promise.all([
     resend.emails.send({
-      ...sendOpts,
+      from: internalFrom,
+      ...(emailAttachments ? { attachments: emailAttachments } : {}),
       to: notifyTo,
       subject: internalSubject,
       html: internalHtml,
       replyTo,
     }),
     resend.emails.send({
-      ...sendOpts,
+      ...clientSendOpts,
       to: clientTo,
       subject: clientSubject,
       html: clientHtml,
