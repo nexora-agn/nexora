@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
+import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
+import { toast } from "sonner";
 
 const benefits = [
   "Custom site + preview before you commit",
@@ -37,6 +39,8 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
   const [industry, setIndustry] = useState("");
   const [phone, setPhone] = useState("");
   const [hasWebsite, setHasWebsite] = useState<"yes" | "no" | "">("");
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -49,6 +53,8 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
     setIndustry("");
     setPhone("");
     setHasWebsite("");
+    setMarketingOptIn(false);
+    setSending(false);
     setErrors({});
   }, [open]);
 
@@ -75,7 +81,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
     run();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const next: Record<string, string> = {};
     if (!name.trim()) next.name = "Add your name.";
@@ -88,7 +94,24 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
     }
     setErrors(next);
     if (Object.keys(next).length) return;
-    setSubmitted(true);
+    setSending(true);
+    try {
+      await sendNexoraFormEmail({
+        formType: "demo",
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        company: company.trim() || undefined,
+        industry,
+        phone: phone.trim(),
+        hasWebsite: hasWebsite as "yes" | "no",
+        marketingOptIn,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send your request.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -154,7 +177,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                   <p className="text-sm text-muted-foreground">We&apos;ll be in touch within 24 hours.</p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                <form onSubmit={e => void handleSubmit(e)} className="space-y-4" noValidate>
                   <div>
                     <Label htmlFor="demo-name" className="text-foreground">
                       Full name
@@ -171,6 +194,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                       className={cn("mt-1.5 h-12 rounded-xl bg-background", errors.name && "border-destructive")}
                       aria-invalid={!!errors.name}
                       aria-describedby={errors.name ? "e-name" : undefined}
+                      disabled={sending}
                     />
                     {errors.name && (
                       <p id="e-name" className="mt-1 text-sm text-destructive" role="alert">
@@ -197,6 +221,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                       className={cn("mt-1.5 h-12 rounded-xl bg-background", errors.email && "border-destructive")}
                       aria-invalid={!!errors.email}
                       aria-describedby={errors.email ? "e-email" : undefined}
+                      disabled={sending}
                     />
                     {errors.email && (
                       <p id="e-email" className="mt-1 text-sm text-destructive" role="alert">
@@ -213,6 +238,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                         value={company}
                         onChange={e => setCompany(e.target.value)}
                         className="mt-1.5 h-12 rounded-xl bg-background"
+                        disabled={sending}
                       />
                     </div>
                     <div>
@@ -232,6 +258,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                       )}
                       aria-invalid={!!errors.industry}
                       aria-describedby={errors.industry ? "e-ind" : undefined}
+                      disabled={sending}
                     >
                         {industries.map(o => (
                           <option key={o.value || "empty"} value={o.value}>
@@ -264,6 +291,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                       className={cn("mt-1.5 h-12 rounded-xl bg-background", errors.phone && "border-destructive")}
                       aria-invalid={!!errors.phone}
                       aria-describedby={errors.phone ? "e-phone" : undefined}
+                      disabled={sending}
                     />
                     {errors.phone && (
                       <p id="e-phone" className="mt-1 text-sm text-destructive" role="alert">
@@ -323,7 +351,13 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                   </fieldset>
 
                   <label className="flex cursor-pointer items-start gap-2.5 pt-1">
-                    <input type="checkbox" className="mt-1 accent-foreground" />
+                    <input
+                      type="checkbox"
+                      className="mt-1 accent-foreground"
+                      checked={marketingOptIn}
+                      onChange={e => setMarketingOptIn(e.target.checked)}
+                      disabled={sending}
+                    />
                     <span className="text-xs leading-relaxed text-muted-foreground">
                       I&apos;d like to receive updates and tips about building a great website.
                     </span>
@@ -332,8 +366,9 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                   <Button
                     type="submit"
                     className="h-12 w-full rounded-xl border-0 bg-brand text-base font-semibold text-brand-foreground hover:bg-brand-muted"
+                    disabled={sending}
                   >
-                    Request demo
+                    {sending ? "Sending…" : "Request demo"}
                   </Button>
                 </form>
               )}

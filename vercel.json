@@ -6,6 +6,9 @@
   "functions": {
     "api/export-site.mjs": {
       "maxDuration": 60
+    },
+    "api/send-form-emails.mjs": {
+      "maxDuration": 30
     }
   },
   "rewrites": [

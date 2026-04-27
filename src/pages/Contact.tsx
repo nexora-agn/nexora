@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle2, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,13 +11,40 @@ import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { companyAddressDisplay, COMPANY_LEGAL } from "@/lib/companyLegal";
 import { SOCIAL_LINKS } from "@/lib/socialLinks";
+import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const name = String(fd.get("name") ?? "").trim();
+    const email = String(fd.get("email") ?? "").trim();
+    const subject = String(fd.get("subject") ?? "").trim();
+    const message = String(fd.get("message") ?? "").trim();
+    if (!name || !email || !message) {
+      toast.error("Please fill in your name, email, and message.");
+      return;
+    }
+    setSending(true);
+    try {
+      await sendNexoraFormEmail({
+        formType: "contact",
+        name,
+        email,
+        subject: subject || undefined,
+        message,
+      });
+      setSubmitted(true);
+      form.reset();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send your message.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -127,7 +155,7 @@ const Contact = () => {
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+              <form onSubmit={e => void handleSubmit(e)} className="space-y-6" noValidate>
                 <div className="space-y-2">
                   <Label htmlFor="contact-name">Full name</Label>
                   <Input
@@ -137,6 +165,7 @@ const Contact = () => {
                     placeholder="Jordan Smith"
                     required
                     className="h-11 rounded-lg"
+                    disabled={sending}
                   />
                 </div>
                 <div className="space-y-2">
@@ -149,6 +178,7 @@ const Contact = () => {
                     placeholder="you@company.com"
                     required
                     className="h-11 rounded-lg"
+                    disabled={sending}
                   />
                 </div>
                 <div className="space-y-2">
@@ -158,6 +188,7 @@ const Contact = () => {
                     name="subject"
                     placeholder="Project inquiry"
                     className="h-11 rounded-lg"
+                    disabled={sending}
                   />
                 </div>
                 <div className="space-y-2">
@@ -168,10 +199,15 @@ const Contact = () => {
                     placeholder="Tell us briefly about your goals, timeline, and how we can help."
                     required
                     className="min-h-[140px] resize-y rounded-lg"
+                    disabled={sending}
                   />
                 </div>
-                <Button type="submit" className="h-11 w-full rounded-lg text-base font-semibold md:w-auto md:px-10">
-                  Send message
+                <Button
+                  type="submit"
+                  className="h-11 w-full rounded-lg text-base font-semibold md:w-auto md:px-10"
+                  disabled={sending}
+                >
+                  {sending ? "Sending…" : "Send message"}
                 </Button>
               </form>
             )}

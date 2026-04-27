@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { formEmailApiPlugin } from "./vite-plugin-form-email";
 
 function resolvePublicOriginForHtml(env: Record<string, string>): string {
   const fromVite = (env.VITE_PUBLIC_SITE_URL || "").replace(/\/$/, "");
@@ -27,6 +28,7 @@ export default defineConfig(({ mode }) => {
   },
   plugins: [
     react(),
+    formEmailApiPlugin(),
     {
       name: "html-public-site-base",
       transformIndexHtml(html) {

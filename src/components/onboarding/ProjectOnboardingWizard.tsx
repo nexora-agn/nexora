@@ -19,7 +19,8 @@ import {
 } from "@/lib/projectOnboardingConstants";
 import { submitProjectRequest } from "@/lib/projectRequests";
 import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
-import type { ProjectRequestType } from "@/lib/supabase";
+import type { ProjectRequestPayload, ProjectRequestType } from "@/lib/supabase";
+import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
 import { PlanCardBody, PlanPopularBadge } from "@/components/landing/PlanCardBody";
 import { MARKETING_PLANS, PLAN_IDS, type MarketingPlanId } from "@/lib/pricingPlans";
 import { toast } from "sonner";
@@ -552,51 +553,66 @@ const ProjectOnboardingWizard = () => {
 
     setSubmitting(true);
     try {
+      let request_type: ProjectRequestType;
+      let payload: ProjectRequestPayload;
+
       if (choice === "new_website") {
-        await submitProjectRequest({
-          request_type: "new_website",
-          payload: {
-            full_name: fullName.trim(),
-            contact_email: workEmail.trim(),
-            contact_phone: phone.trim(),
-            company: company.trim(),
-            timeline,
-            industry: industry.trim(),
-            erp_integration: erpIntegration!,
-            current_erp_system: erpIntegration! ? newCurrentErpSystem.trim() : null,
-            ai_chatbot: newAiChatbot!,
-            ai_chatbot_requirements: newAiChatbot! ? newAiChatbotRequirements.trim() : null,
-            preferred_features: [...preferredFeatures],
-            other_preferred_features: otherPreferredFeatures.trim(),
-            additional_notes: newNotes.trim(),
-            selected_plan: selectedPlan,
-            payment_preference: paymentPreference!,
-          },
-        });
+        request_type = "new_website";
+        payload = {
+          full_name: fullName.trim(),
+          contact_email: workEmail.trim(),
+          contact_phone: phone.trim(),
+          company: company.trim(),
+          timeline,
+          industry: industry.trim(),
+          erp_integration: erpIntegration!,
+          current_erp_system: erpIntegration! ? newCurrentErpSystem.trim() : null,
+          ai_chatbot: newAiChatbot!,
+          ai_chatbot_requirements: newAiChatbot! ? newAiChatbotRequirements.trim() : null,
+          preferred_features: [...preferredFeatures],
+          other_preferred_features: otherPreferredFeatures.trim(),
+          additional_notes: newNotes.trim(),
+          selected_plan: selectedPlan,
+          payment_preference: paymentPreference!,
+        };
       } else {
         const rawUrl = websiteUrl.trim();
         const website_url = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
-        await submitProjectRequest({
-          request_type: "migrate",
-          payload: {
-            full_name: fullName.trim(),
-            contact_email: workEmail.trim(),
-            contact_phone: phone.trim(),
-            company: company.trim(),
-            timeline,
-            website_url,
-            erp_system: erpSystem.trim(),
-            erp_has_api: erpHasApi!,
-            build_api: erpHasApi === false ? buildApi! : null,
-            ai_chatbot: migrateAiChatbot!,
-            ai_chatbot_requirements: migrateAiChatbot! ? migrateAiChatbotRequirements.trim() : null,
-            migration_requirements: migrationRequirements.trim(),
-            additional_notes: migrateNotes.trim(),
-            selected_plan: selectedPlan,
-            payment_preference: paymentPreference!,
-          },
-        });
+        request_type = "migrate";
+        payload = {
+          full_name: fullName.trim(),
+          contact_email: workEmail.trim(),
+          contact_phone: phone.trim(),
+          company: company.trim(),
+          timeline,
+          website_url,
+          erp_system: erpSystem.trim(),
+          erp_has_api: erpHasApi!,
+          build_api: erpHasApi === false ? buildApi! : null,
+          ai_chatbot: migrateAiChatbot!,
+          ai_chatbot_requirements: migrateAiChatbot! ? migrateAiChatbotRequirements.trim() : null,
+          migration_requirements: migrationRequirements.trim(),
+          additional_notes: migrateNotes.trim(),
+          selected_plan: selectedPlan,
+          payment_preference: paymentPreference!,
+        };
       }
+
+      await submitProjectRequest({ request_type, payload });
+
+      try {
+        await sendNexoraFormEmail({
+          formType: "start_project",
+          requestType: request_type,
+          payload,
+        });
+      } catch (emailErr) {
+        console.error(emailErr);
+        toast.warning(
+          `Your project was saved, but confirmation emails could not be sent. We'll still follow up at ${payload.contact_email}.`,
+        );
+      }
+
       setStep(6);
       setChoice(null);
       setSearchParams({}, { replace: true });
