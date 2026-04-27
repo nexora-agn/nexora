@@ -2,9 +2,19 @@
  * Resend email bundle for marketing forms: internal notification + client confirmation.
  * Used by Vite dev middleware and Vercel `api/send-form-emails.mjs`.
  */
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { Resend } from "resend";
 
-const DEFAULT_NOTIFY = "info@nexora-agn.com";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+/** Repo `public/Nexora Email Banner.png` — embedded inline (CID) so the image always shows (no public URL required). */
+const BANNER_ON_DISK = path.join(__dirname, "..", "public", "Nexora Email Banner.png");
+const BANNER_CID = "nexora-email-banner";
+
+/** Team inbox: all three forms (contact, demo, start project) send a copy here. Override with NEXORA_INTERNAL_EMAIL. */
+const DEFAULT_INTERNAL_NOTIFY = "info@nexora-agn.com";
 
 /**
  * `from` must use an address on a domain you verify at resend.com/domains (e.g. nexora-agn.com).
@@ -38,6 +48,47 @@ function getEmailBannerUrl(env) {
   const o = getPublicSiteOrigin(env);
   if (!o) return "";
   return `${o}${EMAIL_BANNER_PATH}`;
+}
+
+/**
+ * Load banner bytes for Resend inline attachment (references as `cid:nexora-email-banner` in HTML).
+ * @returns {Promise<import("resend").Attachment | null>}
+ */
+async function loadBannerInlineAttachment() {
+  try {
+    const content = await fs.readFile(BANNER_ON_DISK);
+    if (!content.length) return null;
+    return {
+      filename: "nexora-email-banner.png",
+      content,
+      contentType: "image/png",
+      inlineContentId: BANNER_CID,
+    };
+  } catch (e) {
+    console.warn("[form-email] Could not read banner file for inline CID:", e?.message ?? e);
+    return null;
+  }
+}
+
+/**
+ * Prefer embedded CID (always works in inbox); else public URL; else "" (fallback header only).
+ * @param {Record<string, string | undefined>} env
+ */
+async function resolveBannerForEmail(env) {
+  const inline = await loadBannerInlineAttachment();
+  if (inline) {
+    return {
+      /** Value for <img src="…"> */
+      imgSrc: `cid:${BANNER_CID}`,
+      /** Pass to resend.emails.send({ attachments }) */
+      attachments: [inline],
+    };
+  }
+  const remote = getEmailBannerUrl(env);
+  if (remote) {
+    return { imgSrc: remote, attachments: undefined };
+  }
+  return { imgSrc: "", attachments: undefined };
 }
 
 const DEFAULT_SITE_ORIGIN = "https://nexora-agn.com";
@@ -453,11 +504,11 @@ export async function handleSendFormEmails(body, env) {
     return { ok: false, error: "RESEND_API_KEY is not set on the server" };
   }
 
-  const notifyTo = (env.NEXORA_INTERNAL_EMAIL || env.VITE_NEXORA_INTERNAL_EMAIL || DEFAULT_NOTIFY).trim();
+  const notifyTo = (env.NEXORA_INTERNAL_EMAIL || env.VITE_NEXORA_INTERNAL_EMAIL || DEFAULT_INTERNAL_NOTIFY).trim();
   const fromRaw = (env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM).trim();
 
   const siteOrigin = getPublicSiteOrigin(env);
-  const bannerUrl = getEmailBannerUrl(env);
+  const { imgSrc: bannerUrl, attachments: bannerAttachments } = await resolveBannerForEmail(env);
   const emailCtx = { bannerUrl, siteOrigin };
 
   let internalHtml;
@@ -502,16 +553,21 @@ export async function handleSendFormEmails(body, env) {
 
   const resend = new Resend(apiKey);
 
+  const sendOpts = {
+    from: fromRaw,
+    ...(bannerAttachments ? { attachments: bannerAttachments } : {}),
+  };
+
   const [internalResult, clientResult] = await Promise.all([
     resend.emails.send({
-      from: fromRaw,
+      ...sendOpts,
       to: notifyTo,
       subject: internalSubject,
       html: internalHtml,
       replyTo,
     }),
     resend.emails.send({
-      from: fromRaw,
+      ...sendOpts,
       to: clientTo,
       subject: clientSubject,
       html: clientHtml,
