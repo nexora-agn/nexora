@@ -113,7 +113,11 @@ const CustomizationPreview = () => {
   const [secondaryColor, setSecondaryColor] = useState("#f5c517");
   const [primaryHex, setPrimaryHex] = useState("#0a0a0a");
   const [secondaryHex, setSecondaryHex] = useState("#f5c517");
-  const brandLabel = logoName ? brandName : "Logo";
+  const brandNameTrimmed = brandName.trim();
+  /** Shown in the mock header when there is no logo (placeholder if the field is empty). */
+  const headerTitleText = brandNameTrimmed || "YourBrand";
+  /** Beside the logo only when the user typed a name; clear the field for logo-only. */
+  const showBrandNameBesideLogo = Boolean(logoPreview && brandNameTrimmed);
   const accentColor = "#ffffff";
   /** Secondary tint for one small accent chip only—rest of mock stays neutral */
   const tone = useMemo(
@@ -149,7 +153,7 @@ const CustomizationPreview = () => {
     const nextPreview = URL.createObjectURL(file);
     setLogoName(file.name);
     setLogoPreview(nextPreview);
-    if (!brandName || brandName === "YourBrand") {
+    if (brandName === "YourBrand") {
       setBrandName(file.name.replace(/\.[^.]+$/, ""));
     }
 
@@ -331,11 +335,13 @@ const CustomizationPreview = () => {
               <Label htmlFor="brand-name" className="mb-3 block text-sm font-semibold text-neutral-100">
                 2. Brand name
               </Label>
-              <p className="mb-3 text-xs font-medium text-neutral-500">Shows in the header if there’s no logo yet.</p>
+              <p className="mb-3 text-xs font-medium text-neutral-500">
+                Next to your logo when set. Clear the field for logo-only. Without a logo, empty shows as “YourBrand”.
+              </p>
               <input
                 id="brand-name"
                 value={brandName}
-                onChange={(e) => setBrandName(e.target.value || "YourBrand")}
+                onChange={(e) => setBrandName(e.target.value)}
                 placeholder="e.g. Acme Studio"
                 autoComplete="organization"
                 className="w-full rounded-xl border border-white/10 bg-neutral-950/50 px-4 py-3 text-sm text-neutral-100 outline-none transition placeholder:text-neutral-500 focus:border-brand/50 focus:ring-2 focus:ring-brand/20"
@@ -491,12 +497,24 @@ const CustomizationPreview = () => {
                         style={{ backgroundColor: logoPreview ? "#ffffff" : primaryColor }}
                       >
                         {logoPreview ? (
-                          <div className="flex h-10 items-center rounded-xl bg-transparent px-1 py-1.5">
-                            <img src={logoPreview} alt={brandLabel} className="h-full max-w-[120px] object-contain" />
+                          <div
+                            className={cn(
+                              "flex min-w-0 items-center rounded-xl bg-transparent px-1 py-1.5",
+                              showBrandNameBesideLogo ? "max-w-[min(100%,18rem)] gap-2" : "max-w-[120px]",
+                            )}
+                          >
+                            <img
+                              src={logoPreview}
+                              alt={showBrandNameBesideLogo ? "" : "Brand logo"}
+                              className="h-full max-h-10 shrink-0 max-w-[120px] object-contain"
+                            />
+                            {showBrandNameBesideLogo ? (
+                              <span className="truncate text-sm font-bold text-slate-900">{brandNameTrimmed}</span>
+                            ) : null}
                           </div>
                         ) : (
                           <span className="text-sm font-bold" style={{ color: accentColor }}>
-                            {brandLabel}
+                            {headerTitleText}
                           </span>
                         )}
                         <div className="flex gap-4">
@@ -600,12 +618,24 @@ const CustomizationPreview = () => {
                       >
                         <div className="flex items-center justify-between px-4 py-3" style={{ backgroundColor: logoPreview ? "#ffffff" : primaryColor }}>
                           {logoPreview ? (
-                            <div className="flex h-7 items-center rounded-lg bg-transparent px-1 py-1">
-                              <img src={logoPreview} alt={brandLabel} className="h-full max-w-[84px] object-contain" />
+                            <div
+                              className={cn(
+                                "flex min-w-0 items-center rounded-lg bg-transparent px-1 py-1",
+                                showBrandNameBesideLogo ? "max-w-[calc(100%-2rem)] gap-1.5" : "max-w-[84px]",
+                              )}
+                            >
+                              <img
+                                src={logoPreview}
+                                alt={showBrandNameBesideLogo ? "" : "Brand logo"}
+                                className="h-full max-h-7 shrink-0 max-w-[84px] object-contain"
+                              />
+                              {showBrandNameBesideLogo ? (
+                                <span className="truncate text-xs font-semibold text-slate-900">{brandNameTrimmed}</span>
+                              ) : null}
                             </div>
                           ) : (
                             <span className="text-xs font-semibold" style={{ color: accentColor }}>
-                              {brandLabel}
+                              {headerTitleText}
                             </span>
                           )}
                           <span

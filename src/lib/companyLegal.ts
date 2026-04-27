@@ -4,9 +4,9 @@
  */
 export const COMPANY_LEGAL = {
   brand: "Nexora",
-  legalName: "NEXORA SOLUTION W.L.L",
-  /** Bahrain W.L.L. = With Limited Liability (aligned with Sh.p.k. in Albanian). */
-  legalForm: "With Limited Liability Company (W.L.L. / Sh.p.k.)",
+  legalName: "NEXORA SOLUTION L.L.C",
+  /** Common abbreviation for a limited liability company in international contexts. */
+  legalForm: "With Limited Liability Company (L.L.C.)",
   commercialRegistration: "196260-1",
   jurisdiction: "Kingdom of Bahrain",
   /** Street and building; empty until a full address is available. */

@@ -65,7 +65,7 @@ const ErpIntegrationSection = () => {
                 <span className="text-neutral-950">Orders</span> land where fulfilment already looks.
               </li>
               <li className="text-sm font-medium text-neutral-800 md:text-base">
-                <span className="text-neutral-950">One trail</span>: finance and ops see the same story.
+                <span className="text-neutral-950">One trail</span> finance and ops see the same story.
               </li>
             </ul>
           </motion.div>

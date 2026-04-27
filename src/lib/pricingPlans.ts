@@ -32,8 +32,8 @@ export const MARKETING_PLANS: {
     id: "growth",
     name: "Growth",
     tagline: "Your services, prices, and office systems stay matched to the website.",
-    price: "$399/month starts 30 days after launch",
-    period: "",
+    price: "$399",
+    period: "/month",
     highlight: true,
     cta: "Book a demo",
     features: [

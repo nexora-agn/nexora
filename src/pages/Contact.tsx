@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CheckCircle2, Mail, MapPin, Phone } from "lucide-react";
+import { CheckCircle2, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { companyAddressDisplay, COMPANY_LEGAL } from "@/lib/companyLegal";
+import { SOCIAL_LINKS } from "@/lib/socialLinks";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -41,10 +42,10 @@ const Contact = () => {
                   <div>
                     <p className="text-sm font-semibold text-foreground">Email</p>
                     <a
-                      href="mailto:hello@nexora.com"
+                      href="mailto:info@nexora-agn.com"
                       className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      hello@nexora.com
+                      info@nexora-agn.com
                     </a>
                   </div>
                 </li>
@@ -59,6 +60,22 @@ const Contact = () => {
                       className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       +1 (555) 000-0000
+                    </a>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background text-foreground">
+                    <Instagram className="h-4 w-4" aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Instagram</p>
+                    <a
+                      href={SOCIAL_LINKS.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      @nexora.agn
                     </a>
                   </div>
                 </li>
