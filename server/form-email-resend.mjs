@@ -9,9 +9,9 @@ import { Resend } from "resend";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-/** Repo `public/Nexora Email Banner.png` — embedded inline (CID) so the image always shows (no public URL required). */
-const BANNER_ON_DISK = path.join(__dirname, "..", "public", "Nexora Email Banner.png");
-const BANNER_CID = "nexora-email-banner";
+/** `public/nexora-logo.png` — used in the custom email header banner (inline CID) and as remote fallback. */
+const LOGO_ON_DISK = path.join(__dirname, "..", "public", "nexora-logo.png");
+const LOGO_CID = "nexora-logo-email";
 
 /** Team inbox: all three forms (contact, demo, start project) send a copy here. Override with NEXORA_INTERNAL_EMAIL. */
 const DEFAULT_INTERNAL_NOTIFY = "info@nexora-agn.com";
@@ -22,13 +22,8 @@ const DEFAULT_INTERNAL_NOTIFY = "info@nexora-agn.com";
  */
 const DEFAULT_RESEND_FROM = "Nexora <info@nexora-agn.com>";
 
-/** @public in Vite; filename has a space — encode for use in href/src */
-const EMAIL_BANNER_PATH = "/Nexora%20Email%20Banner.png";
-
 /**
- * Absolute URL to the email banner (served from `public/`). Required for the image
- * to show in real emails—Resend loads it from a public https URL, not localhost.
- * Set `NEXORA_PUBLIC_URL` or `VITE_PUBLIC_SITE_URL` (or deploy on Vercel with VERCEL_URL).
+ * Set `NEXORA_PUBLIC_URL` or `VITE_PUBLIC_SITE_URL` for remote logo URL fallback if the file cannot be read on disk.
  */
 function getPublicSiteOrigin(env) {
   const explicit = String(env.NEXORA_PUBLIC_URL || env.VITE_PUBLIC_SITE_URL || "")
@@ -40,55 +35,48 @@ function getPublicSiteOrigin(env) {
   return "";
 }
 
-/**
- * @param {Record<string, string | undefined>} env
- * @returns {string} Full https URL, or "" if not configured
- */
-function getEmailBannerUrl(env) {
+function getEmailLogoUrl(env) {
   const o = getPublicSiteOrigin(env);
   if (!o) return "";
-  return `${o}${EMAIL_BANNER_PATH}`;
+  return `${o}/nexora-logo.png`;
 }
 
 /**
- * Load banner bytes for Resend inline attachment (references as `cid:nexora-email-banner` in HTML).
  * @returns {Promise<import("resend").Attachment | null>}
  */
-async function loadBannerInlineAttachment() {
+async function loadLogoInlineAttachment() {
   try {
-    const content = await fs.readFile(BANNER_ON_DISK);
+    const content = await fs.readFile(LOGO_ON_DISK);
     if (!content.length) return null;
     return {
-      filename: "nexora-email-banner.png",
+      filename: "nexora-logo.png",
       content,
       contentType: "image/png",
-      inlineContentId: BANNER_CID,
+      inlineContentId: LOGO_CID,
     };
   } catch (e) {
-    console.warn("[form-email] Could not read banner file for inline CID:", e?.message ?? e);
+    console.warn("[form-email] Could not read logo file for inline CID:", e?.message ?? e);
     return null;
   }
 }
 
 /**
- * Prefer embedded CID (always works in inbox); else public URL; else "" (fallback header only).
+ * Logo for the custom header banner (CID preferred; else `https://…/nexora-logo.png`).
  * @param {Record<string, string | undefined>} env
  */
-async function resolveBannerForEmail(env) {
-  const inline = await loadBannerInlineAttachment();
-  if (inline) {
+async function resolveEmailImages(env) {
+  const logoAtt = await loadLogoInlineAttachment();
+  if (logoAtt) {
     return {
-      /** Value for <img src="…"> */
-      imgSrc: `cid:${BANNER_CID}`,
-      /** Pass to resend.emails.send({ attachments }) */
-      attachments: [inline],
+      logoImgSrc: `cid:${LOGO_CID}`,
+      attachments: [logoAtt],
     };
   }
-  const remote = getEmailBannerUrl(env);
-  if (remote) {
-    return { imgSrc: remote, attachments: undefined };
-  }
-  return { imgSrc: "", attachments: undefined };
+  const remoteL = getEmailLogoUrl(env);
+  return {
+    logoImgSrc: remoteL || "",
+    attachments: undefined,
+  };
 }
 
 const DEFAULT_SITE_ORIGIN = "https://nexora-agn.com";
@@ -97,15 +85,26 @@ function siteHomeHref(ctx) {
   return ctx?.siteOrigin || DEFAULT_SITE_ORIGIN;
 }
 
-/** Top visual — full width banner (when `public/` URL is known). */
-function bannerImageRow(bannerUrl, siteOrigin) {
-  if (!bannerUrl) return "";
+const FOOTER_TAGLINE = "Custom websites, delivered fast";
+
+/**
+ * Custom email banner: gradient strip + `nexora-logo.png` (same file as the site) + tagline. Replaces the old full-bleed PNG hero.
+ */
+function brandHeaderWithLogo(logoSrc, siteOrigin) {
+  if (!logoSrc) return "";
   const home = siteHomeHref({ siteOrigin });
   return `<tr>
-    <td style="padding:0;margin:0;line-height:0;font-size:0;background:#050505;">
-      <a href="${escapeHtml(home)}" style="text-decoration:none;border:0;display:block;" target="_blank" rel="noopener noreferrer">
-        <img src="${escapeHtml(bannerUrl)}" width="600" alt="Nexora" style="display:block;width:100%;max-width:600px;height:auto;border:0;outline:none;margin:0;padding:0;"/>
-      </a>
+    <td style="padding:0;margin:0;background:#0a0f1a;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:linear-gradient(165deg,#0a0f1a 0%,#1e293b 42%,#0f172a 100%);">
+        <tr>
+          <td style="padding:28px 24px 24px 24px;text-align:center;border-bottom:3px solid #334155;">
+            <a href="${escapeHtml(home)}" style="text-decoration:none;border:0;display:inline-block;" target="_blank" rel="noopener noreferrer">
+              <img src="${escapeHtml(logoSrc)}" width="200" alt="Nexora" style="display:block;max-width:200px;width:100%;height:auto;margin:0 auto;border:0;outline:none;"/>
+            </a>
+            <p style="margin:16px 0 0 0;padding:0;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#94a3b8;">${escapeHtml(FOOTER_TAGLINE)}</p>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>`;
 }
@@ -147,15 +146,14 @@ function isValidEmail(v) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
 
-const FOOTER_TAGLINE = "Custom websites, delivered fast";
-
+/** Footer text only — logo lives in the top `brandHeaderWithLogo` strip. */
 function emailFooterRows() {
   return `<tr>
-    <td style="padding:18px 28px 22px 28px;background:#fafafa;border-top:1px solid #e2e8f0;">
-      <p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#64748b;">
+    <td style="padding:20px 28px 22px 28px;background:#fafafa;border-top:1px solid #e2e8f0;">
+      <p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#64748b;text-align:center;">
         <strong style="color:#0f172a;font-weight:600;">Nexora</strong> · ${escapeHtml(FOOTER_TAGLINE)}
       </p>
-      <p style="margin:0;font-size:11px;line-height:1.45;color:#94a3b8;">NEXORA SOLUTION L.L.C. · Kingdom of Bahrain</p>
+      <p style="margin:0;font-size:11px;line-height:1.45;color:#94a3b8;text-align:center;">NEXORA SOLUTION L.L.C. · Kingdom of Bahrain</p>
     </td>
   </tr>
   <tr>
@@ -165,8 +163,8 @@ function emailFooterRows() {
   </tr>`;
 }
 
-/** Internal / team notifications — Nexora Email Banner + title + field list */
-function emailDocument({ preheader, title, blocks, bannerUrl, siteOrigin }) {
+/** Internal / team notifications — custom logo banner + title + field list */
+function emailDocument({ preheader, title, blocks, siteOrigin, logoImgSrc }) {
   const pre = preheader ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</div>` : "";
   const rows = blocks
     .map(
@@ -182,8 +180,8 @@ function emailDocument({ preheader, title, blocks, bannerUrl, siteOrigin }) {
     )
     .join("");
 
-  const headerBlock = bannerUrl
-    ? `${bannerImageRow(bannerUrl, siteOrigin)}${documentTitleRow(title)}`
+  const headerBlock = logoImgSrc
+    ? `${brandHeaderWithLogo(logoImgSrc, siteOrigin)}${documentTitleRow(title)}`
     : `${fallbackHeaderNoBanner(title)}`;
 
   return `<!DOCTYPE html>
@@ -212,13 +210,13 @@ function emailDocument({ preheader, title, blocks, bannerUrl, siteOrigin }) {
 </html>`;
 }
 
-/** Client confirmation letters — same banner, prose body */
-function clientLetterHtml({ preheader, innerHtml, bannerUrl, siteOrigin, headline }) {
+/** Client confirmation letters — custom logo banner, prose body */
+function clientLetterHtml({ preheader, innerHtml, siteOrigin, headline, logoImgSrc }) {
   const pre = preheader
     ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</div>`
     : `<div style="display:none;max-height:0;overflow:hidden;">${escapeHtml("Nexora")}</div>`;
-  const headStrip = bannerUrl
-    ? `${bannerImageRow(bannerUrl, siteOrigin)}<tr>
+  const headStrip = logoImgSrc
+    ? `${brandHeaderWithLogo(logoImgSrc, siteOrigin)}<tr>
     <td style="padding:16px 28px 0 28px;background:#ffffff;border-top:1px solid #e2e8f0;">
       <p style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.02em;color:#0f172a;">${escapeHtml(headline)}</p>
     </td>
@@ -270,8 +268,8 @@ function buildContactInternal({ name, email, subject, message }, ctx) {
     preheader: `New contact from ${name}`,
     title: "New contact form submission",
     blocks,
-    bannerUrl: ctx.bannerUrl,
     siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
   });
 }
 
@@ -285,8 +283,8 @@ function buildContactClient({ name, email }, ctx) {
     <p style="margin:0 0 14px 0;">If you need to reach us sooner, write to <a href="mailto:info@nexora-agn.com" style="color:#0f172a;font-weight:500;">info@nexora-agn.com</a>.</p>
     <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
   `,
-    bannerUrl: ctx.bannerUrl,
     siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
   });
 }
 
@@ -323,8 +321,8 @@ function buildDemoInternal(data, ctx) {
     preheader: `Demo request from ${data.name}`,
     title: "New demo request",
     blocks,
-    bannerUrl: ctx.bannerUrl,
     siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
   });
 }
 
@@ -338,8 +336,8 @@ function buildDemoClient({ name, email }, ctx) {
     <p style="margin:0 0 14px 0;">We sent this confirmation to <strong>${escapeHtml(email)}</strong>.</p>
     <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
   `,
-    bannerUrl: ctx.bannerUrl,
     siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
   });
 }
 
@@ -399,8 +397,8 @@ function buildStartProjectInternal({ requestType, payload }, ctx) {
       preheader: `New project: ${payload.full_name}`,
       title: "New website — project request",
       blocks,
-      bannerUrl: ctx.bannerUrl,
       siteOrigin: ctx.siteOrigin,
+      logoImgSrc: ctx.logoImgSrc,
     });
   }
 
@@ -424,8 +422,8 @@ function buildStartProjectInternal({ requestType, payload }, ctx) {
     preheader: `Migration request: ${payload.full_name}`,
     title: "Site migration — project request",
     blocks,
-    bannerUrl: ctx.bannerUrl,
     siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
   });
 }
 
@@ -440,8 +438,8 @@ function buildStartProjectClient({ requestType, payload }, ctx) {
     <p style="margin:0 0 14px 0;">We sent this confirmation to <strong>${escapeHtml(payload.contact_email)}</strong>. If anything needs to change, reply to this email or contact <a href="mailto:info@nexora-agn.com" style="color:#0f172a;font-weight:500;">info@nexora-agn.com</a>.</p>
     <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
   `,
-    bannerUrl: ctx.bannerUrl,
     siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
   });
 }
 
@@ -508,8 +506,8 @@ export async function handleSendFormEmails(body, env) {
   const fromRaw = (env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM).trim();
 
   const siteOrigin = getPublicSiteOrigin(env);
-  const { imgSrc: bannerUrl, attachments: bannerAttachments } = await resolveBannerForEmail(env);
-  const emailCtx = { bannerUrl, siteOrigin };
+  const { logoImgSrc, attachments: emailAttachments } = await resolveEmailImages(env);
+  const emailCtx = { logoImgSrc, siteOrigin };
 
   let internalHtml;
   let internalSubject;
@@ -555,7 +553,7 @@ export async function handleSendFormEmails(body, env) {
 
   const sendOpts = {
     from: fromRaw,
-    ...(bannerAttachments ? { attachments: bannerAttachments } : {}),
+    ...(emailAttachments ? { attachments: emailAttachments } : {}),
   };
 
   const [internalResult, clientResult] = await Promise.all([
