@@ -27,8 +27,13 @@ const DEFAULT_RESEND_FROM = "info@nexora-agn.com";
 /**
  * Team notifications use this **From** (or `RESEND_FROM_INTERNAL` / `NEXORA_TRANSACTIONAL_FROM`).
  * Avoid `no-reply@` (hurts trust with spam feedback). Use a real role on your verified domain.
+ * Keep this different from the admin `to` (info@) — same mailbox as From+To is often hidden or filtered.
+ *
+ * You do **not** need a real mailbox or Google/Microsoft user for this address. Once `nexora-agn.com` is
+ * verified in Resend, you may send from any `*@nexora-agn.com` as the envelope “From” — it is a label, not
+ * an inbox you check. Override with `RESEND_FROM_INTERNAL` if you prefer another local part (e.g. `team@…`).
  */
-const DEFAULT_INTERNAL_RESEND_FROM = "info@nexora-agn.com";
+const DEFAULT_INTERNAL_RESEND_FROM = "notifications@nexora-agn.com";
 
 const EMAIL_IN_LABEL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -55,6 +60,21 @@ function normalizeResendFrom(raw) {
     if (EMAIL_IN_LABEL.test(addr)) return `${name} <${addr}>`;
   }
   return DEFAULT_RESEND_FROM;
+}
+
+/**
+ * @param {string} fromNormalized — output of `normalizeResendFrom`
+ * @returns {string} lowercased bare email, or "" if not parseable
+ */
+function extractBareEmailFromFromHeader(fromNormalized) {
+  const s = String(fromNormalized ?? "").trim();
+  const m = s.match(/<([^>]+)>\s*$/);
+  if (m) {
+    const inner = m[1].trim();
+    if (EMAIL_IN_LABEL.test(inner)) return inner.toLowerCase();
+  }
+  if (EMAIL_IN_LABEL.test(s)) return s.toLowerCase();
+  return "";
 }
 
 /**
@@ -691,6 +711,14 @@ export async function handleSendFormEmails(body, env) {
   }
 
   const resend = new Resend(apiKey);
+
+  const internalAddr = extractBareEmailFromFromHeader(internalFrom);
+  const notifyAddr = String(notifyTo).trim().toLowerCase();
+  if (internalAddr && notifyAddr && internalAddr === notifyAddr) {
+    console.warn(
+      "[form-email] Team email uses the same From and To; many providers hide or filter these. Set RESEND_FROM_INTERNAL to a different address on your verified domain (e.g. notifications@…).",
+    );
+  }
 
   const clientSendOpts = {
     from: fromRaw,
