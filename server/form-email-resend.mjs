@@ -13,8 +13,8 @@ const __dirname = path.dirname(__filename);
 const LOGO_ON_DISK = path.join(__dirname, "..", "public", "nexora-logo.png");
 const LOGO_CID = "nexora-logo-email";
 
-/** Team inbox: all three forms (contact, demo, start project) send a copy here. Override with NEXORA_INTERNAL_EMAIL. */
-const DEFAULT_INTERNAL_NOTIFY = "info@nexora-agn.com";
+/** Resend `to` for every team notification (contact, demo, start project). Not configurable; avoid mis-sent mail from env. */
+const TEAM_INBOX = "info@nexora-agn.com";
 
 /**
  * `from` must use an address on a domain you verify at resend.com/domains (e.g. nexora-agn.com).
@@ -23,12 +23,10 @@ const DEFAULT_INTERNAL_NOTIFY = "info@nexora-agn.com";
 const DEFAULT_RESEND_FROM = "Nexora <info@nexora-agn.com>";
 
 /**
- * When the team notify address and `RESEND_FROM` use the *same* mailbox, many systems treat the
- * internal “notification” as a self-sent message and it never appears in the inbox.
- * In that case we send **internal** mail from this address instead (any address @ your verified domain works).
- * Override: `RESEND_FROM_INTERNAL` or `NEXORA_TRANSACTIONAL_FROM`.
+ * Team notifications use this **From** (or `RESEND_FROM_INTERNAL` / `NEXORA_TRANSACTIONAL_FROM`).
+ * Avoid `no-reply@` (hurts trust with spam feedback). Use a real role on your verified domain.
  */
-const DEFAULT_INTERNAL_RESEND_FROM = "Nexora <no-reply@nexora-agn.com>";
+const DEFAULT_INTERNAL_RESEND_FROM = "Nexora <notifications@nexora-agn.com>";
 
 const EMAIL_IN_LABEL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -55,15 +53,6 @@ function normalizeResendFrom(raw) {
     if (EMAIL_IN_LABEL.test(addr)) return `${name} <${addr}>`;
   }
   return DEFAULT_RESEND_FROM;
-}
-
-/** Returns lowercase `email@domain` from a normalized `from` (supports `Name <a@b>`). */
-function extractResendFromAddress(normalizedFrom) {
-  const s = String(normalizedFrom ?? "").trim();
-  if (EMAIL_IN_LABEL.test(s)) return s.toLowerCase();
-  const m = s.match(/<\s*([^\s>]+@[^\s>]+)\s*>/);
-  if (m) return m[1].trim().toLowerCase();
-  return "";
 }
 
 /**
@@ -137,13 +126,18 @@ const HERO_BRAND_GOLD = "#F5C517";
 /**
  * Three-line hero headline (same copy as `Hero.tsx` / marketing).
  * @param {"header" | "footer"} variant
+ * @param {"center" | "left"} [align] — footer only; center for header; left reads LTR, flush to the start edge.
  */
-function heroTaglineEmailHtml(variant) {
+function heroTaglineEmailHtml(variant, align = "center") {
   const header = variant === "header";
   const fs1 = header ? "24px" : "14px";
   const fs23 = header ? "22px" : "13px";
   const mt = header ? "20px" : "12px";
-  return `<div style="margin-top:${mt};text-align:center;padding:0 4px;max-width:22rem;margin-left:auto;margin-right:auto;">
+  const isLeft = !header && align === "left";
+  const boxAlign = isLeft
+    ? "text-align:left;padding:0;max-width:100%;margin-left:0;margin-right:0"
+    : "text-align:center;padding:0 4px;max-width:22rem;margin-left:auto;margin-right:auto";
+  return `<div style="margin-top:${mt};${boxAlign};">
     <p style="margin:0 0 8px 0;padding:0;font-size:${fs1};font-weight:700;letter-spacing:-0.03em;line-height:1.12;color:${HERO_TEXT_N950};">We Build Your Website.</p>
     <p style="margin:0 0 8px 0;padding:0;font-size:${fs23};font-weight:600;letter-spacing:-0.02em;line-height:1.18;color:${HERO_TEXT_N600};">You Preview It.</p>
     <p style="margin:0;padding:0;font-size:${fs23};font-weight:600;letter-spacing:-0.02em;line-height:1.2;color:${HERO_TEXT_N600};">Then You
@@ -202,6 +196,32 @@ function escapeHtml(s) {
     .replace(/'/g, "&#39;");
 }
 
+/** Lead email in **internal** team mail: plain text (no `mailto:`) so ESPs don’t flag off-domain links. */
+function leadEmailInInternalHtml(email) {
+  return `<span style="color:#0f172a;font-weight:500;word-break:break-all;">${escapeHtml(email)}</span>`;
+}
+
+/**
+ * Third-party URLs in internal mail: show as text only (no off-site `href`) to match domain-trust checks.
+ * If the URL is on the public site origin, a same-domain link is OK.
+ */
+function externalOrSiteUrlHtml(rawUrl, siteOrigin) {
+  const u = String(rawUrl ?? "").trim();
+  if (!u) return "—";
+  const esc = escapeHtml(u);
+  try {
+    const base = new URL(u);
+    const origin = (siteOrigin || DEFAULT_SITE_ORIGIN).replace(/\/$/, "");
+    const site = new URL(origin);
+    if (base.origin === site.origin) {
+      return `<a href="${esc}" style="color:#0f172a;font-weight:500;">${esc}</a>`;
+    }
+  } catch {
+    // not a valid URL — fall through to text
+  }
+  return `<span style="color:#0f172a;word-break:break-all;">${esc}</span>`;
+}
+
 function isNonEmptyString(v) {
   return typeof v === "string" && v.trim().length > 0;
 }
@@ -220,21 +240,21 @@ function emailFooterRows(logoSrc, siteOrigin) {
   const nameLine = logoSrc
     ? `<div style="margin:0 0 10px 0;">
         <a href="${escapeHtml(home)}/" style="text-decoration:none;border:0;display:inline-block;" target="_blank" rel="noopener noreferrer">
-          <img src="${escapeHtml(logoSrc)}" width="100" alt="Nexora" style="display:block;max-width:100px;width:100px;height:auto;margin:0 auto 0 auto;border:0;"/>
+          <img src="${escapeHtml(logoSrc)}" width="100" alt="Nexora" style="display:block;max-width:100px;width:100px;height:auto;margin:0;border:0;"/>
         </a>
-        ${heroTaglineEmailHtml("footer")}
+        ${heroTaglineEmailHtml("footer", "left")}
       </div>`
-    : heroTaglineEmailHtml("footer");
+    : heroTaglineEmailHtml("footer", "left");
 
   return `<tr>
-    <td style="padding:20px 28px 22px 28px;background:#fafafa;border-top:1px solid #e2e8f0;">
-      <div style="text-align:center;">${nameLine}</div>
-      <p style="margin:0;font-size:11px;line-height:1.45;color:#94a3b8;text-align:center;">NEXORA SOLUTION L.L.C. · Kingdom of Bahrain</p>
+    <td style="padding:20px 28px 22px 28px;background:#fafafa;border-top:1px solid #e2e8f0;text-align:left;direction:ltr;">
+      <div style="text-align:left;direction:ltr;">${nameLine}</div>
+      <p style="margin:8px 0 0 0;font-size:11px;line-height:1.45;color:#94a3b8;text-align:left;direction:ltr;">NEXORA SOLUTION L.L.C. · Kingdom of Bahrain</p>
     </td>
   </tr>
   <tr>
-    <td style="padding:0 16px 24px 16px;text-align:center;">
-      <p style="margin:0;font-size:10px;line-height:1.4;color:#94a3b8;max-width:520px;">This message was sent because you submitted a form on our site. If you did not expect it, you can ignore this email.</p>
+    <td style="padding:0 16px 24px 16px;text-align:left;direction:ltr;">
+      <p style="margin:0;font-size:10px;line-height:1.4;color:#94a3b8;max-width:520px;text-align:left;">This message was sent because you submitted a form on our site. If you did not expect it, you can ignore this email.</p>
     </td>
   </tr>`;
 }
@@ -333,10 +353,7 @@ function clientLetterHtml({ preheader, innerHtml, siteOrigin, headline, logoImgS
 function buildContactInternal({ name, email, subject, message }, ctx) {
   const blocks = [
     { label: "Name", htmlValue: escapeHtml(name) },
-    {
-      label: "Email",
-      htmlValue: `<a href="mailto:${escapeHtml(email)}" style="color:#0f172a;font-weight:500;">${escapeHtml(email)}</a>`,
-    },
+    { label: "Email", htmlValue: leadEmailInInternalHtml(email) },
     { label: "Subject", htmlValue: subject ? escapeHtml(subject) : "—" },
     { label: "Message", htmlValue: escapeHtml(message) },
   ];
@@ -380,10 +397,7 @@ function buildDemoInternal(data, ctx) {
   const industry = INDUSTRY_LABELS[data.industry] || data.industry || "—";
   const blocks = [
     { label: "Name", htmlValue: escapeHtml(data.name) },
-    {
-      label: "Email",
-      htmlValue: `<a href="mailto:${escapeHtml(data.email)}" style="color:#0f172a;font-weight:500;">${escapeHtml(data.email)}</a>`,
-    },
+    { label: "Email", htmlValue: leadEmailInInternalHtml(data.email) },
     { label: "Company", htmlValue: data.company ? escapeHtml(data.company) : "—" },
     { label: "Industry", htmlValue: escapeHtml(industry) },
     { label: "Phone", htmlValue: escapeHtml(data.phone) },
@@ -441,7 +455,7 @@ function paymentLabel(p) {
 function buildStartProjectInternal({ requestType, payload }, ctx) {
   const common = [
     { label: "Name", htmlValue: escapeHtml(payload.full_name) },
-    { label: "Email", htmlValue: `<a href="mailto:${escapeHtml(payload.contact_email)}">${escapeHtml(payload.contact_email)}</a>` },
+    { label: "Email", htmlValue: leadEmailInInternalHtml(payload.contact_email) },
     { label: "Phone", htmlValue: escapeHtml(payload.contact_phone) },
     { label: "Company", htmlValue: escapeHtml(payload.company) },
     { label: "Plan", htmlValue: escapeHtml(planLabel(payload.selected_plan)) },
@@ -482,7 +496,10 @@ function buildStartProjectInternal({ requestType, payload }, ctx) {
     ...common,
     { label: "Path", htmlValue: "Migration" },
     { label: "Timeline", htmlValue: escapeHtml(payload.timeline) },
-    { label: "Existing site URL", htmlValue: `<a href="${escapeHtml(payload.website_url)}">${escapeHtml(payload.website_url)}</a>` },
+    {
+      label: "Existing site URL",
+      htmlValue: externalOrSiteUrlHtml(payload.website_url, ctx.siteOrigin),
+    },
     { label: "ERP / stack", htmlValue: escapeHtml(payload.erp_system) },
     { label: "ERP has API", htmlValue: boolLabel(payload.erp_has_api) },
     { label: "Build API (if no ERP API)", htmlValue: payload.build_api == null ? "—" : boolLabel(payload.build_api) },
@@ -578,18 +595,13 @@ export async function handleSendFormEmails(body, env) {
     return { ok: false, error: "RESEND_API_KEY is not set on the server" };
   }
 
-  const notifyTo = (env.NEXORA_INTERNAL_EMAIL || env.VITE_NEXORA_INTERNAL_EMAIL || DEFAULT_INTERNAL_NOTIFY).trim();
   const fromRaw = normalizeResendFrom(env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM);
-  const fromEmail = extractResendFromAddress(fromRaw);
-  const internalFrom =
-    fromEmail && fromEmail === notifyTo.toLowerCase()
-      ? normalizeResendFrom(
-          env.RESEND_FROM_INTERNAL ||
-            env.NEXORA_TRANSACTIONAL_FROM ||
-            env.VITE_NEXORA_TRANSACTIONAL_FROM ||
-            DEFAULT_INTERNAL_RESEND_FROM
-        )
-      : fromRaw;
+  const internalFrom = normalizeResendFrom(
+    env.RESEND_FROM_INTERNAL ||
+      env.NEXORA_TRANSACTIONAL_FROM ||
+      env.VITE_NEXORA_TRANSACTIONAL_FROM ||
+      DEFAULT_INTERNAL_RESEND_FROM
+  );
 
   const siteOrigin = getPublicSiteOrigin(env);
   const { logoImgSrc, attachments: emailAttachments } = await resolveEmailImages(env);
@@ -646,7 +658,7 @@ export async function handleSendFormEmails(body, env) {
     resend.emails.send({
       from: internalFrom,
       ...(emailAttachments ? { attachments: emailAttachments } : {}),
-      to: notifyTo,
+      to: TEAM_INBOX,
       subject: internalSubject,
       html: internalHtml,
       replyTo,
