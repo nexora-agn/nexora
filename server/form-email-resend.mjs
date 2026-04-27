@@ -6,6 +6,12 @@ import { Resend } from "resend";
 
 const DEFAULT_NOTIFY = "info@nexora-agn.com";
 
+/**
+ * `from` must use an address on a domain you verify at resend.com/domains (e.g. nexora-agn.com).
+ * Resend’s *@resend.dev* sender can only send test mail to your own address — not to customers.
+ */
+const DEFAULT_RESEND_FROM = "Nexora <info@nexora-agn.com>";
+
 /** @public in Vite; filename has a space — encode for use in href/src */
 const EMAIL_BANNER_PATH = "/Nexora%20Email%20Banner.png";
 
@@ -448,7 +454,7 @@ export async function handleSendFormEmails(body, env) {
   }
 
   const notifyTo = (env.NEXORA_INTERNAL_EMAIL || env.VITE_NEXORA_INTERNAL_EMAIL || DEFAULT_NOTIFY).trim();
-  const fromRaw = (env.RESEND_FROM || env.VITE_RESEND_FROM || "Nexora <onboarding@resend.dev>").trim();
+  const fromRaw = (env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM).trim();
 
   const siteOrigin = getPublicSiteOrigin(env);
   const bannerUrl = getEmailBannerUrl(env);
