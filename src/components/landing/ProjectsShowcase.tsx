@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+import { clientTestimonials } from "@/data/clientTestimonials";
 import { customerProjects } from "@/data/customerProjects";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
@@ -94,6 +95,43 @@ const ProjectsShowcase = () => {
               ))}
             </CarouselContent>
           </Carousel>
+        </motion.div>
+
+        <motion.div
+          className="mt-16 border-t border-neutral-200/80 pt-16 md:mt-20 md:pt-20"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, delay: 0.05 }}
+        >
+          <div className="mb-8 max-w-xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Testimonials</p>
+            <h3 className="text-2xl font-bold tracking-tight text-neutral-950 md:text-3xl">What our clients say</h3>
+          </div>
+          <ul className="grid gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
+            {clientTestimonials.map((t) => (
+              <li key={t.id}>
+                <figure
+                  className="flex h-full flex-col rounded-2xl border border-neutral-200 bg-neutral-50/50 p-5 shadow-sm md:p-6"
+                  aria-label={`Testimonial from ${t.name} (${t.industry})`}
+                >
+                  <blockquote className="flex-1 text-sm font-medium leading-relaxed text-neutral-800">
+                    <span className="text-neutral-400" aria-hidden>
+                      &ldquo;
+                    </span>
+                    {t.quote}
+                    <span className="text-neutral-400" aria-hidden>
+                      &rdquo;
+                    </span>
+                  </blockquote>
+                  <figcaption className="mt-4 border-t border-neutral-200/80 pt-4">
+                    <p className="text-sm font-semibold text-neutral-950">{t.name}</p>
+                    <p className="mt-1.5 text-xs font-medium leading-snug text-neutral-600">{t.industry}</p>
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
         </motion.div>
       </div>
     </section>

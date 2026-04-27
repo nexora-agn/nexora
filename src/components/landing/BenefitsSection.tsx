@@ -20,7 +20,7 @@ const benefits = [
   {
     icon: Rocket,
     title: "Launch when you are ready",
-    desc: "Once content and design are signed off, the site is staged for go-live with a clear handoff checklist.",
+    desc: "Once content and design are signed off, the site is staged for go live with a clear handoff checklist.",
   },
 ];
 
