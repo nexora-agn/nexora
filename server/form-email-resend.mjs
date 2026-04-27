@@ -13,20 +13,22 @@ const __dirname = path.dirname(__filename);
 const LOGO_ON_DISK = path.join(__dirname, "..", "public", "nexora-logo.png");
 const LOGO_CID = "nexora-logo-email";
 
-/** Resend `to` for every team notification (contact, demo, start project). Not configurable; avoid mis-sent mail from env. */
-const TEAM_INBOX = "info@nexora-agn.com";
+/** Default when `RESEND_ADMIN_EMAIL` (and legacy `NEXORA_INTERNAL_EMAIL`) are unset. */
+const DEFAULT_ADMIN_EMAIL = "info@nexora-agn.com";
 
 /**
  * `from` must use an address on a domain you verify at resend.com/domains (e.g. nexora-agn.com).
  * Resend’s *@resend.dev* sender can only send test mail to your own address — not to customers.
+ *
+ * Env (same idea as other repos): `RESEND_FROM_EMAIL` preferred, then `RESEND_FROM` / `VITE_*`.
  */
-const DEFAULT_RESEND_FROM = "Nexora <info@nexora-agn.com>";
+const DEFAULT_RESEND_FROM = "info@nexora-agn.com";
 
 /**
  * Team notifications use this **From** (or `RESEND_FROM_INTERNAL` / `NEXORA_TRANSACTIONAL_FROM`).
  * Avoid `no-reply@` (hurts trust with spam feedback). Use a real role on your verified domain.
  */
-const DEFAULT_INTERNAL_RESEND_FROM = "Nexora <notifications@nexora-agn.com>";
+const DEFAULT_INTERNAL_RESEND_FROM = "info@nexora-agn.com";
 
 const EMAIL_IN_LABEL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -53,6 +55,40 @@ function normalizeResendFrom(raw) {
     if (EMAIL_IN_LABEL.test(addr)) return `${name} <${addr}>`;
   }
   return DEFAULT_RESEND_FROM;
+}
+
+/**
+ * Team / admin inbox for form notifications. Matches `RESEND_ADMIN_EMAIL` pattern from sibling projects.
+ * @param {Record<string, string | undefined>} env
+ */
+function resolveAdminEmail(env) {
+  const raw =
+    env.RESEND_ADMIN_EMAIL ||
+    env.NEXORA_INTERNAL_EMAIL ||
+    env.VITE_NEXORA_INTERNAL_EMAIL ||
+    DEFAULT_ADMIN_EMAIL;
+  const t = String(raw ?? "")
+    .trim()
+    .replace(/[\u200B-\u200D\uFEFF]/g, "");
+  return t || DEFAULT_ADMIN_EMAIL;
+}
+
+/**
+ * Where to send the **internal** notification. Contact can use `RESEND_CONTACT_EMAIL` (else admin), like
+ * `RESEND_CONTACT_EMAIL || RESEND_ADMIN_EMAIL` in other codebases.
+ * @param {Record<string, string | undefined>} env
+ * @param {"contact" | "demo" | "start_project"} formType
+ */
+function resolveNotifyTo(env, formType) {
+  const admin = resolveAdminEmail(env);
+  if (formType === "contact") {
+    const c = env.RESEND_CONTACT_EMAIL || env.VITE_RESEND_CONTACT_EMAIL;
+    const t = String(c ?? "")
+      .trim()
+      .replace(/[\u200B-\u200D\uFEFF]/g, "");
+    if (t) return t;
+  }
+  return admin;
 }
 
 /**
@@ -595,7 +631,14 @@ export async function handleSendFormEmails(body, env) {
     return { ok: false, error: "RESEND_API_KEY is not set on the server" };
   }
 
-  const fromRaw = normalizeResendFrom(env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM);
+  const fromRaw = normalizeResendFrom(
+    env.RESEND_FROM_EMAIL ||
+      env.VITE_RESEND_FROM_EMAIL ||
+      env.RESEND_FROM ||
+      env.VITE_RESEND_FROM ||
+      DEFAULT_RESEND_FROM
+  );
+  const notifyTo = resolveNotifyTo(env, formType);
   const internalFrom = normalizeResendFrom(
     env.RESEND_FROM_INTERNAL ||
       env.NEXORA_TRANSACTIONAL_FROM ||
@@ -658,14 +701,14 @@ export async function handleSendFormEmails(body, env) {
     resend.emails.send({
       from: internalFrom,
       ...(emailAttachments ? { attachments: emailAttachments } : {}),
-      to: TEAM_INBOX,
+      to: [notifyTo],
       subject: internalSubject,
       html: internalHtml,
       replyTo,
     }),
     resend.emails.send({
       ...clientSendOpts,
-      to: clientTo,
+      to: [clientTo],
       subject: clientSubject,
       html: clientHtml,
     }),
