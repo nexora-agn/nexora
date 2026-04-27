@@ -22,6 +22,33 @@ const DEFAULT_INTERNAL_NOTIFY = "info@nexora-agn.com";
  */
 const DEFAULT_RESEND_FROM = "Nexora <info@nexora-agn.com>";
 
+const EMAIL_IN_LABEL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * Resend requires `from` as `email@x` or `Name <email@x>`. Env often includes extra wrapping
+ * quotes (`"Nexora <…>"`) or whitespace from Vercel / .env — strip and validate.
+ */
+function normalizeResendFrom(raw) {
+  let s = String(raw ?? "")
+    .trim()
+    .replace(/[\u200B-\u200D\uFEFF]/g, "");
+  while (
+    s.length >= 2 &&
+    ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'")))
+  ) {
+    s = s.slice(1, -1).trim();
+  }
+  if (!s) return DEFAULT_RESEND_FROM;
+  if (EMAIL_IN_LABEL.test(s)) return s;
+  const m = s.match(/^(.+?)\s*<\s*([^\s>]+@[^\s>]+)\s*>$/);
+  if (m) {
+    const name = m[1].trim().replace(/^["']|["']$/g, "");
+    const addr = m[2].trim();
+    if (EMAIL_IN_LABEL.test(addr)) return `${name} <${addr}>`;
+  }
+  return DEFAULT_RESEND_FROM;
+}
+
 /**
  * Set `NEXORA_PUBLIC_URL` or `VITE_PUBLIC_SITE_URL` for remote logo URL fallback if the file cannot be read on disk.
  */
@@ -522,7 +549,7 @@ export async function handleSendFormEmails(body, env) {
   }
 
   const notifyTo = (env.NEXORA_INTERNAL_EMAIL || env.VITE_NEXORA_INTERNAL_EMAIL || DEFAULT_INTERNAL_NOTIFY).trim();
-  const fromRaw = (env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM).trim();
+  const fromRaw = normalizeResendFrom(env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM);
 
   const siteOrigin = getPublicSiteOrigin(env);
   const { logoImgSrc, attachments: emailAttachments } = await resolveEmailImages(env);
