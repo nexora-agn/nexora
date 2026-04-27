@@ -88,20 +88,20 @@ function siteHomeHref(ctx) {
 const FOOTER_TAGLINE = "Custom websites, delivered fast";
 
 /**
- * Custom email banner: gradient strip + `nexora-logo.png` (same file as the site) + tagline. Replaces the old full-bleed PNG hero.
+ * Custom email banner: light background (dark-text logo) + `nexora-logo.png` + tagline.
  */
 function brandHeaderWithLogo(logoSrc, siteOrigin) {
   if (!logoSrc) return "";
   const home = siteHomeHref({ siteOrigin });
   return `<tr>
-    <td style="padding:0;margin:0;background:#0a0f1a;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:linear-gradient(165deg,#0a0f1a 0%,#1e293b 42%,#0f172a 100%);">
+    <td style="padding:0;margin:0;background:#f8fafc;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:linear-gradient(180deg,#ffffff 0%,#f1f5f9 100%);">
         <tr>
-          <td style="padding:28px 24px 24px 24px;text-align:center;border-bottom:3px solid #334155;">
+          <td style="padding:28px 24px 24px 24px;text-align:center;border-bottom:1px solid #e2e8f0;">
             <a href="${escapeHtml(home)}" style="text-decoration:none;border:0;display:inline-block;" target="_blank" rel="noopener noreferrer">
               <img src="${escapeHtml(logoSrc)}" width="200" alt="Nexora" style="display:block;max-width:200px;width:100%;height:auto;margin:0 auto;border:0;outline:none;"/>
             </a>
-            <p style="margin:16px 0 0 0;padding:0;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#94a3b8;">${escapeHtml(FOOTER_TAGLINE)}</p>
+            <p style="margin:16px 0 0 0;padding:0;font-size:12px;font-weight:500;letter-spacing:0.04em;color:#64748b;">${escapeHtml(FOOTER_TAGLINE)}</p>
           </td>
         </tr>
       </table>
@@ -118,12 +118,12 @@ function documentTitleRow(title) {
   </tr>`;
 }
 
-/** If no public URL for the PNG, use a compact branded header (no image). */
+/** If no logo available, use a light compact header (no image). */
 function fallbackHeaderNoBanner(title) {
   return `<tr>
-    <td style="background:linear-gradient(180deg,#0c1222 0%,#1e293b 100%);padding:22px 28px;border-bottom:2px solid #334155;">
-      <p style="margin:0 0 6px 0;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#94a3b8;">Nexora</p>
-      <h1 style="margin:0;font-size:19px;font-weight:700;letter-spacing:-0.02em;color:#f8fafc;">${escapeHtml(title)}</h1>
+    <td style="background:#f8fafc;padding:20px 28px 22px 28px;border-bottom:1px solid #e2e8f0;">
+      <p style="margin:0 0 4px 0;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#64748b;">Nexora</p>
+      <h1 style="margin:0;font-size:19px;font-weight:700;letter-spacing:-0.02em;color:#0f172a;">${escapeHtml(title)}</h1>
     </td>
   </tr>`;
 }
@@ -146,13 +146,32 @@ function isValidEmail(v) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
 
-/** Footer text only — logo lives in the top `brandHeaderWithLogo` strip. */
-function emailFooterRows() {
+/**
+ * @param {string} [logoSrc] — same `cid:` / URL as header (`nexora-logo.png`), or "" to use text "Nexora"
+ * @param {string} [siteOrigin] — for logo link
+ */
+function emailFooterRows(logoSrc, siteOrigin) {
+  const home = (siteOrigin || DEFAULT_SITE_ORIGIN).replace(/\/$/, "");
+  const nameLine = logoSrc
+    ? `<table role="presentation" align="center" cellspacing="0" cellpadding="0" style="margin:0 auto 8px auto;">
+    <tr>
+      <td style="padding:0 6px 0 0;vertical-align:middle;line-height:0;">
+        <a href="${escapeHtml(home)}/" style="text-decoration:none;border:0;" target="_blank" rel="noopener noreferrer">
+          <img src="${escapeHtml(logoSrc)}" width="100" alt="Nexora" style="display:block;max-width:100px;width:100px;height:auto;border:0;"/>
+        </a>
+      </td>
+      <td style="vertical-align:middle;padding:0;font-size:12px;line-height:1.45;color:#64748b;">
+        <span style="color:#cbd5e1;padding:0 2px 0 0;" aria-hidden="true">·</span>${escapeHtml(FOOTER_TAGLINE)}
+      </td>
+    </tr>
+  </table>`
+    : `<p style="margin:0 0 8px 0;font-size:12px;line-height:1.5;color:#64748b;text-align:center;">
+        <strong style="color:#0f172a;font-weight:600;">Nexora</strong> · ${escapeHtml(FOOTER_TAGLINE)}
+      </p>`;
+
   return `<tr>
     <td style="padding:20px 28px 22px 28px;background:#fafafa;border-top:1px solid #e2e8f0;">
-      <p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:#64748b;text-align:center;">
-        <strong style="color:#0f172a;font-weight:600;">Nexora</strong> · ${escapeHtml(FOOTER_TAGLINE)}
-      </p>
+      <div style="text-align:center;">${nameLine}</div>
       <p style="margin:0;font-size:11px;line-height:1.45;color:#94a3b8;text-align:center;">NEXORA SOLUTION L.L.C. · Kingdom of Bahrain</p>
     </td>
   </tr>
@@ -201,7 +220,7 @@ function emailDocument({ preheader, title, blocks, siteOrigin, logoImgSrc }) {
               </table>
             </td>
           </tr>
-          ${emailFooterRows()}
+          ${emailFooterRows(logoImgSrc, siteOrigin)}
         </table>
       </td>
     </tr>
@@ -222,9 +241,9 @@ function clientLetterHtml({ preheader, innerHtml, siteOrigin, headline, logoImgS
     </td>
   </tr>`
     : `<tr>
-    <td style="background:linear-gradient(180deg,#0c1222 0%,#1e293b 100%);padding:20px 28px 22px 28px;">
-      <p style="margin:0 0 2px 0;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#94a3b8;">Nexora</p>
-      <p style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.02em;color:#f8fafc;">${escapeHtml(headline)}</p>
+    <td style="background:#f8fafc;padding:20px 28px 22px 28px;border-bottom:1px solid #e2e8f0;">
+      <p style="margin:0 0 4px 0;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#64748b;">Nexora</p>
+      <p style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.02em;color:#0f172a;">${escapeHtml(headline)}</p>
     </td>
   </tr>`;
 
@@ -243,7 +262,7 @@ function clientLetterHtml({ preheader, innerHtml, siteOrigin, headline, logoImgS
               <div style="font-size:15px;line-height:1.65;color:#334155;">${innerHtml}</div>
             </td>
           </tr>
-          ${emailFooterRows()}
+          ${emailFooterRows(logoImgSrc, siteOrigin)}
         </table>
       </td>
     </tr>
