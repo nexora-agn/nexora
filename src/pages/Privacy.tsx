@@ -18,17 +18,16 @@ const sections = [
         policy, is <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
         {COMPANY_LEGAL.legalForm}. Commercial registration (CR) no.{" "}
         <span className="whitespace-nowrap">{COMPANY_LEGAL.commercialRegistration}</span>
+        {COMPANY_LEGAL.addressLines.length === 0 ? "." : ""}
         {COMPANY_LEGAL.addressLines.length > 0 ? (
           <>
             . Registered address:{" "}
             <span className="mt-1 block whitespace-pre-line text-foreground">
-              {COMPANY_LEGAL.addressLines.join("\n")}, {COMPANY_LEGAL.jurisdiction}
+              {COMPANY_LEGAL.addressLines.join("\n")}
             </span>
             .
           </>
-        ) : (
-          <> · Principal place of business: {COMPANY_LEGAL.jurisdiction}.</>
-        )}
+        ) : null}
       </p>
     ),
   },

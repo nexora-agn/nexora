@@ -92,7 +92,6 @@ const Footer = () => {
               <p>
                 Commercial registration: <span className="tabular-nums">{COMPANY_LEGAL.commercialRegistration}</span>
               </p>
-              <p>{COMPANY_LEGAL.jurisdiction}</p>
             </div>
           </div>
         </div>

@@ -305,7 +305,7 @@ function emailFooterRows(logoSrc, siteOrigin) {
   return `<tr>
     <td style="padding:20px 28px 22px 28px;background:#fafafa;border-top:1px solid #e2e8f0;text-align:left;direction:ltr;">
       <div style="text-align:left;direction:ltr;">${nameLine}</div>
-      <p style="margin:8px 0 0 0;font-size:11px;line-height:1.45;color:#94a3b8;text-align:left;direction:ltr;">NEXORA SOLUTION L.L.C. · Kingdom of Bahrain</p>
+      <p style="margin:8px 0 0 0;font-size:11px;line-height:1.45;color:#94a3b8;text-align:left;direction:ltr;">NEXORA SOLUTION L.L.C.</p>
     </td>
   </tr>
   <tr>
