@@ -35,6 +35,9 @@ const DEFAULT_RESEND_FROM = "info@nexora-agn.com";
  */
 const DEFAULT_INTERNAL_RESEND_FROM = "notifications@nexora-agn.com";
 
+/** Canonical public site for links in outbound email when env does not override (see `getPublicSiteOrigin`). */
+const DEFAULT_SITE_ORIGIN = "https://nexora-agn.com";
+
 const EMAIL_IN_LABEL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
@@ -112,16 +115,18 @@ function resolveNotifyTo(env, formType) {
 }
 
 /**
- * Set `NEXORA_PUBLIC_URL` or `VITE_PUBLIC_SITE_URL` for remote logo URL fallback if the file cannot be read on disk.
+ * Public site origin for email links and remote logo URL.
+ * Prefer `NEXORA_PUBLIC_URL` or `VITE_PUBLIC_SITE_URL` in Production (and Preview if you care).
+ *
+ * We intentionally do **not** fall back to `VERCEL_URL`: on Vercel it is always the deployment host
+ * (`*.vercel.app`), not your production custom domain, so form emails looked broken.
  */
 function getPublicSiteOrigin(env) {
   const explicit = String(env.NEXORA_PUBLIC_URL || env.VITE_PUBLIC_SITE_URL || "")
     .trim()
     .replace(/\/$/, "");
   if (explicit) return explicit;
-  const v = String(env.VERCEL_URL || "").trim().replace(/\/$/, "");
-  if (v) return `https://${v}`;
-  return "";
+  return DEFAULT_SITE_ORIGIN.replace(/\/$/, "");
 }
 
 function getEmailLogoUrl(env) {
@@ -167,8 +172,6 @@ async function resolveEmailImages(env) {
     attachments: undefined,
   };
 }
-
-const DEFAULT_SITE_ORIGIN = "https://nexora-agn.com";
 
 function siteHomeHref(ctx) {
   return ctx?.siteOrigin || DEFAULT_SITE_ORIGIN;
