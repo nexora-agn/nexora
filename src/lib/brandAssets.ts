@@ -7,8 +7,8 @@ function envPublicOrigin(): string {
   return (import.meta.env.VITE_PUBLIC_SITE_URL as string | undefined)?.replace(/\/$/, "") ?? "";
 }
 
-/** Open Graph / social preview image — `public/og-image.png` (served as `/og-image.png`). */
-export const NEXORA_OG_IMAGE_PATH = "/og-image.png";
+/** Open Graph / social preview image — `public/og-image-nexora.png` (served as `/og-image-nexora.png`). */
+export const NEXORA_OG_IMAGE_PATH = "/og-image-nexora.png";
 
 /**
  * Full URL to the OG image for the *current* public site. Uses `VITE_PUBLIC_SITE_URL` at build
@@ -16,9 +16,9 @@ export const NEXORA_OG_IMAGE_PATH = "/og-image.png";
  */
 export function getNexoraOgImageUrl(): string {
   const b = envPublicOrigin();
-  if (b) return `${b}/og-image.png`;
+  if (b) return `${b}/og-image-nexora.png`;
   if (typeof window !== "undefined" && window.location?.origin) {
-    return `${window.location.origin}/og-image.png`;
+    return `${window.location.origin}/og-image-nexora.png`;
   }
   return NEXORA_OG_IMAGE_PATH;
 }
