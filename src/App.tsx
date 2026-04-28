@@ -22,7 +22,7 @@ const AdminProjectRequests = lazy(() => import("./pages/admin/ProjectRequests"))
 
 const queryClient = new QueryClient();
 
-const DEFAULT_SITE_TITLE = "Nexora | Custom websites, delivered fast";
+const DEFAULT_SITE_TITLE = "Nexora | We build your website, you preview it, then you decide.";
 
 /** Resets the tab title on client navigation (admin pages set their own; public routes were not updating). */
 const MarketingDocumentTitle = () => {
