@@ -42,6 +42,8 @@ export const MARKETING_PLANS: {
       "Catalog & pricing sync",
       "AI chatbot",
       "ERP integration",
+      "SEO & Google Ads setup",
+      "AI Infrastructure",
     ],
   },
   {

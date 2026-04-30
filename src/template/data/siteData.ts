@@ -3,7 +3,7 @@ export const COMPANY = {
   /** Subtitle under logo in header/footer when using wordmark */
   legalName: "CONSTRUCTO PREMIUM BUILDERS",
   tagline: "Elevating construction standards with design-build excellence since 2008.",
-  phone: "+1 (800) 123-4567",
+  phone: "+1 (888) 535-9177",
   email: "hello@constructo.com",
   address: "1234 Builder's Avenue, Suite 100, New York, NY 10001",
   hours: "Mon - Fri: 8:00 AM - 6:00 PM",

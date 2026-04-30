@@ -281,7 +281,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                       id="demo-phone"
                       type="tel"
                       autoComplete="tel"
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="+1 (888) 535-9177"
                       value={phone}
                       onChange={e => {
                         setPhone(e.target.value);
