@@ -7,6 +7,7 @@ import ErpIntegrationSection from "@/components/landing/ErpIntegrationSection";
 import CustomizationPreview from "@/components/landing/CustomizationPreview";
 import AiLandingSection from "@/components/landing/AiLandingSection";
 import ProjectsShowcase from "@/components/landing/ProjectsShowcase";
+import WhyChooseNexoraSection from "@/components/landing/WhyChooseNexoraSection";
 import PricingSection from "@/components/landing/PricingSection";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
@@ -57,6 +58,7 @@ const Index = () => {
         <ErpIntegrationSection />
         <AiLandingSection />
         <ProjectsShowcase />
+        <WhyChooseNexoraSection onRequestDemo={() => setDemoOpen(true)} />
         <PricingSection />
         <FinalCTA onRequestDemo={() => setDemoOpen(true)} />
         <Footer />

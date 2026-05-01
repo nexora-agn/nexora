@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 
+/** Order follows homepage scroll: How it works → ERP → AI → Work → Why Nexora → Pricing */
 const sectionLinks = [
   { id: "how-it-works", label: "How it works" },
   { id: "erp-sync", label: "ERP" },
   { id: "ai", label: "AI" },
   { id: "projects", label: "Work" },
+  { id: "why-choose-us", label: "Why Nexora" },
   { id: "pricing", label: "Pricing" },
 ] as const;
 

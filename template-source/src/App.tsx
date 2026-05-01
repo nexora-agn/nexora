@@ -11,9 +11,11 @@ import CustomizationPanel from "@/components/CustomizationPanel";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/layout/LoadingScreen";
 import ChatbotWidget from "@/components/Chatbot/ChatbotWidget";
-
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+
+/** Flip to true when you want the floating template chatbot back (widget code stays in-repo). */
+const SHOW_TEMPLATE_CHATBOT = false;
 
 const About = lazy(() => import("./pages/About"));
 const Services = lazy(() => import("./pages/Services"));
@@ -96,7 +98,7 @@ const AppShell = () => {
         <AnimatedRoutes />
       </Suspense>
       <CustomizationPanel />
-      <ChatbotWidget />
+      {SHOW_TEMPLATE_CHATBOT ? <ChatbotWidget /> : null}
     </BrowserRouter>
   );
 };
