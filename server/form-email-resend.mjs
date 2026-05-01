@@ -508,6 +508,7 @@ function planLabel(id) {
 function paymentLabel(p) {
   if (p === "stripe" || p === "card") return "Stripe (card)";
   if (p === "paypal") return "PayPal";
+  if (p === "paysera") return "Paysera";
   return String(p || "—");
 }
 

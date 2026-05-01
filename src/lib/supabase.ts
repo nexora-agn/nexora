@@ -109,7 +109,7 @@ export type NewWebsiteRequestPayload = {
   /** Marketing plan the user selected before the rest of the flow. */
   selected_plan: "starter" | "growth" | "custom";
   /** How they want to pay once checkout is available. `card` is legacy; prefer `stripe` for new card checkouts. */
-  payment_preference: "card" | "paypal" | "stripe";
+  payment_preference: "card" | "paypal" | "stripe" | "paysera";
 };
 
 export type MigrateRequestPayload = {
@@ -129,7 +129,7 @@ export type MigrateRequestPayload = {
   migration_requirements: string;
   additional_notes: string;
   selected_plan: "starter" | "growth" | "custom";
-  payment_preference: "card" | "paypal" | "stripe";
+  payment_preference: "card" | "paypal" | "stripe" | "paysera";
 };
 
 export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload;

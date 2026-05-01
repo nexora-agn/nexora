@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Check, CheckCircle2, CreditCard, Globe, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle2, CreditCard, Globe, Landmark, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -138,7 +138,7 @@ const ProjectOnboardingWizard = () => {
   const [step, setStep] = useState<Step>(() => (readInitialPlanFromLocation() ? 2 : 1));
   const [choice, setChoice] = useState<ProjectRequestType | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<MarketingPlanId | null>(() => readInitialPlanFromLocation());
-  const [paymentPreference, setPaymentPreference] = useState<"stripe" | "paypal" | null>(null);
+  const [paymentPreference, setPaymentPreference] = useState<"stripe" | "paypal" | "paysera" | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -512,7 +512,7 @@ const ProjectOnboardingWizard = () => {
 
   const runValidateReview = (): boolean => {
     if (!paymentPreference) {
-      setFieldErrors(prev => ({ ...prev, payment: "Choose Stripe or PayPal for when we send checkout." }));
+      setFieldErrors(prev => ({ ...prev, payment: "Choose Stripe, PayPal, or Paysera for when we send checkout." }));
       return false;
     }
     setFieldErrors(prev => {
@@ -1421,15 +1421,15 @@ const ProjectOnboardingWizard = () => {
               <div className="mt-6 space-y-3">
                 <Label className="text-foreground">Payment (after we review your request)</Label>
                 <p className="text-xs text-muted-foreground">
-                  Card payments will use Stripe; PayPal is available too. We’ll connect live checkout when your project is ready.
-                  This just records your preference.
+                  Card payments can use Stripe; PayPal and Paysera are available too. We’ll connect live checkout when your
+                  project is ready. This just records your preference.
                 </p>
                 <div
                   onBlur={e =>
                     onFieldGroupBlur(e, () => {
                       setMergedFieldError(
                         "payment",
-                        !paymentPreference ? "Choose Stripe or PayPal for when we send checkout." : undefined,
+                        !paymentPreference ? "Choose Stripe, PayPal, or Paysera for when we send checkout." : undefined,
                       );
                     })
                   }
@@ -1437,7 +1437,7 @@ const ProjectOnboardingWizard = () => {
                   <RadioGroup
                     value={paymentPreference ?? ""}
                     onValueChange={v => {
-                      setPaymentPreference(v as "stripe" | "paypal");
+                      setPaymentPreference(v as "stripe" | "paypal" | "paysera");
                       clearError("payment");
                     }}
                     className={cn("flex flex-col gap-3 sm:gap-4", fieldErrors.payment && "rounded-md p-1 ring-1 ring-destructive/50")}
@@ -1458,6 +1458,16 @@ const ProjectOnboardingWizard = () => {
                     >
                       <RadioGroupItem value="paypal" id="pay-paypal" className="shrink-0" />
                       <span className="font-normal text-foreground">PayPal</span>
+                    </label>
+                    <label
+                      htmlFor="pay-paysera"
+                      className="flex w-full max-w-md cursor-pointer items-center gap-3 rounded-lg border border-border/70 bg-background/40 px-3 py-2.5"
+                    >
+                      <RadioGroupItem value="paysera" id="pay-paysera" className="shrink-0" />
+                      <span className="flex min-w-0 flex-1 items-center gap-2 font-medium text-foreground">
+                        <Landmark className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                        Paysera
+                      </span>
                     </label>
                   </RadioGroup>
                 </div>
