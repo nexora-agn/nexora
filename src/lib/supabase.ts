@@ -132,7 +132,27 @@ export type MigrateRequestPayload = {
   payment_preference: "card" | "paypal" | "stripe" | "paysera";
 };
 
-export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload;
+/** Public “start project” flow — no ERP / AI questionnaires; logo + palette + essentials. */
+export type PackageOnboardingPayload = {
+  onboarding_version: 2;
+  contact_email: string;
+  logo_file_name: string;
+  logo_mime_type: string;
+  logo_base64: string;
+  brand_colors: string;
+  current_website: string;
+  domain_hosting_info: string;
+  content_text: string;
+  additional_notes: string;
+  selected_plan: "starter" | "growth" | "custom";
+  payment_preference: "card" | "paypal" | "stripe" | "paysera";
+};
+
+export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload | PackageOnboardingPayload;
+
+export function isPackageOnboardingPayload(p: ProjectRequestPayload): p is PackageOnboardingPayload {
+  return typeof p === "object" && p !== null && (p as PackageOnboardingPayload).onboarding_version === 2;
+}
 
 export type ProjectRequest = {
   id: string;

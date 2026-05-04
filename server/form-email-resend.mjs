@@ -255,6 +255,12 @@ function escapeHtml(s) {
     .replace(/'/g, "&#39;");
 }
 
+function escapeHtmlBreaks(text) {
+  const t = String(text ?? "").trim();
+  if (!t) return "—";
+  return escapeHtml(t).replace(/\r\n|\r|\n/g, "<br>");
+}
+
 /** Lead email in **internal** team mail: plain text (no `mailto:`) so ESPs don’t flag off-domain links. */
 function leadEmailInInternalHtml(email) {
   return `<span style="color:#0f172a;font-weight:500;word-break:break-all;">${escapeHtml(email)}</span>`;
@@ -513,6 +519,31 @@ function paymentLabel(p) {
 }
 
 function buildStartProjectInternal({ requestType, payload }, ctx) {
+  if (payload.onboarding_version === 2) {
+    const blocks = [
+      {
+        label: "Path",
+        htmlValue: requestType === "new_website" ? "New website" : "Migration",
+      },
+      { label: "Plan", htmlValue: escapeHtml(planLabel(payload.selected_plan)) },
+      { label: "Payment option", htmlValue: escapeHtml(paymentLabel(payload.payment_preference)) },
+      { label: "Email", htmlValue: leadEmailInInternalHtml(payload.contact_email) },
+      { label: "Logo file", htmlValue: escapeHtml(payload.logo_file_name) },
+      { label: "Brand colors", htmlValue: escapeHtmlBreaks(payload.brand_colors) },
+      { label: "Current website", htmlValue: escapeHtmlBreaks(payload.current_website || "—") },
+      { label: "Domain & hosting", htmlValue: escapeHtmlBreaks(payload.domain_hosting_info) },
+      { label: "Content / site copy", htmlValue: escapeHtmlBreaks(payload.content_text) },
+      { label: "Additional notes", htmlValue: escapeHtmlBreaks(payload.additional_notes || "—") },
+    ];
+    return emailDocument({
+      preheader: `Package request: ${payload.contact_email}`,
+      title: "Package onboarding — details",
+      blocks,
+      siteOrigin: ctx.siteOrigin,
+      logoImgSrc: ctx.logoImgSrc,
+    });
+  }
+
   const common = [
     { label: "Name", htmlValue: escapeHtml(payload.full_name) },
     { label: "Email", htmlValue: leadEmailInInternalHtml(payload.contact_email) },
@@ -581,6 +612,28 @@ function buildStartProjectInternal({ requestType, payload }, ctx) {
 }
 
 function buildStartProjectClient({ requestType, payload }, ctx) {
+  if (payload.onboarding_version === 2) {
+    const plan = planLabel(payload.selected_plan);
+    const greetLocal = escapeHtml(payload.contact_email.split("@")[0] || "there");
+    const pathSentence =
+      requestType === "migrate"
+        ? `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package for your <strong>site migration</strong>. We received your branding, existing site notes, and content.`
+        : `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package. We received your branding and content notes.`;
+    return clientLetterHtml({
+      preheader: `We received your ${plan} package request`,
+      headline: "Request received — next: payment",
+      innerHtml: `
+    <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${greetLocal}</strong>,</p>
+    <p style="margin:0 0 14px 0;">${pathSentence}</p>
+    <p style="margin:0 0 14px 0;">We’ll send you a secure link to finish payment via your selected option (<strong>${escapeHtml(paymentLabel(payload.payment_preference))}</strong>). Once payment is confirmed we move ahead with production.</p>
+    <p style="margin:0 0 14px 0;">This confirmation goes to <strong>${escapeHtml(payload.contact_email)}</strong>. Reply here or reach <a href="mailto:info@nexora-agn.com" style="color:#0f172a;font-weight:500;">info@nexora-agn.com</a> if you need updates.</p>
+    <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
+  `,
+      siteOrigin: ctx.siteOrigin,
+      logoImgSrc: ctx.logoImgSrc,
+    });
+  }
+
   const path = requestType === "new_website" ? "new website" : "site migration";
   return clientLetterHtml({
     preheader: `We received your ${path} project request`,
@@ -635,8 +688,26 @@ function parseStartProject(body) {
   }
   if (!body.payload || typeof body.payload !== "object") return { error: "Missing payload" };
   const p = body.payload;
-  if (!isNonEmptyString(p.full_name)) return { error: "Invalid payload" };
+
+  if (p.onboarding_version === 2) {
+    if (body.requestType !== "new_website" && body.requestType !== "migrate") return { error: "Invalid requestType" };
+    if (!isValidEmail(p.contact_email)) return { error: "Invalid contact_email" };
+    if (!isNonEmptyString(p.logo_file_name) || !isNonEmptyString(p.logo_mime_type)) return { error: "Invalid payload" };
+    if (typeof p.logo_base64 !== "string" || p.logo_base64.length < 32) return { error: "Invalid payload" };
+    if (!isNonEmptyString(p.brand_colors)) return { error: "Invalid payload" };
+    if (!isNonEmptyString(p.domain_hosting_info)) return { error: "Invalid payload" };
+    if (!isNonEmptyString(p.content_text)) return { error: "Invalid payload" };
+    const plan = String(p.selected_plan ?? "");
+    if (plan !== "starter" && plan !== "growth" && plan !== "custom") return { error: "Invalid payload" };
+    const pay = p.payment_preference;
+    if (pay !== "card" && pay !== "paypal" && pay !== "stripe" && pay !== "paysera") {
+      return { error: "Invalid payload" };
+    }
+    return { data: { requestType: body.requestType, payload: p } };
+  }
+
   if (!isValidEmail(p.contact_email)) return { error: "Invalid contact_email" };
+  if (!isNonEmptyString(p.full_name)) return { error: "Invalid payload" };
   return { data: { requestType: body.requestType, payload: p } };
 }
 
@@ -709,8 +780,17 @@ export async function handleSendFormEmails(body, env) {
     replyTo = payload.contact_email;
     internalHtml = buildStartProjectInternal({ requestType, payload }, emailCtx);
     clientHtml = buildStartProjectClient({ requestType, payload }, emailCtx);
-    const short = requestType === "new_website" ? "New site" : "Migration";
-    internalSubject = `[Nexora] ${short}: ${payload.full_name}`;
+    const short =
+      payload.onboarding_version === 2
+        ? requestType === "migrate"
+          ? "Migration (pkg)"
+          : "New site (pkg)"
+        : requestType === "new_website"
+          ? "New site"
+          : "Migration";
+    const leadSubject =
+      payload.onboarding_version === 2 ? payload.contact_email : payload.full_name;
+    internalSubject = `[Nexora] ${short}: ${leadSubject}`;
     clientSubject = "We received your project request — Nexora";
   }
 

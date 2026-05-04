@@ -34,3 +34,13 @@ export function onboardingTimelineLabel(id: string): string {
 }
 
 export const ONBOARDING_AI_CHATBOT_MIN = 20;
+
+/** Streamlined package onboarding (wizard v2). */
+export const PACKAGE_ONBOARD_LIMITS = {
+  currentWebsite: 2000,
+  domainHosting: 4000,
+  contentText: 20000,
+  additionalNotes: 5000,
+} as const;
+
+export const PACKAGE_LOGO_MAX_BYTES = 1_500_000;

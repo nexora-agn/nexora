@@ -8,6 +8,7 @@ import {
   Clock,
   ChevronDown,
   Lock,
+  Package,
   Phone,
   RefreshCw,
   Rocket,
@@ -46,7 +47,7 @@ const HERO_BOTTOM_FEATURES = [
 ] as const;
 
 const HERO_TRUST_POINTS = [
-  { Icon: Check, title: "No Upfront Payment", line: "Preview First" },
+  { Icon: Package, title: "Clear packages", line: "Starter, Growth, or Custom." },
   { Icon: Lock, title: "Zero Risk", line: "You Decide" },
   { Icon: CloudUpload, title: "We Migrate Everything", line: "Stress-Free" },
 ] as const;

@@ -15,7 +15,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { listProjectRequests, updateProjectRequestStatus } from "@/lib/projectRequests";
-import type { ProjectRequest, ProjectRequestStatus } from "@/lib/supabase";
+import {
+  type ProjectRequest,
+  type ProjectRequestStatus,
+  isPackageOnboardingPayload,
+} from "@/lib/supabase";
 import { onboardingTimelineLabel, PREFERRED_FEATURE_OPTIONS } from "@/lib/projectOnboardingConstants";
 import { planLabelById } from "@/lib/pricingPlans";
 import { createPayseraPaymentLink } from "@/lib/createPayseraPaymentLink";
@@ -48,6 +52,9 @@ const featureLabel = (id: string) => PREFERRED_FEATURE_OPTIONS.find(f => f.id ==
 const PAYSERA_METHOD_ANY = "__paysera_any__";
 
 function cardTitle(req: ProjectRequest): string {
+  if (isPackageOnboardingPayload(req.payload)) {
+    return req.payload.contact_email?.trim() || "Package request";
+  }
   const p = req.payload as Record<string, unknown>;
   if (req.request_type === "new_website") {
     const co = p.company;
@@ -73,6 +80,32 @@ function str(v: unknown): string {
 /** Show every field from the public onboarding payload, including empty values (as N/A), for the admin team. */
 function formatPayloadLines(req: ProjectRequest): { label: string; value: string }[] {
   const p = req.payload as Record<string, unknown>;
+
+  if (isPackageOnboardingPayload(req.payload)) {
+    const pkg = req.payload;
+    const payLabel = (v: string) =>
+      v === "card" ? "Card (legacy)" : v === "stripe" ? "Card (Stripe)" : v === "paysera" ? "Paysera" : "PayPal";
+
+    const logoNote = `Uploaded: ${pkg.logo_file_name}${pkg.logo_mime_type ? ` (${pkg.logo_mime_type})` : ""} — raster data in payload`;
+
+    return [
+      { label: "Form version", value: "Package onboarding (v2)" },
+      {
+        label: "Path",
+        value: req.request_type === "new_website" ? "New website" : "Site migration",
+      },
+      { label: "Work email", value: pkg.contact_email },
+      { label: "Logo", value: logoNote },
+      { label: "Brand colors", value: pkg.brand_colors },
+      { label: "Current website", value: pkg.current_website.trim() || "N/A" },
+      { label: "Domain & hosting", value: pkg.domain_hosting_info },
+      { label: "Content / site copy", value: pkg.content_text },
+      { label: "Additional notes", value: pkg.additional_notes.trim() || "N/A" },
+      { label: "Plan", value: planLabelById(pkg.selected_plan) },
+      { label: "Payment option", value: payLabel(pkg.payment_preference) },
+    ];
+  }
+
   const lines: { label: string; value: string }[] = [];
 
   const cell = (label: string, value: string) => {
@@ -307,14 +340,14 @@ const ProjectRequests = () => {
           ? { amount: amountNum, currency: payseraFilterCurrency.trim().toUpperCase() }
           : undefined;
       const result = await fetchPayseraPaymentMethods(token, filters);
-      if (!result.ok) {
+      if (result.ok === true) {
+        setPayseraMethodItems(
+          result.items.map(i => ({ key: i.key, title: i.title, type: i.type, flow: i.flow })),
+        );
+      } else {
         setPayseraMethodsError(result.error ?? "Could not load methods.");
         setPayseraMethodItems(null);
-        return;
       }
-      setPayseraMethodItems(
-        result.items.map(i => ({ key: i.key, title: i.title, type: i.type, flow: i.flow })),
-      );
     } finally {
       setPayseraMethodsBusy(false);
     }
@@ -331,7 +364,7 @@ const ProjectRequests = () => {
         projectRequestId: req.id,
         ...(key ? { payment_details: { key } } : {}),
       });
-      if (!result.ok) {
+      if (result.ok !== true) {
         toast.error(result.error ?? "Could not create Paysera payment link.");
         return;
       }
