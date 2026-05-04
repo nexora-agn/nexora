@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type DragEvent } from "react";
-import { LayoutGrid } from "lucide-react";
+import { Download, LayoutGrid } from "lucide-react";
 import { toast } from "sonner";
 import AdminShell from "./AdminShell";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { listProjectRequests, updateProjectRequestStatus } from "@/lib/projectRequests";
 import {
+  type PackageOnboardingPayload,
   type ProjectRequest,
   type ProjectRequestStatus,
   isPackageOnboardingPayload,
@@ -75,6 +76,52 @@ function str(v: unknown): string {
   if (typeof v === "string") return v;
   if (typeof v === "number" || typeof v === "bigint") return String(v);
   return "";
+}
+
+function sanitizeLogoFileName(name: string): string {
+  const base = name.replace(/^.*[/\\]/, "").trim();
+  const safe = base.replace(/[^\w.\-()+ ]/g, "_").slice(0, 120);
+  return safe || "logo";
+}
+
+function extensionForMime(mime: string): string {
+  const m = mime.toLowerCase();
+  if (m.includes("png")) return ".png";
+  if (m.includes("jpeg") || m.includes("jpg")) return ".jpg";
+  if (m.includes("webp")) return ".webp";
+  if (m.includes("svg")) return ".svg";
+  if (m.includes("gif")) return ".gif";
+  return "";
+}
+
+function downloadPackageLogo(pkg: PackageOnboardingPayload): void {
+  const raw = pkg.logo_base64;
+  if (typeof raw !== "string" || !raw.trim()) {
+    toast.error("No logo file in this request.");
+    return;
+  }
+  let bytes: Uint8Array;
+  try {
+    const bin = atob(raw.replace(/\s/g, ""));
+    bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  } catch {
+    toast.error("Logo data could not be decoded.");
+    return;
+  }
+  const mime = (pkg.logo_mime_type && pkg.logo_mime_type.trim()) || "application/octet-stream";
+  const blob = new Blob([Uint8Array.from(bytes)], { type: mime });
+  const url = URL.createObjectURL(blob);
+  let name = sanitizeLogoFileName(pkg.logo_file_name || "logo");
+  if (!/[.]\w{2,4}$/i.test(name)) name += extensionForMime(mime);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /** Show every field from the public onboarding payload, including empty values (as N/A), for the admin team. */
@@ -483,6 +530,29 @@ const ProjectRequests = () => {
                   <dd className="mt-0.5">{fmtDateTime(detail.updated_at)}</dd>
                 </div>
               </dl>
+              {isPackageOnboardingPayload(detail.payload) && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    onClick={() => {
+                      const p = detail.payload;
+                      if (isPackageOnboardingPayload(p)) downloadPackageLogo(p);
+                    }}
+                  >
+                    <Download className="h-4 w-4 shrink-0" aria-hidden />
+                    Download logo
+                  </Button>
+                  <span
+                    className="text-xs text-muted-foreground truncate max-w-[min(100%,16rem)]"
+                    title={detail.payload.logo_file_name}
+                  >
+                    {detail.payload.logo_file_name}
+                  </span>
+                </div>
+              )}
               <p className="text-xs text-muted-foreground">Full payload as submitted from the start-project flow (all fields below).</p>
               <div className="rounded-lg border bg-muted/20 divide-y divide-border/80">
                 {formatPayloadLines(detail).map((row, i) => (
