@@ -133,24 +133,46 @@ function formatPayloadLines(req: ProjectRequest): { label: string; value: string
     const payLabel = (v: string) =>
       v === "card" ? "Card (legacy)" : v === "stripe" ? "Card (Stripe)" : v === "paysera" ? "Paysera" : "PayPal";
 
-    const logoNote = `Uploaded: ${pkg.logo_file_name}${pkg.logo_mime_type ? ` (${pkg.logo_mime_type})` : ""} — raster data in payload`;
+    const isMigration = req.request_type === "migrate";
+    const logoNote = pkg.logo_file_name
+      ? `Uploaded: ${pkg.logo_file_name}${pkg.logo_mime_type ? ` (${pkg.logo_mime_type})` : ""} — raster data in payload`
+      : isMigration
+        ? "Will be auto-extracted from the existing site"
+        : "N/A";
 
-    return [
+    const lines: { label: string; value: string }[] = [
       { label: "Form version", value: "Package onboarding (v2)" },
-      {
-        label: "Path",
-        value: req.request_type === "new_website" ? "New website" : "Site migration",
-      },
-      { label: "Work email", value: pkg.contact_email },
-      { label: "Logo", value: logoNote },
-      { label: "Brand colors", value: pkg.brand_colors },
-      { label: "Current website", value: pkg.current_website.trim() || "N/A" },
-      { label: "Domain & hosting", value: pkg.domain_hosting_info },
-      { label: "Content / site copy", value: pkg.content_text },
+      { label: "Path", value: isMigration ? "Site migration" : "New website" },
+      { label: "Business email", value: pkg.contact_email },
+    ];
+
+    if (isMigration) {
+      lines.push(
+        { label: "Existing site URL", value: pkg.current_website.trim() || "N/A" },
+        {
+          label: "Auto-extract",
+          value: "Logo, brand colours, and content will be pulled from the URL above.",
+        },
+      );
+    } else {
+      lines.push(
+        { label: "Logo", value: logoNote },
+        { label: "Brand colors", value: pkg.brand_colors.trim() || "N/A" },
+        {
+          label: "Preferred domain",
+          value: (pkg.preferred_domain || "").trim() || "Not specified — we’ll suggest one",
+        },
+        { label: "Content / site copy", value: pkg.content_text.trim() || "Client requested content help" },
+      );
+    }
+
+    lines.push(
       { label: "Additional notes", value: pkg.additional_notes.trim() || "N/A" },
       { label: "Plan", value: planLabelById(pkg.selected_plan) },
       { label: "Payment option", value: payLabel(pkg.payment_preference) },
-    ];
+    );
+
+    return lines;
   }
 
   const lines: { label: string; value: string }[] = [];
@@ -530,7 +552,7 @@ const ProjectRequests = () => {
                   <dd className="mt-0.5">{fmtDateTime(detail.updated_at)}</dd>
                 </div>
               </dl>
-              {isPackageOnboardingPayload(detail.payload) && (
+              {isPackageOnboardingPayload(detail.payload) && detail.payload.logo_file_name && detail.payload.logo_base64 && (
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
                     type="button"

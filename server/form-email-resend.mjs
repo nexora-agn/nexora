@@ -520,19 +520,30 @@ function paymentLabel(p) {
 
 function buildStartProjectInternal({ requestType, payload }, ctx) {
   if (payload.onboarding_version === 2) {
-    const blocks = [
+    const isMigration = requestType === "migrate";
+    const baseBlocks = [
       {
         label: "Path",
-        htmlValue: requestType === "new_website" ? "New website" : "Migration",
+        htmlValue: isMigration ? "Migration" : "New website",
       },
       { label: "Plan", htmlValue: escapeHtml(planLabel(payload.selected_plan)) },
       { label: "Payment option", htmlValue: escapeHtml(paymentLabel(payload.payment_preference)) },
       { label: "Email", htmlValue: leadEmailInInternalHtml(payload.contact_email) },
-      { label: "Logo file", htmlValue: escapeHtml(payload.logo_file_name) },
-      { label: "Brand colors", htmlValue: escapeHtmlBreaks(payload.brand_colors) },
-      { label: "Current website", htmlValue: escapeHtmlBreaks(payload.current_website || "—") },
-      { label: "Domain & hosting", htmlValue: escapeHtmlBreaks(payload.domain_hosting_info) },
-      { label: "Content / site copy", htmlValue: escapeHtmlBreaks(payload.content_text) },
+    ];
+    const flowBlocks = isMigration
+      ? [
+          { label: "Existing site URL", htmlValue: escapeHtmlBreaks(payload.current_website || "—") },
+          { label: "Auto-extract", htmlValue: "Logo, brand colours, and copy will be pulled from the URL above." },
+        ]
+      : [
+          { label: "Logo file", htmlValue: escapeHtml(payload.logo_file_name || "—") },
+          { label: "Brand colors", htmlValue: escapeHtmlBreaks(payload.brand_colors || "—") },
+          { label: "Preferred domain", htmlValue: escapeHtmlBreaks(payload.preferred_domain || "—") },
+          { label: "Content / site copy", htmlValue: escapeHtmlBreaks(payload.content_text || "—") },
+        ];
+    const blocks = [
+      ...baseBlocks,
+      ...flowBlocks,
       { label: "Additional notes", htmlValue: escapeHtmlBreaks(payload.additional_notes || "—") },
     ];
     return emailDocument({
@@ -617,8 +628,8 @@ function buildStartProjectClient({ requestType, payload }, ctx) {
     const greetLocal = escapeHtml(payload.contact_email.split("@")[0] || "there");
     const pathSentence =
       requestType === "migrate"
-        ? `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package for your <strong>site migration</strong>. We received your branding, existing site notes, and content.`
-        : `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package. We received your branding and content notes.`;
+        ? `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package for your <strong>site migration</strong>. We received the URL of your existing site — our team will pull your logo, brand colours, and content from there.`
+        : `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package. We received your logo, brand colours, and any content notes you shared.`;
     return clientLetterHtml({
       preheader: `We received your ${plan} package request`,
       headline: "Request received — next: payment",
@@ -692,11 +703,23 @@ function parseStartProject(body) {
   if (p.onboarding_version === 2) {
     if (body.requestType !== "new_website" && body.requestType !== "migrate") return { error: "Invalid requestType" };
     if (!isValidEmail(p.contact_email)) return { error: "Invalid contact_email" };
-    if (!isNonEmptyString(p.logo_file_name) || !isNonEmptyString(p.logo_mime_type)) return { error: "Invalid payload" };
-    if (typeof p.logo_base64 !== "string" || p.logo_base64.length < 32) return { error: "Invalid payload" };
-    if (!isNonEmptyString(p.brand_colors)) return { error: "Invalid payload" };
-    if (!isNonEmptyString(p.domain_hosting_info)) return { error: "Invalid payload" };
-    if (!isNonEmptyString(p.content_text)) return { error: "Invalid payload" };
+
+    // Field requirements diverge by flow (matches ProjectOnboardingWizard):
+    //   • new_website → logo + brand colours + (optional) content / preferred domain
+    //   • migrate     → only current_website is required; logo/colours/copy
+    //                   are extracted from the live site post-submit.
+    if (body.requestType === "new_website") {
+      if (!isNonEmptyString(p.logo_file_name) || !isNonEmptyString(p.logo_mime_type)) {
+        return { error: "Invalid payload" };
+      }
+      if (typeof p.logo_base64 !== "string" || p.logo_base64.length < 32) {
+        return { error: "Invalid payload" };
+      }
+      if (!isNonEmptyString(p.brand_colors)) return { error: "Invalid payload" };
+    } else {
+      if (!isNonEmptyString(p.current_website)) return { error: "Invalid payload" };
+    }
+
     const plan = String(p.selected_plan ?? "");
     if (plan !== "starter" && plan !== "growth" && plan !== "custom") return { error: "Invalid payload" };
     const pay = p.payment_preference;

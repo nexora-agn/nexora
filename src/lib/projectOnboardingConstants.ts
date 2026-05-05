@@ -41,6 +41,7 @@ export const PACKAGE_ONBOARD_LIMITS = {
   domainHosting: 4000,
   contentText: 20000,
   additionalNotes: 5000,
+  preferredDomain: 253,
 } as const;
 
 export const PACKAGE_LOGO_MAX_BYTES = 1_500_000;

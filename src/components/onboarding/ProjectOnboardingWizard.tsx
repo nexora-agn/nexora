@@ -119,6 +119,8 @@ const ProjectOnboardingWizard = () => {
   const [currentWebsite, setCurrentWebsite] = useState("");
   const [domainHostingInfo, setDomainHostingInfo] = useState("");
   const [contentText, setContentText] = useState("");
+  const [contentHelpRequested, setContentHelpRequested] = useState(false);
+  const [preferredDomain, setPreferredDomain] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
 
   const [logoPayload, setLogoPayload] = useState<{ fileName: string; mimeType: string; base64: string } | null>(null);
@@ -172,6 +174,8 @@ const ProjectOnboardingWizard = () => {
     setCurrentWebsite("");
     setDomainHostingInfo("");
     setContentText("");
+    setContentHelpRequested(false);
+    setPreferredDomain("");
     setAdditionalNotes("");
     setLogoPayload(null);
     setLogoFileLabel("");
@@ -191,44 +195,83 @@ const ProjectOnboardingWizard = () => {
     }
   };
 
-  const DETAIL_KEYS = [
-    "pk-email",
-    "pk-logo",
-    "pk-palette",
-    "pk-site",
-    "pk-domain",
-    "pk-content",
-    "pk-notes",
-  ] as const;
+  // ---- Per-flow validation -------------------------------------------------
+  // The two project types share email + notes, but otherwise diverge:
+  //   • new_website  → logo, palette, content, optional preferred domain
+  //   • migrate      → current website URL (the only thing we really need)
+  // `getActiveDetailKeys()` is the source of truth for what step 3 validates,
+  // and it’s mirrored by the JSX below so both stay in sync.
+  type DetailKey =
+    | "pk-email"
+    | "pk-logo"
+    | "pk-palette"
+    | "pk-site"
+    | "pk-content"
+    | "pk-preferred-domain"
+    | "pk-notes";
 
-  const getDetailError = (key: (typeof DETAIL_KEYS)[number]): string | undefined => {
+  const getActiveDetailKeys = (): DetailKey[] => {
+    if (requestType === "migrate") {
+      return ["pk-email", "pk-site", "pk-notes"];
+    }
+    // Default to new_website (also covers null while step 3 isn't yet visible).
+    return ["pk-email", "pk-logo", "pk-palette", "pk-content", "pk-preferred-domain", "pk-notes"];
+  };
+
+  const isValidUrlish = (raw: string): boolean => {
+    const v = raw.trim();
+    if (!v) return false;
+    try {
+      const withProto = /^[a-z][a-z0-9+.-]*:\/\//i.test(v) ? v : `https://${v}`;
+      const u = new URL(withProto);
+      return /\./.test(u.hostname);
+    } catch {
+      return false;
+    }
+  };
+
+  const isPreferredDomainValid = (raw: string): boolean => {
+    const v = raw.trim().toLowerCase();
+    if (!v) return true;
+    const stripped = v.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+    return /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$/i.test(stripped);
+  };
+
+  const getDetailError = (key: DetailKey): string | undefined => {
     switch (key) {
       case "pk-email":
         return getWorkEmailError(workEmail) ?? undefined;
       case "pk-logo":
         if (!logoPayload) return "Upload your logo (PNG or JPG recommended).";
         return;
-      case "pk-palette": {
+      case "pk-palette":
         if (!isValidHex(primaryHex.trim()) || !isValidHex(secondaryHex.trim())) {
           return "Use two valid 6-digit hex colours (#0a0a0a)—same rules as on the homepage customisation panel.";
         }
         return;
-      }
       case "pk-site":
+        if (requestType === "migrate") {
+          if (!currentWebsite.trim()) return "Paste the URL of your existing website.";
+          if (!isValidUrlish(currentWebsite)) {
+            return "Enter a valid URL — e.g. acme.com or https://acme.com.";
+          }
+        }
         if (currentWebsite.length > PACKAGE_ONBOARD_LIMITS.currentWebsite) {
           return `Use at most ${PACKAGE_ONBOARD_LIMITS.currentWebsite} characters.`;
         }
         return;
-      case "pk-domain":
-        if (!domainHostingInfo.trim()) return "Add domain registration and hosting details (provider, renewal, DNS).";
-        if (domainHostingInfo.length > PACKAGE_ONBOARD_LIMITS.domainHosting) {
-          return `Use at most ${PACKAGE_ONBOARD_LIMITS.domainHosting} characters.`;
-        }
-        return;
       case "pk-content":
-        if (!contentText.trim()) return "Add your page content, headlines, or notes we should use.";
+        // Optional for the new-website flow — clients can ask us to write copy.
         if (contentText.length > PACKAGE_ONBOARD_LIMITS.contentText) {
           return `Use at most ${PACKAGE_ONBOARD_LIMITS.contentText} characters.`;
+        }
+        return;
+      case "pk-preferred-domain":
+        if (preferredDomain.length > PACKAGE_ONBOARD_LIMITS.preferredDomain) {
+          return `Use at most ${PACKAGE_ONBOARD_LIMITS.preferredDomain} characters.`;
+        }
+        if (!isPreferredDomainValid(preferredDomain)) {
+          return "Use a domain like acme.com (no spaces or paths).";
         }
         return;
       case "pk-notes":
@@ -250,14 +293,16 @@ const ProjectOnboardingWizard = () => {
   };
 
   const runValidateDetails = (): boolean => {
+    const activeKeys = getActiveDetailKeys();
     const e: Record<string, string> = {};
-    for (const key of DETAIL_KEYS) {
+    for (const key of activeKeys) {
       const err = getDetailError(key);
       if (err) e[key] = err;
     }
     setFieldErrors(prev => {
       const next = { ...prev };
-      for (const key of DETAIL_KEYS) {
+      // Only touch the keys this flow actually rendered, leave others alone.
+      for (const key of activeKeys) {
         if (e[key]) next[key] = e[key];
         else delete next[key];
       }
@@ -289,8 +334,18 @@ const ProjectOnboardingWizard = () => {
 
   const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPlan || !logoPayload) {
-      toast.error("Finish the logo and package steps first.");
+    if (!requestType) {
+      toast.error("Choose whether this is a new website or a migration.");
+      return;
+    }
+    if (!selectedPlan) {
+      toast.error("Pick a package first.");
+      return;
+    }
+    // Logo is only required for the new-website flow — migrations let us
+    // extract the logo from the live site after submission.
+    if (requestType === "new_website" && !logoPayload) {
+      toast.error("Upload your logo before continuing.");
       return;
     }
     if (!isSupabaseConfigured) {
@@ -299,21 +354,28 @@ const ProjectOnboardingWizard = () => {
     }
     if (!runValidatePayment()) return;
 
-    if (!requestType) {
-      toast.error("Choose whether this is a new website or a migration.");
-      return;
-    }
+    const isMigration = requestType === "migrate";
+
+    // For migrations, the URL is the source of truth; brand assets and copy
+    // are auto-extracted post-submit, so we send empty strings (the email +
+    // admin views render a dash in that case).
+    const contentForPayload = isMigration
+      ? ""
+      : contentHelpRequested && !contentText.trim()
+        ? "[client requested help creating content]"
+        : contentText.trim();
 
     const payload: PackageOnboardingPayload = {
       onboarding_version: 2,
       contact_email: workEmail.trim().toLowerCase(),
-      logo_file_name: logoPayload.fileName,
-      logo_mime_type: logoPayload.mimeType,
-      logo_base64: logoPayload.base64,
-      brand_colors: buildBrandColorsPayload(),
-      current_website: currentWebsite.trim(),
-      domain_hosting_info: domainHostingInfo.trim(),
-      content_text: contentText.trim(),
+      logo_file_name: logoPayload?.fileName ?? "",
+      logo_mime_type: logoPayload?.mimeType ?? "",
+      logo_base64: logoPayload?.base64 ?? "",
+      brand_colors: isMigration ? "" : buildBrandColorsPayload(),
+      current_website: isMigration ? currentWebsite.trim() : "",
+      domain_hosting_info: "",
+      content_text: contentForPayload,
+      preferred_domain: isMigration ? undefined : preferredDomain.trim() || undefined,
       additional_notes: additionalNotes.trim(),
       selected_plan: selectedPlan,
       payment_preference: paymentPreference!,
@@ -388,7 +450,7 @@ const ProjectOnboardingWizard = () => {
     }
   };
 
-  const detailBlur = (key: (typeof DETAIL_KEYS)[number]) => setMergedFieldError(key, getDetailError(key));
+  const detailBlur = (key: DetailKey) => setMergedFieldError(key, getDetailError(key));
 
   const PROGRESS_LABELS = ["Project type", "Package", "Brand & content", "Payment"];
   const milestoneComplete = (n: number) => step > n;
@@ -563,14 +625,18 @@ const ProjectOnboardingWizard = () => {
 
             <div className="space-y-6 rounded-2xl border border-border/70 bg-card/50 p-6 shadow-sm sm:p-8">
               <div>
-                <h2 className="text-lg font-semibold tracking-tight">Brand &amp; kickoff assets</h2>
+                <h2 className="text-lg font-semibold tracking-tight">
+                  {requestType === "migrate" ? "Migration kickoff" : "Brand & kickoff assets"}
+                </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  ERP and AI scope are finalized on your call—nothing to answer about them here.
+                  {requestType === "migrate"
+                    ? "Just paste the URL of your existing site — we’ll extract your logo, brand colours, and copy from there. Domain & hosting are already in place, nothing else needed."
+                    : "ERP and AI scope are finalised on your call — nothing to answer about them here. Domain & hosting are handled internally after kickoff."}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="pkg-email">Work email</Label>
+                <Label htmlFor="pkg-email">Business email</Label>
                 <Input
                   id="pkg-email"
                   type="email"
@@ -589,175 +655,220 @@ const ProjectOnboardingWizard = () => {
                 <FieldError message={fieldErrors["pk-email"]} />
               </div>
 
-              <div className="space-y-2">
-                <Label className="gap-2">
-                  <Upload className="inline h-4 w-4" aria-hidden />
-                  Logo upload
-                </Label>
-                <p className="text-xs text-muted-foreground">
-                  Raster or vector image. Max {Math.round(PACKAGE_LOGO_MAX_BYTES / 1e6)}MB.
-                </p>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  disabled={logoBusy}
-                  className={cn(fieldErrors["pk-logo"] && "border-destructive")}
-                  onChange={e => void onLogoPick(e.target.files)}
-                />
-                {logoFileLabel ? (
+              {requestType === "migrate" ? (
+                <div className="space-y-2">
+                  <Label htmlFor="pkg-site">Current website URL</Label>
+                  <Input
+                    id="pkg-site"
+                    type="url"
+                    inputMode="url"
+                    autoComplete="url"
+                    placeholder="https://your-current-site.com"
+                    maxLength={PACKAGE_ONBOARD_LIMITS.currentWebsite}
+                    value={currentWebsite}
+                    onChange={e => {
+                      setCurrentWebsite(e.target.value);
+                      clearError("pk-site");
+                    }}
+                    onBlur={() => detailBlur("pk-site")}
+                    className={cn(fieldErrors["pk-site"] && "border-destructive")}
+                    aria-invalid={fieldErrors["pk-site"] ? "true" : undefined}
+                  />
                   <p className="text-xs text-muted-foreground">
-                    Attached: <span className="font-medium text-foreground">{logoFileLabel}</span>
+                    We’ll automatically pull your logo, brand colours, and copy from this address — you don’t need to upload anything else.
                   </p>
-                ) : null}
-                <FieldError message={fieldErrors["pk-logo"]} />
-              </div>
-
-              <fieldset
-                className={cn(
-                  "space-y-0 rounded-xl border bg-muted/15 p-4",
-                  fieldErrors["pk-palette"] ? "border-destructive/60" : "border-border/60",
-                )}
-              >
-                <legend className="mb-3 flex items-center gap-2 px-1 text-sm font-semibold text-foreground">
-                  <Palette className="h-4 w-4 text-muted-foreground" aria-hidden />
-                  Colours
-                </legend>
-                <p className="mb-3 px-1 text-xs text-muted-foreground">
-                  Tweak by hand or after upload (6-digit hex).
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2 sm:items-stretch">
-                  <label className="flex min-h-0 flex-col rounded-xl border border-border/60 bg-background/60 p-3">
-                    <span className="mb-2 block text-xs font-medium text-muted-foreground">Primary</span>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="color"
-                        aria-label="Primary colour"
-                        value={primaryColor}
-                        onChange={e => {
-                          setPrimaryColor(e.target.value);
-                          setPrimaryHex(e.target.value);
-                          clearError("pk-palette");
-                        }}
-                        className="h-10 w-12 cursor-pointer overflow-hidden rounded-lg border border-border bg-background p-0.5 [color-scheme:light]"
-                      />
-                      <Input
-                        type="text"
-                        value={primaryHex}
-                        placeholder="#0a0a0a"
-                        spellCheck={false}
-                        className={cn(
-                          "h-10 flex-1 font-mono text-sm",
-                          fieldErrors["pk-palette"] && "border-destructive",
-                        )}
-                        onChange={e => {
-                          setPrimaryHex(e.target.value);
-                          clearError("pk-palette");
-                        }}
-                        onBlur={() =>
-                          applyHexColor(primaryHex.trim(), primaryColor, setPrimaryColor, setPrimaryHex)
-                        }
-                      />
-                    </div>
-                  </label>
-                  <label className="flex min-h-0 flex-col rounded-xl border border-border/60 bg-background/60 p-3">
-                    <span className="mb-2 block text-xs font-medium text-muted-foreground">Secondary</span>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="color"
-                        aria-label="Secondary colour"
-                        value={secondaryColor}
-                        onChange={e => {
-                          setSecondaryColor(e.target.value);
-                          setSecondaryHex(e.target.value);
-                          clearError("pk-palette");
-                        }}
-                        className="h-10 w-12 cursor-pointer overflow-hidden rounded-lg border border-border bg-background p-0.5 [color-scheme:light]"
-                      />
-                      <Input
-                        type="text"
-                        value={secondaryHex}
-                        placeholder="#f5c517"
-                        spellCheck={false}
-                        className={cn(
-                          "h-10 flex-1 font-mono text-sm",
-                          fieldErrors["pk-palette"] && "border-destructive",
-                        )}
-                        onChange={e => {
-                          setSecondaryHex(e.target.value);
-                          clearError("pk-palette");
-                        }}
-                        onBlur={() =>
-                          applyHexColor(secondaryHex.trim(), secondaryColor, setSecondaryColor, setSecondaryHex)
-                        }
-                      />
-                    </div>
-                  </label>
+                  <FieldError message={fieldErrors["pk-site"]} />
                 </div>
-                <p className="mt-3 px-1 text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground">Primary</span> = main button.{" "}
-                  <span className="font-medium text-foreground">Secondary</span> = small chip.
-                </p>
-                <FieldError message={fieldErrors["pk-palette"]} />
-              </fieldset>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <Label className="gap-2">
+                      <Upload className="inline h-4 w-4" aria-hidden />
+                      Logo upload
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      Raster or vector image. Max {Math.round(PACKAGE_LOGO_MAX_BYTES / 1e6)}MB.
+                    </p>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      disabled={logoBusy}
+                      className={cn(fieldErrors["pk-logo"] && "border-destructive")}
+                      onChange={e => void onLogoPick(e.target.files)}
+                    />
+                    {logoFileLabel ? (
+                      <p className="text-xs text-muted-foreground">
+                        Attached: <span className="font-medium text-foreground">{logoFileLabel}</span>
+                      </p>
+                    ) : null}
+                    <FieldError message={fieldErrors["pk-logo"]} />
+                  </div>
+
+                  <fieldset
+                    className={cn(
+                      "space-y-0 rounded-xl border bg-muted/15 p-4",
+                      fieldErrors["pk-palette"] ? "border-destructive/60" : "border-border/60",
+                    )}
+                  >
+                    <legend className="mb-3 flex items-center gap-2 px-1 text-sm font-semibold text-foreground">
+                      <Palette className="h-4 w-4 text-muted-foreground" aria-hidden />
+                      Brand colours
+                    </legend>
+                    <p className="mb-3 px-1 text-xs text-muted-foreground">
+                      Tweak by hand or after logo upload (6-digit hex).
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2 sm:items-stretch">
+                      <label className="flex min-h-0 flex-col rounded-xl border border-border/60 bg-background/60 p-3">
+                        <span className="mb-2 block text-xs font-medium text-muted-foreground">Primary</span>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="color"
+                            aria-label="Primary colour"
+                            value={primaryColor}
+                            onChange={e => {
+                              setPrimaryColor(e.target.value);
+                              setPrimaryHex(e.target.value);
+                              clearError("pk-palette");
+                            }}
+                            className="h-10 w-12 cursor-pointer overflow-hidden rounded-lg border border-border bg-background p-0.5 [color-scheme:light]"
+                          />
+                          <Input
+                            type="text"
+                            value={primaryHex}
+                            placeholder="#0a0a0a"
+                            spellCheck={false}
+                            className={cn(
+                              "h-10 flex-1 font-mono text-sm",
+                              fieldErrors["pk-palette"] && "border-destructive",
+                            )}
+                            onChange={e => {
+                              setPrimaryHex(e.target.value);
+                              clearError("pk-palette");
+                            }}
+                            onBlur={() =>
+                              applyHexColor(primaryHex.trim(), primaryColor, setPrimaryColor, setPrimaryHex)
+                            }
+                          />
+                        </div>
+                      </label>
+                      <label className="flex min-h-0 flex-col rounded-xl border border-border/60 bg-background/60 p-3">
+                        <span className="mb-2 block text-xs font-medium text-muted-foreground">Secondary</span>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="color"
+                            aria-label="Secondary colour"
+                            value={secondaryColor}
+                            onChange={e => {
+                              setSecondaryColor(e.target.value);
+                              setSecondaryHex(e.target.value);
+                              clearError("pk-palette");
+                            }}
+                            className="h-10 w-12 cursor-pointer overflow-hidden rounded-lg border border-border bg-background p-0.5 [color-scheme:light]"
+                          />
+                          <Input
+                            type="text"
+                            value={secondaryHex}
+                            placeholder="#f5c517"
+                            spellCheck={false}
+                            className={cn(
+                              "h-10 flex-1 font-mono text-sm",
+                              fieldErrors["pk-palette"] && "border-destructive",
+                            )}
+                            onChange={e => {
+                              setSecondaryHex(e.target.value);
+                              clearError("pk-palette");
+                            }}
+                            onBlur={() =>
+                              applyHexColor(secondaryHex.trim(), secondaryColor, setSecondaryColor, setSecondaryHex)
+                            }
+                          />
+                        </div>
+                      </label>
+                    </div>
+                    <p className="mt-3 px-1 text-xs text-muted-foreground">
+                      <span className="font-medium text-foreground">Primary</span> = main button.{" "}
+                      <span className="font-medium text-foreground">Secondary</span> = small chip.
+                    </p>
+                    <FieldError message={fieldErrors["pk-palette"]} />
+                  </fieldset>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="pkg-preferred-domain">
+                      Preferred domain name <span className="text-muted-foreground">(optional)</span>
+                    </Label>
+                    <Input
+                      id="pkg-preferred-domain"
+                      type="text"
+                      inputMode="url"
+                      placeholder="acme.com"
+                      autoComplete="off"
+                      spellCheck={false}
+                      maxLength={PACKAGE_ONBOARD_LIMITS.preferredDomain}
+                      value={preferredDomain}
+                      onChange={e => {
+                        setPreferredDomain(e.target.value);
+                        clearError("pk-preferred-domain");
+                      }}
+                      onBlur={() => detailBlur("pk-preferred-domain")}
+                      className={cn(fieldErrors["pk-preferred-domain"] && "border-destructive")}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Tell us what you’d like the new site’s address to be — we’ll handle registration & hosting on our side.
+                    </p>
+                    <FieldError message={fieldErrors["pk-preferred-domain"]} />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <Label htmlFor="pkg-content">
+                        Content <span className="text-muted-foreground">(optional)</span>
+                      </Label>
+                      <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-border accent-foreground"
+                          checked={contentHelpRequested}
+                          onChange={e => {
+                            setContentHelpRequested(e.target.checked);
+                            if (e.target.checked) clearError("pk-content");
+                          }}
+                        />
+                        We can help create content
+                      </label>
+                    </div>
+                    <Textarea
+                      id="pkg-content"
+                      placeholder={
+                        contentHelpRequested
+                          ? "Optional — drop any reference points, brand voice notes, or examples."
+                          : "Paste page text, bullet points, or what each section should convey."
+                      }
+                      rows={6}
+                      maxLength={PACKAGE_ONBOARD_LIMITS.contentText}
+                      value={contentText}
+                      onChange={e => {
+                        setContentText(e.target.value);
+                        clearError("pk-content");
+                      }}
+                      onBlur={() => detailBlur("pk-content")}
+                      className={cn(fieldErrors["pk-content"] && "border-destructive")}
+                    />
+                    <FieldError message={fieldErrors["pk-content"]} />
+                  </div>
+                </>
+              )}
 
               <div className="space-y-2">
-                <Label htmlFor="pkg-site">Current website</Label>
-                <Input
-                  id="pkg-site"
-                  placeholder="URL or describe if you don't have one yet"
-                  maxLength={PACKAGE_ONBOARD_LIMITS.currentWebsite}
-                  value={currentWebsite}
-                  onChange={e => {
-                    setCurrentWebsite(e.target.value);
-                    clearError("pk-site");
-                  }}
-                  onBlur={() => detailBlur("pk-site")}
-                  className={cn(fieldErrors["pk-site"] && "border-destructive")}
-                />
-                <FieldError message={fieldErrors["pk-site"]} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="pkg-domain">Domain &amp; hosting</Label>
-                <Textarea
-                  id="pkg-domain"
-                  placeholder="Registrar, hosting provider, renewal dates, DNS access…"
-                  rows={3}
-                  maxLength={PACKAGE_ONBOARD_LIMITS.domainHosting}
-                  value={domainHostingInfo}
-                  onChange={e => {
-                    setDomainHostingInfo(e.target.value);
-                    clearError("pk-domain");
-                  }}
-                  onBlur={() => detailBlur("pk-domain")}
-                  className={cn(fieldErrors["pk-domain"] && "border-destructive")}
-                />
-                <FieldError message={fieldErrors["pk-domain"]} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="pkg-content">Content / website copy</Label>
-                <Textarea
-                  id="pkg-content"
-                  placeholder="Paste page text, bullet points, or what each section should convey."
-                  rows={6}
-                  maxLength={PACKAGE_ONBOARD_LIMITS.contentText}
-                  value={contentText}
-                  onChange={e => {
-                    setContentText(e.target.value);
-                    clearError("pk-content");
-                  }}
-                  onBlur={() => detailBlur("pk-content")}
-                  className={cn(fieldErrors["pk-content"] && "border-destructive")}
-                />
-                <FieldError message={fieldErrors["pk-content"]} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="pkg-notes">Anything else?</Label>
+                <Label htmlFor="pkg-notes">
+                  Anything else? <span className="text-muted-foreground">(optional)</span>
+                </Label>
                 <Textarea
                   id="pkg-notes"
-                  placeholder="Anything else before we kick off—timing, integrations to research later, references."
+                  placeholder={
+                    requestType === "migrate"
+                      ? "Anything specific about the migration — pages to keep, sections to drop, integrations, references."
+                      : "Anything else before we kick off — timing, integrations to research later, references."
+                  }
                   rows={3}
                   maxLength={PACKAGE_ONBOARD_LIMITS.additionalNotes}
                   value={additionalNotes}
@@ -810,18 +921,39 @@ const ProjectOnboardingWizard = () => {
                   <dt>Email</dt>
                   <dd className="break-all text-right font-medium text-foreground sm:text-left">{workEmail.trim()}</dd>
                 </div>
+                {requestType === "migrate" ? (
+                  <div className="flex justify-between gap-2 sm:flex-col">
+                    <dt>Existing site</dt>
+                    <dd className="break-all text-right font-medium text-foreground sm:text-left">
+                      {currentWebsite.trim() || "—"}
+                    </dd>
+                  </div>
+                ) : preferredDomain.trim() ? (
+                  <div className="flex justify-between gap-2 sm:flex-col">
+                    <dt>Preferred domain</dt>
+                    <dd className="break-all text-right font-medium text-foreground sm:text-left">
+                      {preferredDomain.trim()}
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
-              <div className="flex flex-wrap items-center gap-2 pt-2">
-                {[primaryColor, secondaryColor].map((hex, hi) => (
-                  <span
-                    key={`${hi}-${hex}`}
-                    className="inline-flex h-7 w-7 rounded border border-border/80 shadow-sm"
-                    style={{ backgroundColor: hex }}
-                    title={hex}
-                  />
-                ))}
-                <span className="text-xs font-mono text-muted-foreground">{buildBrandColorsPayload()}</span>
-              </div>
+              {requestType !== "migrate" ? (
+                <div className="flex flex-wrap items-center gap-2 pt-2">
+                  {[primaryColor, secondaryColor].map((hex, hi) => (
+                    <span
+                      key={`${hi}-${hex}`}
+                      className="inline-flex h-7 w-7 rounded border border-border/80 shadow-sm"
+                      style={{ backgroundColor: hex }}
+                      title={hex}
+                    />
+                  ))}
+                  <span className="text-xs font-mono text-muted-foreground">{buildBrandColorsPayload()}</span>
+                </div>
+              ) : (
+                <p className="pt-2 text-xs text-muted-foreground">
+                  Logo, brand colours, and copy will be extracted from the URL above.
+                </p>
+              )}
             </div>
 
             <div className="rounded-2xl border border-border/70 bg-card/50 p-6 shadow-sm sm:p-8 space-y-3">
