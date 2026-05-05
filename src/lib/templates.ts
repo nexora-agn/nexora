@@ -45,7 +45,7 @@ export interface TemplateOption {
 export const TEMPLATES: TemplateOption[] = [
   {
     id: "constructo",
-    name: "Constructo (classic)",
+    name: "Constructo",
     tagline: "Design-build studio · navy + gold",
     description:
       "The original Nexora construction template. Hero with featured project badge, capabilities grid, process timeline, projects, team, and contact. Best fit for design-build firms and general contractors.",
@@ -69,7 +69,7 @@ export const TEMPLATES: TemplateOption[] = [
   },
   {
     id: "summit",
-    name: "Summit Construction (new)",
+    name: "Summit Construction",
     tagline: "Trust-bar + reviews · brown announcement",
     description:
       "Newer construction template with an announcement bar, Google reviews strip, big hero, services ribbon, signature projects, and a dark estimate CTA. Built for general contractors leaning into trust + bookings.",
