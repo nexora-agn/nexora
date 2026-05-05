@@ -82,12 +82,43 @@ export const TEMPLATE_REGISTRY = [
 ];
 
 /**
+ * Maps legacy / pre-registry `template_id` values onto the canonical registry
+ * ids. The DB schema's historical default was `summit-construction`, which
+ * matches NEITHER current id and would otherwise resolve to Constructo via
+ * the fallback below. Keep this aligned with `getTemplate` in the TS registry.
+ */
+const LEGACY_TEMPLATE_ALIASES = {
+  "summit-construction": "summit",
+  "summit construction": "summit",
+  "summit_construction": "summit",
+  "constructo-classic": "constructo",
+  "construction": "constructo",
+};
+
+function canonicalTemplateId(rawId) {
+  if (!rawId) return null;
+  const normalized = String(rawId).trim().toLowerCase();
+  if (TEMPLATE_REGISTRY.some(t => t.id === normalized)) return normalized;
+  return LEGACY_TEMPLATE_ALIASES[normalized] || null;
+}
+
+/**
  * Pick scaffold + live template directory names for the given client template
  * id. Unknown / legacy ids fall back to the first registered template (which
  * is the historical default — matches `getTemplate` in the TS registry).
  */
 export function resolveTemplatePaths(templateId) {
-  const match = TEMPLATE_REGISTRY.find(t => t.id === templateId);
+  const canonical = canonicalTemplateId(templateId);
+  const match = canonical
+    ? TEMPLATE_REGISTRY.find(t => t.id === canonical)
+    : null;
+  if (!match) {
+    console.warn(
+      `[export] Unknown template_id "${templateId}", falling back to "${TEMPLATE_REGISTRY[0].id}".`,
+    );
+  } else {
+    console.log(`[export] Resolved template_id "${templateId}" → "${match.id}"`);
+  }
   return (match || TEMPLATE_REGISTRY[0]).paths;
 }
 

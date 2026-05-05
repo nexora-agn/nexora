@@ -1,13 +1,16 @@
 import { supabase, type Client } from "@/lib/supabase";
-import { DEFAULT_TEMPLATE_ID } from "@/lib/templates";
+import { DEFAULT_TEMPLATE_ID, canonicalTemplateId } from "@/lib/templates";
 
-/** Older Supabase databases may not have the `template_id` column yet —
- *  always normalise the field so the rest of the app can rely on it. */
+/** Older Supabase databases may not have the `template_id` column yet,
+ *  and rows created with the original schema default carry the legacy
+ *  string `'summit-construction'`. Normalise both so the rest of the app
+ *  can rely on a canonical registry id. */
 function normalizeClient(row: unknown): Client {
   const c = row as Partial<Client> & Record<string, unknown>;
+  const raw = c.template_id as string | null | undefined;
   return {
     ...c,
-    template_id: (c.template_id as string) || DEFAULT_TEMPLATE_ID,
+    template_id: canonicalTemplateId(raw) || DEFAULT_TEMPLATE_ID,
   } as Client;
 }
 

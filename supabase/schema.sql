@@ -46,14 +46,32 @@ create table if not exists public.clients (
   contact_email  text,
   contact_phone  text,
   notes          text,
-  template_id    text not null default 'summit-construction',
+  template_id    text not null default 'constructo',
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
 
 -- Safe to re-run on an existing deployment: adds the column on older databases.
 alter table public.clients
-  add column if not exists template_id text not null default 'summit-construction';
+  add column if not exists template_id text not null default 'constructo';
+
+-- Realign the default for older deployments that used the legacy
+-- `'summit-construction'` literal (which matches no registry id and silently
+-- exported as Constructo).
+alter table public.clients
+  alter column template_id set default 'constructo';
+
+-- One-shot backfill: rewrite legacy / unknown values onto the current
+-- registry ids so existing client rows export the right scaffold.
+update public.clients
+   set template_id = 'summit'
+ where lower(template_id) in ('summit-construction', 'summit construction', 'summit_construction');
+
+update public.clients
+   set template_id = 'constructo'
+ where template_id is null
+    or template_id = ''
+    or lower(template_id) not in ('constructo', 'summit');
 
 create index if not exists clients_owner_idx on public.clients(owner_id, updated_at desc);
 

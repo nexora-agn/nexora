@@ -179,8 +179,9 @@ const AdminClients = () => {
           <Dialog open onOpenChange={open => !open && setEditing(null)}>
             <ClientDialog
               title="Edit client"
-              description="Update this client's name and contact details."
+              description="Update this client's name, contact details, or template."
               initial={editing}
+              showTemplatePicker
               onSubmit={async input => {
                 try {
                   await updateClient(editing.id, input);

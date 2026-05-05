@@ -36,6 +36,9 @@ const BlogPost = lazy(() => import("@template-summit/pages/BlogPost"));
 const Team = lazy(() => import("@template-summit/pages/Team"));
 const Contact = lazy(() => import("@template-summit/pages/Contact"));
 const FAQ = lazy(() => import("@template-summit/pages/FAQ"));
+const Reviews = lazy(() => import("@template-summit/pages/Reviews"));
+const ServiceAreas = lazy(() => import("@template-summit/pages/ServiceAreas"));
+const Careers = lazy(() => import("@template-summit/pages/Careers"));
 
 const queryClient = new QueryClient();
 
@@ -63,6 +66,9 @@ const AnimatedRoutes = () => {
         <Route path="/team" element={<Team />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/reviews" element={<Reviews />} />
+        <Route path="/service-areas" element={<ServiceAreas />} />
+        <Route path="/careers" element={<Careers />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

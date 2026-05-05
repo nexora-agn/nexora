@@ -1,251 +1,320 @@
-import { useMemo, useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Calendar,
+  User,
+  Clock,
+} from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import PageHeader from "@/components/sections/PageHeader";
-import PaginationControls from "@/components/layout/PaginationControls";
 import Reveal from "@/components/animations/Reveal";
-import { BLOG_POSTS, BLOG_LIST_PAGE_SIZE, getBlogCategoryCounts } from "@/data/siteData";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ArrowRight, Search } from "lucide-react";
-import { clampPage, parsePageParam, slicePage, totalPages as totalPagesCount } from "@/lib/pagination";
 import { useSiteContent } from "@/contexts/SiteContentContext";
+import { BLOG_POSTS } from "@/data/siteData";
+import { cn } from "@/lib/utils";
+
+/** Summit Blog. Distinct from Constructo's featured + sidebar + newsletter pattern.
+ *  Archetypes:
+ *  1. Stat-led split hero
+ *  2. Editor's picks horizontal marquee (3 covers) — replaces featured + list
+ *  3. Topic mega-chips strip
+ *  4. Asymmetric story column with reading-time bars
+ *  5. Page-unique footer line (no newsletter form) */
+
+function readingTime(content: string): { minutes: number; pct: number } {
+  const words = content.split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.round(words / 220));
+  const pct = Math.min(100, Math.round((minutes / 8) * 100));
+  return { minutes, pct };
+}
 
 const Blog = () => {
-  const { sectionVisibility, company: COMPANY, blogTags: BLOG_TAGS } = useSiteContent();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [q, setQ] = useState("");
-  const [activeCat, setActiveCat] = useState<string | null>(null);
-  const skipFilterEffect = useRef(true);
+  const { company: COMPANY } = useSiteContent();
+  const blogPosts = BLOG_POSTS;
+  const categories = useMemo(() => {
+    const map = new Map<string, number>();
+    blogPosts.forEach(p => map.set(p.category, (map.get(p.category) || 0) + 1));
+    return [
+      { label: "All topics", count: blogPosts.length, key: "__all" },
+      ...Array.from(map.entries()).map(([label, count]) => ({
+        label,
+        count,
+        key: label,
+      })),
+    ];
+  }, [blogPosts]);
 
-  const filtered = useMemo(() => {
-    return BLOG_POSTS.filter(p => {
-      const matchesQ =
-        !q.trim() ||
-        p.title.toLowerCase().includes(q.toLowerCase()) ||
-        p.excerpt.toLowerCase().includes(q.toLowerCase());
-      const matchesCat = !activeCat || p.category === activeCat;
-      return matchesQ && matchesCat;
-    });
-  }, [q, activeCat]);
+  const [topic, setTopic] = useState<string>("__all");
+  const filtered = useMemo(
+    () =>
+      topic === "__all"
+        ? blogPosts
+        : blogPosts.filter(p => p.category === topic),
+    [blogPosts, topic],
+  );
 
-  const featured = filtered.length > 0 ? filtered[0] : null;
-  const remainder = filtered.length > 1 ? filtered.slice(1) : [];
-
-  const listPageCount = totalPagesCount(remainder.length, BLOG_LIST_PAGE_SIZE);
-  const rawPage = parsePageParam(searchParams.get("page"));
-  const listPage = clampPage(rawPage, listPageCount);
-
-  const listPosts = slicePage(remainder, listPage, BLOG_LIST_PAGE_SIZE);
-
-  const categoryRows = useMemo(() => getBlogCategoryCounts(), []);
-
-  useEffect(() => {
-    if (skipFilterEffect.current) {
-      skipFilterEffect.current = false;
-      return;
-    }
-    setSearchParams(prev => {
-      const n = new URLSearchParams(prev);
-      n.delete("page");
-      return n;
-    }, { replace: true });
-  }, [q, activeCat, setSearchParams]);
-
-  useEffect(() => {
-    if (rawPage === listPage) return;
-    setSearchParams(prev => {
-      const n = new URLSearchParams(prev);
-      if (listPage <= 1) n.delete("page");
-      else n.set("page", String(listPage));
-      return n;
-    }, { replace: true });
-  }, [rawPage, listPage, setSearchParams]);
-
-  const showFeatured = listPage === 1 && featured !== null;
-
-  const titleBase = `News | ${COMPANY.name}`;
-  const docTitle = listPage > 1 ? `${titleBase} | Page ${listPage}` : titleBase;
+  const editorsPicks = blogPosts.slice(0, 3);
 
   return (
     <Layout>
       <Helmet>
-        <title>{docTitle}</title>
-        <meta name="description" content={`Insights on architecture, building, and industry news from ${COMPANY.name}.`} />
+        <title>Field journal | {COMPANY.name}</title>
+        <meta
+          name="description"
+          content={`The ${COMPANY.name} field journal — notes from the site, the office, and the trade.`}
+        />
       </Helmet>
 
-      <Reveal direction="zoom" duration={650}>
-        <PageHeader
-          variant="dark"
-          eyebrow="REVIEWS & INSIGHTS"
-          title="Reviews, Stories & Industry News"
-          subtitle={`Real reviews from real clients, plus practical insights on construction, design, and modern building practices from ${COMPANY.name}.`}
-        />
-      </Reveal>
-
-      {sectionVisibility["blog.main"] && <Reveal delay={70}>
-        <section className="section-padding bg-background border-t border-border">
-        <div className="container-custom px-4 md:px-8">
-          <div className="grid lg:grid-cols-3 gap-12 lg:gap-14">
-            <div className="lg:col-span-2 space-y-12">
-              {showFeatured && (
-                <article className="group">
-                  <div className="relative overflow-hidden rounded-2xl mb-6">
-                    <span className="absolute top-4 left-4 z-10 bg-secondary text-secondary-foreground text-[10px] font-black tracking-widest px-3 py-1.5">
-                      FEATURED
-                    </span>
-                    <img
-                      src={featured!.image}
-                      alt=""
-                      className="w-full aspect-[21/9] object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                      loading="lazy"
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {featured!.date} <span className="mx-2">•</span> {featured!.category.toUpperCase()}
-                  </p>
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">{featured!.title}</h2>
-                  <p className="text-muted-foreground leading-relaxed mb-4">{featured!.excerpt}</p>
-                  <Link
-                    to={`/blog/${featured!.id}`}
-                    className="inline-flex items-center gap-2 font-bold text-secondary hover:underline text-sm tracking-wide"
-                  >
-                    READ FULL STORY <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </article>
-              )}
-
-              {!showFeatured && listPosts.length === 0 && (
-                <p className="text-muted-foreground py-8">No articles match your filters.</p>
-              )}
-
-              <div className="space-y-10">
-                {listPosts.map(post => (
-                  <article key={post.id} className="group flex flex-col sm:flex-row gap-6 border-b border-border pb-10 last:border-0">
-                    <img
-                      src={post.image}
-                      alt=""
-                      className="w-full sm:w-44 h-44 sm:h-32 object-cover rounded-xl shrink-0"
-                      loading="lazy"
-                    />
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">
-                        {post.category.toUpperCase()} · {post.date}
-                      </p>
-                      <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-secondary transition-colors">
-                        <Link to={`/blog/${post.id}`}>{post.title}</Link>
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{post.excerpt}</p>
-                      <Link
-                        to={`/blog/${post.id}`}
-                        className="inline-flex items-center gap-1 text-sm font-bold text-foreground hover:text-secondary"
-                      >
-                        READ MORE <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                    </div>
-                  </article>
-                ))}
-              </div>
-
-              <PaginationControls page={listPage} totalPages={listPageCount} searchParams={searchParams} />
-            </div>
-
-            <aside className="space-y-8 lg:pt-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search articles…"
-                  className="pl-10 bg-muted/50 border-border"
-                  value={q}
-                  onChange={e => setQ(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-foreground mb-4 text-sm tracking-wide">Categories</h3>
-                <ul className="space-y-2">
-                  {categoryRows.map(c => (
-                    <li key={c.label}>
-                      <button
-                        type="button"
-                        onClick={() => setActiveCat(activeCat === c.label ? null : c.label)}
-                        className={`w-full flex justify-between text-sm py-1.5 border-b border-border/60 transition-colors ${
-                          activeCat === c.label ? "text-secondary font-semibold" : "text-muted-foreground hover:text-foreground"
-                        }`}
-                      >
-                        <span>{c.label}</span>
-                        <span className="opacity-60">({c.count})</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-xl bg-secondary p-6 text-secondary-foreground">
-                <h3 className="font-bold text-lg mb-2">Need help with a project?</h3>
-                <p className="text-sm opacity-95 mb-5 leading-relaxed">Tell us your timeline, and we&apos;ll propose next steps within one business day.</p>
-                <Button asChild className="w-full rounded-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90">
-                  <Link to="/contact">REQUEST ESTIMATE</Link>
-                </Button>
-              </div>
-
-              <div>
-                <h3 className="font-bold text-foreground mb-4 text-sm tracking-wide">Recent Posts</h3>
-                <ul className="space-y-4">
-                  {BLOG_POSTS.slice(0, 3).map(p => (
-                    <li key={p.id}>
-                      <Link to={`/blog/${p.id}`} className="flex gap-3 group">
-                        <img src={p.image} alt="" className="w-14 h-14 rounded object-cover shrink-0" loading="lazy" />
-                        <span className="text-sm font-semibold text-foreground group-hover:text-secondary leading-snug line-clamp-2">
-                          {p.title}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-bold text-foreground mb-3 text-sm tracking-wide">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {BLOG_TAGS.map(tag => (
-                    <span
-                      key={tag}
-                      className="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full bg-muted text-muted-foreground border border-border"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+      {/* 1 — Stat-led split hero */}
+      <section className="bg-background border-b border-border">
+        <div className="container-custom px-4 md:px-8 py-16 md:py-24 grid lg:grid-cols-12 gap-10 items-end">
+          <div className="lg:col-span-7">
+            <p className="text-xs font-bold tracking-[0.28em] text-secondary mb-4">
+              FIELD JOURNAL · {blogPosts.length} ENTRIES
+            </p>
+            <h1 className="text-4xl md:text-5xl lg:text-[60px] font-black uppercase tracking-tight leading-[1.02] text-primary">
+              Notes from
+              <br />
+              <span className="text-secondary">the site.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-base md:text-lg text-foreground/80 leading-relaxed">
+              Honest writing from people who pour concrete for a living.
+              Lessons we learned the hard way, posted so the next owner doesn't
+              have to.
+            </p>
+          </div>
+          <div className="lg:col-span-5 grid grid-cols-3 gap-3">
+            {[
+              { v: "8 min", l: "Avg. read" },
+              { v: "Twice / mo", l: "Cadence" },
+              { v: "0 ads", l: "Always" },
+            ].map(s => (
+              <div
+                key={s.l}
+                className="rounded-xl bg-primary text-primary-foreground p-4"
+              >
+                <div className="text-xl md:text-2xl font-black text-secondary leading-none">
+                  {s.v}
+                </div>
+                <div className="mt-2 text-[10px] font-bold tracking-widest uppercase text-white/75 leading-tight">
+                  {s.l}
                 </div>
               </div>
-            </aside>
+            ))}
           </div>
         </div>
-        </section>
-      </Reveal>}
+      </section>
 
-      {sectionVisibility["blog.subscribe"] && <Reveal delay={120}>
-        <section className="py-14 bg-muted/60 border-t border-border">
-        <div className="container-custom px-4 md:px-8 max-w-3xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-          <div className="flex-1">
-            <h2 className="font-bold text-foreground text-lg mb-1">Subscribe to our newsletter</h2>
-            <p className="text-sm text-muted-foreground">Occasional updates, no spam.</p>
+      {/* 2 — Editor's picks marquee */}
+      {editorsPicks.length > 0 && (
+        <Reveal>
+          <section className="bg-muted/40 py-14 md:py-20 border-b border-border">
+            <div className="container-custom px-4 md:px-8">
+              <div className="flex items-end justify-between mb-6">
+                <p className="text-xs font-bold tracking-[0.22em] text-secondary">
+                  EDITOR'S PICKS
+                </p>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground hidden md:inline">
+                  Slide →
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-5 overflow-x-auto px-4 md:px-8 pb-5 snap-x snap-mandatory [scrollbar-width:thin]">
+              {editorsPicks.map((post, i) => {
+                const { minutes, pct } = readingTime(post.content);
+                return (
+                  <Link
+                    key={post.id}
+                    to={`/blog/${post.id}`}
+                    className="group relative shrink-0 w-[88%] sm:w-[60%] md:w-[40%] snap-start rounded-2xl overflow-hidden ring-1 ring-black/5 bg-card"
+                  >
+                    <div className="relative aspect-[5/3] overflow-hidden">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary/55 to-transparent" />
+                      <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-secondary text-secondary-foreground px-2.5 py-1 text-[10px] font-black tracking-widest uppercase">
+                        Pick {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <div className="p-5 md:p-6">
+                      <p className="text-[10px] font-bold tracking-widest uppercase text-secondary">
+                        {post.category}
+                      </p>
+                      <h3 className="mt-2 text-lg md:text-xl font-black uppercase tracking-tight text-primary leading-snug group-hover:text-secondary transition-colors">
+                        {post.title}
+                      </h3>
+                      <div className="mt-4 flex items-center gap-3 text-[10px] font-bold tracking-widest uppercase text-muted-foreground">
+                        <span className="inline-flex items-center gap-1">
+                          <Clock className="h-3 w-3" /> {minutes} min
+                        </span>
+                        <div className="flex-1 h-[3px] bg-border rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-secondary"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        </Reveal>
+      )}
+
+      {/* 3 — Topic mega-chips */}
+      <section className="bg-background pt-12 md:pt-16">
+        <div className="container-custom px-4 md:px-8">
+          <p className="text-xs font-bold tracking-[0.22em] text-secondary mb-4">
+            FILTER BY TOPIC
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {categories.map(c => (
+              <button
+                key={c.key}
+                type="button"
+                onClick={() => setTopic(c.key)}
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold tracking-widest uppercase border-2 transition-colors",
+                  topic === c.key
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-foreground/80 hover:border-secondary/60 hover:text-secondary",
+                )}
+              >
+                {c.label}
+                <span
+                  className={cn(
+                    "rounded-full px-1.5 py-0.5 text-[10px] tabular-nums",
+                    topic === c.key
+                      ? "bg-secondary text-secondary-foreground"
+                      : "bg-muted text-muted-foreground",
+                  )}
+                >
+                  {c.count}
+                </span>
+              </button>
+            ))}
           </div>
-          <form
-            className="flex flex-col sm:flex-row gap-2 flex-1"
-            onSubmit={e => {
-              e.preventDefault();
-            }}
-          >
-            <Input type="email" required placeholder="Email address" className="bg-background" />
-            <Button type="submit" className="rounded-sm font-bold bg-secondary text-secondary-foreground shrink-0">
-              SUBSCRIBE
-            </Button>
-          </form>
         </div>
-        </section>
-      </Reveal>}
+      </section>
+
+      {/* 4 — Asymmetric story column with reading-time bars */}
+      <section className="bg-background section-padding">
+        <div className="container-custom px-4 md:px-8">
+          {filtered.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border p-16 text-center">
+              <p className="text-sm text-muted-foreground">
+                No entries in that topic yet.
+              </p>
+            </div>
+          ) : (
+            <ul className="space-y-4">
+              {filtered.map((post, i) => {
+                const { minutes, pct } = readingTime(post.content);
+                const flip = i % 2 === 1;
+                return (
+                  <li key={post.id}>
+                    <Link
+                      to={`/blog/${post.id}`}
+                      className={cn(
+                        "group grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-7 rounded-2xl bg-card border border-border p-4 md:p-5 hover:border-secondary/60 hover:shadow-md transition-all",
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "md:col-span-4 relative aspect-[16/10] overflow-hidden rounded-xl ring-1 ring-black/5",
+                          flip && "md:order-2",
+                        )}
+                      >
+                        <img
+                          src={post.image}
+                          alt={post.title}
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div
+                        className={cn(
+                          "md:col-span-8 flex flex-col justify-between gap-3",
+                          flip && "md:order-1",
+                        )}
+                      >
+                        <div>
+                          <div className="flex flex-wrap items-center gap-3 text-[10px] font-bold tracking-widest uppercase text-muted-foreground mb-3">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 text-secondary px-2 py-0.5">
+                              {post.category}
+                            </span>
+                            <span className="inline-flex items-center gap-1">
+                              <Calendar className="h-3 w-3" /> {post.date}
+                            </span>
+                            <span className="inline-flex items-center gap-1">
+                              <User className="h-3 w-3" /> {post.author}
+                            </span>
+                          </div>
+                          <h2 className="text-xl md:text-2xl lg:text-3xl font-black uppercase tracking-tight text-primary leading-tight group-hover:text-secondary transition-colors">
+                            {post.title}
+                          </h2>
+                          <p className="mt-3 text-sm md:text-base text-muted-foreground leading-relaxed line-clamp-2 md:line-clamp-3">
+                            {post.excerpt}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1 max-w-xs">
+                            <div className="h-1 bg-border rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-secondary rounded-full"
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                            <span className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase text-muted-foreground">
+                              <Clock className="h-3 w-3" /> {minutes} min read
+                            </span>
+                          </div>
+                          <span className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-full bg-secondary/10 text-secondary group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors">
+                            <ArrowUpRight className="h-4 w-4" />
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      {/* 5 — Page-unique closing line (NOT a newsletter form) */}
+      <section className="bg-primary text-primary-foreground border-t border-secondary/30">
+        <div className="container-custom px-4 md:px-8 py-12 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div>
+            <p className="text-[11px] font-bold tracking-[0.28em] uppercase text-secondary mb-2">
+              No newsletter. No tracking.
+            </p>
+            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight leading-tight">
+              When we publish, we tell our crew first.
+            </h2>
+            <p className="mt-2 text-sm text-white/75 max-w-xl leading-relaxed">
+              If you're an owner, architect, or sub who'd like a heads-up on the
+              next entry, drop us a line and we'll add you to a short, plain
+              email list — no campaign software, no unsubscribe lawyers.
+            </p>
+          </div>
+          <Link
+            to="/contact"
+            className="self-start md:self-auto inline-flex items-center gap-2 rounded-md bg-secondary text-secondary-foreground px-6 py-3 text-sm font-extrabold tracking-widest uppercase hover:bg-secondary/90 transition-colors"
+          >
+            ASK FOR THE LIST
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
     </Layout>
   );
 };

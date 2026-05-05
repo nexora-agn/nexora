@@ -69,7 +69,7 @@ export const TEMPLATES: TemplateOption[] = [
   },
   {
     id: "summit",
-    name: "Summit Construction (new)",
+    name: "Summit Construction",
     tagline: "Trust-bar + reviews · brown announcement",
     description:
       "Newer construction template with an announcement bar, Google reviews strip, big hero, services ribbon, signature projects, and a dark estimate CTA. Built for general contractors leaning into trust + bookings.",
@@ -96,11 +96,35 @@ export const TEMPLATES: TemplateOption[] = [
 export const DEFAULT_TEMPLATE_ID = TEMPLATES[0].id;
 
 /**
- * Best-effort lookup. Falls back to the first template when an unknown id is
- * passed (e.g. legacy `summit-construction` rows from before the registry
- * split — those used to render the Constructo files anyway).
+ * Maps legacy `template_id` strings (from before the registry split) onto the
+ * canonical registry ids. Keep this aligned with `LEGACY_TEMPLATE_ALIASES` in
+ * `server/export-logic.mjs`.
+ */
+const LEGACY_TEMPLATE_ALIASES: Record<string, string> = {
+  "summit-construction": "summit",
+  "summit construction": "summit",
+  "summit_construction": "summit",
+  "constructo-classic": "constructo",
+  "construction": "constructo",
+};
+
+/**
+ * Resolve any persisted template id (current, legacy, or unknown) to the
+ * canonical registry id, or `null` if it can't be matched.
+ */
+export function canonicalTemplateId(id: string | null | undefined): string | null {
+  if (!id) return null;
+  const normalized = id.trim().toLowerCase();
+  if (TEMPLATES.some(t => t.id === normalized)) return normalized;
+  return LEGACY_TEMPLATE_ALIASES[normalized] ?? null;
+}
+
+/**
+ * Best-effort lookup. Honors legacy aliases (e.g. `summit-construction` →
+ * `summit`) before falling back to the first registered template.
  */
 export function getTemplate(id: string | null | undefined): TemplateOption {
-  if (!id) return TEMPLATES[0];
-  return TEMPLATES.find(t => t.id === id) ?? TEMPLATES[0];
+  const canonical = canonicalTemplateId(id);
+  if (!canonical) return TEMPLATES[0];
+  return TEMPLATES.find(t => t.id === canonical) ?? TEMPLATES[0];
 }

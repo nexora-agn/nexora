@@ -26,7 +26,11 @@ type TrustPill = {
 };
 
 const HomeHero = () => {
-  const { homeHero: HOME_HERO, company: COMPANY } = useSiteContent();
+  const {
+    homeHero: HOME_HERO,
+    company: COMPANY,
+    siteTop: SITE_TOP,
+  } = useSiteContent();
   const trustPills: TrustPill[] =
     (HOME_HERO as { trustPills?: TrustPill[] }).trustPills ?? [
       { id: "ontime", label: "On Time", sub: "On Budget", icon: "Clock" },
@@ -48,6 +52,10 @@ const HomeHero = () => {
     (HOME_HERO as { eyebrow?: string }).eyebrow ||
     "FULL-SERVICE CONSTRUCTION COMPANY";
   const cleanPhone = (COMPANY.phone || "").replace(/[^\d+]/g, "");
+  const ratingValue =
+    (SITE_TOP as { ratingValue?: string }).ratingValue || "4.9";
+  const ratingCount =
+    (SITE_TOP as { ratingCount?: string }).ratingCount || "260+ Reviews";
 
   return (
     <section className="relative overflow-hidden bg-primary text-primary-foreground">
@@ -169,7 +177,7 @@ const HomeHero = () => {
                 </span>
                 <div className="leading-tight">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-2xl font-black">4.9</span>
+                    <span className="text-2xl font-black">{ratingValue}</span>
                     <div className="flex">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
@@ -181,7 +189,7 @@ const HomeHero = () => {
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Based on 260+ Reviews
+                    Based on {ratingCount}
                   </p>
                 </div>
               </div>

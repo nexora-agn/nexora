@@ -27,6 +27,9 @@ const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Team = lazy(() => import("./pages/Team"));
 const Contact = lazy(() => import("./pages/Contact"));
 const FAQ = lazy(() => import("./pages/FAQ"));
+const Reviews = lazy(() => import("./pages/Reviews"));
+const ServiceAreas = lazy(() => import("./pages/ServiceAreas"));
+const Careers = lazy(() => import("./pages/Careers"));
 
 const queryClient = new QueryClient();
 
@@ -54,6 +57,9 @@ const AnimatedRoutes = () => {
         <Route path="/team" element={<Team />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/reviews" element={<Reviews />} />
+        <Route path="/service-areas" element={<ServiceAreas />} />
+        <Route path="/careers" element={<Careers />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

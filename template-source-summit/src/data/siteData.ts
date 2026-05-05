@@ -43,7 +43,7 @@ export const HOME_HERO = {
   headlineHighlight: "Quality.",
   headlineAfter: "Focused on",
   body:
-    "From concept to completion, we build commercial and residential projects with integrity and precision.",
+    "Commercial and residential builds delivered start to finish, with senior-led crews, honest schedules, and a single point of accountability from groundbreak to handover.",
   primaryCta: { label: "GET A FREE ESTIMATE", to: "/contact" },
   secondaryCta: { label: "CALL NOW", to: "/contact" },
   image:
@@ -60,12 +60,14 @@ export const HOME_HERO = {
   ],
 };
 
-/** The 5-card services grid on the homepage. */
+/** The 5-card services grid on the homepage.
+ *  IDs intentionally match `SERVICES[].id` so each card deep-links to the
+ *  correct service detail page. */
 export const SERVICES_RIBBON = [
-  { id: "commercial", label: "COMMERCIAL CONSTRUCTION", icon: "Building2" as const },
-  { id: "residential", label: "RESIDENTIAL CONSTRUCTION", icon: "Home" as const },
-  { id: "management", label: "CONSTRUCTION MANAGEMENT", icon: "HardHat" as const },
-  { id: "design", label: "DESIGN-BUILD SERVICES", icon: "DraftingCompass" as const },
+  { id: "commercial-construction", label: "COMMERCIAL CONSTRUCTION", icon: "Building2" as const },
+  { id: "residential-construction", label: "RESIDENTIAL CONSTRUCTION", icon: "Home" as const },
+  { id: "construction-management", label: "CONSTRUCTION MANAGEMENT", icon: "HardHat" as const },
+  { id: "design-build", label: "DESIGN-BUILD SERVICES", icon: "DraftingCompass" as const },
   { id: "renovation", label: "RENOVATION & ADDITIONS", icon: "Hammer" as const },
 ];
 
@@ -113,7 +115,7 @@ export const HOME_STATS = [
   { value: "20+", label: "Years Experience", icon: "Award" as const },
   { value: "500+", label: "Projects Completed", icon: "Building2" as const },
   { value: "98%", label: "Client Satisfaction", icon: "Smile" as const },
-  { value: "A+", label: "BBB Rating", icon: "Lock" as const },
+  { value: "A+", label: "BBB Rating", icon: "Award" as const },
   { value: "100%", label: "Licensed & Insured", icon: "ShieldCheck" as const },
   { value: "Quality", label: "Craftsmanship", icon: "BadgeCheck" as const },
 ];
@@ -204,9 +206,10 @@ export const NAV_LINKS = [
   { label: "Services", path: "/services" },
   { label: "Projects", path: "/projects" },
   { label: "About Us", path: "/about" },
-  { label: "Reviews", path: "/blog" },
-  { label: "Service Areas", path: "/contact" },
-  { label: "Careers", path: "/team" },
+  { label: "Journal", path: "/blog" },
+  { label: "Reviews", path: "/reviews" },
+  { label: "Service Areas", path: "/service-areas" },
+  { label: "Careers", path: "/careers" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -223,7 +226,8 @@ export const FOOTER_COMPANY_LINKS: { label: string; to: string }[] = [
   { label: "About Us", to: "/about" },
   { label: "Services", to: "/services" },
   { label: "Projects", to: "/projects" },
-  { label: "Careers", to: "/team" },
+  { label: "Journal", to: "/blog" },
+  { label: "Careers", to: "/careers" },
   { label: "Contact Us", to: "/contact" },
 ];
 

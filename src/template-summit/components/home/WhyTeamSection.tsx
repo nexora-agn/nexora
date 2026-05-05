@@ -52,8 +52,8 @@ const WhyTeamSection = () => {
               Delivered with Pride.
             </h2>
             <p className="mt-6 text-base md:text-lg text-white/85 max-w-xl leading-relaxed">
-              We're more than builders — we're partners. Our team is committed
-              to delivering exceptional results on every project.
+              We're more than builders—we're partners. Our team is committed to
+              delivering exceptional results on every project.
             </p>
 
             <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-7">

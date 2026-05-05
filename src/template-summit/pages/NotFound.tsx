@@ -1,178 +1,304 @@
 import { Helmet } from "react-helmet-async";
-import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, FormEvent } from "react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Search,
+  Home,
+  Phone,
+  Mail,
+  Compass,
+} from "lucide-react";
 import Layout from "@template-summit/components/layout/Layout";
-import Reveal from "@template-summit/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Home, Compass, Phone } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useTheme } from "@template-summit/contexts/ThemeContext";
 import { useSiteContent } from "@template-summit/contexts/SiteContentContext";
 
-const QUICK_LINKS: Array<{ label: string; to: string; description: string }> = [
-  { label: "Services", to: "/services", description: "What we build and how we deliver." },
-  { label: "Projects", to: "/projects", description: "Signature work across three continents." },
-  { label: "Team", to: "/team", description: "The people behind every build." },
-  { label: "Contact", to: "/contact", description: "Start a conversation about your site." },
+/** Summit NotFound. Distinct from Constructo's giant outlined "404" + numbered link cards.
+ *  Archetypes:
+ *  1. Compact wedge hero with current-path chip
+ *  2. Prominent site search input that routes to the closest matching page
+ *  3. Last-published projects filmstrip
+ *  4. Sitemap-style grouped link directory (replaces "popular destinations" cards) */
+
+interface SiteMapLink {
+  to: string;
+  label: string;
+  description: string;
+}
+
+interface SiteMapGroup {
+  heading: string;
+  links: SiteMapLink[];
+}
+
+const SITEMAP: SiteMapGroup[] = [
+  {
+    heading: "About the firm",
+    links: [
+      { to: "/about", label: "Story & eras", description: "Two decades, four chapters." },
+      { to: "/team", label: "The crew", description: "Partners, PMs, supers, and field." },
+      { to: "/careers", label: "Careers", description: "Open roles and how we hire." },
+    ],
+  },
+  {
+    heading: "What we build",
+    links: [
+      { to: "/services", label: "Four pillars", description: "Commercial, residential, industrial, renovation." },
+      { to: "/projects", label: "Delivery log", description: "Filterable case work by sector and year." },
+      { to: "/service-areas", label: "Where we work", description: "North Texas counties served." },
+    ],
+  },
+  {
+    heading: "Talk to us",
+    links: [
+      { to: "/contact", label: "Project intake", description: "Pick a desk, send drawings." },
+      { to: "/reviews", label: "Reviews", description: "Owner words, by platform." },
+      { to: "/faq", label: "What people ask", description: "Pricing, timing, contracts, warranty." },
+    ],
+  },
+];
+
+const KEYWORD_ROUTES: { keywords: string[]; to: string }[] = [
+  { keywords: ["service", "build", "what", "scope"], to: "/services" },
+  { keywords: ["project", "portfolio", "case", "work"], to: "/projects" },
+  { keywords: ["team", "crew", "people", "staff"], to: "/team" },
+  { keywords: ["about", "story", "history"], to: "/about" },
+  { keywords: ["contact", "estimate", "quote", "call"], to: "/contact" },
+  { keywords: ["job", "career", "hire", "apply"], to: "/careers" },
+  { keywords: ["review", "testimonial"], to: "/reviews" },
+  { keywords: ["area", "city", "location", "where"], to: "/service-areas" },
+  { keywords: ["faq", "question", "ask"], to: "/faq" },
+  { keywords: ["blog", "journal", "article"], to: "/blog" },
 ];
 
 const NotFound = () => {
-  const location = useLocation();
-  const { company: COMPANY } = useSiteContent();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { resolveProjectImage } = useTheme();
+  const { projects, company: COMPANY } = useSiteContent();
+  const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    console.warn("404 | route not found:", location.pathname);
-  }, [location.pathname]);
+  const recent = projects.slice(0, 4);
+
+  const onSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const q = query.trim().toLowerCase();
+    if (!q) return;
+    const match = KEYWORD_ROUTES.find(r =>
+      r.keywords.some(kw => q.includes(kw)),
+    );
+    if (match) {
+      navigate(match.to);
+    } else {
+      navigate(`/projects`);
+    }
+  };
+
+  const cleanPhone = (COMPANY.phone || "").replace(/[^\d+]/g, "");
 
   return (
     <Layout>
       <Helmet>
-        <title>Page not found | {COMPANY.name}</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="The page you're looking for doesn't exist. Return to the homepage or browse our services and projects."
-        />
+        <title>Wrong turn | {COMPANY.name}</title>
+        <meta name="robots" content="noindex" />
       </Helmet>
 
-      <section className="relative overflow-hidden bg-primary text-primary-foreground">
+      {/* 1 — Wedge hero with path chip */}
+      <section className="relative bg-primary text-primary-foreground overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.12]"
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
           style={{
             backgroundImage:
-              "radial-gradient(hsl(var(--secondary)) 1px, transparent 1px), radial-gradient(hsl(var(--secondary)) 1px, transparent 1px)",
-            backgroundSize: "36px 36px, 36px 36px",
-            backgroundPosition: "0 0, 18px 18px",
+              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
           }}
         />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-secondary/20 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-32 bottom-0 h-[360px] w-[360px] rounded-full bg-secondary/10 blur-3xl"
-        />
+        <div className="relative container-custom px-4 md:px-8 py-16 md:py-20 grid lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-2 rounded-full bg-secondary text-secondary-foreground px-3 py-1 text-[10px] font-black tracking-widest uppercase mb-5">
+              <Compass className="h-3 w-3" /> 404 · Wrong turn on site
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-[60px] font-black uppercase tracking-tight leading-[1.02]">
+              That URL isn't on
+              <br />
+              <span className="text-secondary">our jobsite.</span>
+            </h1>
+            <p className="mt-5 max-w-xl text-base md:text-lg text-white/85 leading-relaxed">
+              Type what you were looking for in the box below and we'll point
+              you at the right page. Or jump straight to one of the rooms in
+              the directory underneath.
+            </p>
 
-        <div className="container-custom relative px-4 md:px-8 py-24 md:py-32">
-          <div className="grid lg:grid-cols-[1.15fr_1fr] gap-12 lg:gap-16 items-center">
-            <Reveal direction="up" duration={700}>
-              <div>
-                <p className="text-xs md:text-sm font-bold tracking-[0.28em] text-secondary mb-5">
-                  ERROR 404 · OFF THE BLUEPRINT
+            <form onSubmit={onSearch} className="mt-7 relative max-w-xl">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
+              <Input
+                type="search"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="services, projects, careers, contact…"
+                className="h-14 pl-14 pr-32 rounded-md text-base font-medium bg-white text-primary border-0 placeholder:text-muted-foreground focus-visible:ring-secondary"
+              />
+              <Button
+                type="submit"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-11 rounded-md px-5 text-xs font-extrabold tracking-widest uppercase bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              >
+                FIND IT
+              </Button>
+            </form>
+          </div>
+
+          <div className="lg:col-span-5 flex justify-center lg:justify-end">
+            <div className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur p-6 max-w-xs w-full">
+              <p className="text-[10px] font-black tracking-widest uppercase text-secondary mb-3">
+                Address requested
+              </p>
+              <code className="block text-sm font-mono text-white break-all">
+                {pathname}
+              </code>
+              <div className="mt-5 pt-5 border-t border-white/10 space-y-2 text-xs text-white/75">
+                <p className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
+                  Not on file
                 </p>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.05] mb-6">
-                  This page isn&apos;t on the site plan.
-                </h1>
-                <p className="text-base md:text-lg text-primary-foreground/75 leading-relaxed max-w-xl mb-8">
-                  The address you followed doesn&apos;t match anything we&apos;ve built yet.
-                  It may have moved, been renamed, or never existed. Let&apos;s get you
-                  back to solid ground.
+                <p className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+                  All other rooms still open
                 </p>
-
-                {location.pathname && location.pathname !== "/" && (
-                  <div className="mb-10 inline-flex items-center gap-2 rounded-sm border border-primary-foreground/15 bg-primary-foreground/5 px-3 py-2 text-xs md:text-sm font-mono text-primary-foreground/70 max-w-full">
-                    <span className="text-secondary">GET</span>
-                    <span className="truncate">{location.pathname}</span>
-                    <span className="shrink-0 rounded-sm bg-secondary/20 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-secondary">
-                      404
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-3">
-                  <Button
-                    asChild
-                    className="rounded-sm font-bold px-8 bg-secondary text-secondary-foreground hover:bg-secondary/90"
-                  >
-                    <Link to="/" aria-label="Back to homepage">
-                      <Home className="h-4 w-4 mr-2" />
-                      BACK TO HOME
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-sm font-bold px-8 border-primary-foreground/30 text-primary-foreground bg-transparent hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                  >
-                    <Link to="/contact" aria-label="Contact our team">
-                      <Phone className="h-4 w-4 mr-2" />
-                      CONTACT US
-                    </Link>
-                  </Button>
-                </div>
               </div>
-            </Reveal>
-
-            <Reveal direction="zoom" delay={120} duration={800} className="hidden lg:block">
-              <div className="relative select-none text-center">
-                <span
-                  aria-hidden
-                  className="block text-[16rem] xl:text-[19rem] font-black leading-none tracking-tighter text-transparent"
-                  style={{
-                    WebkitTextStroke: "2px hsl(var(--secondary))",
-                  }}
-                >
-                  404
-                </span>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-[0_20px_60px_-20px_hsl(var(--secondary)/0.6)]">
-                    <Compass className="h-9 w-9" strokeWidth={1.75} />
-                  </div>
-                </div>
-              </div>
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>
 
-      <Reveal delay={60}>
-        <section className="section-padding bg-background border-t border-border">
-          <div className="container-custom px-4 md:px-8">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14">
-              <div>
-                <p className="text-sm font-bold tracking-[0.2em] text-secondary mb-3">
-                  POPULAR DESTINATIONS
-                </p>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-primary tracking-tight">
-                  Pick up where you meant to go.
-                </h2>
-              </div>
-              <p className="text-muted-foreground md:max-w-sm leading-relaxed">
-                A few quick paths back into the site, or call us directly at{" "}
-                <a
-                  href={`tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`}
-                  className="font-semibold text-foreground hover:text-secondary"
-                >
-                  {COMPANY.phone}
-                </a>
-                .
+      {/* 2 — Recent projects filmstrip */}
+      {recent.length > 0 && (
+        <section className="bg-background py-12 md:py-16 border-b border-border">
+          <div className="container-custom px-4 md:px-8 mb-6 flex items-end justify-between">
+            <div>
+              <p className="text-xs font-bold tracking-[0.22em] text-secondary mb-2">
+                JUST PUBLISHED
               </p>
+              <h2 className="text-2xl md:text-3xl font-black uppercase text-primary tracking-tight leading-tight">
+                The latest in the delivery log
+              </h2>
             </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {QUICK_LINKS.map((link, idx) => (
-                <Reveal key={link.to} delay={80 + idx * 60} direction="up">
-                  <Link
-                    to={link.to}
-                    className="group block h-full rounded-xl border border-border bg-muted/40 p-6 transition-colors hover:border-secondary hover:bg-background"
-                  >
-                    <div className="flex items-start justify-between gap-3 mb-4">
-                      <span className="text-xs font-bold tracking-[0.2em] text-muted-foreground group-hover:text-secondary">
-                        0{idx + 1}
-                      </span>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-secondary" />
-                    </div>
-                    <h3 className="text-lg font-bold text-primary mb-2">{link.label}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {link.description}
-                    </p>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
+            <Link
+              to="/projects"
+              className="hidden sm:inline-flex items-center gap-2 text-xs font-extrabold tracking-widest uppercase text-primary hover:text-secondary"
+            >
+              ALL PROJECTS
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <div className="container-custom px-4 md:px-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {recent.map(p => (
+              <Link
+                key={p.id}
+                to={`/projects/${p.id}`}
+                className="group relative aspect-[4/3] rounded-2xl overflow-hidden ring-1 ring-black/5"
+              >
+                <img
+                  src={resolveProjectImage(p.id, p.image)}
+                  alt={p.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/85 via-primary/15 to-transparent" />
+                <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 text-primary px-2.5 py-1 text-[10px] font-black tracking-widest uppercase">
+                  {p.category}
+                </span>
+                <div className="absolute left-3 right-3 bottom-3 text-white">
+                  <h3 className="text-sm font-black uppercase tracking-tight leading-tight">
+                    {p.title}
+                  </h3>
+                  <p className="text-[10px] text-white/80 mt-0.5">
+                    {p.location} · {p.year}
+                  </p>
+                </div>
+                <span className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </span>
+              </Link>
+            ))}
           </div>
         </section>
-      </Reveal>
+      )}
+
+      {/* 3 — Sitemap directory (replaces "popular destinations") */}
+      <section className="bg-muted/40 section-padding">
+        <div className="container-custom px-4 md:px-8">
+          <p className="text-xs font-bold tracking-[0.22em] text-secondary mb-3">
+            FULL SITE DIRECTORY
+          </p>
+          <h2 className="text-3xl md:text-4xl font-black uppercase text-primary tracking-tight leading-[1.05] mb-10">
+            Pick the room you meant.
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {SITEMAP.map(group => (
+              <div key={group.heading}>
+                <p className="text-[11px] font-black tracking-widest uppercase text-muted-foreground border-b border-border pb-2 mb-3">
+                  {group.heading}
+                </p>
+                <ul className="space-y-1">
+                  {group.links.map(link => (
+                    <li key={link.to}>
+                      <Link
+                        to={link.to}
+                        className="group block py-2.5 -mx-2 px-2 rounded-md hover:bg-card transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-base font-bold uppercase tracking-tight text-primary group-hover:text-secondary transition-colors">
+                            {link.label}
+                          </span>
+                          <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-secondary group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {link.description}
+                        </p>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4 — Footer minimum CTA */}
+      <section className="bg-background border-t border-border">
+        <div className="container-custom px-4 md:px-8 py-10 flex flex-wrap items-center justify-between gap-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm font-extrabold tracking-widest uppercase text-primary hover:text-secondary"
+          >
+            <Home className="h-4 w-4" /> Back to the front page
+          </Link>
+          <div className="flex items-center gap-3">
+            {COMPANY.phone && (
+              <a
+                href={`tel:${cleanPhone}`}
+                className="inline-flex items-center gap-2 text-xs font-extrabold tracking-widest uppercase text-primary hover:text-secondary border-b-2 border-primary/20 hover:border-secondary transition-colors"
+              >
+                <Phone className="h-3.5 w-3.5" />
+                {COMPANY.phone}
+              </a>
+            )}
+            <a
+              href={`mailto:${COMPANY.email}`}
+              className="inline-flex items-center gap-2 text-xs font-extrabold tracking-widest uppercase text-primary hover:text-secondary border-b-2 border-primary/20 hover:border-secondary transition-colors"
+            >
+              <Mail className="h-3.5 w-3.5" />
+              Email
+            </a>
+          </div>
+        </div>
+      </section>
     </Layout>
   );
 };
