@@ -69,6 +69,16 @@ const sections = [
     ),
   },
   {
+    title: "Payment processing",
+    body: (
+      <p>
+        We use third-party payment providers such as{" "}
+        <span className="font-semibold text-foreground">Paysera</span> to process payments
+        securely. We do not store your payment details on our servers.
+      </p>
+    ),
+  },
+  {
     title: "Security",
     body: (
       <p>

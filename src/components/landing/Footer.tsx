@@ -3,6 +3,7 @@ import { Instagram } from "lucide-react";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
 import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 import { SOCIAL_LINKS } from "@/lib/socialLinks";
+import payseraLogo from "@/assets/paysera-logo.svg";
 
 const gridPattern =
   "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.035'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")";
@@ -74,6 +75,22 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/refund-policy"
+                  className="text-sm text-neutral-300 transition-colors hover:text-white"
+                >
+                  Refund policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/shipping-policy"
+                  className="text-sm text-neutral-300 transition-colors hover:text-white"
+                >
+                  Shipping policy
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/contact"
                   className="text-sm text-neutral-300 transition-colors hover:text-white"
                 >
@@ -92,6 +109,16 @@ const Footer = () => {
               <p>
                 Commercial registration: <span className="tabular-nums">{COMPANY_LEGAL.commercialRegistration}</span>
               </p>
+              <div className="pt-2">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Payments securely by</p>
+                <img
+                  src={payseraLogo}
+                  alt="Paysera"
+                  className="mt-2 h-6 w-auto max-w-[130px] brightness-0 invert opacity-90 max-md:mx-0 md:ml-auto"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
             </div>
           </div>
         </div>

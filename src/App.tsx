@@ -10,10 +10,15 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
+import RefundPolicy from "./pages/RefundPolicy.tsx";
+import ShippingPolicy from "./pages/ShippingPolicy.tsx";
 import Contact from "./pages/Contact.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogArticle from "./pages/BlogArticle.tsx";
 import StartProject from "./pages/StartProject.tsx";
+
+const SalesDeck = lazy(() => import("./pages/SalesDeck"));
+const WebsiteProgram = lazy(() => import("./pages/WebsiteProgram"));
 
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
 const AdminClients = lazy(() => import("./pages/admin/Clients"));
@@ -43,6 +48,14 @@ const MarketingDocumentTitle = () => {
       document.title = "Start a project | Nexora";
       return;
     }
+    if (pathname === "/website-program") {
+      document.title = "Website program | Nexora";
+      return;
+    }
+    if (pathname === "/sales-deck") {
+      document.title = "Sales collateral | Nexora";
+      return;
+    }
     if (pathname === "/blog") {
       document.title = "Blog | Nexora";
       return;
@@ -57,6 +70,14 @@ const MarketingDocumentTitle = () => {
     }
     if (pathname === "/terms") {
       document.title = "Terms of service | Nexora";
+      return;
+    }
+    if (pathname === "/refund-policy") {
+      document.title = "Refund policy | Nexora";
+      return;
+    }
+    if (pathname === "/shipping-policy") {
+      document.title = "Shipping policy | Nexora";
       return;
     }
     document.title = "Page not found | Nexora";
@@ -102,8 +123,12 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/refund-policy" element={<RefundPolicy />} />
+              <Route path="/shipping-policy" element={<ShippingPolicy />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/start" element={<StartProject />} />
+              <Route path="/sales-deck" element={<SalesDeck />} />
+              <Route path="/website-program" element={<WebsiteProgram />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogArticle />} />
 

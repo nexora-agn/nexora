@@ -49,7 +49,7 @@ const SalesDeck = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f5] text-neutral-950 print:bg-white print:text-black">
+    <div className="nexora-collateral-print min-h-screen bg-[#f4f4f5] text-neutral-950 print:min-h-0 print:h-auto print:bg-white print:text-black">
       {/* Screen-only toolbar */}
       <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 shadow-sm backdrop-blur print:hidden">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-6">
@@ -85,12 +85,50 @@ const SalesDeck = () => {
 
       <style>
         {`@media print {
-          @page { size: A4; margin: 10mm 12mm; }
+          @page {
+            size: A4;
+            margin: 0;
+          }
+          html {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+          }
+          body {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+            min-height: 0 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: #fff !important;
+            background-image: none !important;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+          #root {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+            min-height: 0 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+          }
+          .nexora-collateral-print {
+            height: auto !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+          }
         }`}
       </style>
 
       {/* Document wrapper: A4-ish width on screen, full width in print */}
-      <main className="mx-auto max-w-[210mm] px-5 py-10 print:max-w-none print:px-0 print:py-3">
+      <main className="mx-auto max-w-[210mm] px-5 py-10 print:box-border print:h-auto print:max-w-none print:min-h-0 print:px-[8mm] print:pb-[10mm] print:pt-[6mm]">
         {/* Cover */}
         <section className="break-after-page rounded-2xl border border-neutral-200 bg-white p-10 shadow-sm print:break-after-auto print:rounded-none print:border-0 print:p-0 print:pb-1 print:shadow-none">
           <div className="border-b-4 border-brand pb-8 print:border-b-2 print:pb-4">
@@ -272,7 +310,7 @@ const SalesDeck = () => {
         </section>
 
         {/* Footer legal */}
-        <footer className="mt-16 break-inside-avoid border-t border-neutral-200 pt-8 print:mt-3 print:border-t-neutral-300 print:pt-3">
+        <footer className="mt-16 break-inside-avoid border-t border-neutral-200 pt-8 print:mt-3 print:break-before-avoid print:border-t-neutral-300 print:pb-1 print:pt-2">
           <div className="flex flex-wrap items-end justify-between gap-6 print:gap-3">
             <img
               src={NEXORA_LOGO_SRC}
