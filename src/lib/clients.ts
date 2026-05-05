@@ -1,4 +1,15 @@
 import { supabase, type Client } from "@/lib/supabase";
+import { DEFAULT_TEMPLATE_ID } from "@/lib/templates";
+
+/** Older Supabase databases may not have the `template_id` column yet —
+ *  always normalise the field so the rest of the app can rely on it. */
+function normalizeClient(row: unknown): Client {
+  const c = row as Partial<Client> & Record<string, unknown>;
+  return {
+    ...c,
+    template_id: (c.template_id as string) || DEFAULT_TEMPLATE_ID,
+  } as Client;
+}
 
 export async function listClients(): Promise<Client[]> {
   const { data, error } = await supabase
@@ -6,13 +17,13 @@ export async function listClients(): Promise<Client[]> {
     .select("*")
     .order("updated_at", { ascending: false });
   if (error) throw error;
-  return (data ?? []) as Client[];
+  return (data ?? []).map(normalizeClient);
 }
 
 export async function getClient(id: string): Promise<Client | null> {
   const { data, error } = await supabase.from("clients").select("*").eq("id", id).maybeSingle();
   if (error) throw error;
-  return (data as Client | null) ?? null;
+  return data ? normalizeClient(data) : null;
 }
 
 export async function createClient(input: {
@@ -20,6 +31,7 @@ export async function createClient(input: {
   contact_email?: string;
   contact_phone?: string;
   notes?: string;
+  template_id?: string;
 }): Promise<Client> {
   const { data: userData } = await supabase.auth.getUser();
   const ownerId = userData.user?.id;
@@ -33,6 +45,7 @@ export async function createClient(input: {
       contact_email: input.contact_email ?? null,
       contact_phone: input.contact_phone ?? null,
       notes: input.notes ?? null,
+      template_id: input.template_id ?? DEFAULT_TEMPLATE_ID,
     })
     .select("*")
     .single();
@@ -44,10 +57,10 @@ export async function createClient(input: {
     .insert({ client_id: (data as Client).id, theme: {}, content: {} });
   if (draftErr && draftErr.code !== "23505") throw draftErr;
 
-  return data as Client;
+  return normalizeClient(data);
 }
 
-export async function updateClient(id: string, patch: Partial<Pick<Client, "name" | "contact_email" | "contact_phone" | "notes">>): Promise<void> {
+export async function updateClient(id: string, patch: Partial<Pick<Client, "name" | "contact_email" | "contact_phone" | "notes" | "template_id">>): Promise<void> {
   const { error } = await supabase.from("clients").update(patch).eq("id", id);
   if (error) throw error;
 }

@@ -415,7 +415,7 @@ const EditorPanel = ({ state, onChange, clientId }: EditorPanelProps) => {
                     setContent({
                       testimonials: [
                         ...content.testimonials,
-                        { name: "New Name", role: "Role, Company", quote: "What they said.", avatar: "" },
+                        { name: "New Name", role: "Role, Company", quote: "What they said.", avatar: "", rating: 5 },
                       ],
                     })
                   }
