@@ -41,6 +41,7 @@ export default defineConfig(({ mode }) => {
       input: {
         main: path.resolve(__dirname, "index.html"),
         preview: path.resolve(__dirname, "preview.html"),
+        previewSummit: path.resolve(__dirname, "preview-summit.html"),
       },
     },
   },

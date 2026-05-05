@@ -11,24 +11,25 @@ import {
   verifyClientAccess,
   loadDraft,
   buildSiteZip,
+  resolveTemplatePaths,
 } from "./export-logic.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
-// Prefer the committed template-source (ships with git) but fall back to tmp/ for
-// devs who still have the old clone path.
-const TEMPLATE_CANDIDATES = [
-  path.resolve(projectRoot, "template-source"),
-  path.resolve(projectRoot, "tmp/construction-template"),
-];
 
-// Live admin template (src/template) — overlaid on top of template-source so
-// the ZIP renders exactly like the admin preview.
-const LIVE_TEMPLATE_ROOT = path.resolve(projectRoot, "src/template");
-
-async function resolveTemplateRoot() {
-  for (const p of TEMPLATE_CANDIDATES) {
+/**
+ * Resolve the scaffold (template-source*) directory for the given client
+ * template id. Falls back to a legacy tmp/ clone path so devs with older
+ * checkouts keep working when the registered scaffold is missing.
+ */
+async function resolveTemplateRootFor(templateId) {
+  const { scaffoldDir } = resolveTemplatePaths(templateId);
+  const candidates = [
+    path.resolve(projectRoot, scaffoldDir),
+    path.resolve(projectRoot, "tmp/construction-template"),
+  ];
+  for (const p of candidates) {
     try {
       await fs.access(p);
       return p;
@@ -37,14 +38,16 @@ async function resolveTemplateRoot() {
     }
   }
   throw new Error(
-    `Template source not found. Expected one of: ${TEMPLATE_CANDIDATES.join(", ")}`,
+    `Template source not found for template "${templateId}". Expected one of: ${candidates.join(", ")}`,
   );
 }
 
-async function resolveLiveTemplateRoot() {
+async function resolveLiveTemplateRootFor(templateId) {
+  const { liveTemplateDir } = resolveTemplatePaths(templateId);
+  const p = path.resolve(projectRoot, liveTemplateDir);
   try {
-    await fs.access(LIVE_TEMPLATE_ROOT);
-    return LIVE_TEMPLATE_ROOT;
+    await fs.access(p);
+    return p;
   } catch {
     return null;
   }
@@ -103,8 +106,8 @@ const server = http.createServer(async (req, res) => {
       const { userSb } = await authenticateRequest(req.headers.authorization, env);
       const client = await verifyClientAccess(userSb, clientId);
       const draft = await loadDraft(clientId, env);
-      const templateRoot = await resolveTemplateRoot();
-      const liveTemplateRoot = await resolveLiveTemplateRoot();
+      const templateRoot = await resolveTemplateRootFor(client.template_id);
+      const liveTemplateRoot = await resolveLiveTemplateRootFor(client.template_id);
 
       const built = await buildSiteZip({
         templateRoot,

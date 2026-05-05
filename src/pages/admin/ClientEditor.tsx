@@ -16,6 +16,7 @@ import AdminShell from "./AdminShell";
 import { useClientDraft } from "@/hooks/useClientDraft";
 import type { Client } from "@/lib/supabase";
 import { getClient } from "@/lib/clients";
+import { getTemplate } from "@/lib/templates";
 import EditorPanel from "./EditorPanel";
 import { ExportButton } from "./ExportButton";
 
@@ -81,7 +82,11 @@ const ClientEditor = () => {
     };
   }, [id]);
 
-  const previewSrc = useMemo(() => (id ? `/preview.html?c=${id}` : undefined), [id]);
+  const previewSrc = useMemo(() => {
+    if (!id) return undefined;
+    const tpl = getTemplate(client?.template_id);
+    return `${tpl.paths.previewHtml}?c=${id}`;
+  }, [id, client?.template_id]);
 
   const reloadIframe = useCallback(() => {
     if (iframeRef.current) {

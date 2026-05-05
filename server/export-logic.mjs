@@ -55,12 +55,40 @@ export async function authenticateRequest(authHeader, env) {
 export async function verifyClientAccess(userSb, clientId) {
   const { data, error } = await userSb
     .from("clients")
-    .select("id, name")
+    .select("id, name, template_id")
     .eq("id", clientId)
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Client not found or access denied");
   return data;
+}
+
+/**
+ * Server-side mirror of `src/lib/templates.ts`. Keeping a small registry here
+ * avoids cross-importing TS into the .mjs export endpoints. New templates need
+ * to be added in BOTH places (TS for the admin UI + this list for the export
+ * server). `paths.scaffoldDir` and `paths.liveTemplateDir` MUST match the
+ * directories committed at the repo root.
+ */
+export const TEMPLATE_REGISTRY = [
+  {
+    id: "constructo",
+    paths: { scaffoldDir: "template-source", liveTemplateDir: "src/template" },
+  },
+  {
+    id: "summit",
+    paths: { scaffoldDir: "template-source-summit", liveTemplateDir: "src/template-summit" },
+  },
+];
+
+/**
+ * Pick scaffold + live template directory names for the given client template
+ * id. Unknown / legacy ids fall back to the first registered template (which
+ * is the historical default — matches `getTemplate` in the TS registry).
+ */
+export function resolveTemplatePaths(templateId) {
+  const match = TEMPLATE_REGISTRY.find(t => t.id === templateId);
+  return (match || TEMPLATE_REGISTRY[0]).paths;
 }
 
 export async function loadDraft(clientId, env) {

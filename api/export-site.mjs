@@ -11,21 +11,21 @@ import {
   verifyClientAccess,
   loadDraft,
   buildSiteZip,
+  resolveTemplatePaths,
 } from "../server/export-logic.mjs";
 
-// In the Vercel runtime the project root is the repo root, so the committed
-// `template-source/` directory is available on disk.
-const templateRootCandidates = [
-  path.resolve(process.cwd(), "template-source"),
-  path.resolve(process.cwd(), "tmp/construction-template"),
-];
-
-// Live admin template (src/template) — overlaid so the ZIP renders
-// exactly like the admin preview on Vercel too.
-const liveTemplateRootPath = path.resolve(process.cwd(), "src/template");
-
-async function resolveTemplateRoot() {
-  for (const p of templateRootCandidates) {
+/**
+ * Resolve the scaffold (template-source*) directory for the given client
+ * template id. Falls back to a legacy tmp/ clone path so older deployments
+ * keep working if the registered scaffold isn't bundled.
+ */
+async function resolveTemplateRootFor(templateId) {
+  const { scaffoldDir } = resolveTemplatePaths(templateId);
+  const candidates = [
+    path.resolve(process.cwd(), scaffoldDir),
+    path.resolve(process.cwd(), "tmp/construction-template"),
+  ];
+  for (const p of candidates) {
     try {
       await fs.access(p);
       return p;
@@ -34,14 +34,16 @@ async function resolveTemplateRoot() {
     }
   }
   throw new Error(
-    `Template source not found on server. Commit the template-source/ directory so Vercel can bundle it.`,
+    `Template source not found on server for template "${templateId}". Commit the ${scaffoldDir}/ directory so Vercel can bundle it.`,
   );
 }
 
-async function resolveLiveTemplateRoot() {
+async function resolveLiveTemplateRootFor(templateId) {
+  const { liveTemplateDir } = resolveTemplatePaths(templateId);
+  const p = path.resolve(process.cwd(), liveTemplateDir);
   try {
-    await fs.access(liveTemplateRootPath);
-    return liveTemplateRootPath;
+    await fs.access(p);
+    return p;
   } catch {
     return null;
   }
@@ -82,8 +84,8 @@ export default async function handler(req, res) {
     const { userSb } = await authenticateRequest(req.headers.authorization, env);
     const client = await verifyClientAccess(userSb, clientId);
     const draft = await loadDraft(clientId, env);
-    const templateRoot = await resolveTemplateRoot();
-    const liveTemplateRoot = await resolveLiveTemplateRoot();
+    const templateRoot = await resolveTemplateRootFor(client.template_id);
+    const liveTemplateRoot = await resolveLiveTemplateRootFor(client.template_id);
 
     const built = await buildSiteZip({
       templateRoot,
