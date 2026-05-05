@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Trash2, Pencil, ArrowRight } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowRight, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,8 @@ import { toast } from "sonner";
 import AdminShell from "./AdminShell";
 import type { Client } from "@/lib/supabase";
 import { createClient, deleteClient, listClients, updateClient } from "@/lib/clients";
+import { TEMPLATES, DEFAULT_TEMPLATE_ID, getTemplate } from "@/lib/templates";
+import { cn } from "@/lib/utils";
 
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
@@ -82,7 +84,8 @@ const AdminClients = () => {
             </DialogTrigger>
             <ClientDialog
               title="New client"
-              description="Create a draft website for a new client."
+              description="Create a draft website for a new client. Pick a template to start from — you can keep customizing colors, copy, and content from the editor."
+              showTemplatePicker
               onSubmit={async input => {
                 try {
                   const next = await createClient(input);
@@ -122,13 +125,16 @@ const AdminClients = () => {
               <thead className="bg-muted/50 text-muted-foreground">
                 <tr>
                   <th className="text-left font-medium px-4 py-2.5">Client</th>
+                  <th className="text-left font-medium px-4 py-2.5 hidden sm:table-cell">Template</th>
                   <th className="text-left font-medium px-4 py-2.5 hidden md:table-cell">Contact</th>
                   <th className="text-left font-medium px-4 py-2.5 hidden lg:table-cell">Updated</th>
                   <th className="text-right font-medium px-4 py-2.5">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {clients.map(c => (
+                {clients.map(c => {
+                  const tpl = getTemplate(c.template_id);
+                  return (
                   <tr key={c.id} className="border-t hover:bg-muted/20">
                     <td className="px-4 py-3">
                       <Link to={`/admin/clients/${c.id}`} className="font-medium hover:underline inline-flex items-center gap-1.5">
@@ -136,6 +142,16 @@ const AdminClients = () => {
                         <ArrowRight className="h-3.5 w-3.5 opacity-50" />
                       </Link>
                       {c.notes && <div className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{c.notes}</div>}
+                    </td>
+                    <td className="px-4 py-3 hidden sm:table-cell">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium">
+                        <span
+                          aria-hidden
+                          className="h-2 w-2 rounded-full"
+                          style={{ backgroundColor: tpl.accent }}
+                        />
+                        {tpl.name}
+                      </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
                       {c.contact_email || c.contact_phone || <span className="text-muted-foreground/60">N/A</span>}
@@ -152,7 +168,8 @@ const AdminClients = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -187,23 +204,27 @@ interface ClientInput {
   contact_email?: string;
   contact_phone?: string;
   notes?: string;
+  template_id?: string;
 }
 
 const ClientDialog = ({
   title,
   description,
   initial,
+  showTemplatePicker = false,
   onSubmit,
 }: {
   title: string;
   description: string;
   initial?: Partial<Client>;
+  showTemplatePicker?: boolean;
   onSubmit: (input: ClientInput) => Promise<void>;
 }) => {
   const [name, setName] = useState(initial?.name ?? "");
   const [email, setEmail] = useState(initial?.contact_email ?? "");
   const [phone, setPhone] = useState(initial?.contact_phone ?? "");
   const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [templateId, setTemplateId] = useState<string>(initial?.template_id ?? DEFAULT_TEMPLATE_ID);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event: FormEvent) => {
@@ -215,17 +236,103 @@ const ClientDialog = ({
       contact_email: email.trim() || undefined,
       contact_phone: phone.trim() || undefined,
       notes: notes.trim() || undefined,
+      template_id: templateId,
     });
     setSubmitting(false);
   };
 
   return (
-    <DialogContent>
+    <DialogContent className={showTemplatePicker ? "sm:max-w-3xl" : undefined}>
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {showTemplatePicker && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold">Choose a template</Label>
+              <span className="text-xs text-muted-foreground">
+                {TEMPLATES.filter(t => t.available).length} available
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {TEMPLATES.map(t => {
+                const selected = templateId === t.id;
+                return (
+                  <button
+                    type="button"
+                    key={t.id}
+                    onClick={() => t.available && setTemplateId(t.id)}
+                    disabled={!t.available}
+                    aria-pressed={selected}
+                    className={cn(
+                      "relative text-left rounded-lg border bg-card p-3 transition-all overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed",
+                      selected
+                        ? "border-primary ring-2 ring-primary/30 shadow-md"
+                        : "border-border hover:border-primary/50 hover:shadow-sm",
+                    )}
+                  >
+                    <div className="relative aspect-[16/10] rounded-md overflow-hidden bg-muted ring-1 ring-black/5">
+                      <img
+                        src={t.thumbnail}
+                        alt={`${t.name} preview`}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent"
+                      />
+                      {!t.available && (
+                        <span className="absolute top-2 left-2 text-[10px] font-bold tracking-wider uppercase bg-black/70 text-white px-2 py-1 rounded">
+                          Coming soon
+                        </span>
+                      )}
+                      {selected && (
+                        <span className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold px-2 py-1 shadow">
+                          <Check className="h-3 w-3" /> Selected
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-3">
+                      <div className="flex items-center gap-2">
+                        <span
+                          aria-hidden
+                          className="h-2.5 w-2.5 rounded-full shrink-0"
+                          style={{ backgroundColor: t.accent }}
+                        />
+                        <h4 className="font-semibold leading-tight">{t.name}</h4>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                        {t.tagline}
+                      </p>
+                      {t.features.length > 0 && (
+                        <ul className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5">
+                          {t.features.slice(0, 4).map(f => (
+                            <li
+                              key={f}
+                              className="text-[11px] text-muted-foreground flex items-center gap-1"
+                            >
+                              <span className="h-1 w-1 rounded-full bg-primary/60" />
+                              <span className="truncate">{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Sparkles className="h-3 w-3" />
+              More templates coming soon. Each template gets its own preview &
+              ZIP export.
+            </p>
+          </div>
+        )}
+
         <div className="space-y-2">
           <Label htmlFor="client-name">Client name</Label>
           <Input id="client-name" required value={name} onChange={e => setName(e.target.value)} disabled={submitting} placeholder="Acme Construction" />

@@ -46,9 +46,14 @@ create table if not exists public.clients (
   contact_email  text,
   contact_phone  text,
   notes          text,
+  template_id    text not null default 'summit-construction',
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
+
+-- Safe to re-run on an existing deployment: adds the column on older databases.
+alter table public.clients
+  add column if not exists template_id text not null default 'summit-construction';
 
 create index if not exists clients_owner_idx on public.clients(owner_id, updated_at desc);
 

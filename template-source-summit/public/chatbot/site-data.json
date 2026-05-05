@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2024-01-01T00:00:00.000Z",
+  "site": {
+    "name": "CONSTRUCTO",
+    "legalName": "CONSTRUCTO PREMIUM BUILDERS",
+    "tagline": "Elevating construction standards with design-build excellence since 2008."
+  },
+  "contact": {
+    "phone": "+1 (888) 535-9177",
+    "email": "hello@constructo.com",
+    "address": "1234 Builder's Avenue, Suite 100, New York, NY 10001",
+    "hours": "Mon - Fri: 8:00 AM - 6:00 PM",
+    "officeHours": [
+      { "days": "Monday – Friday", "hours": "9:00am - 6:00pm" },
+      { "days": "Saturday", "hours": "By Appointment" },
+      { "days": "Sunday", "hours": "Closed" }
+    ],
+    "locations": "London · New York · Dubai",
+    "mapEmbedUrl": ""
+  },
+  "pages": [
+    { "id": "home", "label": "Home", "path": "/", "description": "" },
+    { "id": "projects", "label": "Projects", "path": "/projects", "description": "" },
+    { "id": "services", "label": "Services", "path": "/services", "description": "" },
+    { "id": "company", "label": "Company", "path": "/about", "description": "" },
+    { "id": "news", "label": "News", "path": "/blog", "description": "" },
+    { "id": "contact", "label": "Contact", "path": "/contact", "description": "" },
+    { "id": "faq", "label": "FAQ", "path": "/faq", "description": "" }
+  ],
+  "about": {
+    "intro": "Elevating construction standards with design-build excellence since 2008.",
+    "stats": [
+      { "label": "Years of experience", "value": "16" },
+      { "label": "Projects completed", "value": "120+" }
+    ],
+    "values": [
+      { "title": "Quality", "description": "Materials, trades, and inspections held to a single uncompromising standard." },
+      { "title": "Transparency", "description": "Open books on allowances, schedules, and decisions. No black boxes." }
+    ],
+    "certifications": [
+      { "label": "ISO 9001", "sub": "Quality management" },
+      { "label": "LEED Certified", "sub": "Sustainable delivery" }
+    ]
+  },
+  "services": [
+    { "id": "general-contracting", "title": "General Contracting", "description": "Full-service general contracting for commercial and residential projects.", "detailPath": "/services/general-contracting" },
+    { "id": "renovation", "title": "Renovation & Remodeling", "description": "Transform existing spaces with expert renovation and remodeling.", "detailPath": "/services/renovation" },
+    { "id": "project-management", "title": "Project Management", "description": "Professional project management ensuring on-time, on-budget delivery.", "detailPath": "/services/project-management" }
+  ],
+  "serviceSections": [],
+  "capabilities": [],
+  "projects": [
+    { "id": "skyline-tower", "title": "Skyline Tower", "category": "Commercial", "location": "Manhattan, NY", "year": "2023", "client": "Skyline Development Corp", "value": "$45M", "description": "30-story mixed-use tower with sustainable design.", "detailPath": "/projects/skyline-tower" }
+  ],
+  "team": [],
+  "testimonials": [],
+  "faq": [
+    { "question": "Are you licensed and insured?", "answer": "Yes. CONSTRUCTO maintains all required state and local licenses, general liability insurance, and workers' compensation." },
+    { "question": "How do I get a project estimate?", "answer": "Contact us through our website or by phone. We'll schedule a consultation and provide a detailed written estimate at no obligation." }
+  ],
+  "pricing": {
+    "summary": "Every quote is project-specific. Share your scope and the team replies within one business day with milestone pricing.",
+    "bullets": ["Fixed milestone pricing options", "Dedicated project lead", "Weekly photo updates"]
+  },
+  "process": [
+    { "label": "Discovery", "description": "Goals, budget, and site realities." },
+    { "label": "Design", "description": "Concepts refined into clear plans." },
+    { "label": "Build", "description": "Craft execution with weekly visibility." }
+  ],
+  "hero": {
+    "headline": "Build better. Faster. With zero surprises.",
+    "body": "We deliver high-end residential and commercial builds with a disciplined process."
+  },
+  "actions": [
+    { "id": "open_contact_form", "description": "Open the contact form." },
+    { "id": "open_demo_modal", "description": "Open the consultation modal." },
+    { "id": "scroll_to_section", "description": "Scroll to a specific section.", "args": { "target": "hero|services|projects|pricing|testimonials|team|about|contact|faq|process" } },
+    { "id": "navigate", "description": "Navigate to an internal path.", "args": { "path": "/services" } },
+    { "id": "open_url", "description": "Open an external URL.", "args": { "url": "https://example.com" } }
+  ]
+}

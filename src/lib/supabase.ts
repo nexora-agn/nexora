@@ -51,6 +51,9 @@ export type Client = {
   contact_email: string | null;
   contact_phone: string | null;
   notes: string | null;
+  /** Identifies which template the client's site is built from. Defaults
+   *  to "summit-construction" for older rows that pre-date the column. */
+  template_id: string;
   created_at: string;
   updated_at: string;
 };

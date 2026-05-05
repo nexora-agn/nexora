@@ -291,6 +291,7 @@ async function patchSiteDataTs(tempProject, content) {
     COMMERCIAL_FITOUT_CARDS: content.commercialFitoutCards,
     LEAD_FORM: content.leadForm,
     BLOG_TAGS: content.blogTags,
+    SERVICE_AREAS: content.serviceAreas,
   };
 
   let patched = source;
