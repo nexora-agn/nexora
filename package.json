@@ -3,8 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "server.js",
   "scripts": {
-    "start": "node server/hostinger.mjs",
+    "start": "node server.js",
     "dev": "vite",
     "dev:api": "node --env-file=.env.local server/export-api.mjs",
     "build": "vite build",

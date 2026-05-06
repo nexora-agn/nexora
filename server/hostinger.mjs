@@ -28,6 +28,19 @@ const distDir = path.join(projectRoot, "dist");
 
 const PORT = Number(process.env.PORT || 8080);
 
+/** Normalize req.url for routing (query strip, decode, trim trailing slash). */
+function requestPathname(req) {
+  const raw = req.url || "/";
+  const pathOnly = raw.split("?")[0];
+  try {
+    let p = decodeURIComponent(pathOnly);
+    if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+    return p || "/";
+  } catch {
+    return pathOnly.split("?")[0].replace(/\/+$/, "") || "/";
+  }
+}
+
 // ---------------------------------------------------------------------------
 // MIME types
 // ---------------------------------------------------------------------------
@@ -69,6 +82,7 @@ function sendJson(res, code, payload) {
   res.writeHead(code, {
     "Content-Type": "application/json",
     "Content-Length": Buffer.byteLength(body),
+    "Access-Control-Allow-Origin": "*",
   });
   res.end(body);
 }
@@ -170,7 +184,7 @@ if (!process.env.RESEND_API_KEY) console.warn("[hostinger] RESEND_API_KEY is not
 // Server
 // ---------------------------------------------------------------------------
 const server = http.createServer(async (req, res) => {
-  const url = req.url || "/";
+  const pathname = requestPathname(req);
   const method = req.method || "GET";
 
   // CORS preflight
@@ -185,7 +199,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── POST /api/send-form-emails ──────────────────────────────────────────
-  if (url === "/api/send-form-emails" && method === "POST") {
+  if (pathname === "/api/send-form-emails" && method === "POST") {
     try {
       const body = await parseBody(req);
       const result = await handleSendFormEmails(body, process.env);
@@ -197,7 +211,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── POST /api/export-site ───────────────────────────────────────────────
-  if (url === "/api/export-site" && method === "POST") {
+  if (pathname === "/api/export-site" && method === "POST") {
     let cleanup;
     try {
       const body = await parseBody(req);
@@ -230,7 +244,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── Static files / SPA fallback ─────────────────────────────────────────
-  await serveStatic(res, url);
+  await serveStatic(res, req.url || "/");
 });
 
 server.on("error", err => {
