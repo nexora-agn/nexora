@@ -52,7 +52,7 @@ export async function sendNexoraFormEmail(body: NexoraFormEmailBody): Promise<vo
   if (!res.ok || !data.ok) {
     const fallback =
       raw.trimStart().startsWith("<") || raw.includes("<!DOCTYPE")
-        ? "Form service unavailable (page returned HTML instead of the API). Check hosting: Node entry must run server.js so /api/send-form-emails is handled."
+        ? "Form service unavailable: the server returned a web page instead of the email API. On Hostinger, open Websites → your site → Settings and set Start command to npm start (not vite preview). Entry file: server.js. Redeploy. Or set VITE_FORM_API_URL to a URL where Node runs server.js."
         : "Could not send email. Please try again or write to info@nexora-agn.com.";
     throw new Error(data.error || fallback);
   }
