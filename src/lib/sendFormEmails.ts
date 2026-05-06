@@ -41,6 +41,8 @@ export async function sendNexoraFormEmail(body: NexoraFormEmailBody): Promise<vo
   });
   const ct = res.headers.get("content-type") || "";
   const raw = await res.text();
+  const looksLikeHtml =
+    ct.includes("text/html") || raw.trimStart().startsWith("<") || raw.includes("<!DOCTYPE");
   let data: { ok?: boolean; error?: string } = {};
   if (ct.includes("application/json")) {
     try {
@@ -49,11 +51,11 @@ export async function sendNexoraFormEmail(body: NexoraFormEmailBody): Promise<vo
       /* ignore */
     }
   }
-  if (!res.ok || !data.ok) {
-    const fallback =
-      raw.trimStart().startsWith("<") || raw.includes("<!DOCTYPE")
-        ? "Form service unavailable: the server returned a web page instead of the email API. On Hostinger, open Websites → your site → Settings and set Start command to npm start (not vite preview). Entry file: server.js. Redeploy. Or set VITE_FORM_API_URL to a URL where Node runs server.js."
-        : "Could not send email. Please try again or write to info@nexora-agn.com.";
+  // SPA hosts often return 200 + index.html for /api/* — treat as failure even when status is OK.
+  if (looksLikeHtml || !res.ok || !data.ok) {
+    const fallback = looksLikeHtml
+      ? "Form service unavailable: /api/send-form-emails returned your site's HTML (SPA fallback), not the Node API. Fix hosting so /api/* is handled by Node (npm start + server.js), nginx/Caddy must proxy /api to Node before try_files → index.html, or use VITE_FORM_API_URL to a host that only runs the API."
+      : "Could not send email. Please try again or write to info@nexora-agn.com.";
     throw new Error(data.error || fallback);
   }
 }
