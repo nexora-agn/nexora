@@ -29,9 +29,12 @@ export type NexoraFormEmailBody = NexoraContactEmailBody | NexoraDemoEmailBody |
 
 /**
  * Sends team notification + client confirmation via Resend (POST /api/send-form-emails).
+ * On static hosting set VITE_FORM_API_URL to the external API server URL.
  */
 export async function sendNexoraFormEmail(body: NexoraFormEmailBody): Promise<void> {
-  const res = await fetch("/api/send-form-emails", {
+  const explicit = (import.meta.env.VITE_FORM_API_URL as string | undefined)?.trim();
+  const url = explicit ? explicit.replace(/\/$/, "") + "/api/send-form-emails" : "/api/send-form-emails";
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),

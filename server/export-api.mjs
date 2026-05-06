@@ -1,5 +1,5 @@
-// Local Node.js dev server for the ZIP export.
-// In production the same logic runs via `api/export-site.mjs` (Vercel serverless).
+// Local Node.js dev server for the ZIP export and form emails.
+// In production the same logic runs via `api/export-site.mjs` and `api/send-form-emails.mjs` (Vercel serverless).
 import http from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -13,6 +13,7 @@ import {
   buildSiteZip,
   resolveTemplatePaths,
 } from "./export-logic.mjs";
+import { handleSendFormEmails } from "./form-email-resend.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,6 +95,17 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(204, corsHeaders);
     res.end();
     return;
+  }
+
+  if (req.url === "/api/send-form-emails" && req.method === "POST") {
+    try {
+      const body = await parseBody(req);
+      const result = await handleSendFormEmails(body, process.env);
+      return sendJson(res, result.ok ? 200 : 500, result);
+    } catch (error) {
+      console.error("[export-api] send-form-emails error:", error);
+      return sendJson(res, 500, { ok: false, error: error instanceof Error ? error.message : "Failed" });
+    }
   }
 
   if (req.url === "/api/export-site" && req.method === "POST") {
