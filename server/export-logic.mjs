@@ -687,180 +687,6 @@ async function patchTemplateContexts(tempProject) {
   }
 }
 
-/**
- * Collapse the template's SiteContent draft into the chatbot/site-data.json
- * shape that `src/template/lib/chatbot/siteData.ts::buildChatbotSiteData`
- * produces at runtime. Writing this file at export time means the chatbot
- * inside the exported ZIP answers from the client's content even before the
- * React context hydrates — useful for first-paint + for any external
- * consumers (e.g. a standalone vanilla-JS embed on a landing page).
- */
-async function writeChatbotSiteData(tempProject, content) {
-  const asStr = (v, f = "") =>
-    typeof v === "string" ? v : typeof v === "number" ? String(v) : f;
-  const asArr = v => (Array.isArray(v) ? v : []);
-
-  const company = content.company || {};
-  const siteTop = content.siteTop || {};
-  const hero = content.homeHero || {};
-  const lead = content.leadForm || {};
-
-  const navLinks = asArr(content.navLinks).map(link => ({
-    id: asStr(link.path, "/").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "") || "home",
-    label: asStr(link.label),
-    path: asStr(link.path, "/"),
-    description: "",
-  }));
-
-  const services = asArr(content.services).map(s => ({
-    id: asStr(s.id),
-    title: asStr(s.title),
-    description: asStr(s.description),
-    detailPath: `/services/${asStr(s.id)}`,
-  }));
-
-  const serviceSections = asArr(content.serviceSections).map(s => ({
-    id: asStr(s.id),
-    title: asStr(s.title),
-    subtitle: asStr(s.subtitle),
-    body: Array.isArray(s.body) ? s.body.map(v => asStr(v)).join("\n\n") : asStr(s.body),
-    inclusions: asArr(s.inclusions).map(v => asStr(v)),
-  }));
-
-  const capabilities = asArr(content.capabilities).map(c => ({
-    id: asStr(c.id),
-    title: asStr(c.title),
-    description: asStr(c.description),
-    to: asStr(c.to) || undefined,
-  }));
-
-  const projects = asArr(content.projects).map(p => ({
-    id: asStr(p.id),
-    title: asStr(p.title),
-    category: asStr(p.category),
-    location: asStr(p.location),
-    year: asStr(p.year),
-    client: asStr(p.client),
-    value: asStr(p.value),
-    description: asStr(p.description),
-    detailPath: `/projects/${asStr(p.id)}`,
-  }));
-
-  const team = asArr(content.team).map(m => ({
-    id: asStr(m.id),
-    name: asStr(m.name),
-    role: asStr(m.role),
-    bio: asStr(m.bio),
-  }));
-
-  const testimonials = asArr(content.testimonials).map(t => ({
-    name: asStr(t.name),
-    role: asStr(t.role),
-    quote: asStr(t.quote),
-  }));
-
-  const faq = asArr(content.faqItems).map(f => ({
-    question: asStr(f.question),
-    answer: asStr(f.answer),
-  }));
-
-  const about = {
-    intro: asStr(company.tagline),
-    stats: asArr(content.aboutStats).map(s => ({
-      label: asStr(s.label),
-      value: asStr(s.value),
-    })),
-    values: asArr(content.coreValues).map(v => ({
-      title: asStr(v.title),
-      description: asStr(v.description),
-    })),
-    certifications: asArr(content.certifications).map(c => ({
-      label: asStr(c.label),
-      sub: asStr(c.sub) || undefined,
-    })),
-  };
-
-  const heroObj = {
-    headline: [asStr(hero.headlineBefore), asStr(hero.headlineHighlight), asStr(hero.headlineAfter)]
-      .filter(Boolean)
-      .join(" "),
-    body: asStr(hero.body),
-    primaryCta: hero.primaryCta
-      ? { label: asStr(hero.primaryCta.label), to: asStr(hero.primaryCta.to) }
-      : undefined,
-    secondaryCta: hero.secondaryCta
-      ? { label: asStr(hero.secondaryCta.label), to: asStr(hero.secondaryCta.to) }
-      : undefined,
-  };
-
-  const payload = {
-    generatedAt: new Date().toISOString(),
-    site: {
-      name: asStr(company.name, "Our Company"),
-      legalName: asStr(company.legalName, asStr(company.name, "Our Company")),
-      tagline: asStr(company.tagline),
-    },
-    contact: {
-      phone: asStr(company.phone),
-      email: asStr(company.email),
-      address: asStr(company.address),
-      hours: asStr(company.hours),
-      officeHours: asArr(content.officeHours).map(h => ({
-        days: asStr(h.days),
-        hours: asStr(h.hours),
-      })),
-      locations: asStr(siteTop.locations),
-      mapEmbedUrl: asStr(content.mapEmbedUrl),
-    },
-    pages: navLinks.length
-      ? navLinks
-      : [
-          { id: "home", label: "Home", path: "/", description: "" },
-          { id: "contact", label: "Contact", path: "/contact", description: "" },
-        ],
-    about,
-    services,
-    serviceSections,
-    capabilities,
-    projects,
-    team,
-    testimonials,
-    faq,
-    pricing: {
-      summary:
-        "Every quote is project-specific. The team replies within one business day with next steps once you share your scope.",
-      bullets: asArr(lead.bullets).map(v => asStr(v)),
-    },
-    process: asArr(content.processSteps).map(s => ({
-      label: asStr(s.label),
-      description: asStr(s.description),
-    })),
-    hero: heroObj,
-    actions: [
-      { id: "open_contact_form", description: "Open the contact form." },
-      { id: "open_demo_modal", description: "Open the consultation modal." },
-      {
-        id: "scroll_to_section",
-        description: "Scroll to a specific section of the current page.",
-        args: {
-          target: "hero|services|projects|pricing|testimonials|team|about|contact|faq|process",
-        },
-      },
-      {
-        id: "navigate",
-        description: "Navigate to an internal path.",
-        args: { path: "Any path from the `pages` array" },
-      },
-      { id: "open_url", description: "Open an external URL.", args: { url: "https://..." } },
-    ],
-  };
-
-  const target = path.join(tempProject, "public/chatbot/site-data.json");
-  await fs.mkdir(path.dirname(target), { recursive: true });
-  await fs.writeFile(target, JSON.stringify(payload, null, 2), "utf8");
-  console.log(`[export] Wrote chatbot site-data.json (${services.length} services, ${projects.length} projects, ${faq.length} faq)`);
-}
-
 function zipDirectory(directory, outputFile) {
   return new Promise((resolve, reject) => {
     const output = createWriteStream(outputFile);
@@ -933,10 +759,6 @@ export async function buildSiteZip({ templateRoot, liveTemplateRoot, clientId, c
     "utf8",
   );
 
-  // Bake a chatbot-ready site-data snapshot so the exported chatbot can answer
-  // from the client's content even before React hydrates the context.
-  await writeChatbotSiteData(tempProject, draft.content || {});
-
   await stripCustomizationPanel(tempProject);
   await patchTemplateContexts(tempProject);
   // Bake customized copy (COMPANY, HOME_HERO, CAPABILITIES, etc.) directly into
@@ -983,34 +805,11 @@ export async function buildSiteZip({ templateRoot, liveTemplateRoot, clientId, c
       "```bash",
       "npm install",
       "npm run dev        # website",
-      "npm run dev:api    # chatbot + export API (separate terminal)",
       "```",
       "",
       "## Deploy",
       "Build with `npm run build` and upload the `dist/` folder to any static host",
       "(Hostinger, Netlify, Vercel, Cloudflare Pages, etc.).",
-      "",
-      "## AI Chatbot",
-      "",
-      "The floating chatbot (bottom-right on every page) is already wired up and",
-      "answers questions using the content in `public/chatbot/site-data.json`.",
-      "",
-      "**Out of the box:** it uses a local rule-based brain — no keys needed.",
-      "",
-      "**To upgrade to real LLM answers** (OpenAI / Claude):",
-      "",
-      "1. Copy `.env.example` to `.env` and fill in ONE of:",
-      "   - `OPENAI_API_KEY=...` (recommended — `OPENAI_MODEL` defaults to `gpt-4o-mini`)",
-      "   - `ANTHROPIC_API_KEY=...` (model defaults to `claude-3-5-haiku-latest`)",
-      "2. On Vercel / Netlify: set the same variable in the hosting dashboard.",
-      "   `api/chat.mjs` is picked up automatically.",
-      "3. On a static host (Hostinger etc.): host the chat endpoint separately",
-      "   and set `VITE_CHAT_API_URL` before running `npm run build`.",
-      "",
-      "**To customize what the chatbot knows:** edit `public/chatbot/site-data.json`.",
-      "The React chatbot also reads live from the site data context, so updates",
-      "made in the admin preview are reflected immediately in the preview and",
-      "baked into this file on every export.",
     ].join("\n"),
     "utf8",
   );

@@ -18,13 +18,9 @@ import {
 import { mergeContent } from "@/lib/drafts";
 import ScrollToTop from "@template-summit/components/ScrollToTop";
 import LoadingScreen from "@template-summit/components/layout/LoadingScreen";
-import ChatbotWidget from "@template-summit/components/Chatbot/ChatbotWidget";
 import Index from "@template-summit/pages/Index";
 import NotFound from "@template-summit/pages/NotFound";
 import { supabase, isSupabaseConfigured, type Draft } from "@/lib/supabase";
-
-/** Flip to true when you want the floating template chatbot back (widget code stays in-repo). */
-const SHOW_TEMPLATE_CHATBOT = false;
 
 const About = lazy(() => import("@template-summit/pages/About"));
 const Services = lazy(() => import("@template-summit/pages/Services"));
@@ -112,7 +108,6 @@ const TemplateShell = () => {
       <Suspense fallback={<RouteLoading />}>
         <AnimatedRoutes />
       </Suspense>
-      {SHOW_TEMPLATE_CHATBOT ? <ChatbotWidget /> : null}
     </HashRouter>
   );
 };

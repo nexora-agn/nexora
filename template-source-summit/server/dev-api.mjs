@@ -4,15 +4,12 @@ import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { handleChatRequest, resolveChatEnv } from "./chat-logic.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 const port = Number(process.env.SITE_API_PORT || 8787);
 const allowOrigin = process.env.SITE_ALLOWED_ORIGIN || "http://localhost:8080";
-
-const chatEnv = resolveChatEnv();
 
 const ignoredDirs = new Set(["node_modules", ".git", "dist", ".vite", ".cursor", ".idea"]);
 const ignoredFiles = new Set(["site-builder-export.json"]);
@@ -134,22 +131,6 @@ const server = http.createServer(async (req, res) => {
       res.end(data);
     } catch (error) {
       sendJson(res, 500, { error: error instanceof Error ? error.message : "Export failed" });
-    }
-    return;
-  }
-
-  if (req.url === "/api/chat" && req.method === "POST") {
-    try {
-      const body = await parseBody(req);
-      const result = await handleChatRequest({
-        message: body.message,
-        history: body.history,
-        siteData: body.siteData,
-        env: chatEnv,
-      });
-      sendJson(res, 200, result);
-    } catch (error) {
-      sendJson(res, 500, { error: error instanceof Error ? error.message : "Chat request failed" });
     }
     return;
   }
