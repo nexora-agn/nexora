@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth";
 
+import { OpenClawChatWidget } from "@/components/OpenClawChatWidget";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Privacy from "./pages/Privacy.tsx";
@@ -118,6 +119,7 @@ const App = () => (
         <AuthProvider>
           <ScrollToTop />
           <MarketingDocumentTitle />
+          <OpenClawChatWidget />
           <Suspense fallback={<RouteLoading />}>
             <Routes>
               <Route path="/" element={<Index />} />
