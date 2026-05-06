@@ -23,7 +23,10 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..");
+/** Override if PM2 resolves import paths oddly (must be absolute path to repo root). */
+const projectRoot = process.env.NEXORA_PROJECT_ROOT
+  ? path.resolve(process.env.NEXORA_PROJECT_ROOT)
+  : path.resolve(__dirname, "..");
 const distDir = path.join(projectRoot, "dist");
 
 const PORT = Number(process.env.PORT || 8080);
@@ -168,7 +171,9 @@ async function serveStatic(res, urlPath) {
 // Verify dist/ exists
 // ---------------------------------------------------------------------------
 if (!fsSync.existsSync(distDir)) {
-  console.error(`[hostinger] dist/ not found at ${distDir}. Run "npm run build" first.`);
+  console.error(
+    `[hostinger] dist/ not found at ${distDir}. Run "npm run build" from project root, or set NEXORA_PROJECT_ROOT to that root (e.g. /var/www/nexora).`,
+  );
   process.exit(1);
 }
 
