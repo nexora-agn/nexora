@@ -11,6 +11,7 @@ import fsSync from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { loadProductionEnv } from "./load-production-env.mjs";
 import { handleSendFormEmails } from "./form-email-resend.mjs";
 import {
   resolveEnv,
@@ -23,10 +24,13 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const defaultProjectRoot = path.resolve(__dirname, "..");
+loadProductionEnv(defaultProjectRoot);
 /** Override if PM2 resolves import paths oddly (must be absolute path to repo root). */
 const projectRoot = process.env.NEXORA_PROJECT_ROOT
   ? path.resolve(process.env.NEXORA_PROJECT_ROOT)
-  : path.resolve(__dirname, "..");
+  : defaultProjectRoot;
+if (projectRoot !== defaultProjectRoot) loadProductionEnv(projectRoot);
 const distDir = path.join(projectRoot, "dist");
 
 const PORT = Number(process.env.PORT || 8080);

@@ -27,12 +27,24 @@ export type NexoraStartProjectEmailBody = {
 
 export type NexoraFormEmailBody = NexoraContactEmailBody | NexoraDemoEmailBody | NexoraStartProjectEmailBody;
 
+function formApiBaseUrl(): string | undefined {
+  if (typeof window !== "undefined") {
+    const w = window as unknown as { __NEXORA_FORM_API_URL__?: string };
+    const fromRuntime = w.__NEXORA_FORM_API_URL__?.trim();
+    if (fromRuntime) return fromRuntime.replace(/\/$/, "");
+  }
+  const fromVite = (import.meta.env.VITE_FORM_API_URL as string | undefined)?.trim();
+  if (fromVite) return fromVite.replace(/\/$/, "");
+  return undefined;
+}
+
 /**
  * Sends team notification + client confirmation via Resend (POST /api/send-form-emails).
- * Set VITE_FORM_API_URL when the UI is static-only and the API runs on another origin.
+ * Set VITE_FORM_API_URL at build time, or `window.__NEXORA_FORM_API_URL__` in
+ * public/nexora-runtime-config.js, when the UI is static-only and the API runs elsewhere.
  */
 export async function sendNexoraFormEmail(body: NexoraFormEmailBody): Promise<void> {
-  const base = (import.meta.env.VITE_FORM_API_URL as string | undefined)?.trim().replace(/\/$/, "");
+  const base = formApiBaseUrl();
   const url = base ? `${base}/api/send-form-emails` : "/api/send-form-emails";
   const res = await fetch(url, {
     method: "POST",
