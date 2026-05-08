@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, ArrowRight, ChevronDown, Star, Home as HomeIcon, AlertCircle } from "lucide-react";
+import { Menu, X, Phone, ArrowRight, ChevronDown, Star, AlertCircle } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useSiteContent } from "@/contexts/SiteContentContext";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-function navItemActive(pathname: string, path: string) {
+/** Pick the nav path that best matches the URL (longest wins — e.g. `/services/storm-damage` over `/services`). */
+function navItemActive(pathname: string, path: string, navPaths: string[]) {
   if (path === "/") return pathname === "/";
-  if (path === "/services") return pathname === "/services";
-  return pathname === path || pathname.startsWith(path + "/");
+  const candidates = navPaths.filter(p => pathname === p || pathname.startsWith(`${p}/`));
+  if (!candidates.length) return false;
+  const best = candidates.reduce((a, b) => (b.length > a.length ? b : a));
+  return best === path;
 }
 
 const Header = () => {
@@ -17,6 +20,7 @@ const Header = () => {
   const { logoUrl } = useTheme();
   const { navLinks: NAV_LINKS, company: COMPANY, siteTop: SITE_TOP, services } = useSiteContent();
   const location = useLocation();
+  const navPaths = NAV_LINKS.map(l => l.path);
 
   const ctaTo = "/contact";
   const phoneHref = `tel:${(COMPANY.phone || "").replace(/[^+\d]/g, "")}`;
@@ -134,7 +138,7 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <ul className="flex items-stretch gap-1 lg:gap-2 overflow-x-auto">
             {NAV_LINKS.map(link => {
-              const active = navItemActive(location.pathname, link.path);
+              const active = navItemActive(location.pathname, link.path, navPaths);
               const isServices = link.path === "/services";
               return (
                 <li key={link.path} className="relative group">
@@ -148,19 +152,25 @@ const Header = () => {
                     )}
                   >
                     {link.label}
-                    {isServices && <ChevronDown className="h-3.5 w-3.5 opacity-60" />}
+                    {isServices && <ChevronDown className="h-3.5 w-3.5 opacity-60" aria-hidden />}
                     {active && (
                       <span className="absolute inset-x-2 lg:inset-x-3 -bottom-px h-0.5 bg-[hsl(var(--primary))]" />
                     )}
                   </Link>
                   {isServices && services.length > 0 && (
-                    <div className="absolute left-0 top-full z-40 hidden group-hover:block min-w-[240px] pt-1">
+                    <div className="absolute left-0 top-full z-40 min-w-[260px] max-h-[min(70vh,420px)] overflow-y-auto pt-1 opacity-0 invisible pointer-events-none transition-[opacity,visibility] duration-150 group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto">
                       <div className="bg-white border border-slate-200 rounded-md shadow-lg py-2">
-                        {services.slice(0, 8).map(s => (
+                        <Link
+                          to="/services"
+                          className="block px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-[hsl(var(--primary))] border-b border-slate-100 hover:bg-slate-50"
+                        >
+                          All services overview →
+                        </Link>
+                        {services.map(s => (
                           <Link
                             key={s.id}
                             to={`/services/${s.id}`}
-                            className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-[hsl(var(--primary))]"
+                            className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-[hsl(var(--primary))]"
                           >
                             {s.title}
                           </Link>
@@ -180,21 +190,51 @@ const Header = () => {
         <div className="md:hidden border-t border-slate-100 bg-white">
           <div className="max-w-7xl mx-auto px-4 py-4 space-y-1">
             {NAV_LINKS.map(link => {
-              const active = navItemActive(location.pathname, link.path);
+              const active = navItemActive(location.pathname, link.path, navPaths);
+              const isServices = link.path === "/services";
               return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setMobileOpen(false)}
-                  className={cn(
-                    "block px-3 py-2.5 text-sm font-bold uppercase tracking-wider rounded-md",
-                    active
-                      ? "bg-[hsl(var(--primary))] text-white"
-                      : "text-slate-700 hover:bg-slate-50",
+                <div key={link.path}>
+                  <Link
+                    to={link.path}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center justify-between gap-2 px-3 py-2.5 text-sm font-bold uppercase tracking-wider rounded-md",
+                      active && !isServices
+                        ? "bg-[hsl(var(--primary))] text-white"
+                        : active && isServices
+                          ? "bg-slate-100 text-[hsl(var(--primary))]"
+                          : "text-slate-700 hover:bg-slate-50",
+                    )}
+                  >
+                    {link.label}
+                    {isServices && (
+                      <ChevronDown className="h-4 w-4 shrink-0 opacity-60" aria-hidden />
+                    )}
+                  </Link>
+                  {isServices && services.length > 0 && (
+                    <div className="mt-1 mb-2 ml-2 pl-3 border-l-2 border-[hsl(var(--secondary))]/40 space-y-0.5">
+                      {services.map(s => {
+                        const childPath = `/services/${s.id}`;
+                        const childActive = location.pathname === childPath;
+                        return (
+                          <Link
+                            key={s.id}
+                            to={childPath}
+                            onClick={() => setMobileOpen(false)}
+                            className={cn(
+                              "block py-2 pr-3 text-[13px] font-semibold tracking-wide rounded-md",
+                              childActive
+                                ? "text-[hsl(var(--primary))] bg-slate-50"
+                                : "text-slate-600 hover:text-[hsl(var(--primary))]",
+                            )}
+                          >
+                            {s.title}
+                          </Link>
+                        );
+                      })}
+                    </div>
                   )}
-                >
-                  {link.label}
-                </Link>
+                </div>
               );
             })}
             <div className="pt-3 border-t border-slate-100 space-y-2">
