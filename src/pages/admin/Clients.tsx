@@ -1,7 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Trash2, Pencil, ArrowRight, Check, Sparkles } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowRight, CheckCircle2, LayoutTemplate, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -144,14 +145,28 @@ const AdminClients = () => {
                       {c.notes && <div className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{c.notes}</div>}
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium">
-                        <span
+                      <div className="flex items-center gap-3 min-w-0 max-w-[220px]">
+                        <div
+                          className="relative h-11 w-[4.75rem] shrink-0 overflow-hidden rounded-md border bg-muted shadow-sm"
                           aria-hidden
-                          className="h-2 w-2 rounded-full"
-                          style={{ backgroundColor: tpl.accent }}
-                        />
-                        {tpl.name}
-                      </span>
+                        >
+                          <img
+                            src={tpl.thumbnail}
+                            alt=""
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                          />
+                          <div
+                            className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5"
+                            style={{ backgroundColor: tpl.accent }}
+                          />
+                          <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/[0.06]" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium leading-snug truncate">{tpl.name}</div>
+                          <div className="text-[11px] text-muted-foreground leading-snug truncate">{tpl.tagline}</div>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
                       {c.contact_email || c.contact_phone || <span className="text-muted-foreground/60">N/A</span>}
@@ -243,94 +258,142 @@ const ClientDialog = ({
   };
 
   return (
-    <DialogContent className={showTemplatePicker ? "sm:max-w-3xl" : undefined}>
-      <DialogHeader>
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-      </DialogHeader>
-      <form onSubmit={handleSubmit} className="space-y-5">
+    <DialogContent
+      className={cn(
+        showTemplatePicker && "sm:max-w-[min(92vw,56rem)] max-h-[min(90vh,920px)] gap-0 overflow-y-auto p-0 sm:rounded-xl",
+      )}
+    >
+      {showTemplatePicker ? (
+        <div className="p-6 pb-5 space-y-1 border-b bg-muted/30">
+          <DialogHeader className="space-y-2 text-left">
+            <DialogTitle className="text-xl tracking-tight">{title}</DialogTitle>
+            <DialogDescription className="text-sm leading-relaxed">{description}</DialogDescription>
+          </DialogHeader>
+        </div>
+      ) : (
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+      )}
+
+      <form onSubmit={handleSubmit} className={cn("space-y-5", showTemplatePicker && "p-6 pt-5")}>
         {showTemplatePicker && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-semibold">Choose a template</Label>
-              <span className="text-xs text-muted-foreground">
-                {TEMPLATES.filter(t => t.available).length} available
-              </span>
+          <div className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="space-y-1">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Website template
+                </p>
+                <p className="text-sm font-medium text-foreground">Starting layout</p>
+                <p className="text-xs text-muted-foreground max-w-xl leading-relaxed">
+                  Applies to this client only. Customize colors, copy, and modules in the editor after you save.
+                </p>
+              </div>
+              <Badge variant="secondary" className="shrink-0 w-fit font-normal text-muted-foreground border-transparent">
+                {TEMPLATES.filter(t => t.available).length} of {TEMPLATES.length} selectable
+              </Badge>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {TEMPLATES.map(t => {
-                const selected = templateId === t.id;
-                return (
-                  <button
-                    type="button"
-                    key={t.id}
-                    onClick={() => t.available && setTemplateId(t.id)}
-                    disabled={!t.available}
-                    aria-pressed={selected}
-                    className={cn(
-                      "relative text-left rounded-lg border bg-card p-3 transition-all overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed",
-                      selected
-                        ? "border-primary ring-2 ring-primary/30 shadow-md"
-                        : "border-border hover:border-primary/50 hover:shadow-sm",
-                    )}
-                  >
-                    <div className="relative aspect-[16/10] rounded-md overflow-hidden bg-muted ring-1 ring-black/5">
-                      <img
-                        src={t.thumbnail}
-                        alt={`${t.name} preview`}
-                        className="absolute inset-0 h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                      <div
-                        aria-hidden
-                        className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent"
-                      />
-                      {!t.available && (
-                        <span className="absolute top-2 left-2 text-[10px] font-bold tracking-wider uppercase bg-black/70 text-white px-2 py-1 rounded">
-                          Coming soon
-                        </span>
+
+            <div className="rounded-xl border bg-card/80 shadow-sm overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border">
+                {TEMPLATES.map(t => {
+                  const selected = templateId === t.id;
+                  return (
+                    <button
+                      type="button"
+                      key={t.id}
+                      onClick={() => t.available && setTemplateId(t.id)}
+                      disabled={!t.available}
+                      aria-pressed={selected}
+                      aria-label={`${t.name}. ${t.tagline}.${selected ? " Selected." : ""}${!t.available ? " Unavailable." : ""}`}
+                      className={cn(
+                        "group relative text-left transition-colors outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                        "disabled:cursor-not-allowed disabled:opacity-[0.72]",
+                        selected ? "bg-primary/[0.06]" : "bg-card hover:bg-muted/40",
                       )}
-                      {selected && (
-                        <span className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold px-2 py-1 shadow">
-                          <Check className="h-3 w-3" /> Selected
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-3">
-                      <div className="flex items-center gap-2">
-                        <span
-                          aria-hidden
-                          className="h-2.5 w-2.5 rounded-full shrink-0"
-                          style={{ backgroundColor: t.accent }}
-                        />
-                        <h4 className="font-semibold leading-tight">{t.name}</h4>
+                    >
+                      <div className="h-1 w-full shrink-0" style={{ backgroundColor: t.accent }} aria-hidden />
+
+                      <div className="p-4 space-y-3">
+                        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-muted shadow-inner ring-1 ring-black/[0.06]">
+                          <img
+                            src={t.thumbnail}
+                            alt={`${t.name} preview`}
+                            className={cn(
+                              "absolute inset-0 h-full w-full object-cover transition-transform duration-300",
+                              !t.available && "grayscale-[35%]",
+                              t.available && !selected && "group-hover:scale-[1.02]",
+                            )}
+                            loading="lazy"
+                          />
+                          <div
+                            aria-hidden
+                            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80"
+                          />
+
+                          {!t.available && (
+                            <div className="absolute left-3 top-3 flex items-center gap-1">
+                              <Badge
+                                variant="secondary"
+                                className="h-6 gap-1 border-border/80 bg-background/95 px-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground backdrop-blur-sm shadow-sm"
+                              >
+                                <Lock className="h-3 w-3" aria-hidden />
+                                Soon
+                              </Badge>
+                            </div>
+                          )}
+
+                          {selected && t.available && (
+                            <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full border border-primary/20 bg-primary pl-2 pr-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-md">
+                              <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                              Active
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-2 min-h-[7rem]">
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="font-semibold text-[15px] leading-snug tracking-tight text-foreground">
+                              {t.name}
+                            </h4>
+                            <span
+                              aria-hidden
+                              className="mt-1 h-2 w-2 shrink-0 rounded-full ring-2 ring-background shadow-sm"
+                              style={{ backgroundColor: t.accent }}
+                            />
+                          </div>
+                          <p className="text-xs font-medium text-muted-foreground leading-snug">{t.tagline}</p>
+                          <p className="text-[11px] text-muted-foreground/95 leading-relaxed line-clamp-2">
+                            {t.description}
+                          </p>
+                          {t.features.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 pt-1">
+                              {t.features.slice(0, 3).map(f => (
+                                <Badge
+                                  key={f}
+                                  variant="outline"
+                                  className="h-5 border-border/70 px-2 text-[10px] font-normal text-muted-foreground hover:bg-transparent"
+                                >
+                                  {f}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                        {t.tagline}
-                      </p>
-                      {t.features.length > 0 && (
-                        <ul className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5">
-                          {t.features.slice(0, 4).map(f => (
-                            <li
-                              key={f}
-                              className="text-[11px] text-muted-foreground flex items-center gap-1"
-                            >
-                              <span className="h-1 w-1 rounded-full bg-primary/60" />
-                              <span className="truncate">{f}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex gap-2.5 border-t border-border/80 bg-muted/25 px-4 py-3 text-xs text-muted-foreground leading-relaxed">
+                <LayoutTemplate className="h-4 w-4 shrink-0 text-muted-foreground/80 mt-0.5" aria-hidden />
+                <span>
+                  Every layout includes a live preview and a matching ZIP export pipeline. New presets appear here as they ship.
+                </span>
+              </div>
             </div>
-            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Sparkles className="h-3 w-3" />
-              More templates coming soon. Each template gets its own preview &
-              ZIP export.
-            </p>
           </div>
         )}
 
