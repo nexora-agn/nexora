@@ -71,7 +71,7 @@ update public.clients
    set template_id = 'constructo'
  where template_id is null
     or template_id = ''
-    or lower(template_id) not in ('constructo', 'summit');
+    or lower(template_id) not in ('constructo', 'summit', 'nexora');
 
 create index if not exists clients_owner_idx on public.clients(owner_id, updated_at desc);
 
