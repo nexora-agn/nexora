@@ -22,6 +22,12 @@
       ],
       "@template/*": [
         "./src/template/*"
+      ],
+      "@template-summit/*": [
+        "./src/template-summit/*"
+      ],
+      "@template-nexora/*": [
+        "./src/template-nexora/*"
       ]
     },
     "skipLibCheck": true,
