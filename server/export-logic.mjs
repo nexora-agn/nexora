@@ -79,6 +79,10 @@ export const TEMPLATE_REGISTRY = [
     id: "summit",
     paths: { scaffoldDir: "template-source-summit", liveTemplateDir: "src/template-summit" },
   },
+  {
+    id: "nexora",
+    paths: { scaffoldDir: "template-source-nexora", liveTemplateDir: "src/template-nexora" },
+  },
 ];
 
 /**
@@ -197,11 +201,14 @@ async function* walkFiles(dir) {
 }
 
 /**
- * Replace `@template/...` imports with `@/...` so the file works inside the
- * exported standalone project (where only `@ -> src` is aliased).
+ * Replace `@template/...`, `@template-summit/...`, `@template-nexora/...` (etc.)
+ * imports with `@/...` so the file works inside the exported standalone project
+ * (where only `@ -> src` is aliased).
  */
 function rewriteTemplateImports(source) {
   return source
+    .replace(/(["'])@template-[a-z0-9-]+\//g, "$1@/")
+    .replace(/(["'])@template-[a-z0-9-]+(["'])/g, "$1@$2")
     .replace(/(["'])@template\//g, "$1@/")
     .replace(/(["'])@template(["'])/g, "$1@$2");
 }

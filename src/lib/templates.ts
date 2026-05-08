@@ -91,6 +91,30 @@ export const TEMPLATES: TemplateOption[] = [
       liveTemplateDir: "src/template-summit",
     },
   },
+  {
+    id: "nexora",
+    name: "Nexora Roofing",
+    tagline: "Roofing contractor · navy + orange",
+    description:
+      "Premium roofing template with 24/7 emergency bar, Google rating header, hero with trust pills, 4-card service grid, why-choose-us with credentials, customer reviews carousel, before/after gallery, and a dark estimate CTA. Best fit for roofing companies and storm-damage specialists.",
+    thumbnail:
+      "https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=800&h=520&fit=crop",
+    accent: "#f97316",
+    available: true,
+    features: [
+      "24/7 emergency bar",
+      "Roofing services 4-card grid",
+      "Why-homeowners-choose-us with stats",
+      "Customer reviews carousel",
+      "Before/after gallery",
+      "Dark estimate CTA",
+    ],
+    paths: {
+      previewHtml: "/preview-nexora.html",
+      scaffoldDir: "template-source-nexora",
+      liveTemplateDir: "src/template-nexora",
+    },
+  },
 ];
 
 export const DEFAULT_TEMPLATE_ID = TEMPLATES[0].id;
