@@ -1,5 +1,5 @@
 /**
- * NEXORA ROOFING — content registry.
+ * RIDGEPEAK ROOFING — content registry.
  *
  * All copy, lists, and CTA labels live here so the admin EditorPanel can
  * patch them, and the export server can bake the customised values into
@@ -8,11 +8,11 @@
  */
 
 export const COMPANY = {
-  name: "NEXORA ROOFING",
-  legalName: "NEXORA ROOFING & RESTORATION",
+  name: "RIDGEPEAK ROOFING",
+  legalName: "RIDGEPEAK ROOFING & RESTORATION",
   tagline: "Quality roofing services you can trust. Protecting homes across Texas with honesty, integrity, and craftsmanship.",
   phone: "(469) 555-0198",
-  email: "info@nexoraroofing.com",
+  email: "info@ridgepeakroofing.com",
   address: "123 Roofing Way, Frisco, TX 75034",
   hours: "Mon - Fri: 7:00 AM - 6:00 PM",
 };
@@ -49,7 +49,7 @@ export const HOME_HERO = {
   primaryCta: { label: "GET FREE ESTIMATE", to: "/contact" },
   secondaryCta: { label: "CALL NOW", to: "/contact" },
   image:
-    "https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=1400&h=1000&fit=crop",
+    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&h=1000&q=85",
   /** Pills shown under the hero CTAs. */
   trustPills: [
     { label: "Free Inspection", sub: "in 24 Hours", icon: "Calendar" as const },
@@ -184,7 +184,7 @@ export const SERVICES = [
     title: "Roof Repair",
     icon: "Flame",
     description: "Fast and reliable repairs for leaks, damage, and wear & tear.",
-    image: "https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&h=400&q=85",
   },
   {
     id: "roof-replacement",
@@ -230,7 +230,7 @@ export const BEFORE_AFTER_PROJECTS = [
     title: "Roof Replacement",
     location: "Frisco, TX",
     beforeImage: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=450&fit=crop",
-    afterImage: "https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=600&h=450&fit=crop",
+    afterImage: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&h=450&q=85",
   },
   {
     id: "mckinney-storm",
@@ -244,7 +244,7 @@ export const BEFORE_AFTER_PROJECTS = [
     title: "Roof Replacement",
     location: "Prosper, TX",
     beforeImage: "https://images.unsplash.com/photo-1597222909672-83c9c47e2cdf?w=600&h=450&fit=crop",
-    afterImage: "https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=600&h=450&fit=crop",
+    afterImage: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&h=450&q=85",
   },
   {
     id: "allen-repair",
@@ -280,7 +280,7 @@ export const TEAM = [
     id: "mike-thompson",
     name: "Mike Thompson",
     role: "Founder & CEO",
-    bio: "Mike founded Nexora Roofing with a mission to bring honest, quality roofing to North Texas homeowners.",
+    bio: "Mike founded RidgePeak Roofing with a mission to bring honest, quality roofing to North Texas homeowners.",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop",
     social: { linkedin: "#", twitter: "#" },
   },
@@ -315,7 +315,7 @@ export const TESTIMONIALS = [
     name: "Sarah M.",
     role: "Dallas, TX",
     quote:
-      "Nexora Roofing did an amazing job on our new roof. They were professional, on time, and the quality is top-notch.",
+      "RidgePeak Roofing did an amazing job on our new roof. They were professional, on time, and the quality is top-notch.",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
     rating: 5,
   },
@@ -339,7 +339,7 @@ export const TESTIMONIALS = [
     name: "Mark D.",
     role: "Frisco, TX",
     quote:
-      "From start to finish, Nexora Roofing was amazing. Professional, on time, and the quality of work is outstanding.",
+      "From start to finish, RidgePeak Roofing was amazing. Professional, on time, and the quality of work is outstanding.",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
     rating: 5,
   },
@@ -391,7 +391,7 @@ export const BLOG_POSTS = [
     date: "January 18, 2024",
     author: "Jason Lee",
     category: "Materials",
-    image: "https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&h=400&q=85",
     content:
       "Asphalt is affordable and proven. Metal is more expensive up front but lasts decades longer and shrugs off hail better. The right answer depends on your budget, your home's design, and how long you plan to stay.",
   },
@@ -417,7 +417,7 @@ export const FAQ_ITEMS = [
   {
     question: "Are you licensed and insured?",
     answer:
-      "Absolutely. Nexora Roofing carries full general liability and workers' compensation coverage. Documentation is available on request.",
+      "Absolutely. RidgePeak Roofing carries full general liability and workers' compensation coverage. Documentation is available on request.",
   },
   {
     question: "What payment methods do you accept?",
@@ -608,7 +608,7 @@ export const FAQ_BY_CATEGORY: Record<FaqTabId, { question: string; answer: strin
     {
       question: "What kind of warranty do you offer?",
       answer:
-        "Manufacturer warranties on materials (up to lifetime) plus a 10-year workmanship warranty backed by Nexora.",
+        "Manufacturer warranties on materials (up to lifetime) plus a 10-year workmanship warranty backed by RidgePeak.",
     },
     {
       question: "Is the warranty transferable?",
@@ -743,7 +743,7 @@ export const LEAD_FORM = {
 export const STORM_CHECKLIST = [
   { id: "safety", title: "Ensure Safety", description: "Check for hazards and make sure everyone is safe." },
   { id: "document", title: "Document Damage", description: "Take photos and videos of your roof and property." },
-  { id: "call", title: "Call Nexora Roofing", description: "We'll inspect the damage and guide you through the next steps." },
+  { id: "call", title: "Call RidgePeak Roofing", description: "We'll inspect the damage and guide you through the next steps." },
   { id: "notify", title: "Notify Your Insurance", description: "We'll meet your adjuster and handle the process." },
 ];
 

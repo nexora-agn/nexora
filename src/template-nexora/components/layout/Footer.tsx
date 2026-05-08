@@ -42,10 +42,10 @@ const Footer = () => {
                   </span>
                   <div className="leading-none">
                     <span className="block text-lg font-extrabold tracking-tight">
-                      {(COMPANY.name || "NEXORA").split(" ")[0] || "NEXORA"}
+                      {(COMPANY.name || "RIDGEPEAK ROOFING").split(" ")[0] || "RIDGEPEAK"}
                     </span>
                     <span className="block text-[10px] font-semibold tracking-[0.18em] text-white/70">
-                      {(COMPANY.name || "NEXORA ROOFING").split(" ").slice(1).join(" ") || "ROOFING"}
+                      {(COMPANY.name || "RIDGEPEAK ROOFING").split(" ").slice(1).join(" ") || "ROOFING"}
                     </span>
                   </div>
                 </>

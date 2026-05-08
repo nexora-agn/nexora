@@ -88,10 +88,10 @@ const Header = () => {
                 </span>
                 <div className="leading-none">
                   <span className="block text-lg sm:text-xl font-extrabold tracking-tight text-[hsl(var(--primary))]">
-                    {(COMPANY.name || "NEXORA").split(" ")[0] || "NEXORA"}
+                    {(COMPANY.name || "RIDGEPEAK ROOFING").split(" ")[0] || "RIDGEPEAK"}
                   </span>
                   <span className="block text-[10px] sm:text-xs font-semibold tracking-[0.18em] text-slate-600">
-                    {(COMPANY.name || "NEXORA ROOFING").split(" ").slice(1).join(" ") || "ROOFING"}
+                    {(COMPANY.name || "RIDGEPEAK ROOFING").split(" ").slice(1).join(" ") || "ROOFING"}
                   </span>
                 </div>
               </>

@@ -93,12 +93,12 @@ export const TEMPLATES: TemplateOption[] = [
   },
   {
     id: "nexora",
-    name: "Nexora Roofing",
+    name: "RidgePeak Roofing",
     tagline: "Roofing contractor · navy + orange",
     description:
       "Premium roofing template with 24/7 emergency bar, Google rating header, hero with trust pills, 4-card service grid, why-choose-us with credentials, customer reviews carousel, before/after gallery, and a dark estimate CTA. Best fit for roofing companies and storm-damage specialists.",
     thumbnail:
-      "https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=800&h=520&fit=crop",
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&h=520&q=85",
     accent: "#f97316",
     available: true,
     features: [

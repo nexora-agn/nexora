@@ -176,7 +176,7 @@ const InsuranceClaimsLayout = () => {
           </div>
           <div className="hidden lg:block lg:col-span-3">
             <img
-              src="https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=600&h=600&fit=crop"
+              src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=600&fit=crop"
               alt="Roof inspection"
               className="rounded-md object-cover w-full h-full"
             />
@@ -245,7 +245,7 @@ const RoofInspectionsLayout = () => {
         title="Roof Inspections"
         eyebrowAfter="Know Your Roof. Protect Your Home."
         body="Regular roof inspections help catch small issues before they become costly problems. Our detailed inspections give you peace of mind and help extend the life of your roof."
-        image="https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
         badges={
           <div className="flex flex-wrap gap-3">
             {[
@@ -371,7 +371,7 @@ const GenericServiceLayout = ({ id }: { id: string }) => {
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Services", to: "/services" }, { label: "Not found" }]}
         title="Service not found"
         body="Looks like that service no longer exists. Browse all of our roofing services below."
-        image="https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
       />
     );
   }

@@ -17,7 +17,6 @@ import {
 } from "@template/contexts/SiteContentContext";
 import { mergeContent } from "@/lib/drafts";
 import ScrollToTop from "@template/components/ScrollToTop";
-import LoadingScreen from "@template/components/layout/LoadingScreen";
 import Index from "@template/pages/Index";
 import NotFound from "@template/pages/NotFound";
 import { supabase, isSupabaseConfigured, type Draft } from "@/lib/supabase";
@@ -65,46 +64,14 @@ const AnimatedRoutes = () => {
   );
 };
 
-const TemplateShell = () => {
-  const [bootLoading, setBootLoading] = useState(true);
-
-  useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    let finished = false;
-    const start = performance.now();
-    const minLoaderMs = 350;
-
-    const finishBoot = () => {
-      if (finished) return;
-      finished = true;
-      const elapsed = performance.now() - start;
-      const remaining = Math.max(0, minLoaderMs - elapsed);
-      timeoutId = setTimeout(() => setBootLoading(false), remaining);
-    };
-
-    if (document.readyState === "complete") finishBoot();
-    else {
-      window.addEventListener("load", finishBoot, { once: true });
-      timeoutId = setTimeout(finishBoot, 1200);
-    }
-
-    return () => {
-      window.removeEventListener("load", finishBoot);
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, []);
-
-  if (bootLoading) return <LoadingScreen />;
-
-  return (
-    <HashRouter>
-      <ScrollToTop />
-      <Suspense fallback={<RouteLoading />}>
-        <AnimatedRoutes />
-      </Suspense>
-    </HashRouter>
-  );
-};
+const TemplateShell = () => (
+  <HashRouter>
+    <ScrollToTop />
+    <Suspense fallback={<RouteLoading />}>
+      <AnimatedRoutes />
+    </Suspense>
+  </HashRouter>
+);
 
 const PreviewMessage = ({ title, body }: { title: string; body: string }) => (
   <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-8">

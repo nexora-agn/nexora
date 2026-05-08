@@ -224,7 +224,7 @@ const Contact = () => {
           </div>
           <div className="relative rounded-lg overflow-hidden min-h-[320px]">
             <img
-              src="https://images.unsplash.com/photo-1632759145355-8b8f3ab5ad9c?w=900&h=900&fit=crop"
+              src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&h=900&fit=crop"
               alt="Roofer at work"
               className="absolute inset-0 h-full w-full object-cover"
             />

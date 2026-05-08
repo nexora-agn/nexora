@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SiteContentProvider } from "@/contexts/SiteContentContext";
 import CustomizationPanel from "@/components/CustomizationPanel";
 import ScrollToTop from "@/components/ScrollToTop";
-import LoadingScreen from "@/components/layout/LoadingScreen";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -62,47 +61,15 @@ const AnimatedRoutes = () => {
   );
 };
 
-const AppShell = () => {
-  const [bootLoading, setBootLoading] = useState(true);
-
-  useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    let finished = false;
-    const start = performance.now();
-    const minLoaderMs = 950;
-
-    const finishBoot = () => {
-      if (finished) return;
-      finished = true;
-      const elapsed = performance.now() - start;
-      const remaining = Math.max(0, minLoaderMs - elapsed);
-      timeoutId = setTimeout(() => setBootLoading(false), remaining);
-    };
-
-    if (document.readyState === "complete") finishBoot();
-    else {
-      window.addEventListener("load", finishBoot, { once: true });
-      timeoutId = setTimeout(finishBoot, 1800);
-    }
-
-    return () => {
-      window.removeEventListener("load", finishBoot);
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, []);
-
-  if (bootLoading) return <LoadingScreen />;
-
-  return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <Suspense fallback={<RouteLoading />}>
-        <AnimatedRoutes />
-      </Suspense>
-      <CustomizationPanel />
-    </BrowserRouter>
-  );
-};
+const AppShell = () => (
+  <BrowserRouter>
+    <ScrollToTop />
+    <Suspense fallback={<RouteLoading />}>
+      <AnimatedRoutes />
+    </Suspense>
+    <CustomizationPanel />
+  </BrowserRouter>
+);
 
 const App = () => (
   <HelmetProvider>
