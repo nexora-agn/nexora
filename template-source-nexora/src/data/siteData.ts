@@ -670,6 +670,25 @@ export const SERVICE_DEEP_DIVES: {
   inclusions: string[];
 }[] = [
   {
+    id: "roof-repair",
+    category: "REPAIR",
+    title: "Roof Repair",
+    subtitle: "LEAKS, FLASHING & SHINGLE PATCHING",
+    body: [
+      "From storm-blown tabs to ridge-cap fixes and flashing leaks, we diagnose fast and repair right the first time — no unnecessary full replacements.",
+      "Emergency tarping is available when water is active. We photo-document everything for insurance when wind or hail is involved.",
+    ],
+    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=900&h=700&q=85",
+    inclusions: [
+      "Same-week appointments",
+      "Written repair scope & photos",
+      "Flashing & penetration fixes",
+      "Shingle / tile color matching",
+      "Vent & boot replacements",
+      "Post-repair magnetic sweep",
+    ],
+  },
+  {
     id: "roof-replacement",
     category: "RESIDENTIAL",
     title: "Roof Replacement",
@@ -724,6 +743,25 @@ export const SERVICE_DEEP_DIVES: {
       "Supplemental filing",
       "Re-inspection support",
       "Approved repair completion",
+    ],
+  },
+  {
+    id: "gutter-services",
+    category: "EXTERIOR",
+    title: "Gutter Services",
+    subtitle: "INSTALLATION · REPAIR · CLEANING",
+    body: [
+      "Proper gutters protect fascia, foundations, and landscaping. We install seamless systems, realign sagging runs, and clear debris so water exits away from your home.",
+      "Ask about gutter guards and downspout extensions — especially important after roof replacements when runoff patterns change.",
+    ],
+    image: "https://images.unsplash.com/photo-1597222909672-83c9c47e2cdf?w=900&h=700&fit=crop",
+    inclusions: [
+      "Seamless gutter fabrication",
+      "Downspout reroutes & extensions",
+      "Leak & hanger adjustments",
+      "Seasonal cleaning packages",
+      "Guard & screen options",
+      "Color-matched accessories",
     ],
   },
 ];

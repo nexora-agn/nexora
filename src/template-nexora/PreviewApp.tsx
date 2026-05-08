@@ -35,6 +35,8 @@ const BlogPost = lazy(() => import("@template-nexora/pages/BlogPost"));
 const Team = lazy(() => import("@template-nexora/pages/Team"));
 const Contact = lazy(() => import("@template-nexora/pages/Contact"));
 const FAQ = lazy(() => import("@template-nexora/pages/FAQ"));
+const Reviews = lazy(() => import("@template-nexora/pages/Reviews"));
+const ServiceAreas = lazy(() => import("@template-nexora/pages/ServiceAreas"));
 
 const queryClient = new QueryClient();
 
@@ -62,6 +64,8 @@ const AnimatedRoutes = () => {
         <Route path="/team" element={<Team />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/reviews" element={<Reviews />} />
+        <Route path="/service-areas" element={<ServiceAreas />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
