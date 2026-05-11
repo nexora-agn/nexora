@@ -16,6 +16,8 @@ import Contact from "./pages/Contact.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogArticle from "./pages/BlogArticle.tsx";
 import StartProject from "./pages/StartProject.tsx";
+import PaymentComplete from "./pages/PaymentComplete.tsx";
+import PaymentCancelled from "./pages/PaymentCancelled.tsx";
 
 const SalesDeck = lazy(() => import("./pages/SalesDeck"));
 const WebsiteProgram = lazy(() => import("./pages/WebsiteProgram"));
@@ -80,6 +82,14 @@ const MarketingDocumentTitle = () => {
       document.title = "Shipping policy | Nexora";
       return;
     }
+    if (pathname === "/payment/complete") {
+      document.title = "Payment received | Nexora";
+      return;
+    }
+    if (pathname === "/payment/cancelled") {
+      document.title = "Payment cancelled | Nexora";
+      return;
+    }
     document.title = "Page not found | Nexora";
   }, [pathname]);
   return null;
@@ -127,6 +137,8 @@ const App = () => (
               <Route path="/shipping-policy" element={<ShippingPolicy />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/start" element={<StartProject />} />
+              <Route path="/payment/complete" element={<PaymentComplete />} />
+              <Route path="/payment/cancelled" element={<PaymentCancelled />} />
               <Route path="/sales-deck" element={<SalesDeck />} />
               <Route path="/website-program" element={<WebsiteProgram />} />
               <Route path="/blog" element={<Blog />} />

@@ -244,7 +244,7 @@ create policy "assets_owner_delete"
 
 -- project_requests: inbound project inquiries from the public marketing "start project" wizard.
 -- `payload` is the full form submission (JSON). Expected keys include contact fields, plan,
--- payment_preference (card | paypal | stripe | paysera), and either new-website or migration fields—see
+-- payment_preference (package v2: paysera only; legacy: card | paypal | stripe | paysera), and either new-website or migration fields—see
 -- `NewWebsiteRequestPayload` / `MigrateRequestPayload` in src/lib/supabase.ts. Do not drop
 -- or truncate: staff rely on the admin dashboard to read the complete payload.
 create table if not exists public.project_requests (

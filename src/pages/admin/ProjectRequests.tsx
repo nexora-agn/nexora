@@ -4,10 +4,6 @@ import { toast } from "sonner";
 import AdminShell from "./AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +20,6 @@ import {
 import { onboardingTimelineLabel, PREFERRED_FEATURE_OPTIONS } from "@/lib/projectOnboardingConstants";
 import { planLabelById } from "@/lib/pricingPlans";
 import { createPayseraPaymentLink } from "@/lib/createPayseraPaymentLink";
-import { fetchPayseraPaymentMethods } from "@/lib/fetchPayseraPaymentMethods";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
@@ -48,9 +43,6 @@ const fmtDateTime = (iso: string) =>
 const typeLabel = (t: ProjectRequest["request_type"]) => (t === "new_website" ? "New website" : "Migration");
 
 const featureLabel = (id: string) => PREFERRED_FEATURE_OPTIONS.find(f => f.id === id)?.label ?? id;
-
-/** RadioGroup value meaning “do not pass payment_details.key”. */
-const PAYSERA_METHOD_ANY = "__paysera_any__";
 
 function cardTitle(req: ProjectRequest): string {
   if (isPackageOnboardingPayload(req.payload)) {
@@ -299,14 +291,6 @@ const ProjectRequests = () => {
   const [detail, setDetail] = useState<ProjectRequest | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [payseraBusyId, setPayseraBusyId] = useState<string | null>(null);
-  const [payseraMethodsBusy, setPayseraMethodsBusy] = useState(false);
-  const [payseraMethodsError, setPayseraMethodsError] = useState<string | null>(null);
-  const [payseraMethodItems, setPayseraMethodItems] = useState<
-    { key: string; title: string; type: string; flow: string }[] | null
-  >(null);
-  const [payseraMethodKey, setPayseraMethodKey] = useState(PAYSERA_METHOD_ANY);
-  const [payseraFilterAmount, setPayseraFilterAmount] = useState("");
-  const [payseraFilterCurrency, setPayseraFilterCurrency] = useState("EUR");
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -328,11 +312,6 @@ const ProjectRequests = () => {
   useEffect(() => {
     reload();
   }, [reload]);
-
-  useEffect(() => {
-    setPayseraMethodKey(PAYSERA_METHOD_ANY);
-    setPayseraMethodsError(null);
-  }, [detail?.id]);
 
   const byStatus = useMemo(() => {
     const map: Record<ProjectRequestStatus, ProjectRequest[]> = {
@@ -393,52 +372,19 @@ const ProjectRequests = () => {
     void move(id, status);
   };
 
-  const reloadPayseraMethods = async () => {
-    setPayseraMethodsBusy(true);
-    setPayseraMethodsError(null);
-    try {
-      const { data } = await supabase.auth.getSession();
-      const token = data.session?.access_token;
-      const amtRaw = payseraFilterAmount.trim();
-      const amountNum = amtRaw === "" ? undefined : Number.parseInt(amtRaw, 10);
-      const filters =
-        amountNum != null &&
-        Number.isFinite(amountNum) &&
-        amountNum >= 1 &&
-        payseraFilterCurrency.trim().length === 3
-          ? { amount: amountNum, currency: payseraFilterCurrency.trim().toUpperCase() }
-          : undefined;
-      const result = await fetchPayseraPaymentMethods(token, filters);
-      if (result.ok === true) {
-        setPayseraMethodItems(
-          result.items.map(i => ({ key: i.key, title: i.title, type: i.type, flow: i.flow })),
-        );
-      } else {
-        setPayseraMethodsError(result.error ?? "Could not load methods.");
-        setPayseraMethodItems(null);
-      }
-    } finally {
-      setPayseraMethodsBusy(false);
-    }
-  };
-
   const openPayseraCheckout = async (req: ProjectRequest) => {
     setPayseraBusyId(req.id);
     try {
       const { data } = await supabase.auth.getSession();
       const token = data.session?.access_token;
-      const key =
-        payseraMethodKey === PAYSERA_METHOD_ANY ? "" : payseraMethodKey.trim();
       const result = await createPayseraPaymentLink(token, {
         projectRequestId: req.id,
-        ...(key ? { payment_details: { key } } : {}),
       });
       if (result.ok !== true) {
-        toast.error(result.error ?? "Could not create Paysera payment link.");
+        toast.error(result.error ?? "Could not open Paysera checkout.");
         return;
       }
-      window.open(result.payment_URL, "_blank", "noopener,noreferrer");
-      toast.success("Paysera checkout opened in a new tab.");
+      window.location.assign(result.payment_URL);
     } finally {
       setPayseraBusyId(null);
     }
@@ -593,98 +539,14 @@ const ProjectRequests = () => {
               <div className="rounded-lg border border-border/70 bg-muted/15 px-3 py-3 space-y-3">
                 <p className="text-xs font-medium text-foreground">Paysera checkout</p>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Creates a Paysera payment link using this request&apos;s UUID as <code className="text-foreground">order_id</code> and fills
-                  payer details from the submission. Configure{" "}
-                  <code className="text-foreground">PAYSERA_ACCESS_TOKEN</code> and optionally{" "}
-                  <code className="text-foreground">PAYSERA_PAYMENT_AMOUNT_MINOR</code> on the server.
+                  Builds the signed <code className="text-foreground">https://www.paysera.com/pay/</code> URL and{" "}
+                  <strong>redirects this browser</strong> there (classic integration — no separate payment API call). Order id is this
+                  request&apos;s UUID. Configure <code className="text-foreground">PAYSERA_PROJECT_ID</code>,{" "}
+                  <code className="text-foreground">PAYSERA_SIGN_PASSWORD</code>, and{" "}
+                  <code className="text-foreground">PAYSERA_PAYMENT_AMOUNT_MINOR</code> on the server. Paid callbacks hit{" "}
+                  <code className="text-foreground">/api/paysera-callback</code> and move <strong>New</strong> → <strong>In progress</strong>{" "}
+                  when Paysera reports paid.
                 </p>
-                <div className="space-y-2 rounded-md border border-border/60 bg-background/40 p-3">
-                  <p className="text-[11px] font-medium text-foreground">Payment methods (Paysera API)</p>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">
-                    Leave amount empty to list all methods. With both amount (minor units) and currency, results are filtered per Paysera limits.
-                  </p>
-                  <div className="flex flex-wrap items-end gap-2">
-                    <div className="space-y-1">
-                      <Label htmlFor="paysera-amt" className="text-[10px] text-muted-foreground">
-                        Amount (minor)
-                      </Label>
-                      <Input
-                        id="paysera-amt"
-                        className="h-8 w-[7.5rem] text-xs"
-                        inputMode="numeric"
-                        placeholder="e.g. 2500"
-                        value={payseraFilterAmount}
-                        onChange={e => setPayseraFilterAmount(e.target.value.replace(/\D/g, ""))}
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <Label htmlFor="paysera-cur" className="text-[10px] text-muted-foreground">
-                        Currency
-                      </Label>
-                      <Input
-                        id="paysera-cur"
-                        className="h-8 w-[4.5rem] text-xs uppercase"
-                        maxLength={3}
-                        placeholder="EUR"
-                        value={payseraFilterCurrency}
-                        onChange={e => setPayseraFilterCurrency(e.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3))}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      className="h-8"
-                      disabled={payseraMethodsBusy}
-                      onClick={() => void reloadPayseraMethods()}
-                    >
-                      {payseraMethodsBusy ? "Loading…" : "Load methods"}
-                    </Button>
-                  </div>
-                  {payseraMethodsError && (
-                    <p className="text-[11px] text-destructive">{payseraMethodsError}</p>
-                  )}
-                  {payseraMethodItems && payseraMethodItems.length > 0 && (
-                    <div className="space-y-2 pt-1">
-                      <p className="text-[10px] font-medium text-muted-foreground">Pre-select method (optional)</p>
-                      <ScrollArea className="h-[200px] w-full rounded-md border border-border/60 bg-muted/20 pr-2">
-                        <RadioGroup
-                          value={payseraMethodKey}
-                          onValueChange={setPayseraMethodKey}
-                          className="gap-0 p-2"
-                        >
-                          <label
-                            htmlFor="paysera-method-any"
-                            className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-muted/50"
-                          >
-                            <RadioGroupItem
-                              value={PAYSERA_METHOD_ANY}
-                              id="paysera-method-any"
-                              className="shrink-0"
-                            />
-                            <span className="text-muted-foreground">No pre-selection (customer chooses)</span>
-                          </label>
-                          {payseraMethodItems.map((m, mi) => (
-                            <label
-                              key={m.key}
-                              htmlFor={`paysera-m-${mi}`}
-                              className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-muted/50"
-                            >
-                              <RadioGroupItem value={m.key} id={`paysera-m-${mi}`} className="shrink-0" />
-                              <span className="min-w-0 flex-1">
-                                <span className="font-medium text-foreground">{m.title}</span>
-                                <span className="text-muted-foreground">
-                                  {" "}
-                                  · {m.type} · {m.flow}
-                                </span>
-                              </span>
-                            </label>
-                          ))}
-                        </RadioGroup>
-                      </ScrollArea>
-                    </div>
-                  )}
-                </div>
                 <Button
                   type="button"
                   size="sm"
@@ -692,7 +554,7 @@ const ProjectRequests = () => {
                   disabled={payseraBusyId === detail.id}
                   onClick={() => void openPayseraCheckout(detail)}
                 >
-                  {payseraBusyId === detail.id ? "Creating link…" : "Open Paysera payment link"}
+                  {payseraBusyId === detail.id ? "Redirecting…" : "Go to Paysera checkout"}
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 pt-2">

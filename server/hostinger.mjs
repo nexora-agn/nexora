@@ -13,6 +13,8 @@ import { fileURLToPath } from "node:url";
 
 import { loadProductionEnv } from "./load-production-env.mjs";
 import { handleSendFormEmails } from "./form-email-resend.mjs";
+import { handleCreatePayseraPaymentLink } from "./paysera-payment-link.mjs";
+import { handlePayseraCallback } from "./paysera-callback.mjs";
 import {
   resolveEnv,
   authenticateRequest,
@@ -104,6 +106,41 @@ function parseBody(req) {
     });
     req.on("error", reject);
   });
+}
+
+function readRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on("data", c => chunks.push(c));
+    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+    req.on("error", reject);
+  });
+}
+
+function parseUrlQuery(urlStr) {
+  const raw = urlStr || "";
+  const i = raw.indexOf("?");
+  if (i < 0) return {};
+  try {
+    const u = new URL(raw.slice(i), "http://nexora.local");
+    /** @type {Record<string, string>} */
+    const o = {};
+    u.searchParams.forEach((v, k) => {
+      o[k] = v;
+    });
+    return o;
+  } catch {
+    return {};
+  }
+}
+
+function sendText(res, code, body, contentType = "text/plain; charset=utf-8") {
+  res.writeHead(code, {
+    "Content-Type": contentType,
+    "Content-Length": Buffer.byteLength(body),
+    "Access-Control-Allow-Origin": "*",
+  });
+  res.end(body);
 }
 
 // ---------------------------------------------------------------------------
@@ -216,6 +253,55 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       console.error("[hostinger] send-form-emails error:", err);
       return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
+    }
+  }
+
+  // ── POST /api/start-project-paysera — save request + signed Paysera redirect URL ──
+  if (pathname === "/api/start-project-paysera" && method === "POST") {
+    try {
+      const body = await parseBody(req);
+      const { handlePublicStartProjectPayseraRedirect } = await import("./public-start-project-paysera.mjs");
+      const result = await handlePublicStartProjectPayseraRedirect(body, process.env);
+      const code = result.status ?? (result.ok ? 200 : 500);
+      return sendJson(res, code, result);
+    } catch (err) {
+      console.error("[hostinger] start-project-paysera error:", err);
+      return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
+    }
+  }
+
+  // ── POST /api/paysera-payment-link ───────────────────────────────────────
+  if (pathname === "/api/paysera-payment-link" && method === "POST") {
+    try {
+      const body = await parseBody(req);
+      const auth = typeof req.headers.authorization === "string" ? req.headers.authorization : undefined;
+      const result = await handleCreatePayseraPaymentLink(body, auth, process.env);
+      const code = result.status ?? (result.ok ? 200 : 500);
+      return sendJson(res, code, result);
+    } catch (err) {
+      console.error("[hostinger] paysera-payment-link error:", err);
+      return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
+    }
+  }
+
+  // ── GET/POST /api/paysera-callback ──────────────────────────────────────
+  if (pathname === "/api/paysera-callback" && (method === "GET" || method === "POST")) {
+    try {
+      const query = parseUrlQuery(req.url || "");
+      /** @type {Record<string, string>} */
+      let form = {};
+      if (method === "POST") {
+        const raw = await readRawBody(req);
+        const ct = String(req.headers["content-type"] || "").toLowerCase();
+        if (ct.includes("application/x-www-form-urlencoded") && raw.trim()) {
+          form = Object.fromEntries(new URLSearchParams(raw));
+        }
+      }
+      const result = await handlePayseraCallback({ query, form, env: process.env });
+      return sendText(res, result.status, result.body, result.contentType);
+    } catch (err) {
+      console.error("[hostinger] paysera-callback error:", err);
+      return sendText(res, 500, "FAIL");
     }
   }
 

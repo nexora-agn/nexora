@@ -9,23 +9,22 @@ function payseraPaymentLinkEndpoint(): string {
 
 export type CreatePayseraPaymentLinkPayload = {
   projectRequestId: string;
-  /** Amount in minor units (e.g. cents). Omit to use server default `PAYSERA_PAYMENT_AMOUNT_MINOR`. */
-  purchase?: { amount?: number };
-  lifetime?: number;
-  name?: string;
-  experience?: { language?: string; payment_flow?: string };
-  payment_details?: { key?: string; purpose?: string; country_code?: string };
-  metadata?: Record<string, unknown>;
+  /** Amount in minor units (cents). Omit to use server default `PAYSERA_PAYMENT_AMOUNT_MINOR`. */
+  amount?: number;
+  currency?: string;
+  /** Paysera payment method key (optional). */
+  payment?: string;
+  lang?: string;
 };
 
 export type CreatePayseraPaymentLinkOk = {
   ok: true;
   payment_URL: string;
-  link_id: string | null;
   order_id: string;
+  link_id: string | null;
   expired_at: number | null;
   created_at: number | null;
-  purchase?: { amount: number };
+  purchase?: { amount: number; currency?: string };
 };
 
 export type CreatePayseraPaymentLinkFail = {
@@ -34,7 +33,7 @@ export type CreatePayseraPaymentLinkFail = {
 };
 
 /**
- * Calls the server-side Paysera Payment Link endpoint (OAuth token stays on the server).
+ * Calls the server-side Paysera classic checkout endpoint (credentials stay on the server).
  */
 export async function createPayseraPaymentLink(
   accessToken: string | undefined,

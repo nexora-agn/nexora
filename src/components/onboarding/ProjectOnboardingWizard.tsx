@@ -1,36 +1,23 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft,
-  Check,
-  CheckCircle2,
-  CreditCard,
-  Globe,
-  Landmark,
-  Palette,
-  Sparkles,
-  Upload,
-} from "lucide-react";
+import { ArrowLeft, Check, Globe, Landmark, Palette, Sparkles, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { applyHexColor, extractLogoColors, isValidHex } from "@/lib/extractLogoBrandColors";
-import { isSupabaseConfigured } from "@/lib/supabase";
 import { PACKAGE_LOGO_MAX_BYTES, PACKAGE_ONBOARD_LIMITS } from "@/lib/projectOnboardingConstants";
-import { submitProjectRequest } from "@/lib/projectRequests";
+import { submitStartProjectAndGetPayseraRedirect } from "@/lib/submitStartProjectPaysera";
 import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
 import type { MarketingPlanId } from "@/lib/pricingPlans";
 import type { PackageOnboardingPayload, ProjectRequestType } from "@/lib/supabase";
-import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
 import { PlanCardBody, PlanPopularBadge } from "@/components/landing/PlanCardBody";
 import { MARKETING_PLANS, PLAN_IDS } from "@/lib/pricingPlans";
 import { toast } from "sonner";
 
-type Step = 1 | 2 | 3 | 4 | 5;
+type Step = 1 | 2 | 3 | 4;
 
 /** Same defaults as homepage `CustomizationPreview` live panel. */
 const DEFAULT_PRIMARY = "#0a0a0a";
@@ -107,7 +94,6 @@ const ProjectOnboardingWizard = () => {
   const [step, setStep] = useState<Step>(1);
   const [requestType, setRequestType] = useState<ProjectRequestType | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<MarketingPlanId | null>(() => readInitialPlanFromLocation());
-  const [paymentPreference, setPaymentPreference] = useState<"stripe" | "paypal" | "paysera" | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -179,7 +165,6 @@ const ProjectOnboardingWizard = () => {
     setAdditionalNotes("");
     setLogoPayload(null);
     setLogoFileLabel("");
-    setPaymentPreference(null);
     setFieldErrors({});
     setSelectedPlan(null);
     setRequestType(null);
@@ -311,20 +296,6 @@ const ProjectOnboardingWizard = () => {
     return Object.keys(e).length === 0;
   };
 
-  const runValidatePayment = (): boolean => {
-    if (!paymentPreference) {
-      setFieldErrors(prev => ({ ...prev, payment: "Choose a payment option to continue." }));
-      return false;
-    }
-    setFieldErrors(prev => {
-      if (!prev.payment) return prev;
-      const next = { ...prev };
-      delete next.payment;
-      return next;
-    });
-    return true;
-  };
-
   const goToPayment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!runValidatePlan()) return;
@@ -348,12 +319,6 @@ const ProjectOnboardingWizard = () => {
       toast.error("Upload your logo before continuing.");
       return;
     }
-    if (!isSupabaseConfigured) {
-      toast.error("This form is not connected yet. Please try again later.");
-      return;
-    }
-    if (!runValidatePayment()) return;
-
     const isMigration = requestType === "migrate";
 
     // For migrations, the URL is the source of truth; brand assets and copy
@@ -378,32 +343,18 @@ const ProjectOnboardingWizard = () => {
       preferred_domain: isMigration ? undefined : preferredDomain.trim() || undefined,
       additional_notes: additionalNotes.trim(),
       selected_plan: selectedPlan,
-      payment_preference: paymentPreference!,
+      payment_preference: "paysera",
     };
 
     setSubmitting(true);
     try {
-      await submitProjectRequest({ request_type: requestType, payload });
-
-      try {
-        await sendNexoraFormEmail({
-          formType: "start_project",
-          requestType,
-          payload,
-        });
-      } catch (emailErr) {
-        console.error(emailErr);
-        toast.warning(
-          `Your request was saved, but confirmation emails could not be sent. We'll still follow up at ${payload.contact_email}.`,
-        );
-      }
-
-      setStep(5);
-      setSearchParams({}, { replace: true });
-      resetFormFields();
+      const { payment_URL } = await submitStartProjectAndGetPayseraRedirect({
+        requestType,
+        payload,
+      });
+      window.location.assign(payment_URL);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong. Please try again.");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -457,8 +408,7 @@ const ProjectOnboardingWizard = () => {
 
   return (
     <div className="w-full min-w-0">
-      {step < 5 && (
-        <div className="mb-8 flex flex-wrap items-center gap-2" aria-hidden>
+      <div className="mb-8 flex flex-wrap items-center gap-2" aria-hidden>
           {[1, 2, 3, 4].map(n => (
             <div key={n} className="flex items-center gap-2 sm:gap-3">
               <div
@@ -480,7 +430,6 @@ const ProjectOnboardingWizard = () => {
             {PROGRESS_LABELS[step - 1]}
           </span>
         </div>
-      )}
 
       <AnimatePresence mode="wait">
         {step === 1 && (
@@ -959,72 +908,20 @@ const ProjectOnboardingWizard = () => {
             <div className="rounded-2xl border border-border/70 bg-card/50 p-6 shadow-sm sm:p-8 space-y-3">
               <Label className="text-foreground">Payment</Label>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Choose how you’d like to pay. After you submit we send a secure link for your selected method—once payment lands, we enter
-                full production.
+                Checkout is handled on{" "}
+                <span className="font-medium text-foreground inline-flex items-center gap-1.5">
+                  <Landmark className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                  Paysera
+                </span>
+                . When you submit, your browser will go straight to the secure Paysera payment page. After payment is confirmed we move ahead with
+                production.
               </p>
-              <div
-                onBlur={e =>
-                  !e.currentTarget.contains(e.relatedTarget as Node | null) &&
-                  setMergedFieldError("payment", !paymentPreference ? "Choose Stripe, PayPal, or Paysera." : undefined)
-                }
-              >
-                <RadioGroup
-                  value={paymentPreference ?? ""}
-                  onValueChange={v => {
-                    setPaymentPreference(v as "stripe" | "paypal" | "paysera");
-                    clearError("payment");
-                  }}
-                  className={cn("flex flex-col gap-3 sm:gap-4", fieldErrors.payment && "rounded-md p-1 ring-1 ring-destructive/50")}
-                >
-                  <label className="flex w-full max-w-md cursor-pointer items-center gap-3 rounded-lg border border-border/70 bg-background/40 px-3 py-2.5">
-                    <RadioGroupItem value="stripe" id="pay-stripe-pkg" className="shrink-0" />
-                    <span className="flex min-w-0 flex-1 items-center gap-2 font-medium">
-                      <CreditCard className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
-                      Card (Stripe)
-                    </span>
-                  </label>
-                  <label className="flex w-full max-w-md cursor-pointer items-center gap-3 rounded-lg border border-border/70 bg-background/40 px-3 py-2.5">
-                    <RadioGroupItem value="paypal" id="pay-paypal-pkg" className="shrink-0" />
-                    <span className="font-normal">PayPal</span>
-                  </label>
-                  <label className="flex w-full max-w-md cursor-pointer items-center gap-3 rounded-lg border border-border/70 bg-background/40 px-3 py-2.5">
-                    <RadioGroupItem value="paysera" id="pay-paysera-pkg" className="shrink-0" />
-                    <span className="flex min-w-0 flex-1 items-center gap-2 font-medium">
-                      <Landmark className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
-                      Paysera
-                    </span>
-                  </label>
-                </RadioGroup>
-              </div>
-              <FieldError message={fieldErrors.payment} />
             </div>
 
             <Button type="submit" className="h-11 rounded-lg px-8 font-semibold" disabled={submitting}>
-              {submitting ? "Sending…" : "Submit request & request payment"}
+              {submitting ? "Redirecting to Paysera…" : "Submit & continue to payment"}
             </Button>
           </motion.form>
-        )}
-
-        {step === 5 && (
-          <motion.div
-            key="done"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="mx-auto flex w-full max-w-lg flex-col items-center rounded-2xl border border-border/70 bg-card/40 px-6 py-14 text-center shadow-sm"
-            role="status"
-          >
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600/10 text-emerald-700">
-              <CheckCircle2 className="h-7 w-7" strokeWidth={2} aria-hidden />
-            </div>
-            <h2 className="mt-6 text-xl font-semibold tracking-tight text-foreground">Request received</h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Check your inbox. You’ll get a secure payment link for the method you picked—once that’s settled, production continues.
-            </p>
-            <Button type="button" variant="outline" className="mt-10 h-11 rounded-lg px-8 font-semibold" onClick={startOver}>
-              Start another request
-            </Button>
-          </motion.div>
         )}
       </AnimatePresence>
     </div>

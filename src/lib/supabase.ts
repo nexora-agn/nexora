@@ -111,7 +111,7 @@ export type NewWebsiteRequestPayload = {
   additional_notes: string;
   /** Marketing plan the user selected before the rest of the flow. */
   selected_plan: "starter" | "growth" | "custom";
-  /** How they want to pay once checkout is available. `card` is legacy; prefer `stripe` for new card checkouts. */
+  /** How they want to pay once checkout is available (legacy wizard values). Package onboarding v2 uses Paysera only. */
   payment_preference: "card" | "paypal" | "stripe" | "paysera";
 };
 
@@ -158,7 +158,7 @@ export type PackageOnboardingPayload = {
   /** New flow only — what the client wants their domain to be (e.g. acme.com). */
   preferred_domain?: string;
   selected_plan: "starter" | "growth" | "custom";
-  payment_preference: "card" | "paypal" | "stripe" | "paysera";
+  payment_preference: "paysera";
 };
 
 export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload | PackageOnboardingPayload;
