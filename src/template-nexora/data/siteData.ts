@@ -444,6 +444,8 @@ export const FAQ_ITEMS = [
 export const NAV_LINKS = [
   { label: "Home", path: "/" },
   { label: "Roofing Services", path: "/services" },
+  { label: "Storm Damage", path: "/services/storm-damage" },
+  { label: "Insurance Claims", path: "/services/insurance-claims" },
   { label: "About Us", path: "/about" },
   { label: "Reviews", path: "/reviews" },
   { label: "Service Areas", path: "/service-areas" },
