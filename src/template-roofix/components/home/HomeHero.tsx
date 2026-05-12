@@ -1,112 +1,86 @@
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
-  Phone,
-  Star,
   ShieldCheck,
   Award,
-  Clock,
+  Users,
   BadgeCheck,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 
-const trustIconMap = {
-  Clock,
-  Award,
-  ShieldCheck,
-  BadgeCheck,
-} as const;
+const iconMap = { ShieldCheck, Award, Users, BadgeCheck };
 
-type TrustPill = {
-  id: string;
-  label: string;
-  sub: string;
-  icon: keyof typeof trustIconMap | string;
-};
-
+/**
+ * Roofix (sleek premium metallic) — full-section dark metallic hero.
+ * NO image hero (intentional: the only template with no photographic hero
+ * background). Instead a 3-stop radial gradient + grid pattern. Left side
+ * has a gradient-text headline and a single squared CTA. Right side is a
+ * bento-grid of glass cards showing live stats and credentials.
+ */
 const HomeHero = () => {
-  const {
-    homeHero: HOME_HERO,
-    company: COMPANY,
-    siteTop: SITE_TOP,
-  } = useSiteContent();
-  const trustPills: TrustPill[] =
-    (HOME_HERO as { trustPills?: TrustPill[] }).trustPills ?? [
-      { id: "ontime", label: "On Time", sub: "On Budget", icon: "Clock" },
-      { id: "premium", label: "Premium", sub: "Quality", icon: "Award" },
-      {
-        id: "licensed",
-        label: "Licensed",
-        sub: "& Insured",
-        icon: "ShieldCheck",
-      },
-      {
-        id: "satisfaction",
-        label: "Satisfaction",
-        sub: "Guaranteed",
-        icon: "BadgeCheck",
-      },
-    ];
-  const eyebrow =
-    (HOME_HERO as { eyebrow?: string }).eyebrow ||
-    "FULL-SERVICE CONSTRUCTION COMPANY";
-  const cleanPhone = (COMPANY.phone || "").replace(/[^\d+]/g, "");
-  const ratingValue =
-    (SITE_TOP as { ratingValue?: string }).ratingValue || "4.9";
-  const ratingCount =
-    (SITE_TOP as { ratingCount?: string }).ratingCount || "260+ Reviews";
+  const { homeHero: HOME_HERO } = useSiteContent();
+
+  const trustPills =
+    (HOME_HERO as { trustPills?: { id: string; label: string; sub: string; icon: keyof typeof iconMap }[] })
+      .trustPills ?? [];
 
   return (
-    <section className="relative overflow-hidden bg-primary text-primary-foreground">
-      {/* Background image with dark overlay */}
-      <div className="absolute inset-0">
-        <img
-          src={HOME_HERO.image}
-          alt=""
-          className="h-full w-full object-cover object-center"
-          loading="eager"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/35"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"
-        />
-      </div>
-
-      {/* Decorative grid */}
+    <section className="relative isolate tpl-metallic text-white overflow-hidden">
+      {/* Grid pattern */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage:
-            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
+            "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+        }}
+      />
+      {/* Subtle moving glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full blur-3xl opacity-30"
+        style={{
+          background:
+            "radial-gradient(circle, hsl(217 91% 60% / 0.55), transparent 60%)",
         }}
       />
 
-      <div className="container-custom relative px-4 md:px-8 py-20 md:py-28 lg:py-32">
-        <div className="grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7">
-            <p className="text-xs sm:text-sm font-bold tracking-[0.22em] text-secondary mb-5">
-              {eyebrow}
-            </p>
+      <div className="container-custom relative px-4 md:px-8 pt-20 md:pt-28 pb-20 md:pb-32">
+        {/* Eyebrow chip */}
+        <div className="inline-flex items-center gap-2 rounded-full tpl-glass px-4 py-1.5 text-[11px] font-semibold tracking-[0.22em] uppercase">
+          <Sparkles className="h-3.5 w-3.5 text-secondary" />
+          {(HOME_HERO as { eyebrow?: string }).eyebrow ||
+            "Premium Roofing — Built To Last"}
+        </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-black tracking-tight leading-[1.02] uppercase">
+        <div className="mt-8 grid lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+          {/* Headline + CTA */}
+          <div className="lg:col-span-7">
+            <h1
+              className="text-5xl md:text-6xl lg:text-[88px] font-bold leading-[0.95] tracking-[-0.02em]"
+              style={{ fontFamily: "var(--tpl-font-display)" }}
+            >
               {HOME_HERO.headlineBefore}
+              <br />
+              <span className="tpl-gradient-text">
+                {HOME_HERO.headlineHighlight}
+              </span>
               {HOME_HERO.headlineAfter && (
                 <>
                   <br />
-                  {HOME_HERO.headlineAfter}{" "}
+                  <span className="text-white/85">
+                    {HOME_HERO.headlineAfter}
+                  </span>
                 </>
-              )}{" "}
-              <span className="text-secondary">{HOME_HERO.headlineHighlight}</span>
+              )}
             </h1>
 
-            <p className="mt-7 text-base md:text-lg text-white/85 max-w-xl leading-relaxed">
+            <div className="tpl-rule-gradient mt-8 w-32" />
+
+            <p className="mt-6 max-w-xl text-base md:text-lg text-white/75 leading-relaxed">
               {HOME_HERO.body}
             </p>
 
@@ -114,7 +88,7 @@ const HomeHero = () => {
               <Button
                 asChild
                 size="lg"
-                className="rounded-md h-14 px-8 text-sm font-extrabold tracking-wider bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-xl shadow-black/30 group"
+                className="rounded-[var(--radius)] h-14 px-7 text-sm font-bold tracking-wider bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-[0_18px_40px_-12px_hsl(217_91%_60%/0.55)] group"
               >
                 <Link
                   to={HOME_HERO.primaryCta.to}
@@ -124,92 +98,77 @@ const HomeHero = () => {
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="rounded-md h-14 px-8 text-sm font-extrabold tracking-wider bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary"
+              <Link
+                to={HOME_HERO.secondaryCta.to}
+                className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-white/80 hover:text-white transition-colors"
               >
-                <a
-                  href={cleanPhone ? `tel:${cleanPhone}` : HOME_HERO.secondaryCta.to}
-                  className="inline-flex items-center gap-2"
-                >
-                  <Phone className="h-4 w-4" />
-                  {HOME_HERO.secondaryCta.label}
-                </a>
-              </Button>
+                {HOME_HERO.secondaryCta.label}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
+          </div>
 
-            {/* Trust pills */}
-            <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5">
-              {trustPills.map(pill => {
-                const Icon =
-                  trustIconMap[pill.icon as keyof typeof trustIconMap] ||
-                  ShieldCheck;
+          {/* Bento glass-card grid */}
+          <div className="lg:col-span-5">
+            <div className="grid grid-cols-6 gap-3">
+              {/* Big spec card */}
+              <div className="col-span-6 tpl-glass rounded-[var(--radius)] p-6">
+                <p className="text-[10px] tracking-[0.32em] uppercase text-secondary font-bold">
+                  Live · This Month
+                </p>
+                <p
+                  className="mt-3 text-6xl md:text-7xl font-bold tpl-gradient-text leading-none"
+                  style={{ fontFamily: "var(--tpl-font-display)" }}
+                >
+                  4.9
+                </p>
+                <p className="mt-3 text-xs text-white/65">
+                  Average rating across 320+ verified reviews
+                </p>
+              </div>
+
+              {/* Small specs */}
+              <div className="col-span-3 tpl-glass rounded-[var(--radius)] p-5">
+                <p className="text-[10px] tracking-[0.32em] uppercase text-white/55 font-bold">
+                  Roofs Done
+                </p>
+                <p
+                  className="mt-2 text-3xl font-bold text-white"
+                  style={{ fontFamily: "var(--tpl-font-display)" }}
+                >
+                  2,500+
+                </p>
+              </div>
+              <div className="col-span-3 tpl-glass rounded-[var(--radius)] p-5">
+                <p className="text-[10px] tracking-[0.32em] uppercase text-white/55 font-bold">
+                  Warranty
+                </p>
+                <p
+                  className="mt-2 text-3xl font-bold text-white"
+                  style={{ fontFamily: "var(--tpl-font-display)" }}
+                >
+                  Lifetime
+                </p>
+              </div>
+
+              {/* Pills row */}
+              {trustPills.slice(0, 2).map(pill => {
+                const Icon = iconMap[pill.icon] || ShieldCheck;
                 return (
                   <div
                     key={pill.id}
-                    className="flex items-center gap-3 min-w-0"
+                    className="col-span-3 tpl-glass rounded-[var(--radius)] p-4 flex items-center gap-3"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-secondary ring-1 ring-white/15">
-                      <Icon className="h-5 w-5" strokeWidth={1.8} />
+                    <span className="flex h-9 w-9 items-center justify-center rounded-md bg-secondary/20 text-secondary">
+                      <Icon className="h-4 w-4" strokeWidth={2} />
                     </span>
-                    <div className="leading-tight min-w-0">
-                      <p className="text-sm font-bold truncate">{pill.label}</p>
-                      <p className="text-[11px] text-white/70 truncate">
-                        {pill.sub}
-                      </p>
+                    <div className="leading-tight">
+                      <p className="text-xs font-bold text-white">{pill.label}</p>
+                      <p className="text-[10px] text-white/55">{pill.sub}</p>
                     </div>
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Floating Google review card */}
-          <div className="hidden lg:block lg:col-span-5">
-            <div className="ml-auto max-w-sm rounded-xl bg-white text-foreground shadow-2xl shadow-black/40 p-5 border border-border">
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-border shadow-sm">
-                  <span className="text-xl font-black bg-gradient-to-br from-blue-500 via-yellow-500 to-red-500 bg-clip-text text-transparent">
-                    G
-                  </span>
-                </span>
-                <div className="leading-tight">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-2xl font-black">{ratingValue}</span>
-                    <div className="flex">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-4 w-4 fill-secondary text-secondary"
-                          aria-hidden
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Based on {ratingCount}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 flex -space-x-2">
-                {[
-                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop",
-                ].map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
-                    className="h-9 w-9 rounded-full ring-2 ring-white object-cover"
-                    loading="lazy"
-                  />
-                ))}
-              </div>
             </div>
           </div>
         </div>

@@ -1,118 +1,122 @@
 import { Link } from "react-router-dom";
 import {
-  Building2,
   Home,
-  HardHat,
-  DraftingCompass,
-  Hammer,
-  Compass,
-  Palette,
-  Ruler,
-  Leaf,
   Wrench,
-  ClipboardList,
+  Hammer,
   ClipboardCheck,
-  Paintbrush,
-  CloudLightning,
   Droplets,
+  CloudLightning,
   Zap,
   PanelTop,
-  Shield,
-  ShieldCheck,
-  Award,
-  ArrowRight,
+  Building2,
+  ArrowUpRight,
 } from "lucide-react";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 
 const iconMap = {
-  Building2,
   Home,
-  HardHat,
-  DraftingCompass,
-  Hammer,
-  Compass,
-  Palette,
-  Ruler,
-  Leaf,
   Wrench,
-  ClipboardList,
+  Hammer,
   ClipboardCheck,
-  Paintbrush,
-  CloudLightning,
   Droplets,
+  CloudLightning,
   Zap,
   PanelTop,
-  Shield,
-  ShieldCheck,
-  Award,
+  Building2,
 } as const;
 
-/** Convert an all-caps title (e.g. "DESIGN-BUILD SERVICES") to display form. */
-function formatTitle(label: string): string {
-  // Allow line break after first 2-3 words for nicer card height
-  return label;
-}
-
+/**
+ * Roofix (sleek premium metallic) — dark metallic section with glass-card
+ * service grid. Each card is a tilted gradient-bordered tile with a small
+ * accent number and a hover lift. Intentionally NOT a light-bg card grid.
+ */
 const ServicesRibbon = () => {
-  const { servicesRibbon: SERVICES_RIBBON, services } = useSiteContent();
+  const { services } = useSiteContent();
 
   return (
-    <section id="services" className="bg-background section-padding">
-      <div className="container-custom px-4 md:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14">
+    <section className="tpl-metallic text-white relative overflow-hidden">
+      {/* Decorative rule pattern */}
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #fff 1px, transparent 1px)",
+          backgroundSize: "72px 100%",
+        }}
+      />
+
+      <div className="container-custom relative section-padding">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
           <div>
-            <p className="text-xs font-bold tracking-[0.22em] text-secondary mb-3">
-              OUR SERVICES
+            <p className="text-[11px] font-bold tracking-[0.32em] uppercase text-secondary">
+              [ 01 ] What we offer
             </p>
-            <h2 className="text-3xl md:text-4xl lg:text-[44px] font-black text-primary tracking-tight uppercase leading-[1.05]">
-              Roofing Services
+            <h2
+              className="mt-5 text-4xl md:text-5xl lg:text-6xl font-bold tracking-[-0.02em] leading-[1.02]"
+              style={{ fontFamily: "var(--tpl-font-display)" }}
+            >
+              Built for{" "}
+              <span className="tpl-gradient-text">every roof</span>.
             </h2>
-            <p className="mt-4 text-sm md:text-base text-muted-foreground max-w-2xl">
-              Complete roofing solutions for residential & commercial properties.
+            <p className="mt-5 max-w-xl text-white/65 leading-relaxed">
+              From storm-day emergencies to premium standing-seam metal builds,
+              every service is delivered by a senior crew with documented
+              workmanship warranties.
             </p>
           </div>
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 text-sm font-extrabold tracking-widest text-primary hover:text-secondary transition-colors self-start md:self-end uppercase"
+            className="inline-flex items-center gap-2 text-sm font-bold tracking-[0.22em] uppercase text-white/85 hover:text-secondary transition-colors self-start md:self-end"
           >
-            View All Services
-            <ArrowRight className="h-4 w-4" />
+            All services
+            <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          {SERVICES_RIBBON.map(item => {
-            const Icon =
-              iconMap[item.icon as keyof typeof iconMap] || Building2;
-            // Try to map ribbon item id → existing service detail page
-            const matchingService = services.find(s => s.id === item.id);
-            const linkTo = matchingService
-              ? `/services/${matchingService.id}`
-              : "/services";
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {services.slice(0, 6).map((service, i) => {
+            const Icon = iconMap[service.icon as keyof typeof iconMap] || Home;
+            const num = String(i + 1).padStart(2, "0");
             return (
               <Link
-                key={item.id}
-                to={linkTo}
-                className="group block rounded-lg border border-border bg-card p-6 hover:border-secondary/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                key={service.id}
+                to={`/services/${service.id}`}
+                className="group tpl-glass rounded-[var(--radius)] p-6 md:p-7 relative overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-secondary/40"
               >
-                <div className="flex h-14 w-14 items-center justify-center mb-5 text-secondary transition-transform group-hover:scale-110">
-                  <Icon
-                    className="h-12 w-12"
-                    strokeWidth={1.5}
-                    aria-hidden
-                  />
+                {/* Gradient corner accent */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background:
+                      "radial-gradient(circle, hsl(217 91% 60% / 0.45), transparent 60%)",
+                  }}
+                />
+                <div className="relative flex items-start justify-between">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius)] bg-secondary/15 text-secondary border border-secondary/30">
+                    <Icon className="h-6 w-6" strokeWidth={1.6} />
+                  </span>
+                  <span
+                    className="text-3xl font-bold text-white/15"
+                    style={{ fontFamily: "var(--tpl-font-display)" }}
+                  >
+                    {num}
+                  </span>
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tight text-primary leading-tight mb-3">
-                  {formatTitle(item.label)}
+                <h3
+                  className="relative mt-6 text-xl md:text-2xl font-bold text-white leading-tight"
+                  style={{ fontFamily: "var(--tpl-font-display)" }}
+                >
+                  {service.title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-5 min-h-[3.5rem]">
-                  {matchingService?.description ||
-                    "Professional roofing services delivered with quality and care."}
+                <p className="relative mt-3 text-sm text-white/65 leading-relaxed">
+                  {service.description}
                 </p>
-                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold tracking-widest text-secondary group-hover:gap-2.5 transition-all">
-                  LEARN MORE
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </span>
+                <div className="relative mt-6 flex items-center justify-between text-xs font-bold tracking-[0.22em] uppercase text-secondary">
+                  <span>Learn more</span>
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
               </Link>
             );
           })}

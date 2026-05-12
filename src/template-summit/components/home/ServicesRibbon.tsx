@@ -1,103 +1,79 @@
 import { Link } from "react-router-dom";
-import {
-  Building2,
-  Home,
-  HardHat,
-  DraftingCompass,
-  Hammer,
-  Compass,
-  Palette,
-  Ruler,
-  Leaf,
-  Wrench,
-  ClipboardList,
-  Paintbrush,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useSiteContent } from "@template-summit/contexts/SiteContentContext";
 
-const iconMap = {
-  Building2,
-  Home,
-  HardHat,
-  DraftingCompass,
-  Hammer,
-  Compass,
-  Palette,
-  Ruler,
-  Leaf,
-  Wrench,
-  ClipboardList,
-  Paintbrush,
-} as const;
-
-/** Convert an all-caps title (e.g. "DESIGN-BUILD SERVICES") to display form. */
-function formatTitle(label: string): string {
-  // Allow line break after first 2-3 words for nicer card height
-  return label;
-}
-
+/**
+ * Summit (editorial luxury) — numbered hairline service index.
+ * Tall heading on the left, vertical list on the right with serif numbers,
+ * hairline rules between rows, no cards, no icons. Hovering reveals an
+ * arrow on each row. Intentionally NOT a grid of cards.
+ */
 const ServicesRibbon = () => {
-  const { servicesRibbon: SERVICES_RIBBON, services } = useSiteContent();
+  const { services } = useSiteContent();
+  const rows = services.slice(0, 8);
 
   return (
-    <section id="services" className="bg-background section-padding">
-      <div className="container-custom px-4 md:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14">
-          <div>
-            <p className="text-xs font-bold tracking-[0.22em] text-secondary mb-3">
-              WHAT WE DO
-            </p>
-            <h2 className="text-3xl md:text-4xl lg:text-[44px] font-black text-primary tracking-tight uppercase leading-[1.05]">
-              Our Construction Services
-            </h2>
-          </div>
+    <section className="bg-background border-t border-foreground/10">
+      <div className="container-custom section-padding grid lg:grid-cols-12 gap-12 lg:gap-20">
+        <header className="lg:col-span-4">
+          <p className="text-[11px] tracking-[0.32em] uppercase font-semibold text-foreground/60">
+            Index — Services
+          </p>
+          <h2
+            className="mt-6 text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-foreground"
+            style={{ fontFamily: "var(--tpl-font-display)" }}
+          >
+            What we{" "}
+            <span className="italic text-secondary">craft</span>.
+          </h2>
+          <p className="mt-6 max-w-sm text-foreground/65 leading-relaxed">
+            A single accountable partner across feasibility, design, and build.
+            Every project is led by a senior superintendent and a written scope
+            you can read in one sitting.
+          </p>
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 text-sm font-extrabold tracking-widest text-primary hover:text-secondary transition-colors self-start md:self-end uppercase"
+            className="tpl-link-underline mt-8 inline-flex items-center gap-2 text-sm font-semibold tracking-[0.22em] uppercase text-foreground"
           >
-            View All Services
-            <ArrowRight className="h-4 w-4" />
+            View all services
+            <ArrowUpRight className="h-4 w-4" />
           </Link>
-        </div>
+        </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          {SERVICES_RIBBON.map(item => {
-            const Icon =
-              iconMap[item.icon as keyof typeof iconMap] || Building2;
-            // Try to map ribbon item id → existing service detail page
-            const matchingService = services.find(s => s.id === item.id);
-            const linkTo = matchingService
-              ? `/services/${matchingService.id}`
-              : "/services";
-            return (
+        <ol className="lg:col-span-8 border-t border-foreground/15">
+          {rows.map((service, i) => (
+            <li
+              key={service.id}
+              className="group border-b border-foreground/15"
+            >
               <Link
-                key={item.id}
-                to={linkTo}
-                className="group block rounded-lg border border-border bg-card p-6 hover:border-secondary/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                to={`/services/${service.id}`}
+                className="grid grid-cols-12 items-baseline gap-4 py-7 md:py-9 transition-colors hover:bg-foreground/[0.02]"
               >
-                <div className="flex h-14 w-14 items-center justify-center mb-5 text-secondary transition-transform group-hover:scale-110">
-                  <Icon
-                    className="h-12 w-12"
-                    strokeWidth={1.5}
-                    aria-hidden
-                  />
-                </div>
-                <h3 className="text-lg font-black uppercase tracking-tight text-primary leading-tight mb-3">
-                  {formatTitle(item.label)}
+                <span
+                  className="col-span-2 text-2xl md:text-3xl text-foreground/40 group-hover:text-secondary transition-colors"
+                  style={{ fontFamily: "var(--tpl-font-display)" }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3
+                  className="col-span-6 md:col-span-5 text-2xl md:text-3xl lg:text-4xl font-medium text-foreground"
+                  style={{ fontFamily: "var(--tpl-font-display)" }}
+                >
+                  {service.title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-5 min-h-[3.5rem]">
-                  {matchingService?.description ||
-                    "Professional construction services delivered with quality and care."}
+                <p className="col-span-12 md:col-span-4 text-sm text-foreground/65 leading-relaxed">
+                  {service.description}
                 </p>
-                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold tracking-widest text-secondary group-hover:gap-2.5 transition-all">
-                  LEARN MORE
-                  <ArrowRight className="h-3.5 w-3.5" />
+                <span className="col-span-12 md:col-span-1 flex md:justify-end pt-2 md:pt-0">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-foreground/20 text-foreground/60 transition-all group-hover:border-secondary group-hover:text-secondary group-hover:rotate-45">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
                 </span>
               </Link>
-            );
-          })}
-        </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
