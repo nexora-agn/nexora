@@ -42,11 +42,11 @@ export const HOME_HERO = {
 };
 
 export const SERVICES_RIBBON = [
-  { id: "architect", label: "ARCHITECT", icon: "Compass" as const },
-  { id: "builder", label: "BUILDER", icon: "HardHat" as const },
-  { id: "design", label: "DESIGN", icon: "Palette" as const, featured: true },
-  { id: "construct", label: "CONSTRUCT", icon: "Hammer" as const },
-  { id: "detail", label: "DETAIL", icon: "Ruler" as const },
+  { id: "architect", label: "ARCHITECT", icon: "Compass" as const, to: "/services/architecture" },
+  { id: "builder", label: "BUILDER", icon: "HardHat" as const, to: "/services/general-contracting" },
+  { id: "design", label: "DESIGN", icon: "Palette" as const, featured: true, to: "/services/interior-design" },
+  { id: "construct", label: "CONSTRUCT", icon: "Hammer" as const, to: "/services/project-management" },
+  { id: "detail", label: "DETAIL", icon: "Ruler" as const, to: "/services/renovation" },
 ];
 
 export const CAPABILITIES = [

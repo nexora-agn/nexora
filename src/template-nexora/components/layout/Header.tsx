@@ -133,13 +133,13 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Nav strip */}
-      <nav className="hidden md:block border-b border-slate-100">
+      {/* Nav strip — overflow must stay visible so the Services mega-menu is not clipped */}
+      <nav className="hidden md:block relative z-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <ul className="flex items-stretch gap-1 lg:gap-2 overflow-x-auto">
+          <ul className="flex flex-wrap items-stretch gap-1 lg:gap-2">
             {NAV_LINKS.map(link => {
               const active = navItemActive(location.pathname, link.path, navPaths);
-              const isServices = link.path === "/services";
+              const isServices = link.path.replace(/\/$/, "") === "/services";
               return (
                 <li key={link.path} className="relative group">
                   <Link
@@ -158,8 +158,15 @@ const Header = () => {
                     )}
                   </Link>
                   {isServices && services.length > 0 && (
-                    <div className="absolute left-0 top-full z-40 min-w-[260px] max-h-[min(70vh,420px)] overflow-y-auto pt-1 opacity-0 invisible pointer-events-none transition-[opacity,visibility] duration-150 group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto">
-                      <div className="bg-white border border-slate-200 rounded-md shadow-lg py-2">
+                    <div
+                      className={cn(
+                        "absolute left-0 top-full z-50 min-w-[260px] max-h-[min(70vh,420px)] opacity-0 invisible pointer-events-none transition-[opacity,visibility] duration-150",
+                        "pt-2 -mt-1",
+                        "group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto",
+                        "group-focus-within:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto",
+                      )}
+                    >
+                      <div className="max-h-[min(70vh,400px)] overflow-y-auto rounded-md border border-slate-200 bg-white py-2 shadow-lg">
                         <Link
                           to="/services"
                           className="block px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-[hsl(var(--primary))] border-b border-slate-100 hover:bg-slate-50"
@@ -191,7 +198,7 @@ const Header = () => {
           <div className="max-w-7xl mx-auto px-4 py-4 space-y-1">
             {NAV_LINKS.map(link => {
               const active = navItemActive(location.pathname, link.path, navPaths);
-              const isServices = link.path === "/services";
+              const isServices = link.path.replace(/\/$/, "") === "/services";
               return (
                 <div key={link.path}>
                   <Link
