@@ -49,7 +49,7 @@ export const HOME_HERO = {
   primaryCta: { label: "GET FREE ESTIMATE", to: "/contact" },
   secondaryCta: { label: "CALL NOW", to: "/contact" },
   image:
-    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&h=1000&q=85",
+    "https://images.unsplash.com/photo-1632759145355-e9d2c00ec600?auto=format&fit=crop&w=1400&h=1000&q=85",
   /** Pills shown under the hero CTAs. */
   trustPills: [
     { label: "Free Inspection", sub: "in 24 Hours", icon: "Calendar" as const },
@@ -61,10 +61,10 @@ export const HOME_HERO = {
     score: "4.9",
     countLabel: "Based on 250+ Reviews",
     avatars: [
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop",
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop",
+      "https://images.unsplash.com/photo-1559548331-f9cb98001426?w=80&h=80&fit=crop",
+      "https://images.unsplash.com/photo-1542596594-649edbc13630?w=80&h=80&fit=crop",
+      "https://images.unsplash.com/photo-1573497019418-b400bb3ab074?w=80&h=80&fit=crop",
+      "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=80&h=80&fit=crop",
     ],
   },
   /** Legacy fields kept for editor compatibility. */
@@ -184,42 +184,42 @@ export const SERVICES = [
     title: "Roof Repair",
     icon: "Flame",
     description: "Fast and reliable repairs for leaks, damage, and wear & tear.",
-    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&h=400&q=85",
+    image: "https://images.unsplash.com/photo-1591588582259-e675bd2e6088?auto=format&fit=crop&w=600&h=400&q=85",
   },
   {
     id: "roof-replacement",
     title: "Roof Replacement",
     icon: "Home",
     description: "High-quality roofs built to last. Asphalt, metal, tile, and more.",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=600&h=400&fit=crop",
   },
   {
     id: "storm-damage",
     title: "Storm Damage Repair",
     icon: "CloudLightning",
     description: "Storm damage experts. We'll help with repairs and insurance claims.",
-    image: "https://images.unsplash.com/photo-1605007493699-af65834f8a00?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop",
   },
   {
     id: "insurance-claims",
     title: "Insurance Claims",
     icon: "FileCheck",
     description: "We make the process easy and handle the paperwork for you.",
-    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&h=400&fit=crop",
   },
   {
     id: "roof-inspections",
     title: "Roof Inspections",
     icon: "Search",
     description: "Detailed inspections and honest reports to protect your investment.",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=600&h=400&fit=crop",
   },
   {
     id: "gutter-services",
     title: "Gutter Services",
     icon: "Wrench",
     description: "Gutter installation, repair, and cleaning to protect your roof and home.",
-    image: "https://images.unsplash.com/photo-1597222909672-83c9c47e2cdf?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=600&h=400&fit=crop",
   },
 ];
 
@@ -229,29 +229,29 @@ export const BEFORE_AFTER_PROJECTS = [
     id: "frisco-replacement",
     title: "Roof Replacement",
     location: "Frisco, TX",
-    beforeImage: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=450&fit=crop",
-    afterImage: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&h=450&q=85",
+    beforeImage: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=600&h=450&fit=crop",
+    afterImage: "https://images.unsplash.com/photo-1632759145355-e9d2c00ec600?auto=format&fit=crop&w=600&h=450&q=85",
   },
   {
     id: "mckinney-storm",
     title: "Storm Damage Repair",
     location: "McKinney, TX",
-    beforeImage: "https://images.unsplash.com/photo-1605007493699-af65834f8a00?w=600&h=450&fit=crop",
-    afterImage: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=450&fit=crop",
+    beforeImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop",
+    afterImage: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=600&h=450&fit=crop",
   },
   {
     id: "prosper-replacement",
     title: "Roof Replacement",
     location: "Prosper, TX",
-    beforeImage: "https://images.unsplash.com/photo-1597222909672-83c9c47e2cdf?w=600&h=450&fit=crop",
-    afterImage: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&h=450&q=85",
+    beforeImage: "https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=600&h=450&fit=crop",
+    afterImage: "https://images.unsplash.com/photo-1632759145355-e9d2c00ec600?auto=format&fit=crop&w=600&h=450&q=85",
   },
   {
     id: "allen-repair",
     title: "Roof Repair",
     location: "Allen, TX",
-    beforeImage: "https://images.unsplash.com/photo-1605007493699-af65834f8a00?w=600&h=450&fit=crop",
-    afterImage: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=450&fit=crop",
+    beforeImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop",
+    afterImage: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=600&h=450&fit=crop",
   },
 ];
 
@@ -281,7 +281,7 @@ export const TEAM = [
     name: "Mike Thompson",
     role: "Founder & CEO",
     bio: "Mike founded RidgePeak Roofing with a mission to bring honest, quality roofing to North Texas homeowners.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1542596594-649edbc13630?w=300&h=300&fit=crop",
     social: { linkedin: "#", twitter: "#" },
   },
   {
@@ -289,7 +289,7 @@ export const TEAM = [
     name: "Carla Rodriguez",
     role: "Operations Manager",
     bio: "Carla keeps every project on schedule and every homeowner informed.",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop",
     social: { linkedin: "#", twitter: "#" },
   },
   {
@@ -297,7 +297,7 @@ export const TEAM = [
     name: "Jason Lee",
     role: "Lead Project Manager",
     bio: "Jason runs the field and makes sure every roof is installed to the highest standards.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=300&h=300&fit=crop",
     social: { linkedin: "#", twitter: "#" },
   },
   {
@@ -305,7 +305,7 @@ export const TEAM = [
     name: "Ashley Baker",
     role: "Insurance Claims Specialist",
     bio: "Ashley handles the paperwork so you don't have to.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1559548331-f9cb98001426?w=300&h=300&fit=crop",
     social: { linkedin: "#", twitter: "#" },
   },
 ];
@@ -316,7 +316,7 @@ export const TESTIMONIALS = [
     role: "Dallas, TX",
     quote:
       "RidgePeak Roofing did an amazing job on our new roof. They were professional, on time, and the quality is top-notch.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
+    avatar: "https://images.unsplash.com/photo-1559548331-f9cb98001426?w=120&h=120&fit=crop",
     rating: 5,
   },
   {
@@ -324,7 +324,7 @@ export const TESTIMONIALS = [
     role: "Fort Worth, TX",
     quote:
       "We had severe storm damage and they helped us through the whole insurance process. Highly recommend!",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
+    avatar: "https://images.unsplash.com/photo-1542596594-649edbc13630?w=120&h=120&fit=crop",
     rating: 5,
   },
   {
@@ -332,7 +332,7 @@ export const TESTIMONIALS = [
     role: "Plano, TX",
     quote:
       "Great communication, fair pricing, and excellent workmanship. Our roof looks great and we feel protected.",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
+    avatar: "https://images.unsplash.com/photo-1573497019418-b400bb3ab074?w=120&h=120&fit=crop",
     rating: 5,
   },
   {
@@ -340,7 +340,7 @@ export const TESTIMONIALS = [
     role: "Frisco, TX",
     quote:
       "From start to finish, RidgePeak Roofing was amazing. Professional, on time, and the quality of work is outstanding.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+    avatar: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=120&h=120&fit=crop",
     rating: 5,
   },
   {
@@ -348,7 +348,7 @@ export const TESTIMONIALS = [
     role: "McKinney, TX",
     quote:
       "They made the insurance claim process so easy and our new roof looks incredible. Highly recommend!",
-    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop",
+    avatar: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=120&h=120&fit=crop",
     rating: 5,
   },
   {
@@ -356,7 +356,7 @@ export const TESTIMONIALS = [
     role: "Allen, TX",
     quote:
       "Honest, reliable, and the best pricing we found. The crew was respectful and cleaned up everything.",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&h=120&fit=crop",
+    avatar: "https://images.unsplash.com/photo-1610414861048-d2b8a8f57921?w=120&h=120&fit=crop",
     rating: 5,
   },
 ];
@@ -369,7 +369,7 @@ export const BLOG_POSTS = [
     date: "March 12, 2024",
     author: "Mike Thompson",
     category: "Maintenance",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=600&h=400&fit=crop",
     content:
       "Catching small problems early is the cheapest way to protect your roof. Walk your property after every major storm and look for missing shingles, dented vents, and granules in the gutters. If anything looks off, schedule a free professional inspection before water finds its way inside.",
   },
@@ -380,7 +380,7 @@ export const BLOG_POSTS = [
     date: "February 22, 2024",
     author: "Ashley Baker",
     category: "Insurance",
-    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&h=400&fit=crop",
     content:
       "Document the damage with photos, file the claim within your policy window, and request an on-site adjuster meeting. We'll meet your adjuster, walk the roof, and make sure nothing gets missed.",
   },
@@ -391,7 +391,7 @@ export const BLOG_POSTS = [
     date: "January 18, 2024",
     author: "Jason Lee",
     category: "Materials",
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&h=400&q=85",
+    image: "https://images.unsplash.com/photo-1632759145355-e9d2c00ec600?auto=format&fit=crop&w=600&h=400&q=85",
     content:
       "Asphalt is affordable and proven. Metal is more expensive up front but lasts decades longer and shrugs off hail better. The right answer depends on your budget, your home's design, and how long you plan to stay.",
   },
@@ -678,7 +678,7 @@ export const SERVICE_DEEP_DIVES: {
       "From storm-blown tabs to ridge-cap fixes and flashing leaks, we diagnose fast and repair right the first time — no unnecessary full replacements.",
       "Emergency tarping is available when water is active. We photo-document everything for insurance when wind or hail is involved.",
     ],
-    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=900&h=700&q=85",
+    image: "https://images.unsplash.com/photo-1591588582259-e675bd2e6088?auto=format&fit=crop&w=900&h=700&q=85",
     inclusions: [
       "Same-week appointments",
       "Written repair scope & photos",
@@ -697,7 +697,7 @@ export const SERVICE_DEEP_DIVES: {
       "Full tear-offs, premium underlayment, and certified-installer crews. We handle asphalt, metal, tile, and synthetic systems with manufacturer-backed warranties.",
       "Every replacement includes a magnetic nail sweep and full debris haul-off — your yard goes back to spotless.",
     ],
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=900&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=900&h=700&fit=crop",
     inclusions: [
       "Free on-site estimate",
       "Premium materials",
@@ -716,7 +716,7 @@ export const SERVICE_DEEP_DIVES: {
       "Hail, wind, fallen branches — we tarp emergency leaks fast and document everything you'll need for an insurance claim.",
       "Our crew has handled hundreds of storm restorations across North Texas, and we'll fight to make sure your claim is fully covered.",
     ],
-    image: "https://images.unsplash.com/photo-1605007493699-af65834f8a00?w=900&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&h=700&fit=crop",
     inclusions: [
       "24/7 emergency tarping",
       "Damage documentation",
@@ -735,7 +735,7 @@ export const SERVICE_DEEP_DIVES: {
       "From the first photo to the final shingle, we make insurance claims simple. We meet your adjuster on-site, walk the roof together, and make sure nothing gets missed.",
       "You pay your deductible — we handle the rest.",
     ],
-    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=900&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=900&h=700&fit=crop",
     inclusions: [
       "Free claim review",
       "Adjuster meeting",
@@ -754,7 +754,7 @@ export const SERVICE_DEEP_DIVES: {
       "Proper gutters protect fascia, foundations, and landscaping. We install seamless systems, realign sagging runs, and clear debris so water exits away from your home.",
       "Ask about gutter guards and downspout extensions — especially important after roof replacements when runoff patterns change.",
     ],
-    image: "https://images.unsplash.com/photo-1597222909672-83c9c47e2cdf?w=900&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=900&h=700&fit=crop",
     inclusions: [
       "Seamless gutter fabrication",
       "Downspout reroutes & extensions",
@@ -800,25 +800,25 @@ export const INSPECTION_TYPES = [
     id: "routine",
     title: "Routine Maintenance Inspections",
     description: "Recommended twice a year to ensure your roof is in top condition and performing its best.",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1545158539-1709d5b8f7d2?w=600&h=400&fit=crop",
   },
   {
     id: "storm",
     title: "Storm Damage Inspections",
     description: "After severe weather, we inspect your roof for damage and help with insurance claims if needed.",
-    image: "https://images.unsplash.com/photo-1605007493699-af65834f8a00?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop",
   },
   {
     id: "pre-purchase",
     title: "Pre-Purchase Inspections",
     description: "Know exactly what you're buying. We provide detailed reports for homebuyers and real estate agents.",
-    image: "https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1632759145351-d3866b2151a1?w=600&h=400&fit=crop",
   },
   {
     id: "commercial",
     title: "Commercial Roof Inspections",
     description: "Comprehensive inspections for commercial properties to keep your business protected.",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1568438350562-2cae6d394ad0?w=600&h=400&fit=crop",
   },
 ];
 
