@@ -121,8 +121,8 @@ export const TEMPLATES: TemplateOption[] = [
     tagline: "Premium roofing · navy + blue accent",
     description:
       "Premium roofing template with announcement bar, big hero on a dark navy backdrop, services grid, why-choose-us card stack, recent projects gallery, testimonials, pricing tiers, blog and contact. Built for roofing companies focused on lead generation.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1632759145355-e9d2c00ec600?auto=format&fit=crop&w=800&h=520&q=85",
+    /** Self-hosted roofing image (Nexora roofing dataset, not the RidgePeak hero) for CSP-safe admin thumbs. */
+    thumbnail: "/admin-template-thumbs/roofix.jpg",
     accent: "#2563eb",
     available: true,
     features: [

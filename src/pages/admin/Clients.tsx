@@ -1,6 +1,14 @@
 import { FormEvent, useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import { Link } from "react-router-dom";
-import { Plus, Trash2, Pencil, ArrowRight, CheckCircle2, LayoutTemplate, Lock } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowRight, LayoutTemplate, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -242,6 +250,13 @@ const ClientDialog = ({
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [templateId, setTemplateId] = useState<string>(initial?.template_id ?? DEFAULT_TEMPLATE_ID);
   const [submitting, setSubmitting] = useState(false);
+  const [templateCarouselApi, setTemplateCarouselApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!templateCarouselApi) return;
+    const i = TEMPLATES.findIndex(t => t.id === templateId);
+    if (i >= 0) templateCarouselApi.scrollTo(i);
+  }, [templateCarouselApi, templateId]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -296,101 +311,115 @@ const ClientDialog = ({
             </div>
 
             <div className="rounded-xl border bg-card/80 shadow-sm overflow-hidden">
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border">
-                {TEMPLATES.map(t => {
-                  const selected = templateId === t.id;
-                  return (
-                    <button
-                      type="button"
-                      key={t.id}
-                      onClick={() => t.available && setTemplateId(t.id)}
-                      disabled={!t.available}
-                      aria-pressed={selected}
-                      aria-label={`${t.name}. ${t.tagline}.${selected ? " Selected." : ""}${!t.available ? " Unavailable." : ""}`}
-                      className={cn(
-                        "group relative text-left transition-colors outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                        "disabled:cursor-not-allowed disabled:opacity-[0.72]",
-                        selected ? "bg-primary/[0.06]" : "bg-card hover:bg-muted/40",
-                      )}
-                    >
-                      <div className="h-1 w-full shrink-0" style={{ backgroundColor: t.accent }} aria-hidden />
-
-                      <div className="p-4 space-y-3">
-                        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-muted shadow-inner ring-1 ring-black/[0.06]">
-                          <img
-                            src={t.thumbnail}
-                            alt={`${t.name} preview`}
+              <div className="relative px-10 sm:px-11 py-3">
+                <Carousel
+                  setApi={setTemplateCarouselApi}
+                  opts={{ align: "start", loop: false }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2 sm:-ml-3">
+                    {TEMPLATES.map(t => {
+                      const selected = templateId === t.id;
+                      return (
+                        <CarouselItem
+                          key={t.id}
+                          className="pl-2 sm:pl-3 basis-full min-w-0 sm:basis-1/2 xl:basis-1/3"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => t.available && setTemplateId(t.id)}
+                            disabled={!t.available}
+                            aria-pressed={selected}
+                            aria-label={`${t.name}. ${t.tagline}.${selected ? " Selected." : ""}${!t.available ? " Unavailable." : ""}`}
                             className={cn(
-                              "absolute inset-0 h-full w-full object-cover transition-transform duration-300",
-                              !t.available && "grayscale-[35%]",
-                              t.available && !selected && "group-hover:scale-[1.02]",
+                              "group relative flex h-full w-full flex-col text-left transition-colors outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                              "rounded-lg border border-border/80 shadow-sm",
+                              "disabled:cursor-not-allowed disabled:opacity-[0.72]",
+                              selected ? "bg-primary/[0.06] ring-1 ring-primary/20" : "bg-card hover:bg-muted/40",
                             )}
-                            loading="lazy"
-                          />
-                          <div
-                            aria-hidden
-                            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80"
-                          />
+                          >
+                            <div className="h-1 w-full shrink-0 rounded-t-[inherit]" style={{ backgroundColor: t.accent }} aria-hidden />
 
-                          {!t.available && (
-                            <div className="absolute left-3 top-3 flex items-center gap-1">
-                              <Badge
-                                variant="secondary"
-                                className="h-6 gap-1 border-border/80 bg-background/95 px-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground backdrop-blur-sm shadow-sm"
-                              >
-                                <Lock className="h-3 w-3" aria-hidden />
-                                Soon
-                              </Badge>
-                            </div>
-                          )}
+                            <div className="flex flex-1 flex-col p-3 sm:p-4 space-y-2.5">
+                              <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-muted shadow-inner ring-1 ring-black/[0.06]">
+                                <img
+                                  src={t.thumbnail}
+                                  alt={`${t.name} preview`}
+                                  className={cn(
+                                    "absolute inset-0 h-full w-full object-cover transition-transform duration-300",
+                                    !t.available && "grayscale-[35%]",
+                                    t.available && !selected && "group-hover:scale-[1.02]",
+                                  )}
+                                  loading="lazy"
+                                />
+                                <div
+                                  aria-hidden
+                                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80"
+                                />
 
-                          {selected && t.available && (
-                            <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full border border-primary/20 bg-primary pl-2 pr-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-md">
-                              <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                              Active
-                            </div>
-                          )}
-                        </div>
+                                {!t.available && (
+                                  <div className="absolute left-3 top-3 flex items-center gap-1">
+                                    <Badge
+                                      variant="secondary"
+                                      className="h-6 gap-1 border-border/80 bg-background/95 px-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground backdrop-blur-sm shadow-sm"
+                                    >
+                                      <Lock className="h-3 w-3" aria-hidden />
+                                      Soon
+                                    </Badge>
+                                  </div>
+                                )}
+                              </div>
 
-                        <div className="space-y-2 min-h-[7rem]">
-                          <div className="flex items-start justify-between gap-2">
-                            <h4 className="font-semibold text-[15px] leading-snug tracking-tight text-foreground">
-                              {t.name}
-                            </h4>
-                            <span
-                              aria-hidden
-                              className="mt-1 h-2 w-2 shrink-0 rounded-full ring-2 ring-background shadow-sm"
-                              style={{ backgroundColor: t.accent }}
-                            />
-                          </div>
-                          <p className="text-xs font-medium text-muted-foreground leading-snug">{t.tagline}</p>
-                          <p className="text-[11px] text-muted-foreground/95 leading-relaxed line-clamp-2">
-                            {t.description}
-                          </p>
-                          {t.features.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5 pt-1">
-                              {t.features.slice(0, 3).map(f => (
-                                <Badge
-                                  key={f}
-                                  variant="outline"
-                                  className="h-5 border-border/70 px-2 text-[10px] font-normal text-muted-foreground hover:bg-transparent"
-                                >
-                                  {f}
-                                </Badge>
-                              ))}
+                              <div className="space-y-1.5 min-h-[4.75rem] flex-1">
+                                <div className="flex items-start justify-between gap-2">
+                                  <h4 className="font-semibold text-[15px] leading-snug tracking-tight text-foreground">
+                                    {t.name}
+                                  </h4>
+                                  <span
+                                    aria-hidden
+                                    className="mt-1 h-2 w-2 shrink-0 rounded-full ring-2 ring-background shadow-sm"
+                                    style={{ backgroundColor: t.accent }}
+                                  />
+                                </div>
+                                <p className="text-xs font-medium text-muted-foreground leading-snug">{t.tagline}</p>
+                                <p className="text-[11px] text-muted-foreground/95 leading-relaxed line-clamp-2">
+                                  {t.description}
+                                </p>
+                                {t.features.length > 0 && (
+                                  <div className="flex flex-wrap gap-1.5 pt-0.5">
+                                    {t.features.slice(0, 2).map(f => (
+                                      <Badge
+                                        key={f}
+                                        variant="outline"
+                                        className="h-5 border-border/70 px-2 text-[10px] font-normal text-muted-foreground hover:bg-transparent"
+                                      >
+                                        {f}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
+                          </button>
+                        </CarouselItem>
+                      );
+                    })}
+                  </CarouselContent>
+                  <CarouselPrevious
+                    type="button"
+                    className="left-1 size-8 border bg-background/95 shadow-sm disabled:opacity-40"
+                  />
+                  <CarouselNext
+                    type="button"
+                    className="right-1 size-8 border bg-background/95 shadow-sm disabled:opacity-40"
+                  />
+                </Carousel>
               </div>
 
               <div className="flex gap-2.5 border-t border-border/80 bg-muted/25 px-4 py-3 text-xs text-muted-foreground leading-relaxed">
                 <LayoutTemplate className="h-4 w-4 shrink-0 text-muted-foreground/80 mt-0.5" aria-hidden />
                 <span>
-                  Every layout includes a live preview and a matching ZIP export pipeline. New presets appear here as they ship.
+                  Use the arrows or swipe sideways to compare layouts. Each includes a live preview and ZIP export; new presets appear here as they ship.
                 </span>
               </div>
             </div>
