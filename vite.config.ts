@@ -26,6 +26,10 @@ export default defineConfig(({ mode }) => {
     hmr: {
       overlay: false,
     },
+    /** Ignore nested Claude worktrees so file changes there do not churn HMR / full reloads. */
+    watch: {
+      ignored: ["**/.claude/**"],
+    },
   },
   plugins: [
     react(),
