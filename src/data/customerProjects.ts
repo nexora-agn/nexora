@@ -1,4 +1,4 @@
-import arizonaRoofDoctors from "@/assets/projects/Roof Doctors Screen.png";
+import arizonaRoofDoctors from "@/assets/projects/arizonaroofdoctors-screen.png";
 import bossRoofing from "@/assets/projects/bossroofingsiding-com-1024x768desktop-0b61fe.jpg";
 import fmorinaBau from "@/assets/projects/fmorina-bau.png";
 import goPrimeElectric from "@/assets/projects/goprimeelectric-com-1024x768desktop-1acc70.jpg";
