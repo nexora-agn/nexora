@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 /** Summit Blog. Distinct from Constructo's featured + sidebar + newsletter pattern.
  *  Archetypes:
  *  1. Stat-led split hero
- *  2. Editor's picks horizontal marquee (3 covers) — replaces featured + list
+ *  2. Editor's picks grid (3 covers)
  *  3. Topic mega-chips strip
  *  4. Asymmetric story column with reading-time bars
  *  5. Page-unique footer line (no newsletter form) */
@@ -106,28 +106,22 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* 2 — Editor's picks marquee */}
+      {/* 2 — Editor's picks */}
       {editorsPicks.length > 0 && (
         <Reveal>
           <section className="bg-muted/40 py-14 md:py-20 border-b border-border">
             <div className="container-custom px-4 md:px-8">
-              <div className="flex items-end justify-between mb-6">
-                <p className="text-xs font-bold tracking-[0.22em] text-secondary">
-                  EDITOR'S PICKS
-                </p>
-                <span className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground hidden md:inline">
-                  Slide →
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-5 overflow-x-auto px-4 md:px-8 pb-5 snap-x snap-mandatory [scrollbar-width:thin]">
+              <p className="text-xs font-bold tracking-[0.22em] text-secondary mb-6">
+                EDITOR'S PICKS
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
               {editorsPicks.map((post, i) => {
                 const { minutes, pct } = readingTime(post.content);
                 return (
                   <Link
                     key={post.id}
                     to={`/blog/${post.id}`}
-                    className="group relative shrink-0 w-[88%] sm:w-[60%] md:w-[40%] snap-start rounded-2xl overflow-hidden ring-1 ring-black/5 bg-card"
+                    className="group relative flex flex-col rounded-2xl overflow-hidden ring-1 ring-black/5 bg-card h-full"
                   >
                     <div className="relative aspect-[5/3] overflow-hidden">
                       <img
@@ -145,7 +139,7 @@ const Blog = () => {
                       <p className="text-[10px] font-bold tracking-widest uppercase text-secondary">
                         {post.category}
                       </p>
-                      <h3 className="mt-2 text-lg md:text-xl font-black uppercase tracking-tight text-primary leading-snug group-hover:text-secondary transition-colors">
+                      <h3 className="mt-2 text-lg md:text-xl font-black uppercase tracking-tight text-primary leading-snug group-hover:text-secondary transition-colors break-words">
                         {post.title}
                       </h3>
                       <div className="mt-4 flex items-center gap-3 text-[10px] font-bold tracking-widest uppercase text-muted-foreground">
@@ -163,6 +157,7 @@ const Blog = () => {
                   </Link>
                 );
               })}
+              </div>
             </div>
           </section>
         </Reveal>
