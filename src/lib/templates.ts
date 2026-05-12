@@ -115,6 +115,30 @@ export const TEMPLATES: TemplateOption[] = [
       liveTemplateDir: "src/template-nexora",
     },
   },
+  {
+    id: "roofix",
+    name: "Roofix Roofing",
+    tagline: "Premium roofing · navy + blue accent",
+    description:
+      "Premium roofing template with announcement bar, big hero on a dark navy backdrop, services grid, why-choose-us card stack, recent projects gallery, testimonials, pricing tiers, blog and contact. Built for roofing companies focused on lead generation.",
+    thumbnail:
+      "https://images.unsplash.com/photo-1632759145355-e9d2c00ec600?auto=format&fit=crop&w=800&h=520&q=85",
+    accent: "#2563eb",
+    available: true,
+    features: [
+      "Dark navy + blue accent brand",
+      "Hero with trust pills and CTA",
+      "Roofing services grid",
+      "Why-choose-us with stats",
+      "Recent roofing projects gallery",
+      "Pricing tiers + lead form",
+    ],
+    paths: {
+      previewHtml: "/preview-roofix.html",
+      scaffoldDir: "template-source-roofix",
+      liveTemplateDir: "src/template-roofix",
+    },
+  },
 ];
 
 export const DEFAULT_TEMPLATE_ID = TEMPLATES[0].id;

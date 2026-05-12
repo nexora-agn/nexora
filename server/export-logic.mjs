@@ -83,6 +83,10 @@ export const TEMPLATE_REGISTRY = [
     id: "nexora",
     paths: { scaffoldDir: "template-source-nexora", liveTemplateDir: "src/template-nexora" },
   },
+  {
+    id: "roofix",
+    paths: { scaffoldDir: "template-source-roofix", liveTemplateDir: "src/template-roofix" },
+  },
 ];
 
 /**

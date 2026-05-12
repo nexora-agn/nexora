@@ -16,6 +16,9 @@
       ],
       "@template-nexora/*": [
         "./src/template-nexora/*"
+      ],
+      "@template-roofix/*": [
+        "./src/template-roofix/*"
       ]
     },
     "skipLibCheck": true,
