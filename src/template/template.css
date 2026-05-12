@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================================
+ * CONSTRUCTO — Corporate industrial construction template.
+ * Identity: navy + gold, condensed industrial headlines (Oswald), Inter body,
+ * sharp 0.25rem radius, dense corporate spacing, hard structural feel.
+ * ====================================================================== */
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -13,19 +19,17 @@
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    /* Defaults match ThemeContext (Constructo-style: navy + gold). Runtime theme overrides via JS. */
     --primary: 220 60% 9%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 45 86% 48%;
-    /* On-accent text: auto-set from ThemeContext (light accent → brand dark; dark accent → white). */
     --secondary-foreground: 220 60% 9%;
 
     --muted: 210 20% 96%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 86% 48%;
+    --accent-foreground: 220 60% 9%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -34,7 +38,8 @@
     --input: 214 32% 91%;
     --ring: 211 55% 24%;
 
-    --radius: 0.5rem;
+    /* Sharp/corporate */
+    --radius: 0.25rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -44,6 +49,12 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Template identity tokens */
+    --tpl-font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --tpl-font-display: "Oswald", "Inter", ui-sans-serif, system-ui, sans-serif;
+    --tpl-display-tracking: 0.02em;
+    --tpl-eyebrow-tracking: 0.24em;
   }
 
   .dark {
@@ -55,12 +66,12 @@
     --popover-foreground: 210 40% 98%;
     --primary: 210 40% 98%;
     --primary-foreground: 211 55% 24%;
-    --secondary: 38 92% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 45 86% 48%;
+    --secondary-foreground: 220 60% 9%;
     --muted: 217 33% 18%;
     --muted-foreground: 215 20% 65%;
-    --accent: 38 92% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 86% 48%;
+    --accent-foreground: 220 60% 9%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
     --border: 217 33% 18%;
@@ -75,7 +86,12 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--tpl-font-body);
+    font-feature-settings: "cv11", "ss01";
+  }
+  h1, h2, h3, h4, h5, h6, .tpl-display {
+    font-family: var(--tpl-font-display);
+    letter-spacing: var(--tpl-display-tracking);
   }
 }
 
@@ -86,6 +102,18 @@
   .container-custom {
     @apply max-w-7xl mx-auto;
   }
+  .tpl-card-accent {
+    position: relative;
+  }
+  .tpl-card-accent::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 56px;
+    background: hsl(var(--secondary));
+  }
 }
 
 html {
@@ -93,14 +121,8 @@ html {
 }
 
 @keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .page-transition-enter {
@@ -115,47 +137,7 @@ html {
   transition-delay: var(--reveal-delay, 0ms);
   will-change: transform, opacity;
 }
-
-.reveal--up {
-  transform: translateY(var(--reveal-distance, 26px));
-}
-
-.reveal--down {
-  transform: translateY(calc(var(--reveal-distance, 26px) * -1));
-}
-
-.reveal--left {
-  transform: translateX(var(--reveal-distance, 26px));
-}
-
-.reveal--right {
-  transform: translateX(calc(var(--reveal-distance, 26px) * -1));
-}
-
-.reveal--zoom {
-  transform: scale(0.96);
-  filter: blur(4px);
-}
-
-.reveal--visible {
-  opacity: 1;
-  transform: translate(0, 0) scale(1);
-  filter: blur(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .page-transition-enter {
-    animation: none;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-  }
-}
+.reveal--up    { transform: translateY(var(--reveal-distance, 26px)); }
+.reveal--down  { transform: translateY(calc(var(--reveal-distance, 26px) * -1)); }
+.reveal--left  { transform: translateX(var(--reveal-distance, 26px)); }
+.reveal--right { transform: translateX(calc(var(--reveal-distance, 26px) * -1)); }
