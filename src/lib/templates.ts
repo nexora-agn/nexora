@@ -11,6 +11,11 @@
  * 4. The New Client dialog and the clients list pick up the new entry
  *    automatically.
  */
+import constructoThumbUrl from "@/assets/admin/constructo-thumb.svg?url";
+import summitThumbUrl from "@/assets/admin/summit-thumb.svg?url";
+import ridgepeakThumbUrl from "@/assets/admin/ridgepeak-thumb.svg?url";
+import roofixThumbUrl from "@/assets/admin/roofix-thumb.svg?url";
+
 export interface TemplateOption {
   /** Stable identifier persisted on the `clients.template_id` column. */
   id: string;
@@ -49,8 +54,8 @@ export const TEMPLATES: TemplateOption[] = [
     tagline: "Design-build studio · navy + gold",
     description:
       "The original Nexora construction template. Hero with featured project badge, capabilities grid, process timeline, projects, team, and contact. Best fit for design-build firms and general contractors.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=520&fit=crop",
+    /** Vite resolves URL; avoids broken /public SVG in some setups. */
+    thumbnail: constructoThumbUrl,
     accent: "#e4b012",
     available: true,
     features: [
@@ -73,8 +78,7 @@ export const TEMPLATES: TemplateOption[] = [
     tagline: "Trust-bar + reviews · brown announcement",
     description:
       "Newer construction template with an announcement bar, Google reviews strip, big hero, services ribbon, signature projects, and a dark estimate CTA. Built for general contractors leaning into trust + bookings.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=520&fit=crop",
+    thumbnail: summitThumbUrl,
     accent: "#8c4f1f",
     available: true,
     features: [
@@ -97,8 +101,7 @@ export const TEMPLATES: TemplateOption[] = [
     tagline: "Roofing contractor · navy + orange",
     description:
       "Premium roofing template with 24/7 emergency bar, Google rating header, hero with trust pills, 4-card service grid, why-choose-us with credentials, customer reviews carousel, before/after gallery, and a dark estimate CTA. Best fit for roofing companies and storm-damage specialists.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&h=520&q=85",
+    thumbnail: ridgepeakThumbUrl,
     accent: "#f97316",
     available: true,
     features: [
@@ -121,8 +124,7 @@ export const TEMPLATES: TemplateOption[] = [
     tagline: "Premium roofing · navy + blue accent",
     description:
       "Premium roofing template with announcement bar, big hero on a dark navy backdrop, services grid, why-choose-us card stack, recent projects gallery, testimonials, pricing tiers, blog and contact. Built for roofing companies focused on lead generation.",
-    /** Self-hosted roofing image (Nexora roofing dataset, not the RidgePeak hero) for CSP-safe admin thumbs. */
-    thumbnail: "/admin-template-thumbs/roofix.jpg",
+    thumbnail: roofixThumbUrl,
     accent: "#2563eb",
     available: true,
     features: [

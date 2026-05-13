@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520" role="img" aria-label="Constructo template">
+  <defs>
+    <linearGradient id="c-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1530"/>
+      <stop offset="55%" stop-color="#122038"/>
+      <stop offset="100%" stop-color="#1a2e4f"/>
+    </linearGradient>
+    <linearGradient id="c-glow" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#e4b012" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#e4b012" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" fill="url(#c-bg)"/>
+  <rect width="800" height="520" fill="url(#c-glow)"/>
+  <g stroke="#e8edf5" stroke-opacity="0.06" stroke-width="1" fill="none">
+    <path d="M0 80 H800 M0 160 H800 M0 240 H800 M0 320 H800 M0 400 H800"/>
+    <path d="M100 0 V520 M200 0 V520 M300 0 V520 M400 0 V520 M500 0 V520 M600 0 V520 M700 0 V520"/>
+  </g>
+  <path d="M0 472 L120 472 L164 438 L296 438 L356 472 L520 472 L596 392 L682 472 L800 472 V520 H0 Z" fill="#071022" opacity="0.45"/>
+  <g transform="translate(400 252)">
+    <text xml:space="preserve" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="800" letter-spacing="-0.02em" text-anchor="middle" dominant-baseline="middle">CONSTRUCTO</text>
+    <rect x="-168" y="38" width="336" height="5" rx="2" fill="#e4b012" opacity="0.95"/>
+    <text xml:space="preserve" fill="#e4b012" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" letter-spacing="0.22em" text-anchor="middle" y="78" opacity="0.92">DESIGN-BUILD STUDIO</text>
+  </g>
+  <rect x="0" y="0" width="800" height="520" fill="none" stroke="#e4b012" stroke-opacity="0.12" stroke-width="2"/>
+</svg>

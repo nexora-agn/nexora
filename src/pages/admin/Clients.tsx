@@ -153,7 +153,10 @@ const AdminClients = () => {
                       {c.notes && <div className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{c.notes}</div>}
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
-                      <div className="flex items-center gap-3 min-w-0 max-w-[220px]">
+                      <Link
+                        to={`/admin/clients/${c.id}`}
+                        className="flex items-center gap-3 min-w-0 max-w-[220px] rounded-md -m-1 p-1 -ml-1 hover:bg-muted/50 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
                         <div
                           className="relative h-11 w-[4.75rem] shrink-0 overflow-hidden rounded-md border bg-muted shadow-sm"
                           aria-hidden
@@ -174,7 +177,7 @@ const AdminClients = () => {
                           <div className="text-sm font-medium leading-snug truncate">{tpl.name}</div>
                           <div className="text-[11px] text-muted-foreground leading-snug truncate">{tpl.tagline}</div>
                         </div>
-                      </div>
+                      </Link>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
                       {c.contact_email || c.contact_phone || <span className="text-muted-foreground/60">N/A</span>}
