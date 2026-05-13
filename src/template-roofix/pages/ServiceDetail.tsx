@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit ServiceDetail. New archetypes (not on home, not on Constructo):
+/** Roofix ServiceDetail. Archetypes (not on Constructo's layout):
  *  1. Diagonal-wedge image hero with metadata tape
  *  2. Vertical scope→deliverables accordion with thumbnail preview pane
  *  3. Duration + budget table styled as a permit slab
@@ -36,74 +36,74 @@ interface ScopePhase {
 
 const SCOPE_PHASES: ScopePhase[] = [
   {
-    id: "discovery",
-    label: "Discovery & feasibility",
+    id: "inspection",
+    label: "Inspection & documentation",
     summary:
-      "Site walk, existing-conditions review, and a written feasibility note before any pricing happens.",
+      "We walk every plane of the roof, photograph soft decking and flashings, and document venting — before we talk price.",
     deliverables: [
-      "Site walk + photo log",
-      "Zoning & code memo",
-      "Order-of-magnitude cost band",
-      "Schedule sketch with critical path",
+      "Attic + exterior photo set",
+      "Flashing condition notes",
+      "Ventilation + ice/water plan",
+      "Written scope recap same visit",
     ],
     thumb:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&h=700&fit=crop",
+      "https://images.unsplash.com/photo-1695045194325-af9f065d5587?auto=format&fit=crop&w=900&h=700&q=85",
   },
   {
     id: "design",
-    label: "Design alignment",
+    label: "System selection",
     summary:
-      "We coordinate with your architect (or bring our own), test trade-offs, and lock the program.",
+      "Pick shingle tier, drip edge spec, skylight trims, gutters — engineered to manufacturer detail, not guesses.",
     deliverables: [
-      "Architectural narrative",
-      "MEP basis-of-design",
-      "Allowance schedule",
-      "Long-lead procurement plan",
+      "Starter + ridge cap spelled out",
+      "Underlayment + ice-water map",
+      "Color + accessory samples",
+      "HOA submission packet when needed",
     ],
     thumb:
-      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=900&h=700&fit=crop",
+      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&h=700&q=85",
   },
   {
-    id: "preconstruction",
-    label: "Preconstruction & permits",
+    id: "scheduling",
+    label: "Permits · dumpsters · crews",
     summary:
-      "Drawings priced, subs pre-qualified, permits filed. Nothing leaves the office without a sub on it.",
+      "Lock the production calendar once materials are confirmed. HOA letters, porta-potty routing, tarp coverage — scripted.",
     deliverables: [
-      "Permit set + city liaison",
-      "Subcontractor leveling matrix",
-      "Insurance & bonding stack",
-      "GMP or fixed-price proposal",
+      "Permits / HOA letters filed",
+      "Material delivery ETA",
+      "Dumpster placement map",
+      "Neighborhood courtesy notice",
     ],
     thumb:
-      "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&h=700&fit=crop",
+      "https://images.unsplash.com/photo-1763149191834-471c980404f6?auto=format&fit=crop&w=900&h=700&q=85",
   },
   {
-    id: "build",
-    label: "Build phase",
+    id: "install",
+    label: "Tear-off & install",
     summary:
-      "Senior super on site daily. Weekly photo log, three-day look-ahead, and an owner walk every Friday.",
+      "One crew lead on the roof daily. Decking repairs photographed, nail patterns checked, skylights reflashed quietly.",
     deliverables: [
-      "Daily safety + sign-in log",
-      "Weekly photo + schedule update",
-      "Friday owner walk + minutes",
-      "Change-order discipline (priced first)",
+      "Lift-by-lift photo log",
+      "Deck repairs priced before plywood goes down",
+      "Mag sweep + gutters cleared each day",
+      "Superintendent sign-off nightly",
     ],
     thumb:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&h=700&fit=crop",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&h=700&q=85",
   },
   {
     id: "closeout",
-    label: "Closeout & aftercare",
+    label: "Final QA & registration",
     summary:
-      "Punch closed before final pay. O&M binder, warranty stack, and a real phone number that picks up.",
+      "Manufacturer inspection booked, ridge vents aired, homeowner walk-through with printed packet.",
     deliverables: [
-      "Punch list with photos, signed",
-      "As-builts + O&M manuals (digital)",
-      "Warranty stack delivered to owner",
+      "Final walk checklist signed",
+      "Warranty paperwork registered",
+      "Care + maintenance primer",
       "10-year workmanship pledge",
     ],
     thumb:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&h=700&fit=crop",
+      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&h=700&q=85",
   },
 ];
 
@@ -116,51 +116,51 @@ interface BudgetBand {
 
 const BUDGET_BANDS: BudgetBand[] = [
   {
-    scale: "Compact (single-trade focus)",
-    value: "$50K – $250K",
-    duration: "4 – 10 weeks",
+    scale: "Repair & service tickets",
+    value: "$500 – $4K",
+    duration: "Same week",
+    contract: "T&M cap",
+  },
+  {
+    scale: "Typical steep-slope re-roof",
+    value: "$12K – $28K",
+    duration: "2 – 5 days onsite",
     contract: "Fixed price",
   },
   {
-    scale: "Mid (renovation + addition / TI)",
-    value: "$250K – $2M",
-    duration: "3 – 8 months",
-    contract: "Fixed-price milestones",
+    scale: "Large / designer steep roofs",
+    value: "$28K – $75K",
+    duration: "1 – 3 weeks",
+    contract: "Fixed + allowances",
   },
   {
-    scale: "Major (ground-up / large reno)",
-    value: "$2M – $15M",
-    duration: "6 – 14 months",
-    contract: "GMP with allowances",
-  },
-  {
-    scale: "Anchor (multi-phase / campus)",
-    value: "$15M+",
-    duration: "12 – 24 months",
-    contract: "Negotiated GMP / IPD",
+    scale: "Low-slope / commercial membranes",
+    value: "$9 – $22 / sq.ft.",
+    duration: "3 – 10 days",
+    contract: "Milestone billing",
   },
 ];
 
 const ADDONS = [
   {
     icon: Sparkles,
-    title: "Owner-furniture procurement",
-    body: "We'll receive, inspect, and stage everything before move-in day so you don't unpack a damaged piece.",
+    title: "Seamless gutter + gutter guard",
+    body: "Color-matched fascia accessories with dedicated hang crew — not an afterthought on day four.",
   },
   {
     icon: ShieldCheck,
-    title: "Building-systems commissioning",
-    body: "Independent commissioning of HVAC, controls, and envelope before you accept the building.",
+    title: "Skylights & sun tunnels",
+    body: "Flashing kits installed to manufacturer torque specs with interior protection while we cut.",
   },
   {
     icon: CalendarRange,
-    title: "Annual building checkup",
-    body: "We come back in year one and year two — caulk, sealants, mechanicals — and write a one-page report.",
+    title: "Maintenance club",
+    body: "Bi-annual roof tune-ups: fastener check, flashing photos, ridge vent airflow — summarized in email.",
   },
   {
     icon: Hammer,
-    title: "Aftercare retainer",
-    body: "A named technician on standby for small fixes so you're not chasing your original GC.",
+    title: "Storm response standby",
+    body: "Pre-storm ladder check + post-storm tarping hotline routed to whichever crew knows your roof.",
   },
 ];
 
@@ -221,7 +221,7 @@ const ServiceDetail = () => {
             to="/services"
             className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-white/70 hover:text-secondary transition-colors mb-6"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> All four pillars
+            <ArrowLeft className="h-3.5 w-3.5" /> All roofing services
           </Link>
           <p className="text-xs font-bold tracking-[0.28em] text-secondary mb-3">
             SERVICE FILE · {service.id.replace(/-/g, " ").toUpperCase()}
@@ -238,7 +238,7 @@ const ServiceDetail = () => {
           <div className="container-custom px-4 md:px-8 py-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] md:text-xs font-bold tracking-widest uppercase">
             <span>License · Bonded</span>
             <span className="opacity-40">·</span>
-            <span>OSHA-30 field</span>
+            <span>Fall protection + OSHA-30 crews</span>
             <span className="opacity-40">·</span>
             <span>10-yr workmanship warranty</span>
             <span className="opacity-40">·</span>
@@ -255,7 +255,7 @@ const ServiceDetail = () => {
               SCOPE FILE
             </p>
             <h2 className="text-3xl md:text-4xl font-black uppercase text-primary tracking-tight leading-[1.05]">
-              The five doors we open with every owner.
+              The five phases we run on every roof.
             </h2>
           </div>
 

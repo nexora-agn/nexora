@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit Careers — distinct from a generic perks-grid + jobs-list + dark CTA pattern.
+/** Roofix Careers — distinct from a generic perks-grid + jobs-list + dark CTA pattern.
  *  Archetypes:
  *  1. Stat-led split hero with retention numbers
  *  2. Interview journey horizontal stepper
@@ -41,12 +41,12 @@ const STEPS = [
   {
     icon: Phone,
     label: "Phone screen",
-    body: "Twenty minutes with a senior super or PM. Two-way conversation, not interrogation.",
+    body: "Twenty minutes with a senior superintendent or estimator. Two-way conversation, not interrogation.",
   },
   {
     icon: HardHat,
     label: "Site ride-along",
-    body: "Half a day on an active jobsite with the crew you'd join. Lunch on us.",
+    body: "Half a day on active roofs with the crew you'd join. Lunch on us.",
   },
   {
     icon: ClipboardCheck,
@@ -68,7 +68,7 @@ const BENEFIT_TABS: BenefitTab[] = [
   {
     id: "fulltime",
     label: "Full-time staff",
-    who: "PMs, supers, estimators, office",
+    who: "Production managers, estimators, office",
     perks: [
       {
         icon: Coffee,
@@ -87,15 +87,15 @@ const BENEFIT_TABS: BenefitTab[] = [
       },
       {
         icon: Award,
-        title: "Project bonus pool",
-        body: "Closeouts under budget and on schedule split a bonus pool — not a discretionary handshake.",
+        title: "On-time closeout pool",
+        body: "Crews that finish clean and callback-free split a bonus pool — published, not whispered.",
       },
     ],
   },
   {
     id: "craft",
     label: "Craft & field",
-    who: "Carpenters, finishers, laborers",
+    who: "Installers, repair techs, laborers",
     perks: [
       {
         icon: Wrench,
@@ -115,7 +115,7 @@ const BENEFIT_TABS: BenefitTab[] = [
       {
         icon: Users,
         title: "Steady crew",
-        body: "Crew assignments stay together for a full project — not split mid-job to chase another bid.",
+        body: "Crew pairings stay together for a full roof — not split mid-job to chase another storm.",
       },
     ],
   },
@@ -127,7 +127,7 @@ const BENEFIT_TABS: BenefitTab[] = [
       {
         icon: GraduationCap,
         title: "Mentor pairing",
-        body: "Paired with a senior craftsman for a documented two-year curriculum.",
+        body: "Paired with a senior installer for a documented two-year safety + install curriculum.",
       },
       {
         icon: CalendarRange,
@@ -142,7 +142,7 @@ const BENEFIT_TABS: BenefitTab[] = [
       {
         icon: Award,
         title: "Promotion ladder",
-        body: "Written milestones to journeyman with reviews every six months.",
+        body: "Written milestones to journeyman installer with reviews every six months.",
       },
     ],
   },
@@ -159,49 +159,49 @@ interface JobOpening {
 
 const OPENINGS: JobOpening[] = [
   {
-    id: "senior-super-commercial",
-    role: "Senior Superintendent — Commercial",
-    type: "Full-time",
-    location: "Dallas / Fort Worth",
-    level: "10+ yrs",
+    id: "crew-lead-steep",
+    role: "Crew Lead — Steep slope",
+    type: "Full-time / field",
+    location: "DFW yards",
+    level: "7+ yrs",
     summary:
-      "Lead a single ground-up or major TI from preconstruction through punch. Senior PM partner, no rotating projects.",
+      "Run 4–6 person detachments, coach nail patterns, own magnet sweeps and QA photos every lift.",
   },
   {
-    id: "pm-residential",
-    role: "Project Manager — Residential",
-    type: "Full-time",
-    location: "Frisco yard",
-    level: "5–10 yrs",
-    summary:
-      "Run two custom homes concurrently with a dedicated super and estimator. Owner-facing role.",
-  },
-  {
-    id: "estimator-mid",
-    role: "Estimator — Mid-market",
-    type: "Full-time",
-    location: "Dallas office",
+    id: "service-tech",
+    role: "Service & Repair Technician",
+    type: "Full-time / field",
+    location: "Dispatch, DFW",
     level: "3–7 yrs",
     summary:
-      "Conceptual through GMP estimating across renovation and ground-up. WinEst or similar.",
+      "Leak tracing, flashing rebuilds, warranty callbacks — truck stocked, documentation-first mindset.",
   },
   {
-    id: "lead-carpenter",
-    role: "Lead Carpenter",
-    type: "Full-time / craft",
-    location: "Field, DFW",
+    id: "estimator-res",
+    role: "Estimator — Residential",
+    type: "Full-time",
+    location: "Dallas office",
+    level: "4–9 yrs",
+    summary:
+      "Xactimate + hand-measure verification, supplement support, photo-rich proposals for homeowners.",
+  },
+  {
+    id: "low-slope-mechanic",
+    role: "Low-slope Mechanic",
+    type: "Full-time / field",
+    location: "Commercial routes",
     level: "5+ yrs",
     summary:
-      "Run a finish crew across high-end residential and hospitality. Read drawings, cut stairs, mentor apprentices.",
+      "TPO/PVC welds, ISO tapers, detail photos for property managers — safety harness hours current.",
   },
   {
-    id: "apprentice-carpentry",
-    role: "Apprentice — Carpentry",
+    id: "apprentice-roofing",
+    role: "Apprentice — Roofing",
     type: "Apprentice",
     location: "Field, DFW",
-    level: "Trade school grad",
+    level: "Entry / trade school",
     summary:
-      "Two-year mentored program, paired with a senior craftsman. Day-shift schedule.",
+      "Two-year mentored program: tear-off etiquette, harness discipline, and manufacturer certifications.",
   },
 ];
 
@@ -218,7 +218,7 @@ const Careers = () => {
         <title>Build a career | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`Open roles at ${COMPANY.name} — staff PMs, supers, craftspeople, and apprentices.`}
+          content={`Open roles at ${COMPANY.name}: crew leads, installers, estimators, and apprentices.`}
         />
       </Helmet>
 
@@ -379,9 +379,10 @@ const Careers = () => {
               The numbers we work to keep.
             </h2>
             <p className="mt-5 text-base md:text-lg text-white/85 leading-relaxed max-w-md">
-              Every Summit jobsite runs on a documented safety plan. Every
-              employee — office or field — has stop-work authority. We post
-              these numbers because we're proud of them and held to them.
+              Every Roofix rooftop runs under a harness plan and weather hold
+              protocol. Every employee — estimating or installer — has
+              stop-work authority. We publish these metrics because inspectors
+              and carriers ask for them weekly.
             </p>
           </div>
           <div className="lg:col-span-7 grid grid-cols-2 lg:grid-cols-4 gap-4">

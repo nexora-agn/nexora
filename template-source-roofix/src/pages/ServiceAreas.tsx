@@ -9,13 +9,13 @@ import {
   Clock,
   Phone,
 } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-roofix/components/layout/Layout";
+import Reveal from "@template-roofix/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit ServiceAreas — distinct from city-cards + promise-band + map + CTA pattern.
+/** Roofix ServiceAreas — distinct from city-cards + promise-band + map + CTA pattern.
  *  Archetypes:
  *  1. Custom hero with crawling city ticker
  *  2. Drive-time concentric ring infographic
@@ -86,31 +86,31 @@ const DISPATCH: DispatchEntry[] = [
   {
     status: "On site",
     city: "Frisco, TX",
-    detail: "Custom home · framing inspection booked",
+    detail: "Hail rebuild · ridge vent balance check",
     time: "Active now",
   },
   {
     status: "Mobilizing",
     city: "Plano, TX",
-    detail: "Office TI · trailer dropped, temp power on",
+    detail: "Low-slope TPO recover · crane swing scheduled",
     time: "Today",
   },
   {
     status: "Closing out",
     city: "Dallas, TX",
-    detail: "Restaurant fit-out · health inspection cleared",
+    detail: "Designer shingle install · HOA final punch",
     time: "This week",
   },
   {
     status: "Pre-walk",
     city: "Fort Worth, TX",
-    detail: "Estate renovation · kickoff Monday 7am",
+    detail: "Full tear-off kickoff Monday 7am tarp crew staged",
     time: "Mon",
   },
   {
     status: "On site",
     city: "Arlington, TX",
-    detail: "Tilt-wall · two panels stood today",
+    detail: "Skylight well rebuild · flashing detail photos uploading",
     time: "Active now",
   },
 ];
@@ -119,38 +119,38 @@ const NEIGHBORHOOD_CASES = [
   {
     zip: "75034",
     city: "Frisco",
-    project: "Custom home, 4,800 sqft",
-    note: "Mature oak protection plan, 8-month build.",
+    project: "Class 4 impact install",
+    note: "HOA color board signed off before shingles arrived.",
   },
   {
     zip: "76104",
     city: "Fort Worth",
-    project: "Restaurant fit-out",
-    note: "14-week shell-to-opening on Magnolia Ave.",
+    project: "Historic craftsman reroof",
+    note: "Synthetic underlayment + copper valley details.",
   },
   {
     zip: "75024",
     city: "Plano",
-    project: "Office TI",
-    note: "After-hours phasing, occupied building.",
+    project: "Townhome rows",
+    note: "Phased tear-offs so neighbors kept covered parking.",
   },
   {
     zip: "76039",
     city: "Euless",
-    project: "Tilt-wall industrial",
-    note: "180,000 sqft distribution facility.",
+    project: "Warehouse TPO",
+    note: "ISO taper pack eliminated ponding at scuppers.",
   },
   {
     zip: "75252",
     city: "Dallas",
-    project: "Whole-home renovation",
-    note: "Lived-in remodel, dust controls, kitchen worked the entire job.",
+    project: "Storm supplement",
+    note: "Code drip edge + ice/water added after adjuster revisit.",
   },
   {
     zip: "76092",
     city: "Southlake",
     project: "Estate compound",
-    note: "Multi-phase, pool house and main residence under one GMP.",
+    note: "Main house + guest casita under one production calendar.",
   },
 ];
 
@@ -208,7 +208,7 @@ const ServiceAreas = () => {
         </div>
         {/* City crawl */}
         <div className="bg-secondary text-secondary-foreground py-3 overflow-hidden border-y-2 border-primary/30 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
-          <div className="flex shrink-0 gap-8 px-4 animate-[summit-areas-marquee_60s_linear_infinite]">
+          <div className="flex shrink-0 gap-8 px-4 animate-[roofix-areas-marquee_60s_linear_infinite]">
             {[...PRIMARY_CITIES, ...PRIMARY_CITIES].map((c, i) => (
               <span
                 key={`${c}-${i}`}
@@ -219,7 +219,7 @@ const ServiceAreas = () => {
               </span>
             ))}
           </div>
-          <style>{`@keyframes summit-areas-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
+          <style>{`@keyframes roofix-areas-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
         </div>
       </section>
 
@@ -352,7 +352,7 @@ const ServiceAreas = () => {
                         "h-2 w-2 rounded-full",
                         row.status === "On site" && "bg-emerald-400 animate-pulse",
                         row.status === "Mobilizing" && "bg-secondary",
-                        row.status === "Closing out" && "bg-amber-400",
+                        row.status === "Closing out" && "bg-emerald-500",
                         row.status === "Pre-walk" && "bg-blue-400",
                       )}
                     />

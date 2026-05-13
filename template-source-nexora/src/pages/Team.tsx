@@ -1,8 +1,8 @@
 import { Helmet } from "react-helmet-async";
-import Layout from "@/components/layout/Layout";
-import PageHeader from "@/components/sections/PageHeader";
-import CTASection from "@/components/sections/CTASection";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import Layout from "@template-nexora/components/layout/Layout";
+import PageHeader from "@template-nexora/components/sections/PageHeader";
+import CTASection from "@template-nexora/components/sections/CTASection";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 import { Linkedin, Twitter } from "lucide-react";
 
 const Team = () => {

@@ -291,7 +291,7 @@ const Blog = () => {
       </section>
 
       {/* 5 — Page-unique closing line (NOT a newsletter form) */}
-      <section className="bg-primary text-primary-foreground border-t border-secondary/30">
+      <section className="bg-primary text-primary-foreground">
         <div className="container-custom px-4 md:px-8 py-12 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
           <div>
             <p className="text-[11px] font-bold tracking-[0.28em] uppercase text-secondary mb-2">

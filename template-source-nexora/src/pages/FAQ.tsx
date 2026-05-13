@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import Layout from "@/components/layout/Layout";
-import PageHeader from "@/components/sections/PageHeader";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-nexora/components/layout/Layout";
+import PageHeader from "@template-nexora/components/sections/PageHeader";
+import Reveal from "@template-nexora/components/animations/Reveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { FAQ_BY_CATEGORY, FAQ_TABS, FAQ_ITEMS as DEFAULT_FAQ_ITEMS, type FaqTabId } from "@/data/siteData";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { FAQ_BY_CATEGORY, FAQ_TABS, FAQ_ITEMS as DEFAULT_FAQ_ITEMS, type FaqTabId } from "@template-nexora/data/siteData";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
 const FAQ = () => {

@@ -35,16 +35,6 @@ const LeadContactSection = () => {
 
   return (
     <section className="relative bg-primary text-primary-foreground overflow-hidden">
-      {/* Subtle blueprint pattern */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
       <div className="container-custom relative px-4 md:px-8 py-16 md:py-20">
         <div className="grid lg:grid-cols-12 gap-10 items-start">
           {/* Left intro */}

@@ -269,7 +269,7 @@ const Projects = () => {
       </Reveal>
 
       {/* 4 — Closing tape-strip CTA */}
-      <section className="bg-primary text-primary-foreground border-t border-secondary/30">
+      <section className="bg-primary text-primary-foreground">
         <div className="container-custom px-4 md:px-8 py-12 md:py-16 grid md:grid-cols-2 gap-6 items-center">
           <div>
             <p className="text-xs font-bold tracking-[0.28em] text-secondary mb-3">

@@ -14,7 +14,7 @@ import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { BLOG_POSTS } from "@template-roofix/data/siteData";
 import { cn } from "@/lib/utils";
 
-/** Summit Blog. Distinct from Constructo's featured + sidebar + newsletter pattern.
+/** Roofix Blog. Distinct from Constructo's featured + sidebar + newsletter pattern.
  *  Archetypes:
  *  1. Stat-led split hero
  *  2. Editor's picks grid (3 covers)

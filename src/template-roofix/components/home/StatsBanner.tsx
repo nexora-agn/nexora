@@ -105,7 +105,7 @@ const StatsBanner = () => {
             BY THE NUMBERS
           </p>
           <h2 className="mt-2 text-2xl md:text-3xl font-bold">
-            Nearly three decades of trusted craftsmanship.
+            Fifteen-plus years protecting North Texas roofs.
           </h2>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-10 lg:gap-y-0 text-center lg:divide-x lg:divide-secondary-foreground/20">

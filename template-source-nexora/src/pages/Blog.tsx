@@ -1,16 +1,16 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
-import Layout from "@/components/layout/Layout";
-import PageHeader from "@/components/sections/PageHeader";
-import PaginationControls from "@/components/layout/PaginationControls";
-import Reveal from "@/components/animations/Reveal";
-import { BLOG_POSTS, BLOG_LIST_PAGE_SIZE, getBlogCategoryCounts } from "@/data/siteData";
+import Layout from "@template-nexora/components/layout/Layout";
+import PageHeader from "@template-nexora/components/sections/PageHeader";
+import PaginationControls from "@template-nexora/components/layout/PaginationControls";
+import Reveal from "@template-nexora/components/animations/Reveal";
+import { BLOG_POSTS, BLOG_LIST_PAGE_SIZE, getBlogCategoryCounts } from "@template-nexora/data/siteData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Search } from "lucide-react";
-import { clampPage, parsePageParam, slicePage, totalPages as totalPagesCount } from "@/lib/pagination";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { clampPage, parsePageParam, slicePage, totalPages as totalPagesCount } from "@template-nexora/lib/pagination";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 
 const Blog = () => {
   const { sectionVisibility, company: COMPANY, blogTags: BLOG_TAGS } = useSiteContent();

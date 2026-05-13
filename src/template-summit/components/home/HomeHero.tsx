@@ -7,6 +7,7 @@ import {
   Award,
   Clock,
   BadgeCheck,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@template-summit/contexts/SiteContentContext";
@@ -76,17 +77,6 @@ const HomeHero = () => {
           className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"
         />
       </div>
-
-      {/* Decorative grid */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
-      />
 
       <div className="container-custom relative px-4 md:px-8 py-20 md:py-28 lg:py-32">
         <div className="grid lg:grid-cols-12 gap-10 items-center">
@@ -164,51 +154,61 @@ const HomeHero = () => {
                 );
               })}
             </div>
-          </div>
 
-          {/* Floating Google review card */}
-          <div className="hidden lg:block lg:col-span-5">
-            <div className="ml-auto max-w-sm rounded-xl bg-white text-foreground shadow-2xl shadow-black/40 p-5 border border-border">
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-border shadow-sm">
-                  <span className="text-xl font-black bg-gradient-to-br from-blue-500 via-yellow-500 to-red-500 bg-clip-text text-transparent">
-                    G
+            {/* Summit: integrated review ribbon (no faux Google tile) */}
+            <div className="mt-8 max-w-xl rounded-2xl border border-white/20 bg-white/10 px-5 py-4 backdrop-blur-md shadow-xl shadow-black/20">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-3xl font-black tabular-nums leading-none">
+                    {ratingValue}
                   </span>
-                </span>
-                <div className="leading-tight">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-2xl font-black">{ratingValue}</span>
-                    <div className="flex">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-4 w-4 fill-secondary text-secondary"
-                          aria-hidden
-                        />
-                      ))}
-                    </div>
+                  <div className="flex" aria-hidden>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="h-4 w-4 fill-secondary text-secondary"
+                      />
+                    ))}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Based on {ratingCount}
-                  </p>
+                </div>
+                <p className="text-xs sm:text-sm text-white/80 font-medium uppercase tracking-[0.12em]">
+                  Client reviews · {ratingCount}
+                </p>
+                <div className="flex -space-x-2 ml-auto shrink-0">
+                  {[
+                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop",
+                    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
+                    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop",
+                    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&h=80&fit=crop",
+                  ].map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt=""
+                      className="h-9 w-9 rounded-full ring-2 ring-primary/70 object-cover"
+                      loading="lazy"
+                    />
+                  ))}
                 </div>
               </div>
-              <div className="mt-4 flex -space-x-2">
-                {[
-                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop",
-                ].map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
-                    className="h-9 w-9 rounded-full ring-2 ring-white object-cover"
-                    loading="lazy"
-                  />
-                ))}
+            </div>
+          </div>
+
+          {/* Summit: secondary panel — credential story, distinct from Roofing/Nexora cards */}
+          <div className="lg:col-span-5 lg:justify-self-end w-full lg:max-w-sm">
+            <div className="rounded-3xl border border-white/25 bg-gradient-to-br from-white/14 to-white/6 p-7 backdrop-blur-md shadow-2xl shadow-black/30">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-lg mb-5">
+                <Building2 className="h-6 w-6" aria-hidden strokeWidth={1.75} />
+              </div>
+              <p className="text-[10px] font-black tracking-[0.28em] text-secondary uppercase mb-2">
+                Field-tested builds
+              </p>
+              <p className="text-lg font-bold tracking-tight text-white leading-snug">
+                Coordinated crews, clean sites, and documentation you can send to inspectors without a second guess.
+              </p>
+              <div className="mt-6 flex items-center gap-3 text-white/85 text-sm border-t border-white/15 pt-5">
+                <Award className="h-8 w-8 text-secondary shrink-0" aria-hidden strokeWidth={1.4} />
+                <span>Fully insured teams on every mobilization · references on request.</span>
               </div>
             </div>
           </div>

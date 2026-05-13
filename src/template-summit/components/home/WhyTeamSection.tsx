@@ -29,17 +29,6 @@ const WhyTeamSection = () => {
 
   return (
     <section className="relative bg-primary text-primary-foreground section-padding overflow-hidden">
-      {/* subtle grid */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
-      />
-
       <div className="container-custom relative px-4 md:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
@@ -79,7 +68,7 @@ const WhyTeamSection = () => {
             </div>
 
             {/* Accreditation logos */}
-            <div className="mt-12 flex flex-wrap items-center gap-6 lg:gap-8 pt-8 border-t border-white/10">
+            <div className="mt-12 flex flex-wrap items-center gap-6 lg:gap-8 pt-8">
               {CERTIFICATIONS.map(cert => (
                 <div
                   key={cert.id}

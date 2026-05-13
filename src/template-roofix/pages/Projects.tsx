@@ -9,7 +9,7 @@ import { useTheme } from "@template-roofix/contexts/ThemeContext";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit Projects. New archetypes (not on home, not on Constructo):
+/** Roofix Projects. Distinct archetypes vs other templates:
  *  1. Stat-led split hero with category counter
  *  2. Filter pills + asymmetric bento masonry grid
  *  3. Sector KPI ribbon (different metrics from homepage stats)

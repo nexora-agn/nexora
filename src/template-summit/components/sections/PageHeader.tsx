@@ -19,15 +19,6 @@ const PageHeader = ({
   if (variant === "dark") {
     return (
       <section className="relative bg-primary text-primary-foreground py-20 md:py-28 overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-            backgroundSize: "56px 56px",
-          }}
-        />
         <div className={cn("container-custom relative px-4 md:px-8", align === "center" && "text-center")}>
           {eyebrow && (
             <p className="text-xs md:text-sm font-bold tracking-[0.22em] text-secondary mb-4">{eyebrow}</p>

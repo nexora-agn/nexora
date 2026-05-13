@@ -27,7 +27,7 @@ const ServiceAreas = () => {
         title="Areas We Serve"
         eyebrowAfter="North Texas Roofing Crews"
         body={`From emergency tarping to full replacements, our crews roll deep across the Metroplex. Same honest pricing and workmanship warranty — ${SITE_TOP.locations || "Frisco · McKinney · Plano · Allen"}.`}
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1768162486370-0895686d087c?auto=format&fit=crop&w=1400&h=900&q=85"
         badges={
           <div className="flex flex-wrap gap-3">
             <span className="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-2 text-xs font-bold">

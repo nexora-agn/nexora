@@ -1,18 +1,51 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, Calendar, Tag, ShieldCheck, Star } from "lucide-react";
+import {
+  ArrowRight,
+  Phone,
+  Calendar,
+  Tag,
+  ShieldCheck,
+  Star,
+  Quote,
+  Medal,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 
 const iconMap = { Calendar, Tag, ShieldCheck } as const;
 
+const DEFAULT_RATING_AVATARS = [
+  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop",
+  "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop",
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop",
+  "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&h=80&fit=crop",
+] as const;
+
 const HomeHero = () => {
-  const { homeHero: HOME_HERO, company: COMPANY } = useSiteContent();
+  const { homeHero: HOME_HERO, company: COMPANY, siteTop: SITE_TOP } = useSiteContent();
   const trustPills = (HOME_HERO as any).trustPills as
     | { label: string; sub: string; icon: keyof typeof iconMap }[]
     | undefined;
   const ratingCard = (HOME_HERO as any).ratingCard as
     | { score: string; countLabel: string; avatars: string[] }
     | undefined;
+  const fallbackScore = (SITE_TOP as { ratingValue?: string }).ratingValue ?? "4.9";
+  const fallbackLabel =
+    (SITE_TOP as { ratingCount?: string }).ratingCount != null
+      ? `Backed by ${String((SITE_TOP as { ratingCount?: string }).ratingCount)} homeowner reviews`
+      : "Highly rated by local homeowners";
+
+  const displayScore = ratingCard?.score ?? fallbackScore;
+  const displayLabel = ratingCard?.countLabel ?? fallbackLabel;
+  const displayAvatars =
+    ratingCard?.avatars && ratingCard.avatars.length > 0 ? ratingCard.avatars : [...DEFAULT_RATING_AVATARS];
+  const ratingQuote =
+    String((HOME_HERO as { ratingQuote?: string }).ratingQuote ?? "").trim() ||
+    "Straight answers on the estimate, crews that cleaned up nightly, and a roof that survived the last wind season.";
+  const showReviewPedestal =
+    ratingCard != null ||
+    Boolean((SITE_TOP as { ratingValue?: string }).ratingValue) ||
+    Boolean((SITE_TOP as { ratingCount?: string }).ratingCount);
   const phoneHref = `tel:${(COMPANY.phone || "").replace(/[^+\d]/g, "")}`;
 
   return (
@@ -106,41 +139,55 @@ const HomeHero = () => {
             )}
           </div>
 
-          {/* Floating rating card */}
-          {ratingCard && (
-            <div className="lg:col-span-5 lg:justify-self-end">
-              <div className="relative inline-flex w-full lg:w-auto lg:max-w-sm">
-                <div className="bg-white rounded-xl shadow-2xl p-5 w-full">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-slate-100 shadow-inner">
-                      <span className="text-[15px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC05]">G</span>
-                    </span>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-2xl font-extrabold text-slate-900 leading-none">
-                          {ratingCard.score}
-                        </span>
-                        <span className="flex gap-0.5">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-4 w-4 fill-[hsl(var(--secondary))] text-[hsl(var(--secondary))]"
-                            />
-                          ))}
-                        </span>
-                      </div>
-                      <span className="text-xs text-slate-500 font-medium block mt-0.5">
-                        {ratingCard.countLabel}
-                      </span>
+          {showReviewPedestal && (
+            <div className="lg:col-span-5 lg:justify-self-end w-full">
+              <div className="relative w-full lg:w-auto lg:max-w-[340px] pt-8">
+                {/* Ridgepeak-style testimonial pedestal (distinct from Summit ribbon + Roofix slab) */}
+                <div className="absolute -top-2 right-10 z-20 flex flex-col items-center">
+                  <div className="flex h-[4.75rem] w-[4.75rem] flex-col items-center justify-center rounded-full border-4 border-[hsl(var(--secondary))] bg-white shadow-xl shadow-black/25">
+                    <span className="text-2xl font-black text-slate-900 leading-none">{displayScore}</span>
+                    <div className="mt-1 flex gap-px" aria-hidden>
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="h-2.5 w-2.5 fill-[hsl(var(--secondary))] text-[hsl(var(--secondary))]"
+                        />
+                      ))}
                     </div>
                   </div>
-                  <div className="mt-4 flex -space-x-2">
-                    {ratingCard.avatars.map((src, i) => (
+                  <Medal className="h-5 w-5 text-[hsl(var(--secondary))] -mt-1 drop-shadow-sm" aria-hidden />
+                </div>
+
+                <div className="relative overflow-hidden rounded-[2rem] border border-white/50 bg-gradient-to-b from-white via-white to-slate-100 px-8 pb-8 pt-12 shadow-[0_24px_50px_-20px_rgba(0,0,0,0.45)]">
+                  <Quote
+                    className="absolute left-6 top-6 h-14 w-14 text-[hsl(var(--secondary))]/25"
+                    strokeWidth={1.25}
+                    aria-hidden
+                  />
+                  <div className="relative text-center mt-6">
+                    <p className="text-[11px] font-black tracking-[0.2em] text-slate-500 uppercase mb-2">
+                      Proudly serving our neighbors
+                    </p>
+                    <p className="text-sm md:text-[15px] text-slate-700 font-semibold leading-relaxed italic">
+                      &ldquo;{ratingQuote}&rdquo;
+                    </p>
+                    <div className="mt-5 flex justify-center gap-1" aria-hidden>
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="h-5 w-5 fill-[hsl(var(--secondary))] text-[hsl(var(--secondary))]"
+                        />
+                      ))}
+                    </div>
+                    <p className="mt-3 text-xs font-bold text-slate-500">{displayLabel}</p>
+                  </div>
+                  <div className="mt-6 flex justify-center -space-x-2 pt-6 border-t border-slate-200/90">
+                    {displayAvatars.map((src, i) => (
                       <img
                         key={src + i}
                         src={src}
                         alt=""
-                        className="h-9 w-9 rounded-full border-2 border-white object-cover"
+                        className="h-11 w-11 rounded-full border-[3px] border-white shadow-md object-cover ring-2 ring-slate-200/80"
                       />
                     ))}
                   </div>

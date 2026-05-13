@@ -2,14 +2,14 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { ArrowRight, ArrowUpRight, MapPin } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-roofix/components/layout/Layout";
+import Reveal from "@template-roofix/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/contexts/ThemeContext";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useTheme } from "@template-roofix/contexts/ThemeContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit Projects. New archetypes (not on home, not on Constructo):
+/** Roofix Projects. Distinct archetypes vs other templates:
  *  1. Stat-led split hero with category counter
  *  2. Filter pills + asymmetric bento masonry grid
  *  3. Sector KPI ribbon (different metrics from homepage stats)

@@ -1,8 +1,8 @@
 import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
-import Layout from "@/components/layout/Layout";
-import CTASection from "@/components/sections/CTASection";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import Layout from "@template-nexora/components/layout/Layout";
+import CTASection from "@template-nexora/components/sections/CTASection";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 import { MapPin, Calendar, User, DollarSign, ArrowLeft } from "lucide-react";
 
 const ProjectDetail = () => {

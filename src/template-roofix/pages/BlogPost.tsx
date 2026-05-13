@@ -18,7 +18,7 @@ import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { BLOG_POSTS } from "@template-roofix/data/siteData";
 import { cn } from "@/lib/utils";
 
-/** Summit BlogPost. Distinct from Constructo's `PageHeader + meta + paragraphs + 2-up related`.
+/** Roofix BlogPost. Same visual language as Roofix editorial pages.
  *  Archetypes:
  *  1. Image-bleed banner with reading-time meter (no PageHeader)
  *  2. Three-column body: sticky takeaways · article with drop-cap & pull quote · TOC rail

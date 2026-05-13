@@ -42,7 +42,7 @@ const Services = () => {
         title="Our Roofing Services"
         eyebrowAfter="Comprehensive Roofing Solutions"
         body={servicesPageIntro}
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=1400&h=900&q=85"
       />
 
       <section className="bg-white py-14 lg:py-20">

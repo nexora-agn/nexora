@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { useTheme } from "@template-roofix/contexts/ThemeContext";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 
-/** Summit NotFound. Distinct from Constructo's giant outlined "404" + numbered link cards.
+/** Roofix NotFound. Distinct from Constructo's giant outlined "404" + numbered link cards.
  *  Archetypes:
  *  1. Compact wedge hero with current-path chip
  *  2. Prominent site search input that routes to the closest matching page
@@ -44,17 +44,21 @@ const SITEMAP: SiteMapGroup[] = [
     ],
   },
   {
-    heading: "What we build",
+    heading: "What we do",
     links: [
-      { to: "/services", label: "Four pillars", description: "Commercial, residential, industrial, renovation." },
-      { to: "/projects", label: "Delivery log", description: "Filterable case work by sector and year." },
+      {
+        to: "/services",
+        label: "Roofing services",
+        description: "Replacements, storm repair, flat roofs, gutters, skylights.",
+      },
+      { to: "/projects", label: "Project gallery", description: "Recent roofs by neighborhood and type." },
       { to: "/service-areas", label: "Where we work", description: "North Texas counties served." },
     ],
   },
   {
     heading: "Talk to us",
     links: [
-      { to: "/contact", label: "Project intake", description: "Pick a desk, send drawings." },
+      { to: "/contact", label: "Request an estimate", description: "Pick a lane, describe your roof." },
       { to: "/reviews", label: "Reviews", description: "Owner words, by platform." },
       { to: "/faq", label: "What people ask", description: "Pricing, timing, contracts, warranty." },
     ],

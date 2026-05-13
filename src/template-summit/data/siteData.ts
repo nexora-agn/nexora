@@ -46,8 +46,9 @@ export const HOME_HERO = {
     "Commercial and residential builds delivered start to finish, with senior-led crews, honest schedules, and a single point of accountability from groundbreak to handover.",
   primaryCta: { label: "GET A FREE ESTIMATE", to: "/contact" },
   secondaryCta: { label: "CALL NOW", to: "/contact" },
+  /** Unsplash — tower cranes silhouetted against twilight (large-scale construction). */
   image:
-    "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600&h=1200&fit=crop",
+    "https://images.unsplash.com/photo-1485083269755-a7b559a4fe5e?auto=format&fit=crop&w=1920&h=1080&q=85",
   featuredEyebrow: "FEATURED PROJECT",
   featuredTitle: "Dallas Corporate Tower",
   featuredMeta: "Dallas, TX · 18-Month Build",
@@ -206,10 +207,6 @@ export const NAV_LINKS = [
   { label: "Services", path: "/services" },
   { label: "Projects", path: "/projects" },
   { label: "About Us", path: "/about" },
-  { label: "Journal", path: "/blog" },
-  { label: "Reviews", path: "/reviews" },
-  { label: "Service Areas", path: "/service-areas" },
-  { label: "Careers", path: "/careers" },
   { label: "Contact", path: "/contact" },
 ];
 

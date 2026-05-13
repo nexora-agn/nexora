@@ -32,6 +32,16 @@ import {
 } from "@template-nexora/data/siteData";
 import { Button } from "@/components/ui/button";
 
+/** roofing imagery unique to RIDGEPEAK (template-nexora) */
+const CLAIM_TYPE_CARD_IMAGES = [
+  "https://images.unsplash.com/photo-1644604120663-4e5fcdf33104?w=400&h=400&fit=crop&auto=format&q=80",
+  "https://images.unsplash.com/photo-1768162486370-0895686d087c?w=400&h=400&fit=crop&auto=format&q=80",
+  "https://images.unsplash.com/photo-1590365876016-da05ac533e83?w=400&h=400&fit=crop&auto=format&q=80",
+  "https://images.unsplash.com/photo-1705229753988-15e68d388ca7?w=400&h=400&fit=crop&auto=format&q=80",
+  "https://images.unsplash.com/photo-1603517431529-6ba96d7525bb?w=400&h=400&fit=crop&auto=format&q=80",
+  "https://images.unsplash.com/photo-1570690732090-275b8807dd76?w=400&h=400&fit=crop&auto=format&q=80",
+] as const;
+
 const claimTypeIconMap = { Cloud, Wind, CloudLightning, TreePine, Droplets, Snowflake } as const;
 const benefitIconMap = { ShieldCheck, Clock, HomeIcon, FileCheck, DollarSign, Home: HomeIcon } as const;
 
@@ -47,7 +57,7 @@ const InsuranceClaimsLayout = () => {
         title="Insurance Claims Made Easy."
         eyebrowAfter="We Advocate for You."
         body="Dealing with insurance can be stressful. Our team has the experience to guide you through the process and maximize your claim so you can get the roof you need."
-        image="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1683551739934-a25185351214?auto=format&fit=crop&w=1400&h=900&q=85"
         badges={
           <div className="flex flex-wrap gap-3">
             {[
@@ -102,13 +112,13 @@ const InsuranceClaimsLayout = () => {
             Types of Claims We Handle
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {claimTypes.map(c => {
+            {claimTypes.map((c, idx) => {
               const Icon = claimTypeIconMap[(c.icon as keyof typeof claimTypeIconMap)] || Cloud;
               return (
                 <article key={c.id} className="bg-white rounded-md border border-slate-100 overflow-hidden">
                   <div className="relative aspect-square bg-slate-100">
                     <img
-                      src={`https://images.unsplash.com/photo-1605007493699-af65834f8a00?w=400&h=400&fit=crop&auto=format&q=80`}
+                      src={CLAIM_TYPE_CARD_IMAGES[idx % CLAIM_TYPE_CARD_IMAGES.length]}
                       alt=""
                       className="absolute inset-0 h-full w-full object-cover opacity-90"
                     />
@@ -176,7 +186,7 @@ const InsuranceClaimsLayout = () => {
           </div>
           <div className="hidden lg:block lg:col-span-3">
             <img
-              src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=600&fit=crop"
+              src="https://images.unsplash.com/photo-1681049400158-0ff6249ac315?auto=format&fit=crop&w=600&h=600&q=85"
               alt="Roof inspection"
               className="rounded-md object-cover w-full h-full"
             />
@@ -205,8 +215,8 @@ const InsuranceClaimsLayout = () => {
           </div>
           <div className="relative rounded-lg overflow-hidden min-h-[280px]">
             <img
-              src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&h=700&fit=crop"
-              alt="Beautiful home"
+              src="https://images.unsplash.com/photo-1590365876016-da05ac533e83?auto=format&fit=crop&w=900&h=700&q=85"
+              alt="Residential roofing"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div aria-hidden className="absolute inset-0 bg-gradient-to-tr from-[hsl(var(--primary))]/85 via-[hsl(var(--primary))]/40 to-transparent" />
@@ -245,7 +255,7 @@ const RoofInspectionsLayout = () => {
         title="Roof Inspections"
         eyebrowAfter="Know Your Roof. Protect Your Home."
         body="Regular roof inspections help catch small issues before they become costly problems. Our detailed inspections give you peace of mind and help extend the life of your roof."
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1591588582259-e675bd2e6088?auto=format&fit=crop&w=1400&h=900&q=85"
         badges={
           <div className="flex flex-wrap gap-3">
             {[
@@ -331,8 +341,8 @@ const RoofInspectionsLayout = () => {
           </div>
           <div className="relative rounded-lg overflow-hidden min-h-[280px]">
             <img
-              src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&h=700&fit=crop"
-              alt="Beautiful home"
+              src="https://images.unsplash.com/photo-1570690732090-275b8807dd76?auto=format&fit=crop&w=900&h=700&q=85"
+              alt="Residential roof inspection"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div aria-hidden className="absolute inset-0 bg-gradient-to-tr from-[hsl(var(--primary))]/85 via-[hsl(var(--primary))]/30 to-transparent" />
@@ -371,7 +381,7 @@ const GenericServiceLayout = ({ id }: { id: string }) => {
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Services", to: "/services" }, { label: "Not found" }]}
         title="Service not found"
         body="Looks like that service no longer exists. Browse all of our roofing services below."
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1628774942553-bd4b553e7457?auto=format&fit=crop&w=1400&h=900&q=85"
       />
     );
   }

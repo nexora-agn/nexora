@@ -30,6 +30,7 @@ import {
   BLOG_TAGS,
   SERVICE_AREAS,
 } from "@template-roofix/data/siteData";
+import { normalizeRoofixHeroImageUrl } from "@/lib/roofixHeroImage";
 
 type Service = (typeof SERVICES)[number];
 type ServiceSection = (typeof SERVICE_DEEP_DIVES)[number];
@@ -194,6 +195,27 @@ export const SITE_CONTENT_DEFAULTS: SiteContentState = {
 
 const uid = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
 
+/** Constructo-era service/link ids that localStorage/export JSON sometimes carries; never surface on Roofix. */
+const EXCLUDED_NON_ROOFIX_SERVICE_IDS = new Set(["project-management"]);
+
+function sanitizeRoofixSiteContent(state: SiteContentState): SiteContentState {
+  const pmSlug = "/services/project-management";
+  const isPmTitle = (t: string) => /^project\s+management$/i.test(t.trim());
+  return {
+    ...state,
+    homeHero: {
+      ...state.homeHero,
+      image: normalizeRoofixHeroImageUrl(state.homeHero?.image),
+    },
+    services: state.services.filter(
+      s => !EXCLUDED_NON_ROOFIX_SERVICE_IDS.has(s.id) && !isPmTitle(String(s.title)),
+    ),
+    footerServiceLinks: state.footerServiceLinks.filter(l => l.to !== pmSlug && !isPmTitle(l.label)),
+    footerCompanyLinks: state.footerCompanyLinks.filter(l => l.to !== pmSlug && !isPmTitle(l.label)),
+    navLinks: state.navLinks.filter(l => l.path !== pmSlug && !isPmTitle(l.label)),
+  };
+}
+
 const SiteContentContext = createContext<SiteContentContextType | undefined>(undefined);
 
 interface ProviderProps {
@@ -212,35 +234,36 @@ interface ProviderProps {
 
 /** Deep-merge a partial snapshot over the defaults so old drafts missing newer
  *  fields (added after the draft was saved) still render correctly. */
-const mergeWithDefaults = (partial: Partial<SiteContentState> | undefined): SiteContentState => ({
-  ...SITE_CONTENT_DEFAULTS,
-  ...(partial ?? {}),
-  company: { ...SITE_CONTENT_DEFAULTS.company, ...(partial?.company ?? {}) },
-  siteTop: { ...SITE_CONTENT_DEFAULTS.siteTop, ...(partial?.siteTop ?? {}) },
-  homeHero: {
-    ...SITE_CONTENT_DEFAULTS.homeHero,
-    ...(partial?.homeHero ?? {}),
-    primaryCta: {
-      ...SITE_CONTENT_DEFAULTS.homeHero.primaryCta,
-      ...(partial?.homeHero?.primaryCta ?? {}),
+const mergeWithDefaults = (partial: Partial<SiteContentState> | undefined): SiteContentState =>
+  sanitizeRoofixSiteContent({
+    ...SITE_CONTENT_DEFAULTS,
+    ...(partial ?? {}),
+    company: { ...SITE_CONTENT_DEFAULTS.company, ...(partial?.company ?? {}) },
+    siteTop: { ...SITE_CONTENT_DEFAULTS.siteTop, ...(partial?.siteTop ?? {}) },
+    homeHero: {
+      ...SITE_CONTENT_DEFAULTS.homeHero,
+      ...(partial?.homeHero ?? {}),
+      primaryCta: {
+        ...SITE_CONTENT_DEFAULTS.homeHero.primaryCta,
+        ...(partial?.homeHero?.primaryCta ?? {}),
+      },
+      secondaryCta: {
+        ...SITE_CONTENT_DEFAULTS.homeHero.secondaryCta,
+        ...(partial?.homeHero?.secondaryCta ?? {}),
+      },
     },
-    secondaryCta: {
-      ...SITE_CONTENT_DEFAULTS.homeHero.secondaryCta,
-      ...(partial?.homeHero?.secondaryCta ?? {}),
+    leadForm: { ...SITE_CONTENT_DEFAULTS.leadForm, ...(partial?.leadForm ?? {}) },
+    sectionVisibility: {
+      ...SITE_CONTENT_DEFAULTS.sectionVisibility,
+      ...(partial?.sectionVisibility ?? {}),
     },
-  },
-  leadForm: { ...SITE_CONTENT_DEFAULTS.leadForm, ...(partial?.leadForm ?? {}) },
-  sectionVisibility: {
-    ...SITE_CONTENT_DEFAULTS.sectionVisibility,
-    ...(partial?.sectionVisibility ?? {}),
-  },
-});
+  });
 
 export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, onChange, external }) => {
   const isControlled = value !== undefined && typeof onChange === "function";
 
   const [internalState, setInternalState] = useState<SiteContentState>(() => {
-    if (isControlled) return value as SiteContentState;
+    if (isControlled) return sanitizeRoofixSiteContent(value as SiteContentState);
     if (external) return SITE_CONTENT_DEFAULTS;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -251,16 +274,20 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
     }
   });
 
-  const state = isControlled ? (value as SiteContentState) : internalState;
+  const state = useMemo(
+    () => (isControlled ? sanitizeRoofixSiteContent(value as SiteContentState) : internalState),
+    [isControlled, value, internalState],
+  );
 
   const save = (next: SiteContentState) => {
+    const cleaned = sanitizeRoofixSiteContent(next);
     if (isControlled) {
-      onChange!(next);
+      onChange!(cleaned);
       return;
     }
-    setInternalState(next);
+    setInternalState(cleaned);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
     } catch {
       // ignore quota errors
     }
@@ -304,7 +331,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
             title: "New Service",
             icon: "Building2",
             description: "Describe this service.",
-            image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=400&fit=crop",
+            image: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=600&h=400&fit=crop",
           },
         ],
       }),
@@ -322,7 +349,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
             title: "New Service Section",
             subtitle: "ADD A SUBTITLE",
             body: ["Describe the first paragraph.", "Describe the second paragraph."],
-            image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&h=700&fit=crop",
+            image: "https://images.unsplash.com/photo-1761115435501-bebf019aba54?auto=format&fit=crop&w=900&h=700&q=85",
             inclusions: ["Inclusion one", "Inclusion two", "Inclusion three"],
           },
         ],
@@ -344,7 +371,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
             name: "New Member",
             role: "Role",
             bio: "Short bio for this team member.",
-            image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop",
+            image: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=300&h=300&q=85",
             social: { linkedin: "#", twitter: "#" },
           },
         ],
@@ -366,7 +393,7 @@ export const SiteContentProvider: React.FC<ProviderProps> = ({ children, value, 
             client: "Client Name",
             value: "$0M",
             description: "Project description.",
-            image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop",
+            image: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=600&h=400&q=85",
             gallery: [],
           },
         ],

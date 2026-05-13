@@ -14,14 +14,14 @@ const Index = () => {
   return (
     <Layout>
       <Helmet>
-        <title>{COMPANY.name} | Full-Service Construction Company</title>
+        <title>{COMPANY.name} | Roofing Contractor</title>
         <meta
           name="description"
           content={`${COMPANY.name}. ${COMPANY.tagline}`}
         />
         <meta
           property="og:title"
-          content={`${COMPANY.name} | Full-Service Construction Company`}
+          content={`${COMPANY.name} | Roofing Contractor`}
         />
         <meta property="og:description" content={COMPANY.tagline} />
       </Helmet>

@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
-import Layout from "@/components/layout/Layout";
-import PageHeader from "@/components/sections/PageHeader";
-import { BLOG_POSTS } from "@/data/siteData";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import Layout from "@template-nexora/components/layout/Layout";
+import PageHeader from "@template-nexora/components/sections/PageHeader";
+import { BLOG_POSTS } from "@template-nexora/data/siteData";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 
 const BlogPost = () => {

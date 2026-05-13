@@ -403,16 +403,7 @@ const About = () => {
       </section>
 
       {/* 6 — Blueprint-style closing CTA (NOT shared CTASection) */}
-      <section className="relative bg-primary text-primary-foreground overflow-hidden border-t border-secondary/30">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }}
-        />
+      <section className="relative bg-primary text-primary-foreground overflow-hidden">
         <div className="container-custom relative px-4 md:px-8 py-16 md:py-20 grid lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7">
             <p className="text-xs font-bold tracking-[0.28em] text-secondary mb-3">

@@ -3,19 +3,26 @@ import {
   ArrowRight,
   Phone,
   Star,
+  Calendar,
+  Tag,
   ShieldCheck,
   Award,
   Clock,
   BadgeCheck,
+  Users,
+  MapPinned,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 
 const trustIconMap = {
-  Clock,
-  Award,
+  Calendar,
+  Tag,
   ShieldCheck,
+  Award,
+  Clock,
   BadgeCheck,
+  Users,
 } as const;
 
 type TrustPill = {
@@ -33,88 +40,75 @@ const HomeHero = () => {
   } = useSiteContent();
   const trustPills: TrustPill[] =
     (HOME_HERO as { trustPills?: TrustPill[] }).trustPills ?? [
-      { id: "ontime", label: "On Time", sub: "On Budget", icon: "Clock" },
-      { id: "premium", label: "Premium", sub: "Quality", icon: "Award" },
+      { id: "inspect", label: "Free Inspection", sub: "in 24 Hours", icon: "Calendar" },
+      { id: "pricing", label: "Upfront Pricing", sub: "No Hidden Fees", icon: "Tag" },
       {
-        id: "licensed",
-        label: "Licensed",
-        sub: "& Insured",
+        id: "warranty",
+        label: "Workmanship Warranty",
+        sub: "You Can Trust",
         icon: "ShieldCheck",
-      },
-      {
-        id: "satisfaction",
-        label: "Satisfaction",
-        sub: "Guaranteed",
-        icon: "BadgeCheck",
       },
     ];
   const eyebrow =
     (HOME_HERO as { eyebrow?: string }).eyebrow ||
-    "FULL-SERVICE CONSTRUCTION COMPANY";
+    "PROFESSIONAL ROOFING CONTRACTORS";
   const cleanPhone = (COMPANY.phone || "").replace(/[^\d+]/g, "");
-  const ratingValue =
-    (SITE_TOP as { ratingValue?: string }).ratingValue || "4.9";
+  const ratingCard = (HOME_HERO as { ratingCard?: { score: string; countLabel: string; avatars: string[] } })
+    .ratingCard;
+  const ratingValue = ratingCard?.score ?? (SITE_TOP as { ratingValue?: string }).ratingValue ?? "4.9";
   const ratingCount =
-    (SITE_TOP as { ratingCount?: string }).ratingCount || "260+ Reviews";
+    ratingCard?.countLabel ??
+    `Based on ${(SITE_TOP as { ratingCount?: string }).ratingCount ?? "320+"}`;
 
   return (
     <section className="relative overflow-hidden bg-primary text-primary-foreground">
-      {/* Background image with dark overlay */}
-      <div className="absolute inset-0">
-        <img
-          src={HOME_HERO.image}
-          alt=""
-          className="h-full w-full object-cover object-center"
-          loading="eager"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/35"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"
-        />
-      </div>
-
-      {/* Decorative grid */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
-      />
+      {HOME_HERO.image && (
+        <>
+          <img
+            src={HOME_HERO.image}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full min-h-[520px] w-full scale-105 object-cover object-[52%_30%] sm:object-center opacity-[0.72]"
+            loading="eager"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-r from-primary from-25% via-primary/88 to-primary/20"
+          />
+        </>
+      )}
 
       <div className="container-custom relative px-4 md:px-8 py-20 md:py-28 lg:py-32">
         <div className="grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7">
-            <p className="text-xs sm:text-sm font-bold tracking-[0.22em] text-secondary mb-5">
+          <div className="lg:col-span-7 space-y-6">
+            <p className="text-xs sm:text-sm font-bold tracking-[0.22em] text-secondary">
               {eyebrow}
             </p>
 
             <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-black tracking-tight leading-[1.02] uppercase">
               {HOME_HERO.headlineBefore}
-              {HOME_HERO.headlineAfter && (
+              {HOME_HERO.headlineHighlight && (
                 <>
-                  <br />
-                  {HOME_HERO.headlineAfter}{" "}
+                  {" "}
+                  <span className="block lg:inline text-secondary">
+                    {HOME_HERO.headlineHighlight}
+                  </span>
                 </>
-              )}{" "}
-              <span className="text-secondary">{HOME_HERO.headlineHighlight}</span>
+              )}
+              {HOME_HERO.headlineAfter && (
+                <span className="block text-primary-foreground">{HOME_HERO.headlineAfter}</span>
+              )}
             </h1>
 
-            <p className="mt-7 text-base md:text-lg text-white/85 max-w-xl leading-relaxed">
+            <p className="text-base md:text-lg text-white/85 max-w-xl leading-relaxed">
               {HOME_HERO.body}
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap gap-3 pt-2">
               <Button
                 asChild
                 size="lg"
-                className="rounded-md h-14 px-8 text-sm font-extrabold tracking-wider bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-xl shadow-black/30 group"
+                className="rounded-md h-14 px-8 text-sm font-extrabold tracking-wider bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-xl shadow-black/25 group"
               >
                 <Link
                   to={HOME_HERO.primaryCta.to}
@@ -128,7 +122,7 @@ const HomeHero = () => {
                 asChild
                 variant="outline"
                 size="lg"
-                className="rounded-md h-14 px-8 text-sm font-extrabold tracking-wider bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary"
+                className="rounded-md h-14 px-8 text-sm font-extrabold tracking-wider bg-transparent border-2 border-white/40 text-white hover:bg-white/10"
               >
                 <a
                   href={cleanPhone ? `tel:${cleanPhone}` : HOME_HERO.secondaryCta.to}
@@ -140,78 +134,83 @@ const HomeHero = () => {
               </Button>
             </div>
 
-            {/* Trust pills */}
-            <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5">
-              {trustPills.map(pill => {
-                const Icon =
-                  trustIconMap[pill.icon as keyof typeof trustIconMap] ||
-                  ShieldCheck;
-                return (
-                  <div
-                    key={pill.id}
-                    className="flex items-center gap-3 min-w-0"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-secondary ring-1 ring-white/15">
-                      <Icon className="h-5 w-5" strokeWidth={1.8} />
-                    </span>
-                    <div className="leading-tight min-w-0">
-                      <p className="text-sm font-bold truncate">{pill.label}</p>
-                      <p className="text-[11px] text-white/70 truncate">
-                        {pill.sub}
-                      </p>
+            {trustPills.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 max-w-xl">
+                {trustPills.map(pill => {
+                  const Icon =
+                    trustIconMap[pill.icon as keyof typeof trustIconMap] ||
+                    ShieldCheck;
+                  return (
+                    <div
+                      key={pill.id}
+                      className="flex items-start gap-2.5 rounded-md"
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary/15 ring-1 ring-secondary/30">
+                        <Icon className="h-4 w-4 text-secondary" />
+                      </span>
+                      <div className="leading-tight min-w-0">
+                        <span className="block text-sm font-bold">{pill.label}</span>
+                        <span className="block text-xs text-white/70">{pill.sub}</span>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {/* Floating Google review card */}
-          <div className="hidden lg:block lg:col-span-5">
-            <div className="ml-auto max-w-sm rounded-xl bg-white text-foreground shadow-2xl shadow-black/40 p-5 border border-border">
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-border shadow-sm">
-                  <span className="text-xl font-black bg-gradient-to-br from-blue-500 via-yellow-500 to-red-500 bg-clip-text text-transparent">
-                    G
-                  </span>
-                </span>
-                <div className="leading-tight">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-2xl font-black">{ratingValue}</span>
-                    <div className="flex">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-4 w-4 fill-secondary text-secondary"
-                          aria-hidden
-                        />
-                      ))}
+          {(ratingCard || ratingValue) && (
+            <div className="lg:col-span-5 lg:justify-self-end w-full">
+              <div className="relative w-full lg:w-auto lg:max-w-sm">
+                <div
+                  className="absolute left-5 right-5 top-0 h-[3px] rounded-b-sm bg-secondary shadow-[0_0_18px_-2px_hsl(var(--secondary))]"
+                  aria-hidden
+                />
+                <div className="rounded-sm border border-white/15 bg-neutral-950/90 text-white backdrop-blur-md shadow-2xl shadow-black/55 pt-8 px-5 pb-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] font-black tracking-[0.22em] text-secondary uppercase mb-3">
+                        Local homeowners
+                      </p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[40px] font-black tabular-nums leading-none tracking-tight">
+                          {ratingValue}
+                        </span>
+                        <div className="flex gap-0.5 shrink-0" aria-hidden>
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="h-4 w-4 fill-secondary text-secondary" />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-xs text-neutral-400 font-medium mt-2 max-w-[16rem] leading-relaxed">
+                        {ratingCount}
+                      </p>
                     </div>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-secondary/25 ring-2 ring-secondary/40">
+                      <MapPinned className="h-5 w-5 text-secondary" strokeWidth={2} aria-hidden />
+                    </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Based on {ratingCount}
-                  </p>
+                  <div className="mt-5 flex gap-1.5">
+                    {(ratingCard?.avatars ?? [
+                      "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=80&h=80&fit=crop",
+                      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop",
+                      "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=80&h=80&fit=crop",
+                      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop",
+                      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
+                    ]).map((src, i) => (
+                      <img
+                        key={src + i}
+                        src={src}
+                        alt=""
+                        className="h-10 w-10 rounded-sm ring-2 ring-neutral-700 object-cover hover:ring-secondary/70 transition-colors"
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="mt-4 flex -space-x-2">
-                {[
-                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&h=80&fit=crop",
-                  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop",
-                ].map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
-                    className="h-9 w-9 rounded-full ring-2 ring-white object-cover"
-                    loading="lazy"
-                  />
-                ))}
-              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

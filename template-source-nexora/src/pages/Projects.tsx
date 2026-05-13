@@ -1,17 +1,17 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
-import Layout from "@/components/layout/Layout";
-import PageHeader from "@/components/sections/PageHeader";
-import PaginationControls from "@/components/layout/PaginationControls";
-import CTASection from "@/components/sections/CTASection";
-import Reveal from "@/components/animations/Reveal";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import Layout from "@template-nexora/components/layout/Layout";
+import PageHeader from "@template-nexora/components/sections/PageHeader";
+import PaginationControls from "@template-nexora/components/layout/PaginationControls";
+import CTASection from "@template-nexora/components/sections/CTASection";
+import Reveal from "@template-nexora/components/animations/Reveal";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 import {
   SIGNATURE_PROJECT_COUNT,
   PROJECTS_LATEST_PAGE_SIZE,
-} from "@/data/siteData";
-import { clampPage, parsePageParam, slicePage, totalPages as totalPagesCount } from "@/lib/pagination";
+} from "@template-nexora/data/siteData";
+import { clampPage, parsePageParam, slicePage, totalPages as totalPagesCount } from "@template-nexora/lib/pagination";
 
 const Projects = () => {
   const { projects, sectionVisibility, company: COMPANY, projectsPageStats: PROJECTS_PAGE_STATS } = useSiteContent();

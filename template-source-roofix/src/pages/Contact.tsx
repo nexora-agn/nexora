@@ -8,7 +8,7 @@ import {
   Clock,
   Building,
   Home,
-  Factory,
+  CloudLightning,
   Wrench,
   Camera,
   FileText,
@@ -17,17 +17,17 @@ import {
   ChevronDown,
   Lock,
 } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-roofix/components/layout/Layout";
+import Reveal from "@template-roofix/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-/** Summit Contact. Distinct from Constructo (no shared form-on-the-right card,
+/** Roofix Contact. Distinct from Constructo (no shared form-on-the-right card,
  *  no centered "Headquarters" / "Office Hours" muted box, no shared CTASection).
  *  Archetypes:
  *  1. Split hero with response-pledge counter
@@ -48,40 +48,40 @@ interface DepartmentDef {
 
 const DEPARTMENTS: DepartmentDef[] = [
   {
-    id: "commercial",
-    label: "Commercial estimating",
-    icon: Building,
-    blurb:
-      "Office buildings, retail strips, medical, and tenant improvements. RFPs welcome — drawings, narratives, or napkin sketches all fine.",
-    who: "PM lead + senior estimator",
-    fastest: "Email with site address & rough sqft → response same business day.",
-  },
-  {
     id: "residential",
-    label: "Residential estimating",
+    label: "Residential re-roofs",
     icon: Home,
     blurb:
-      "Custom homes, additions, whole-home remodels, estate work. Best for owners with land in hand or a renovation scoped by an architect.",
-    who: "Residential PM + design-build lead",
-    fastest: "Phone call with budget band → on-site walk inside one week.",
+      "Steep-slope tear-offs, designer shingles, attic ventilation fixes, and honest decking repairs with photos.",
+    who: "Residential production lead + estimator",
+    fastest: "Address + a few roof photos → same-day call back with next steps.",
   },
   {
-    id: "industrial",
-    label: "Industrial / distribution",
-    icon: Factory,
+    id: "commercial",
+    label: "Commercial & low-slope",
+    icon: Building,
     blurb:
-      "Tilt-wall, pre-engineered metal, light manufacturing, and dock-loaded distribution facilities. Civil-heavy sites welcome.",
-    who: "Industrial PM + civil estimator",
-    fastest: "Drop a survey + program → conceptual ROM inside three days.",
+      "TPO/PVC recoveries, metal retrofits, skylight details, and rooftop equipment curbs — documented for property managers.",
+    who: "Commercial superintendent + membrane specialist",
+    fastest: "Drop square footage + roof access plan → walk scheduled within 48 hours.",
+  },
+  {
+    id: "storm",
+    label: "Storm & insurance",
+    icon: CloudLightning,
+    blurb:
+      "Hail/wind documentation, supplement support, and emergency tarping when you're still waiting on an adjuster.",
+    who: "Claims coordinator + field manager",
+    fastest: "Text photos of impacted slopes — tarp crew routes same day when safe.",
   },
   {
     id: "aftercare",
-    label: "Aftercare & warranty",
+    label: "Warranty & service",
     icon: Wrench,
     blurb:
-      "If we built it, we still own it. Warranty claims, post-occupancy issues, or year-two checkups go to a named technician — not a call center.",
-    who: "Aftercare lead",
-    fastest: "Phone or email — no portal logins.",
+      "Leaks, nail pops, wind-lifted tabs, gutter pull-away — if we installed it, we still own the callback.",
+    who: "Service technician line",
+    fastest: "Phone or email — no portals, just a human with your file.",
   },
 ];
 
@@ -94,7 +94,7 @@ const SLA_STEPS = [
   {
     when: "Same business day",
     label: "Routing",
-    body: "Your inquiry is matched to a senior estimator or PM with experience in your sector.",
+    body: "Your inquiry is matched to a senior estimator or superintendent with experience on your roof type.",
   },
   {
     when: "Next business day",
@@ -104,25 +104,25 @@ const SLA_STEPS = [
   {
     when: "Within five days",
     label: "Working session",
-    body: "Either a site walk, a drawings review, or a written feasibility note. No vapor.",
+    body: "Either a roof walk, a supplement review, or a written scope note. No vapor.",
   },
 ];
 
 const ATTACHMENTS = [
   {
     icon: FileText,
-    title: "Drawings or sketches",
-    body: "PDFs, DWGs, or even napkin photos. We piece together what we can.",
+    title: "Photos & claims paperwork",
+    body: "Exterior slopes, hail maps, insurer estimates — we'll organize what you've got.",
   },
   {
     icon: PenSquare,
-    title: "Program or scope notes",
-    body: "Square footages, room counts, must-haves, nice-to-haves.",
+    title: "Roof notes",
+    body: "Age of shingles, attic leaks, HOA requirements, skylight counts.",
   },
   {
     icon: Camera,
-    title: "Site or existing-conditions photos",
-    body: "Front, back, and any problem spots. Phone photos are fine.",
+    title: "Ground + ladder photos",
+    body: "Close-ups of drip edge, ridges, vents. Phone snaps are plenty.",
   },
   {
     icon: ClipboardList,
@@ -164,7 +164,7 @@ const Contact = () => {
         <title>Contact | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`Reach the right desk at ${COMPANY.name}: commercial, residential, industrial, or aftercare.`}
+          content={`Reach the ${COMPANY.name} desk that fits your roof: residential, commercial, storm, or warranty.`}
         />
       </Helmet>
 
@@ -445,7 +445,7 @@ const Contact = () => {
                     <Label htmlFor="full-name" className="text-xs font-bold uppercase tracking-wider">
                       Your name
                     </Label>
-                    <Input id="full-name" name="name" required placeholder="Owner / GC / Architect" />
+                    <Input id="full-name" name="name" required placeholder="Homeowner / Property manager / Agent" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider">

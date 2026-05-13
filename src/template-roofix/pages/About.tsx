@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit's About is built around a generational, craft-rooted story.
+/** Roofix About is built around a generational, trade-rooted story.
  *  Section sequence (none of these archetypes appear on the homepage or in Constructo's About):
  *  1. Diagonal split hero with vertical year badge
  *  2. Sticky era-rail with scrolling narrative
@@ -30,71 +30,71 @@ import { cn } from "@/lib/utils";
 const ERAS = [
   {
     id: "founded",
-    year: "2004",
+    year: "2009",
     label: "Founded",
-    headline: "A pickup truck, a Nextel, and one custom home.",
+    headline: "Two ladders, a pickup, and honest tear-offs.",
     body:
-      "Summit started as a single residential remodel in East Dallas. The first crew was four people. The first project ran two days late and we made it back by Friday. The handshake then is the same one we offer now.",
+      "Roofix started replacing roofs in neighborhoods where hail season never really ends. First crew fit in one truck — every shingle accounted for before we invoiced.",
   },
   {
     id: "scale",
-    year: "2011",
-    label: "First commercial book",
-    headline: "Trades partners followed us into commercial work.",
+    year: "2014",
+    label: "HOA & low-slope",
+    headline: "Steep roofs led us to flats and HOA punch lists.",
     body:
-      "Office tenant improvements led to retail strips, then ground-up Class-A. We grew on the back of subs we'd worked with for years — never the other way around. Same standards, larger floor plates.",
+      "HOA inspectors get picky fast. We standardized photo packets, drip-edge photos, and manufacturer call sheets — the same playbook we still run on duplexes and retail strips.",
   },
   {
     id: "field",
-    year: "2017",
-    label: "Field-led operating model",
-    headline: "Supers and PMs share the desk.",
+    year: "2019",
+    label: "Production model",
+    headline: "Estimating and installs share one scoreboard.",
     body:
-      "We rewrote our org chart so superintendents sit in on every preconstruction call. The field signs off before we issue subcontracts. The result: fewer RFIs, faster closeouts, contracts you can read in one sitting.",
+      "We tied production goals to superintendent walk-alongs — if the estimator missed it on paper, crews flag it day one instead of arguing at final.",
   },
   {
     id: "legacy",
     year: "Today",
-    label: "Built to outlast",
-    headline: "A second generation walks the sites.",
+    label: "Built to weather",
+    headline: "New leads still come from shingles we nailed years ago.",
     body:
-      "Founder's kids run estimating and field ops now. The crew nicknames stuck. The 10-year workmanship warranty stuck too. Every site walk still ends with the same question: would we live here?",
+      "Second-generation crews are on ladders now. Warranty callbacks stay tracked. Storm season still gets the same tarp protocol — tarp first, paperwork second.",
   },
 ];
 
 const KPI_TILES = [
-  { label: "Years building", value: "20+" },
+  { label: "Years roofing", value: "15+" },
   { label: "Counties served", value: "11" },
   { label: "Repeat-client rate", value: "85%" },
-  { label: "Avg. punch-list items / project", value: "<6" },
+  { label: "Warranty claim rate / year", value: "<3%" },
 ];
 
 const AUTHORITIES = [
-  "City of Dallas Building Inspection",
-  "Texas Department of Licensing",
-  "AGC of Texas",
-  "Build with Strength",
-  "BBB · A+ Accredited",
-  "OSHA 30 Certified Field",
-  "NRMCA Member",
-  "DFW Permitting Coalition",
+  "GAF · Master Elite Contractor",
+  "CertainTeed · SELECT ShingleMaster",
+  "Owens Corning · Preferred Contractor",
+  "NRCA member firm",
+  "Texas Department of Licensing & Regulation",
+  "BBB · A+ rated",
+  "OSHA-30 certified installers",
+  "Fully insured · workers' comp on file",
 ];
 
 const PULL_QUOTES = [
   {
     quote:
-      "We don't sell the lowest bid. We sell the cleanest closeout. There's a difference.",
+      "We don't sell fantasy pricing. If the decking is soft, we'll show you photos before we write the change.",
     author: "Founder",
   },
   {
     quote:
-      "Every job site has a sign-out sheet, a broom, and a phone number that always picks up.",
+      "Every roof wrap ends with magnets in the mulch and a superintendent sign-off.",
     author: "Field Operations",
   },
   {
     quote:
-      "If the schedule is going to slip, you'll hear it from us before you wonder.",
-    author: "Project Management",
+      "If hail's coming, we'd rather tarp than ghost you.",
+    author: "Service desk",
   },
 ];
 
@@ -131,7 +131,7 @@ const About = () => {
         <title>About | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`${COMPANY.name} — a multi-generational, field-led construction firm rooted in North Texas.`}
+          content={`${COMPANY.name} — storm-tested roofing, steep-slope and low-slope, serving North Texas with licensed crews.`}
         />
       </Helmet>
 
@@ -144,19 +144,19 @@ const About = () => {
         <div className="container-custom relative px-4 md:px-8 py-20 md:py-28 grid lg:grid-cols-12 gap-10 items-end">
           <div className="lg:col-span-7">
             <p className="text-xs md:text-sm font-bold tracking-[0.28em] text-secondary mb-5">
-              SINCE 2004 · NORTH TEXAS
+              SINCE 2009 · NORTH TEXAS
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-[64px] font-black uppercase tracking-tight leading-[1.02]">
-              Two decades of
+              Storm-tested installs
               <br />
-              quiet sites and
+              and leak-free
               <br />
-              <span className="text-secondary">clean closeouts.</span>
+              <span className="text-secondary">details that hold.</span>
             </h1>
             <p className="mt-7 max-w-xl text-base md:text-lg text-white/85 leading-relaxed">
-              We're a family-run general contractor built around long subs, long
-              clients, and longer warranties. Most of our work comes back to us
-              twice — once as a referral, then again as the next phase.
+              We're a family-run roofing contractor built around disciplined
+              installs, insurer-grade documentation, and crews who keep the same
+              lead from tear-off through final magnet sweep.
             </p>
           </div>
 
@@ -167,10 +167,10 @@ const About = () => {
                   EST.
                 </div>
                 <div className="text-7xl md:text-8xl font-black leading-none text-white">
-                  '04
+                  '09
                 </div>
                 <div className="mt-3 text-xs uppercase tracking-widest text-white/70">
-                  Same crew. Bigger sites.
+                  Same tarp line. Faster answers.
                 </div>
               </div>
               <div className="absolute -left-3 top-1/2 -translate-y-1/2 -rotate-90 origin-center text-[10px] font-bold tracking-[0.4em] text-white/40 hidden md:block whitespace-nowrap">
@@ -284,7 +284,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-4 md:gap-5">
             <div className="md:col-span-3 lg:col-span-5 row-span-2 relative rounded-2xl overflow-hidden min-h-[320px] md:min-h-[440px] ring-1 ring-black/5">
               <img
-                src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1100&h=1300&fit=crop"
+                src="https://images.unsplash.com/photo-1695045194325-af9f065d5587?auto=format&fit=crop&w=1100&h=1300&q=85"
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover"
                 loading="lazy"
@@ -351,7 +351,7 @@ const About = () => {
           ref={tickerRef}
           className="relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
         >
-          <div className="flex shrink-0 gap-10 px-6 animate-[summit-marquee_42s_linear_infinite]">
+          <div className="flex shrink-0 gap-10 px-6 animate-[roofix-marquee_42s_linear_infinite]">
             {[...AUTHORITIES, ...AUTHORITIES].map((a, i) => (
               <span
                 key={`${a}-${i}`}
@@ -363,7 +363,7 @@ const About = () => {
             ))}
           </div>
         </div>
-        <style>{`@keyframes summit-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
+        <style>{`@keyframes roofix-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
       </section>
 
       {/* 5 — Image-quote collage */}
@@ -374,18 +374,18 @@ const About = () => {
               FIELD MARKERS
             </p>
             <h2 className="text-3xl md:text-4xl font-black uppercase text-primary tracking-tight leading-[1.05]">
-              Things you'll find on a Summit job.
+              Things you'll find on a Roofix site.
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { icon: ClipboardSignature, label: "Daily site log, signed in ink" },
-              { icon: HardHat, label: "Same super, start to finish" },
-              { icon: TreePine, label: "Mature trees protected, not 'managed'" },
-              { icon: Hammer, label: "Punch list closed before final pay" },
-              { icon: Building, label: "Subs we've used 10+ years" },
-              { icon: Wrench, label: "Aftercare line, real number" },
-              { icon: ArrowUpRight, label: "Weekly photo updates, no portal logins" },
+              { icon: ClipboardSignature, label: "Photo log — deck + flashings, every lift" },
+              { icon: HardHat, label: "Same crew lead, tear-off to final walk" },
+              { icon: TreePine, label: "Landscape pads + tarp protocol, spelled out" },
+              { icon: Hammer, label: "Magnet sweep + gutter clean before we leave" },
+              { icon: Building, label: "Manufacturer reps on speed dial" },
+              { icon: Wrench, label: "Emergency tarp line you can actually call" },
+              { icon: ArrowUpRight, label: "Estimate packet with diagrams, not a portal" },
               { icon: ClipboardSignature, label: "10-year workmanship warranty" },
             ].map(({ icon: Icon, label }, i) => (
               <div
@@ -419,15 +419,15 @@ const About = () => {
               FILE NO. 0001 · DRAFT FOR YOUR PROJECT
             </p>
             <h2 className="text-3xl md:text-4xl lg:text-[44px] font-black uppercase tracking-tight leading-[1.02]">
-              Your project deserves
+              Your roof deserves
               <br />
-              a builder, not a broker.
+              a roofer, not a storm chaser.
             </h2>
             <ul className="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-2 text-sm text-white/85">
               {[
-                "Single point of contact, start to finish",
-                "Weekly photo + schedule update by email",
-                "Allowances and changes priced in writing",
+                "One production lead from inspection to final walk",
+                "Photo documentation for insurance + HOA reviewers",
+                "Change orders priced before we strip another tab",
                 "10-year workmanship warranty",
               ].map(item => (
                 <li key={item} className="flex items-start gap-2">

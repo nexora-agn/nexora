@@ -52,7 +52,7 @@ const Contact = () => {
         title="We're Here to Help."
         eyebrowAfter="Let's Talk."
         body="Have a question or need a free estimate? Fill out the form and our team will get back to you as soon as possible."
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1655041404429-027ce0cf7b71?auto=format&fit=crop&w=1400&h=900&q=85"
         badges={
           <div className="flex flex-wrap gap-3">
             {[
@@ -224,7 +224,7 @@ const Contact = () => {
           </div>
           <div className="relative rounded-lg overflow-hidden min-h-[320px]">
             <img
-              src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&h=900&fit=crop"
+              src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&h=900&q=85"
               alt="Roofer at work"
               className="absolute inset-0 h-full w-full object-cover"
             />

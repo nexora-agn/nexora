@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 3;
@@ -15,7 +15,7 @@ const ClientStoriesSection = () => {
   if (!visible.length) return null;
 
   return (
-    <section className="bg-background section-padding">
+    <section className="bg-muted/40 section-padding">
       <div className="container-custom px-4 md:px-8">
         <div className="flex items-end justify-between mb-10 md:mb-14">
           <h2 className="text-3xl md:text-4xl lg:text-[44px] font-black text-primary uppercase tracking-tight leading-[1.05]">

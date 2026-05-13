@@ -12,13 +12,13 @@ import {
   Building2,
   Users,
 } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-roofix/components/layout/Layout";
+import Reveal from "@template-roofix/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit Team. Distinct from Constructo's uniform 3-column hover-social grid.
+/** Roofix Team. Distinct from Constructo's uniform 3-column hover-social grid.
  *  Archetypes:
  *  1. Stat-led split hero
  *  2. Tier strip — Leadership / Field / Estimating with counts + density-per-tier
@@ -40,31 +40,31 @@ const TIERS: TierMeta[] = [
     label: "Leadership",
     icon: Building2,
     blurb:
-      "Founders, partners, and the principals who sign every contract. They're on site at least once a week.",
+      "Owners and production directors who carry the license, sign indemnity clauses, and still climb ladders quarterly.",
     count: "3 partners",
   },
   {
     id: "delivery",
-    label: "Project delivery",
+    label: "Production",
     icon: ClipboardCheck,
     blurb:
-      "Senior PMs and superintendents who own a job from preconstruction through punch. One name, one phone number.",
-    count: "12 PMs · 18 supers",
+      "Superintendents and QA leads coordinating tear-offs and installs — not bouncing between unrelated verticals.",
+    count: "8 supers · 14 crew leads",
   },
   {
     id: "field",
-    label: "Field operations",
+    label: "Install crews",
     icon: Hammer,
     blurb:
-      "Carpenters, finishers, and laborers who've been with us long enough to know the kids' birthdays. Not subs — staff.",
-    count: "40+ field staff",
+      "In-house installers, metal-smiths for flashings, and magnet-sweep rookies rotated through every roof.",
+    count: "40+ installers",
   },
   {
     id: "estimating",
     label: "Estimating & safety",
     icon: ShieldCheck,
     blurb:
-      "The people who price the work and keep it safe. They never see a number they don't sign their name to.",
+      "Xactimate-literate estimators pairing with OSHA-30 field coaches — paperwork and harnesses tracked together.",
     count: "Dedicated team",
   },
 ];
@@ -82,7 +82,7 @@ const Team = () => {
         <title>The crew | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`Meet the people who run a ${COMPANY.name} job — partners, PMs, superintendents, and field staff.`}
+          content={`Meet the crews running ${COMPANY.name} installs — ownership, supers, installers, estimators.`}
         />
       </Helmet>
 
@@ -99,9 +99,9 @@ const Team = () => {
               <span className="text-secondary">on every job.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base md:text-lg text-foreground/80 leading-relaxed">
-              We don't rotate strangers through your project. The PM you meet
-              at preconstruction is the PM at the ribbon cutting. Below: the
-              people you'll actually work with.
+              We don't rotate strangers through your roof lift. The
+              superintendent who inspects decking is there for QA walk-through.
+              Below: real faces, direct lines.
             </p>
           </div>
           <div className="lg:col-span-5 grid grid-cols-2 gap-3">

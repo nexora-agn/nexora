@@ -1,27 +1,27 @@
 import { Helmet } from "react-helmet-async";
-import Layout from "@/components/layout/Layout";
-import HomeHero from "@/components/home/HomeHero";
-import ServicesRibbon from "@/components/home/ServicesRibbon";
-import SignatureProjectsSection from "@/components/home/SignatureProjectsSection";
-import ClientStoriesSection from "@/components/home/ClientStoriesSection";
-import WhyTeamSection from "@/components/home/WhyTeamSection";
-import LeadContactSection from "@/components/home/LeadContactSection";
-import Reveal from "@/components/animations/Reveal";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import Layout from "@template-roofix/components/layout/Layout";
+import HomeHero from "@template-roofix/components/home/HomeHero";
+import ServicesRibbon from "@template-roofix/components/home/ServicesRibbon";
+import SignatureProjectsSection from "@template-roofix/components/home/SignatureProjectsSection";
+import ClientStoriesSection from "@template-roofix/components/home/ClientStoriesSection";
+import WhyTeamSection from "@template-roofix/components/home/WhyTeamSection";
+import LeadContactSection from "@template-roofix/components/home/LeadContactSection";
+import Reveal from "@template-roofix/components/animations/Reveal";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 
 const Index = () => {
   const { sectionVisibility, company: COMPANY } = useSiteContent();
   return (
     <Layout>
       <Helmet>
-        <title>{COMPANY.name} | Full-Service Construction Company</title>
+        <title>{COMPANY.name} | Roofing Contractor</title>
         <meta
           name="description"
           content={`${COMPANY.name}. ${COMPANY.tagline}`}
         />
         <meta
           property="og:title"
-          content={`${COMPANY.name} | Full-Service Construction Company`}
+          content={`${COMPANY.name} | Roofing Contractor`}
         />
         <meta property="og:description" content={COMPANY.tagline} />
       </Helmet>

@@ -27,10 +27,10 @@ interface ThemeContextType extends ThemeConfig {
   resetTheme: () => void;
 }
 
-/** Primary = brand dark (nav, footer, dark UI). Secondary = accent (gold highlights, CTAs). Applied as HSL CSS variables site-wide. */
+/** Primary = brand dark (nav, footer). Secondary = accent (CTAs). Applied as HSL CSS variables site-wide. */
 const DEFAULT_THEME: ThemeConfig = {
-  primaryColor: "#0a1628",
-  secondaryColor: "#e4b012",
+  primaryColor: "#1c1917",
+  secondaryColor: "#15803d",
   logoUrl: null,
   faviconUrl: null,
   serviceImages: {},
@@ -39,8 +39,31 @@ const DEFAULT_THEME: ThemeConfig = {
   projectImages: {},
 };
 
-const STORAGE_KEY = "constructco-theme";
-const EXPORT_MARKER_KEY = "constructco-export-applied-at";
+const STORAGE_KEY = "roofix-theme";
+const EXPORT_MARKER_KEY = "roofix-export-applied-at";
+
+const LEGACY_ROOFIX_SECONDARY_HEX = new Set([
+  "#ea580c",
+  "#f97316",
+  "#c2410c",
+  "#9a3412",
+  "#eab308",
+  "#ca8a04",
+  "#f59e0b",
+  "#d97706",
+  "#fbbf24",
+  "#fcd34d",
+  "#fde047",
+]);
+
+function migrateRoofixThemeConfig(partial: Partial<ThemeConfig>): ThemeConfig {
+  const merged: ThemeConfig = { ...DEFAULT_THEME, ...partial };
+  const hex = merged.secondaryColor?.trim().toLowerCase() ?? "";
+  if (hex && LEGACY_ROOFIX_SECONDARY_HEX.has(hex)) {
+    merged.secondaryColor = DEFAULT_THEME.secondaryColor;
+  }
+  return merged;
+}
 
 function hexToHSL(hex: string): string {
   let r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -83,8 +106,20 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [config, setConfig] = useState<ThemeConfig>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? { ...DEFAULT_THEME, ...JSON.parse(saved) } : DEFAULT_THEME;
-    } catch { return DEFAULT_THEME; }
+      if (!saved) return DEFAULT_THEME;
+      const parsed = JSON.parse(saved) as Partial<ThemeConfig>;
+      const migrated = migrateRoofixThemeConfig(parsed);
+      if (migrated.secondaryColor !== parsed.secondaryColor) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        } catch {
+          // ignore
+        }
+      }
+      return migrated;
+    } catch {
+      return DEFAULT_THEME;
+    }
   });
 
   const applyColors = useCallback((primary: string, secondary: string) => {
@@ -126,7 +161,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const generatedAt = String(data?.generatedAt || "");
         const alreadyApplied = localStorage.getItem(EXPORT_MARKER_KEY);
         if (generatedAt && alreadyApplied === generatedAt) return;
-        setConfig(prev => ({ ...prev, ...data.theme }));
+        setConfig(prev => {
+          const next = migrateRoofixThemeConfig({ ...prev, ...data.theme });
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          } catch {
+            // ignore
+          }
+          return next;
+        });
         if (generatedAt) localStorage.setItem(EXPORT_MARKER_KEY, generatedAt);
       })
       .catch(() => undefined);

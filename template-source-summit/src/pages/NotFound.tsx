@@ -108,15 +108,6 @@ const NotFound = () => {
 
       {/* 1 — Wedge hero with path chip */}
       <section className="relative bg-primary text-primary-foreground overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }}
-        />
         <div className="relative container-custom px-4 md:px-8 py-16 md:py-20 grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 rounded-full bg-secondary text-secondary-foreground px-3 py-1 text-[10px] font-black tracking-widest uppercase mb-5">

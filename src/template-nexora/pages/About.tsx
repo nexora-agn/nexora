@@ -28,7 +28,7 @@ const About = () => {
         title={`About ${COMPANY.name}`}
         eyebrowAfter="Built on Integrity. Focused on You."
         body={`${COMPANY.name} is a locally owned and operated roofing company serving North Texas with honest service, superior craftsmanship, and reliable results. We treat every home like our own and every customer like family.`}
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1590365876016-da05ac533e83?auto=format&fit=crop&w=1400&h=900&q=85"
         imageAlt="Beautiful home"
         badges={
           <div className="flex flex-wrap gap-3">
@@ -105,7 +105,7 @@ const About = () => {
           <div className="bg-slate-50 rounded-lg p-6 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 rounded-md overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=900&h=600&fit=crop"
+                src="https://images.unsplash.com/photo-1705229753988-15e68d388ca7?auto=format&fit=crop&w=900&h=600&q=85"
                 alt="Our team"
                 className="w-full h-full object-cover"
               />

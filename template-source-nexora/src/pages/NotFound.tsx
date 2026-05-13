@@ -1,11 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import Layout from "@/components/layout/Layout";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-nexora/components/layout/Layout";
+import Reveal from "@template-nexora/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Home, Compass, Phone } from "lucide-react";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 
 const QUICK_LINKS: Array<{ label: string; to: string; description: string }> = [
   { label: "Services", to: "/services", description: "What we build and how we deliver." },

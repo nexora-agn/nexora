@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@template-roofix/contexts/ThemeContext";
 import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 
-/** Summit ProjectDetail. New archetypes (not on home, not on Constructo):
+/** Roofix ProjectDetail. New archetypes (not on home, not on Constructo):
  *  1. Image hero with diagonal cut + meta strip
  *  2. Horizontal-scroll gallery filmstrip
  *  3. Phase ribbon (Kickoff → Mobilize → Build → Closeout) with annotated milestones
@@ -34,23 +34,23 @@ import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 const PHASES = [
   {
     icon: ClipboardCheck,
-    title: "Kickoff",
-    body: "Owner alignment, scope memo, long-lead procurement plan signed in week one.",
+    title: "Prep",
+    body: "Measurements, HOA letters, dumpsters staged, drip-edge specs confirmed before tear-off.",
   },
   {
     icon: Truck,
-    title: "Mobilize",
-    body: "Site fence, temp power, jobsite trailer, and pre-task safety plans on day one.",
+    title: "Tear-off / dry-in",
+    body: "Protect landscaping, peel to deck, snap ice-and-water shots, plywood only where inspectors agree.",
   },
   {
     icon: Hammer,
-    title: "Build",
-    body: "Senior super on site daily. Friday owner walks. Weekly photo + schedule emails.",
+    title: "Install",
+    body: "Crew lead on the roof daily. Magnet sweeps, ridge venting balanced, skylights reflashed carefully.",
   },
   {
     icon: ShieldCheck,
-    title: "Closeout",
-    body: "Punch closed before final pay. As-builts and warranty stack handed over in person.",
+    title: "QA & closeout",
+    body: "Manufacturer walk, homeowner sign-off, warranty packets registered before final invoice.",
   },
 ];
 
@@ -79,7 +79,7 @@ const ProjectDetail = () => {
             to="/projects"
             className="inline-flex items-center gap-2 mt-6 text-sm font-extrabold tracking-widest uppercase text-secondary"
           >
-            <ArrowLeft className="h-4 w-4" /> Back to delivery log
+            <ArrowLeft className="h-4 w-4" /> Back to project gallery
           </Link>
         </div>
       </Layout>
@@ -90,9 +90,9 @@ const ProjectDetail = () => {
     ? project.gallery
     : [
         resolveProjectImage(project.id, project.image),
-        "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&h=800&fit=crop",
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop",
-        "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1765340949906-960f72f32b7f?auto=format&fit=crop&w=1200&h=800&q=85",
+        "https://images.unsplash.com/photo-1683551739934-a25185351214?auto=format&fit=crop&w=1200&h=800&q=85",
+        "https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?auto=format&fit=crop&w=1200&h=800&q=85",
       ];
 
   return (
@@ -135,7 +135,7 @@ const ProjectDetail = () => {
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5 text-secondary" />
-              Delivered {project.year}
+              Completed {project.year}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <DollarSign className="h-3.5 w-3.5 text-secondary" />
@@ -192,12 +192,12 @@ const ProjectDetail = () => {
                 HOW IT MOVED
               </p>
               <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight leading-[1.02]">
-                Four phases. One ledger.
+                Four phases. One production board.
               </h2>
             </div>
             <p className="max-w-md text-sm md:text-base text-white/85 leading-relaxed">
-              Every Summit job runs the same four-phase rhythm. Below is the
-              version we ran on this project.
+              Every Roofix job runs the same four-phase rhythm — site prep,
+              dry-in, install, QA. Here's how this roof moved.
             </p>
           </div>
           <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 relative">
@@ -249,18 +249,18 @@ const ProjectDetail = () => {
               <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="mt-2 h-1.5 w-1.5 rounded-full bg-destructive shrink-0" />
-                  Existing site logistics were tight — a single drive supplied
-                  every trade for the duration.
+                  Steep backyard access — only one safe staging lane for shingles
+                  and tear-off debris.
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-2 h-1.5 w-1.5 rounded-full bg-destructive shrink-0" />
-                  Owner needed weekend operations to continue with no dust or
-                  noise spillover into adjacent tenancies.
+                  Neighbor lots close — we had to shield windows and keep noise
+                  predictable for evening routines.
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-2 h-1.5 w-1.5 rounded-full bg-destructive shrink-0" />
-                  Long-lead MEP equipment was 14 weeks out at preconstruction —
-                  on the critical path.
+                  Weather window tight — multiple pop-up storms threatened the
+                  exposed deck between lifts.
                 </li>
               </ul>
             </article>
@@ -269,26 +269,30 @@ const ProjectDetail = () => {
                 <Target className="h-3 w-3" /> What we ran
               </div>
               <p className="mt-5 text-base md:text-lg text-white/90 leading-relaxed">
-                A phased site logistics plan with reserved early procurement,
-                weekend dust controls, and a Friday owner walk that closed every
-                open question before the next week's schedule was published.
+                Dedicated ground protection, phased tear-off with same-day
+                dry-in, and a superintendent who texted photo updates before
+                homeowners had to ask.
               </p>
               <ul className="mt-5 space-y-2 text-sm text-white/85">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-secondary mt-0.5 shrink-0" />
-                  Long-lead MEP locked the day the GMP was signed.
+                  Dumpsters rotated on a pull schedule so the driveway never
+                  stacked debris overnight.
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-secondary mt-0.5 shrink-0" />
-                  Negative-pressure dust containment with daily readings posted.
+                  Magnet + blower pass after every lift — gutters cleared before
+                  final walk.
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-secondary mt-0.5 shrink-0" />
-                  Single-drive site choreography by hour, not by day.
+                  Weather holds built into the production board, not hidden in
+                  the fine print.
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-secondary mt-0.5 shrink-0" />
-                  Closed punch list with photos before final draw.
+                  Manufacturer rep sign-off captured on camera for warranty
+                  registration.
                 </li>
               </ul>
             </article>
@@ -308,9 +312,9 @@ const ProjectDetail = () => {
                 Locally licensed in {project.location.split(",")[0]}.
               </h3>
               <p className="text-foreground/85 leading-relaxed">
-                Our crews were licensed and inspected in this jurisdiction
-                before this project began. We know the local code reviewers by
-                name and the trades by their grandkids' birthdays.
+                Our crews are licensed in this county and file the same
+                documentation package your insurer or HOA expects. Adjacent
+                neighbors get the same cleanup standard.
               </p>
               <Link
                 to="/service-areas"
@@ -348,7 +352,7 @@ const ProjectDetail = () => {
           <div className="lg:col-span-7">
             <div className="flex items-end justify-between mb-5">
               <h3 className="text-2xl md:text-3xl font-black uppercase text-primary tracking-tight leading-tight">
-                Built in the same lane
+                Roofs in the same lane
               </h3>
               <Link
                 to="/projects"
@@ -359,7 +363,7 @@ const ProjectDetail = () => {
             </div>
             {adjacent.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
-                More projects in this category are coming soon.
+                More roofs in this category are coming soon.
               </div>
             ) : (
               <ul className="space-y-3">

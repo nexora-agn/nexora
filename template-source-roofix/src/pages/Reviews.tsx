@@ -11,14 +11,14 @@ import {
   MapPin,
   Search,
 } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-roofix/components/layout/Layout";
+import Reveal from "@template-roofix/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import { cn } from "@/lib/utils";
 
-/** Summit Reviews. Distinct from the homepage's three-up testimonial carousel.
+/** Roofix Reviews. Distinct from the homepage's three-up testimonial carousel.
  *  Archetypes:
  *  1. Aggregate score split hero with platform breakdown
  *  2. Platform filter pills (Google / Houzz / Referrals / Yelp)
@@ -62,8 +62,8 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Jan 2026",
     body:
-      "Three contractors bid the addition. Summit was the only one who walked the attic before quoting. Their number was the most honest one we got and ended up being the final number too.",
-    project: "Whole-home addition",
+      "Three bids on our hail claim. Roofix photographed every slope before quoting and walked us through drip edge upgrades the adjuster actually approved.",
+    project: "Full shingle replacement",
   },
   {
     id: "r2",
@@ -73,8 +73,8 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Dec 2025",
     body:
-      "Friday owner walks were the difference. We never had a Monday surprise the entire job. The super knew our dog's name by week two.",
-    project: "Custom home, 4,800 sqft",
+      "They tarped ahead of another front, then peeled it back so we could finish interior paint. Respectful crew — radios low, mulch protected.",
+    project: "Designer shingle upgrade",
   },
   {
     id: "r3",
@@ -84,8 +84,8 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Nov 2025",
     body:
-      "Hired them on a friend's recommendation. Project came in three days early. Punch list closed before the final draw. Refer them every chance I get.",
-    project: "Office TI",
+      "Leak after a windy week turned out to be lifted ridge cap. They fixed it without upselling an entire deck — unheard of honesty.",
+    project: "Emergency repair → warranty tune-up",
   },
   {
     id: "r4",
@@ -95,8 +95,8 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Oct 2025",
     body:
-      "We were told a renovation of this scope would be a nightmare. It wasn't. Daily sweep, dust barriers, and our kitchen worked the entire time.",
-    project: "Estate renovation",
+      "HOA flagged drip edge spacing. Superintendent sent photos the same night and re-ran the detail before the inspector returned.",
+    project: "HOA reroof",
   },
   {
     id: "r5",
@@ -106,8 +106,8 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Sep 2025",
     body:
-      "We used the aftercare line a year after move-in. They came back within two days, fixed it under warranty, and emailed me a one-page note. Doesn't happen with every builder.",
-    project: "Custom home aftercare",
+      "Year-two maintenance visit caught a nail pop we never saw. Free fix, documented for our insurer. That's why we refer neighbors.",
+    project: "Maintenance club visit",
   },
   {
     id: "r6",
@@ -117,8 +117,8 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Aug 2025",
     body:
-      "Two change orders the entire job, both priced before the work started. The bill at the end matched the contract. I had to triple-check.",
-    project: "Restaurant fit-out",
+      "Flat roof on our shop had ponding. They quoted a tapered ISO plan with real numbers — not a magic coating pitch.",
+    project: "TPO recover",
   },
   {
     id: "r7",
@@ -128,8 +128,8 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Jul 2025",
     body:
-      "We've now hired them twice. Different supers, same standards. The continuity across crews is what made us come back.",
-    project: "Second residence",
+      "Second roof with them — different crew lead, same cleanup standard. Magnet sweep caught nails our dog didn't step on.",
+    project: "Second home reroof",
   },
   {
     id: "r8",
@@ -139,28 +139,28 @@ const REVIEWS: ReviewItem[] = [
     rating: 5,
     date: "Jun 2025",
     body:
-      "They told me the things I didn't want to hear about my budget — early enough that we could change the plan instead of the project.",
-    project: "Custom build",
+      "They told us the attic needed more intake before we bought the dark shingles. Saved us a callback summer.",
+    project: "Ventilation correction",
   },
 ];
 
 const VIDEO_REVIEWS = [
   {
     poster:
-      "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=900&h=520&fit=crop",
-    speaker: "Owner — Plano custom home",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&h=520&q=85",
+    speaker: "Homeowner — Plano hail claim",
     duration: "1:42",
   },
   {
     poster:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&h=520&fit=crop",
-    speaker: "Owner — Office TI, Las Colinas",
+      "https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?auto=format&fit=crop&w=900&h=520&q=85",
+    speaker: "Property manager — Las Colinas flat roof",
     duration: "2:16",
   },
   {
     poster:
-      "https://images.unsplash.com/photo-1503387837-b154d5074bd2?w=900&h=520&fit=crop",
-    speaker: "Architect — Frisco estate",
+      "https://images.unsplash.com/photo-1761115435501-bebf019aba54?auto=format&fit=crop&w=900&h=520&q=85",
+    speaker: "Agent — Frisco listing prep",
     duration: "0:58",
   },
 ];
@@ -525,7 +525,7 @@ const Reviews = () => {
               <Link to="/contact">START A PROJECT</Link>
             </Button>
             <a
-              href="https://www.google.com/search?q=summit+construction+reviews"
+              href={`https://www.google.com/search?q=${encodeURIComponent(`${COMPANY.name} roofing reviews`)}`}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 self-center text-xs font-extrabold tracking-widest uppercase text-primary hover:text-secondary border-b-2 border-primary/20 hover:border-secondary transition-colors"

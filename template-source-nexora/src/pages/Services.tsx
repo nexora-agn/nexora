@@ -10,11 +10,11 @@ import {
   Wrench,
   Hammer,
 } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import NexoraPageHero from "@/components/sections/NexoraPageHero";
-import LeadContactSection from "@/components/home/LeadContactSection";
-import { useSiteContent } from "@/contexts/SiteContentContext";
-import { useTheme } from "@/contexts/ThemeContext";
+import Layout from "@template-nexora/components/layout/Layout";
+import NexoraPageHero from "@template-nexora/components/sections/NexoraPageHero";
+import LeadContactSection from "@template-nexora/components/home/LeadContactSection";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
+import { useTheme } from "@template-nexora/contexts/ThemeContext";
 
 const iconMap: Record<string, typeof Flame> = {
   Flame,
@@ -42,7 +42,7 @@ const Services = () => {
         title="Our Roofing Services"
         eyebrowAfter="Comprehensive Roofing Solutions"
         body={servicesPageIntro}
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=1400&h=900&q=85"
       />
 
       <section className="bg-white py-14 lg:py-20">

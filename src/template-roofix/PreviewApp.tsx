@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   ThemeProvider,
   THEME_DEFAULTS,
+  migrateRoofixThemeConfig,
   type ThemeConfig,
 } from "@template-roofix/contexts/ThemeContext";
 import {
@@ -15,7 +16,8 @@ import {
   SITE_CONTENT_DEFAULTS,
   type SiteContentState,
 } from "@template-roofix/contexts/SiteContentContext";
-import { mergeContent } from "@/lib/drafts";
+import { mergeSiteContentState } from "@/lib/drafts";
+import { withCanonicalRoofixHeroImage } from "@/lib/roofixHeroImage";
 import ScrollToTop from "@template-roofix/components/ScrollToTop";
 import Index from "@template-roofix/pages/Index";
 import NotFound from "@template-roofix/pages/NotFound";
@@ -114,8 +116,15 @@ const PreviewApp = () => {
     let active = true;
     const applyDraft = (draft: Draft | null) => {
       if (!active || !draft) return;
-      setTheme({ ...THEME_DEFAULTS, ...(draft.theme as Partial<ThemeConfig>) });
-      setContent(mergeContent(draft.content as Partial<SiteContentState> | null));
+      setTheme(migrateRoofixThemeConfig((draft.theme as Partial<ThemeConfig>) ?? {}));
+      setContent(
+        withCanonicalRoofixHeroImage(
+          mergeSiteContentState(
+            SITE_CONTENT_DEFAULTS as unknown as Record<string, unknown>,
+            draft.content as Partial<Record<string, unknown>> | null,
+          ) as SiteContentState,
+        ),
+      );
     };
 
     (async () => {

@@ -15,7 +15,7 @@ import {
   SITE_CONTENT_DEFAULTS,
   type SiteContentState,
 } from "@template-nexora/contexts/SiteContentContext";
-import { mergeContent } from "@/lib/drafts";
+import { mergeSiteContentState } from "@/lib/drafts";
 import ScrollToTop from "@template-nexora/components/ScrollToTop";
 import ChatbotWidget from "@template-nexora/components/Chatbot/ChatbotWidget";
 import Index from "@template-nexora/pages/Index";
@@ -118,7 +118,12 @@ const PreviewApp = () => {
     const applyDraft = (draft: Draft | null) => {
       if (!active || !draft) return;
       setTheme({ ...THEME_DEFAULTS, ...(draft.theme as Partial<ThemeConfig>) });
-      setContent(mergeContent(draft.content as Partial<SiteContentState> | null));
+      setContent(
+        mergeSiteContentState(
+          SITE_CONTENT_DEFAULTS as unknown as Record<string, unknown>,
+          draft.content as Partial<Record<string, unknown>> | null,
+        ) as SiteContentState,
+      );
     };
 
     (async () => {

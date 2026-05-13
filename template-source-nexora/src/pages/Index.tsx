@@ -1,13 +1,13 @@
 import { Helmet } from "react-helmet-async";
-import Layout from "@/components/layout/Layout";
-import HomeHero from "@/components/home/HomeHero";
-import ServicesRibbon from "@/components/home/ServicesRibbon";
-import WhyTeamSection from "@/components/home/WhyTeamSection";
-import ClientStoriesSection from "@/components/home/ClientStoriesSection";
-import SignatureProjectsSection from "@/components/home/SignatureProjectsSection";
-import LeadContactSection from "@/components/home/LeadContactSection";
-import Reveal from "@/components/animations/Reveal";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import Layout from "@template-nexora/components/layout/Layout";
+import HomeHero from "@template-nexora/components/home/HomeHero";
+import ServicesRibbon from "@template-nexora/components/home/ServicesRibbon";
+import WhyTeamSection from "@template-nexora/components/home/WhyTeamSection";
+import ClientStoriesSection from "@template-nexora/components/home/ClientStoriesSection";
+import SignatureProjectsSection from "@template-nexora/components/home/SignatureProjectsSection";
+import LeadContactSection from "@template-nexora/components/home/LeadContactSection";
+import Reveal from "@template-nexora/components/animations/Reveal";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 
 const Index = () => {
   const { sectionVisibility, company: COMPANY } = useSiteContent();

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Menu,
@@ -43,10 +43,20 @@ const Header = () => {
   const cleanPhone = (COMPANY.phone || "").replace(/[^\d+]/g, "");
   const logoLetter = (COMPANY.name || "S").charAt(0).toUpperCase();
 
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1280px)");
+    const close = () => {
+      if (mq.matches) setMobileOpen(false);
+    };
+    mq.addEventListener("change", close);
+    close();
+    return () => mq.removeEventListener("change", close);
+  }, []);
+
   return (
     <>
       {/* Top announcement bar */}
-      <div className="bg-primary text-primary-foreground text-xs hidden md:block border-b border-white/5">
+      <div className="bg-primary text-primary-foreground text-xs hidden md:block">
         <div className="container-custom flex items-center justify-between py-2 px-4 md:px-8 gap-6">
           <div className="flex items-center gap-2 min-w-0">
             <ShieldCheck className="h-3.5 w-3.5 text-secondary shrink-0" />
@@ -82,10 +92,10 @@ const Header = () => {
 
       {/* Main header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur border-b border-border shadow-sm">
-        <div className="container-custom flex items-center justify-between min-h-[72px] md:min-h-[88px] py-3 md:py-2 px-4 md:px-8 gap-6">
+        <div className="container-custom flex w-full min-w-0 max-w-full items-center justify-between xl:justify-normal min-h-[72px] md:min-h-[88px] py-3 md:py-2 px-4 md:px-8 gap-4 xl:gap-5">
           <Link
             to="/"
-            className="flex items-center gap-3 shrink-0 min-w-0"
+            className="flex items-center gap-3 shrink-0 min-w-0 xl:mr-2"
             aria-label={COMPANY.name}
           >
             {logoUrl ? (
@@ -129,52 +139,7 @@ const Header = () => {
             )}
           </Link>
 
-          {/* Center - phone + CTA */}
-          <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 gap-8">
-            {COMPANY.phone && (
-              <a
-                href={`tel:${cleanPhone}`}
-                className="flex items-center gap-2 text-foreground hover:text-secondary transition-colors"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary/10 text-secondary">
-                  <Phone className="h-4 w-4" />
-                </span>
-                <div className="leading-tight">
-                  <span className="block text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
-                    Call Now — We Answer 24/7
-                  </span>
-                  <span className="block text-lg font-extrabold">
-                    {COMPANY.phone}
-                  </span>
-                </div>
-              </a>
-            )}
-          </div>
-
-          <div className="hidden lg:flex items-center shrink-0">
-            <Button
-              asChild
-              className="rounded-md h-12 px-6 text-sm font-extrabold tracking-wider bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md"
-            >
-              <Link to="/contact" className="inline-flex items-center gap-2">
-                GET A FREE ESTIMATE
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-
-          <button
-            className="lg:hidden p-2 -mr-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
-
-        {/* Lower nav strip */}
-        <nav className="hidden lg:block border-t border-border bg-card">
-          <div className="container-custom flex items-center justify-center px-4 md:px-8">
+          <nav className="hidden xl:flex flex-1 items-center justify-center gap-0.5 min-w-0 shrink px-3">
             {NAV_LINKS.map(link => {
               const active = navItemActive(location.pathname, link.path);
               if (link.path === "/services") {
@@ -183,22 +148,22 @@ const Header = () => {
                     <Link
                       to={link.path}
                       className={cn(
-                        "px-5 py-4 text-[13px] font-bold tracking-wider uppercase transition-colors whitespace-nowrap inline-flex items-center gap-1.5 border-b-2",
+                        "px-3 py-2.5 text-[14px] font-bold tracking-wide uppercase transition-colors whitespace-nowrap rounded-lg inline-flex items-center gap-1.5 shrink-0",
                         active
-                          ? "text-primary border-secondary"
-                          : "text-foreground/85 border-transparent hover:text-secondary hover:border-secondary/40",
+                          ? "text-secondary bg-secondary/10"
+                          : "text-foreground/85 hover:text-primary hover:bg-muted/70",
                       )}
                     >
                       {link.label}
-                      <ChevronDown className="h-3.5 w-3.5" />
+                      <ChevronDown className="h-4 w-4 shrink-0" />
                     </Link>
-                    <div className="pointer-events-none absolute left-0 top-full opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-40">
-                      <div className="min-w-[280px] rounded-lg border border-border bg-card shadow-xl p-2 mt-1">
+                    <div className="pointer-events-none absolute left-0 top-full pt-2 opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto z-40">
+                      <div className="min-w-[260px] rounded-xl border border-border bg-card shadow-xl p-2">
                         {services.map(service => (
                           <Link
                             key={service.id}
                             to={`/services/${service.id}`}
-                            className="block rounded-md px-3 py-2.5 text-sm font-medium text-foreground/90 hover:bg-secondary/10 hover:text-secondary transition-colors"
+                            className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/90 hover:bg-muted hover:text-secondary transition-colors"
                           >
                             {service.title}
                           </Link>
@@ -213,21 +178,61 @@ const Header = () => {
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    "px-5 py-4 text-[13px] font-bold tracking-wider uppercase transition-colors whitespace-nowrap border-b-2",
+                    "px-3 py-2.5 text-[14px] font-bold tracking-wide uppercase transition-colors whitespace-nowrap rounded-lg shrink-0",
                     active
-                      ? "text-primary border-secondary"
-                      : "text-foreground/85 border-transparent hover:text-secondary hover:border-secondary/40",
+                      ? "text-secondary bg-secondary/10"
+                      : "text-foreground/85 hover:text-primary hover:bg-muted/70",
                   )}
                 >
                   {link.label}
                 </Link>
               );
             })}
+          </nav>
+
+          <div className="hidden xl:flex items-center shrink-0 gap-4 min-w-0">
+            {COMPANY.phone && (
+              <a
+                href={`tel:${cleanPhone}`}
+                className="flex items-center gap-2 text-foreground hover:text-secondary transition-colors min-w-0"
+                aria-label={`Call ${COMPANY.phone}`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+                  <Phone className="h-4 w-4" />
+                </span>
+                <div className="leading-tight min-w-0">
+                  <span className="hidden min-[1400px]:block text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
+                    Call 24/7
+                  </span>
+                  <span className="block text-[15px] font-extrabold whitespace-nowrap tabular-nums">
+                    {COMPANY.phone}
+                  </span>
+                </div>
+              </a>
+            )}
+            <Button
+              asChild
+              className="rounded-md h-12 px-6 text-[13px] font-extrabold tracking-wide bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md shrink-0"
+            >
+              <Link to="/contact" className="inline-flex items-center gap-2">
+                GET A FREE ESTIMATE
+                <ArrowRight className="h-4 w-4 shrink-0" />
+              </Link>
+            </Button>
           </div>
-        </nav>
+
+          <button
+            type="button"
+            className="xl:hidden p-2 -mr-2 shrink-0"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
 
         {mobileOpen && (
-          <nav className="lg:hidden border-t bg-card px-4 pb-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <nav className="xl:hidden border-t bg-card px-4 pb-4 max-h-[min(70dvh,calc(100vh-5rem))] overflow-y-auto overscroll-contain">
             {NAV_LINKS.map(link => {
               if (link.path === "/services") {
                 return (

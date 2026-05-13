@@ -58,8 +58,8 @@ const WhyTeamSection = () => {
 
         <div className="relative min-h-[420px]">
           <img
-            src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&h=900&fit=crop"
-            alt="Beautiful home with new roof"
+            src="https://images.unsplash.com/photo-1760544137552-b225c3379c76?auto=format&fit=crop&w=1200&h=900&q=85"
+            alt="Quality residential roofing workmanship"
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div

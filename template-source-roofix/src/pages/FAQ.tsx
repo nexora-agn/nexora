@@ -11,23 +11,22 @@ import {
   ShieldCheck,
   Hammer,
   ClipboardList,
-  Building,
-  Wrench,
   ChevronDown,
+  Layers,
 } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import Reveal from "@/components/animations/Reveal";
+import Layout from "@template-roofix/components/layout/Layout";
+import Reveal from "@template-roofix/components/animations/Reveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import { useSiteContent } from "@template-roofix/contexts/SiteContentContext";
 import {
   FAQ_BY_CATEGORY,
   FAQ_TABS,
   type FaqTabId,
-} from "@/data/siteData";
+} from "@template-roofix/data/siteData";
 import { cn } from "@/lib/utils";
 
-/** Summit FAQ. Distinct from Constructo's tabs+single-accordion pattern.
+/** Roofix FAQ. Distinct from Constructo's tabs+single-accordion pattern.
  *  Archetypes:
  *  1. Search-led hero with live counter
  *  2. Six quick-answer icon cards (educational, not Q&A)
@@ -36,41 +35,41 @@ import { cn } from "@/lib/utils";
  *  5. Page-unique closing footer */
 
 interface QuickAnswer {
-  icon: typeof Building;
+  icon: typeof Layers;
   title: string;
   body: string;
 }
 
 const QUICK_ANSWERS: QuickAnswer[] = [
   {
-    icon: Building,
-    title: "What we build",
-    body: "Commercial, residential, industrial, and renovation. Four pillars, one builder.",
+    icon: Layers,
+    title: "What we cover",
+    body: "Steep-slope, low-slope, storm mitigation, skylights, gutters — one crew brand, coordinated schedules.",
   },
   {
     icon: ScrollText,
     title: "How we contract",
-    body: "Fixed-price below $2M, GMP with allowances above. Both with documented change orders.",
+    body: "Most residential roofs are fixed price. Commercial membranes bill on milestones — change orders quoted before crews move.",
   },
   {
     icon: CalendarRange,
-    title: "How fast we move",
-    body: "Two-hour acknowledgment. Same-day routing. On-site walk inside one week.",
+    title: "How fast we mobilize",
+    body: "Two-hour acknowledgement. Emergency tarps routed same day when weather cooperates.",
   },
   {
     icon: ShieldCheck,
-    title: "How we warrant the work",
-    body: "Ten-year workmanship pledge. Aftercare technician on-call after handover.",
+    title: "How we warrant work",
+    body: "10-year workmanship plus manufacturer-backed systems. Warranty desk answers the phone.",
   },
   {
     icon: ClipboardList,
-    title: "What we deliver weekly",
-    body: "Photo log, three-day look-ahead, and a Friday owner walk. No portal logins.",
+    title: "What you see weekly",
+    body: "Photo lifts, superintendent notes, magnet sweeps logged — emailed, not trapped in portals.",
   },
   {
     icon: Hammer,
-    title: "Who's actually on site",
-    body: "Your senior super, daily. Same name from preconstruction through punch.",
+    title: "Who's on your roof",
+    body: "A named crew lead every day — same superintendent from tear-off day one through QA walk.",
   },
 ];
 
@@ -82,29 +81,29 @@ interface CostBand {
 
 const COST_BANDS: CostBand[] = [
   {
-    scale: "Single-trade fix",
-    range: "$10K – $80K",
-    blurb: "Aftercare-style work: caulks, sealants, isolated repairs, finish refresh.",
+    scale: "Service & spot repairs",
+    range: "$500 – $4K",
+    blurb: "Flashing resets, chimney cricket rebuilds, squirrel damage, slipped ridge — usually same-week.",
   },
   {
-    scale: "Compact remodel",
-    range: "$80K – $400K",
-    blurb: "Kitchens, baths, single-room additions, isolated TI scope.",
+    scale: "Partial slope / overlays (when allowed)",
+    range: "$4K – $12K",
+    blurb: "Isolated elevations, HOA quick fixes — only when code + manufacturer specs allow overlays.",
   },
   {
-    scale: "Full renovation / addition",
-    range: "$400K – $2M",
-    blurb: "Whole-home, restaurant fit-out, mid-size TI, structural changes.",
+    scale: "Full steep-slope replacement",
+    range: "$12K – $60K",
+    blurb: "Typical DFW detachments with decking repairs, vents, skylights, gutters add-ons billed separately.",
   },
   {
-    scale: "Ground-up build",
-    range: "$2M – $15M",
-    blurb: "Custom estate, retail strip, office shell, light industrial.",
+    scale: "Low-slope commercial",
+    range: "$12K – six figures",
+    blurb: "Mechanically fastened or fully adhered membranes sized per square foot + rooftop access logistics.",
   },
   {
-    scale: "Anchor / multi-phase",
-    range: "$15M+",
-    blurb: "Distribution, large estate compound, mixed-use, campus expansion.",
+    scale: "Storm + insurance supplementation",
+    range: "Varies",
+    blurb: "We document code upgrades, drip edge, ice/water, and decking so adjusters see defensible line items.",
   },
 ];
 

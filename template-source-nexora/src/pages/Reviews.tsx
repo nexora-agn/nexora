@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet-async";
 import { Star, Quote } from "lucide-react";
-import Layout from "@/components/layout/Layout";
-import NexoraPageHero from "@/components/sections/NexoraPageHero";
-import LeadContactSection from "@/components/home/LeadContactSection";
-import { useSiteContent } from "@/contexts/SiteContentContext";
+import Layout from "@template-nexora/components/layout/Layout";
+import NexoraPageHero from "@template-nexora/components/sections/NexoraPageHero";
+import LeadContactSection from "@template-nexora/components/home/LeadContactSection";
+import { useSiteContent } from "@template-nexora/contexts/SiteContentContext";
 
 const Reviews = () => {
   const { testimonials, company: COMPANY, siteTop: SITE_TOP, stats } = useSiteContent();
@@ -23,7 +23,7 @@ const Reviews = () => {
         title="What Homeowners Say"
         eyebrowAfter="Trusted Across North Texas"
         body={`We're proud of the roofs we've installed and the homeowners we've served. Here's what people say about working with ${COMPANY.name}.`}
-        image="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&h=900&fit=crop"
+        image="https://images.unsplash.com/photo-1603517431529-6ba96d7525bb?auto=format&fit=crop&w=1400&h=900&q=85"
         badges={
           <div className="flex flex-wrap gap-3">
             <span className="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-2 text-xs font-bold">
