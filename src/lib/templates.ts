@@ -16,6 +16,7 @@ import summitThumbUrl from "@/assets/admin/summit-thumb.svg?url";
 import ridgepeakThumbUrl from "@/assets/admin/ridgepeak-thumb.svg?url";
 import roofixThumbUrl from "@/assets/admin/roofix-thumb.svg?url";
 import electricalThumbUrl from "@/assets/admin/electrical-thumb.svg?url";
+import plumbingThumbUrl from "@/assets/admin/plumbing-thumb.svg?url";
 
 export interface TemplateOption {
   /** Stable identifier persisted on the `clients.template_id` column. */
@@ -163,6 +164,29 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-electrical.html",
       scaffoldDir: "template-source-electrical",
       liveTemplateDir: "src/template-electrical",
+    },
+  },
+  {
+    id: "plumbing",
+    name: "ClearCurrent Plumbing",
+    tagline: "Premium plumbing contractor · deep blue + white",
+    description:
+      "Premium plumbing contractor template with 24/7 emergency bar, white premium hero, service categories, process timeline, before/after projects, Google reviews, financing, service areas, SEO city pages, and lead forms. Built specifically for plumbing companies.",
+    thumbnail: plumbingThumbUrl,
+    accent: "#2b7cd3",
+    available: true,
+    features: [
+      "24/7 emergency + contact strip",
+      "Premium white hero with reviews card",
+      "14+ plumbing services",
+      "Process + capabilities sections",
+      "Before/after project gallery",
+      "Financing + SEO city landing pages",
+    ],
+    paths: {
+      previewHtml: "/preview-plumbing.html",
+      scaffoldDir: "template-source-plumbing",
+      liveTemplateDir: "src/template-plumbing",
     },
   },
 ];

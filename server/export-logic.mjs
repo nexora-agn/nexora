@@ -91,6 +91,10 @@ export const TEMPLATE_REGISTRY = [
     id: "electrical",
     paths: { scaffoldDir: "template-source-electrical", liveTemplateDir: "src/template-electrical" },
   },
+  {
+    id: "plumbing",
+    paths: { scaffoldDir: "template-source-plumbing", liveTemplateDir: "src/template-plumbing" },
+  },
 ];
 
 /**
