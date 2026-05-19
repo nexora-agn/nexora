@@ -15,6 +15,7 @@ import constructoThumbUrl from "@/assets/admin/constructo-thumb.svg?url";
 import summitThumbUrl from "@/assets/admin/summit-thumb.svg?url";
 import ridgepeakThumbUrl from "@/assets/admin/ridgepeak-thumb.svg?url";
 import roofixThumbUrl from "@/assets/admin/roofix-thumb.svg?url";
+import electricalThumbUrl from "@/assets/admin/electrical-thumb.svg?url";
 
 export interface TemplateOption {
   /** Stable identifier persisted on the `clients.template_id` column. */
@@ -139,6 +140,29 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-roofix.html",
       scaffoldDir: "template-source-roofix",
       liveTemplateDir: "src/template-roofix",
+    },
+  },
+  {
+    id: "electrical",
+    name: "VoltCurrent Electrical",
+    tagline: "Premium electrical contractor · charcoal + electric blue",
+    description:
+      "Premium electrical contractor template with 24/7 emergency bar, split hero, residential & commercial highlights, services grid, troubleshooting section, project gallery, reviews spotlight, emergency financing band, service areas, and estimate form. Built specifically for electricians.",
+    thumbnail: electricalThumbUrl,
+    accent: "#38bdf8",
+    available: true,
+    features: [
+      "24/7 emergency + contact strip",
+      "Split hero with emergency CTA",
+      "Residential & commercial panels",
+      "15+ electrical services",
+      "Troubleshooting + why-choose sections",
+      "Project gallery + reviews spotlight",
+    ],
+    paths: {
+      previewHtml: "/preview-electrical.html",
+      scaffoldDir: "template-source-electrical",
+      liveTemplateDir: "src/template-electrical",
     },
   },
 ];

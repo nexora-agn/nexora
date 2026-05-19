@@ -87,6 +87,10 @@ export const TEMPLATE_REGISTRY = [
     id: "roofix",
     paths: { scaffoldDir: "template-source-roofix", liveTemplateDir: "src/template-roofix" },
   },
+  {
+    id: "electrical",
+    paths: { scaffoldDir: "template-source-electrical", liveTemplateDir: "src/template-electrical" },
+  },
 ];
 
 /**

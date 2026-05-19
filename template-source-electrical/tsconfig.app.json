@@ -19,21 +19,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@template/*": [
-        "./src/template/*"
-      ],
-      "@template-summit/*": [
-        "./src/template-summit/*"
-      ],
-      "@template-nexora/*": [
-        "./src/template-nexora/*"
-      ],
-      "@template-roofix/*": [
-        "./src/template-roofix/*"
-      ],
-      "@template-electrical/*": [
-        "./src/template-electrical/*"
       ]
     },
     "skipLibCheck": true,

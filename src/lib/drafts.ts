@@ -14,6 +14,8 @@ import {
   migrateRoofixThemeConfig,
 } from "@template-roofix/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as ROOFIX_SITE_CONTENT } from "@template-roofix/contexts/SiteContentContext";
+import { THEME_DEFAULTS as ELECTRICAL_THEME } from "@template-electrical/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as ELECTRICAL_SITE_CONTENT } from "@template-electrical/contexts/SiteContentContext";
 import { THEME_DEFAULTS as SUMMIT_THEME } from "@template-summit/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as SUMMIT_SITE_CONTENT } from "@template-summit/contexts/SiteContentContext";
 import { canonicalTemplateId } from "@/lib/templates";
@@ -38,6 +40,8 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return NEXORA_THEME;
     case "roofix":
       return ROOFIX_THEME;
+    case "electrical":
+      return ELECTRICAL_THEME;
     case "summit":
       return SUMMIT_THEME;
     default:
@@ -55,6 +59,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return NEXORA_SITE_CONTENT as unknown as SiteContentState;
     case "roofix":
       return ROOFIX_SITE_CONTENT as unknown as SiteContentState;
+    case "electrical":
+      return ELECTRICAL_SITE_CONTENT as unknown as SiteContentState;
     case "summit":
       return SUMMIT_SITE_CONTENT as unknown as SiteContentState;
     default:

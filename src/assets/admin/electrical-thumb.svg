@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520" role="img" aria-label="VoltCurrent Electrical template">
+  <defs>
+    <linearGradient id="e-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e14"/>
+      <stop offset="50%" stop-color="#121820"/>
+      <stop offset="100%" stop-color="#1a2332"/>
+    </linearGradient>
+    <linearGradient id="e-glow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" fill="url(#e-bg)"/>
+  <rect width="800" height="520" fill="url(#e-glow)"/>
+  <g stroke="#e8edf5" stroke-opacity="0.04" stroke-width="1" fill="none">
+    <path d="M0 104 H800 M0 208 H800 M0 312 H800 M0 416 H800"/>
+    <path d="M160 0 V520 M320 0 V520 M480 0 V520 M640 0 V520"/>
+  </g>
+  <path d="M120 380 L200 280 L280 340 L400 200 L520 300 L640 240 L720 320" stroke="#38bdf8" stroke-width="3" fill="none" opacity="0.5"/>
+  <g transform="translate(400 250)">
+    <text fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="800" letter-spacing="-0.02em" text-anchor="middle" y="-8">VOLTCURRENT</text>
+    <text fill="#38bdf8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="0.28em" text-anchor="middle" y="28">ELECTRICAL</text>
+    <rect x="-160" y="48" width="320" height="4" rx="2" fill="#38bdf8"/>
+    <text fill="#94a3b8" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" letter-spacing="0.16em" text-anchor="middle" y="78">PREMIUM ELECTRICAL CONTRACTOR</text>
+  </g>
+  <rect x="0" y="0" width="800" height="520" fill="none" stroke="#38bdf8" stroke-opacity="0.12" stroke-width="2"/>
+</svg>
