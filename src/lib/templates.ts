@@ -18,6 +18,7 @@ import roofixThumbUrl from "@/assets/admin/roofix-thumb.svg?url";
 import electricalThumbUrl from "@/assets/admin/electrical-thumb.svg?url";
 import plumbingThumbUrl from "@/assets/admin/plumbing-thumb.svg?url";
 import paintingThumbUrl from "@/assets/admin/painting-thumb.svg?url";
+import landscapingThumbUrl from "@/assets/admin/landscaping-thumb.svg?url";
 
 export interface TemplateOption {
   /** Stable identifier persisted on the `clients.template_id` column. */
@@ -211,6 +212,29 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-painting.html",
       scaffoldDir: "template-source-painting",
       liveTemplateDir: "src/template-painting",
+    },
+  },
+  {
+    id: "landscaping",
+    name: "VerdeField Landscaping",
+    tagline: "Premium landscaping & tree service · forest green + warm stone",
+    description:
+      "Luxury landscaping and tree service template with emergency contact strip, cinematic nature hero, tree service highlights, lawn care showcase, outdoor transformations gallery, seasonal services, process timeline, and estimate form. Built specifically for landscaping contractors.",
+    thumbnail: landscapingThumbUrl,
+    accent: "#3d6b4f",
+    available: true,
+    features: [
+      "Forest green + warm stone palette",
+      "19+ landscaping & tree services",
+      "Tree service + lawn + hardscape sections",
+      "Outdoor transformation gallery",
+      "Seasonal services + service areas",
+      "Premium estimate lead form",
+    ],
+    paths: {
+      previewHtml: "/preview-landscaping.html",
+      scaffoldDir: "template-source-landscaping",
+      liveTemplateDir: "src/template-landscaping",
     },
   },
 ];

@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 48 33% 97%;
+    --foreground: 155 45% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 155 45% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 45% 14%;
+
+    --primary: 152 48% 22%;
+    --primary-foreground: 48 40% 98%;
+
+    --secondary: 38 78% 48%;
+    --secondary-foreground: 155 55% 10%;
+
+    --muted: 48 20% 92%;
+    --muted-foreground: 155 12% 38%;
+
+    --accent: 38 78% 48%;
+    --accent-foreground: 155 55% 10%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 48 14% 86%;
+    --input: 48 14% 86%;
+    --ring: 38 78% 48%;
+
+    --radius: 0.375rem;
+
+    --vf-forest: 152 48% 22%;
+    --vf-forest-dark: 155 55% 12%;
+    --vf-cream: 48 33% 97%;
+    --vf-sage: 140 22% 90%;
+    --vf-amber: 38 78% 48%;
+    --vf-earth: 30 18% 42%;
+
+    --sidebar-background: 48 33% 97%;
+    --sidebar-foreground: 155 45% 14%;
+    --sidebar-primary: 152 48% 22%;
+    --sidebar-primary-foreground: 48 40% 98%;
+    --sidebar-accent: 48 20% 92%;
+    --sidebar-accent-foreground: 155 45% 14%;
+    --sidebar-border: 48 14% 86%;
+    --sidebar-ring: 38 78% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Outfit", system-ui, sans-serif;
+  }
+  .font-sans-brand {
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .container-custom {
+    @apply max-w-7xl mx-auto w-full;
+  }
+  .container-inset {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  .vf-section-pad,
+  .section-padding {
+    @apply py-14 md:py-20 lg:py-24;
+  }
+  .vf-card-hover {
+    @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg;
+  }
+  .page-transition-enter {
+    animation: vfFadeUp 0.45s ease-out;
+  }
+}
+
+@keyframes vfFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
