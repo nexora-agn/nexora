@@ -1,0 +1,231 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 215 45% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 45% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 45% 15%;
+
+    /* BrushHouse: dark navy + contractor orange */
+    --primary: 214 55% 23%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 21 90% 48%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 214 30% 94%;
+    --muted-foreground: 215 18% 40%;
+
+    --accent: 21 90% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 25% 88%;
+    --input: 214 25% 88%;
+    --ring: 21 90% 48%;
+
+    --radius: 0.125rem;
+
+    --flow-charcoal: 214 55% 23%;
+    --flow-gold: 21 90% 48%;
+    --flow-cream: 210 40% 98%;
+    --flow-warm: 214 35% 95%;
+    --flow-panel: 214 50% 18%;
+
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 215 45% 15%;
+    --sidebar-primary: 214 55% 23%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 214 30% 94%;
+    --sidebar-accent-foreground: 215 45% 15%;
+    --sidebar-border: 214 25% 88%;
+    --sidebar-ring: 21 90% 48%;
+  }
+
+  .dark {
+    --background: 214 50% 10%;
+    --foreground: 210 30% 96%;
+    --card: 214 45% 12%;
+    --card-foreground: 210 30% 96%;
+    --popover: 214 45% 12%;
+    --popover-foreground: 210 30% 96%;
+    --primary: 210 30% 96%;
+    --primary-foreground: 214 55% 23%;
+    --secondary: 21 90% 48%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 214 30% 18%;
+    --muted-foreground: 214 15% 65%;
+    --accent: 21 90% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 55% 40%;
+    --destructive-foreground: 210 30% 96%;
+    --border: 214 25% 22%;
+    --input: 214 25% 22%;
+    --ring: 21 90% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  h4,
+  h5,
+  h6 {
+    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .font-sans-brand {
+    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .section-padding {
+    @apply py-20 md:py-28 px-5 md:px-10 lg:px-14;
+  }
+
+  .section-padding-tight {
+    @apply py-14 md:py-20 px-5 md:px-10 lg:px-14;
+  }
+
+  .container-custom {
+    @apply max-w-[1280px] mx-auto;
+  }
+
+  /** Horizontal inset matching section-padding — use on header, heroes, and strips outside section-padding. */
+  .container-inset {
+    @apply px-5 md:px-10 lg:px-14;
+  }
+
+  .paint-shadow-soft {
+    box-shadow: 0 8px 40px -12px hsl(214 55% 23% / 0.18);
+  }
+
+  .paint-shadow-card {
+    box-shadow: 0 2px 8px hsl(214 55% 23% / 0.06), 0 16px 48px -16px hsl(214 55% 23% / 0.12);
+  }
+
+  .paint-border-gold {
+    border-color: hsl(var(--secondary) / 0.45);
+  }
+
+  .paint-editorial-rule {
+    @apply h-px w-16 bg-[hsl(var(--secondary))];
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition-enter {
+  animation: page-enter 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+.reveal {
+  opacity: 0;
+  transition-property: transform, opacity, filter;
+  transition-duration: var(--reveal-duration, 700ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: transform, opacity;
+}
+
+.reveal--up {
+  transform: translateY(var(--reveal-distance, 28px));
+}
+
+.reveal--down {
+  transform: translateY(calc(var(--reveal-distance, 28px) * -1));
+}
+
+.reveal--left {
+  transform: translateX(var(--reveal-distance, 28px));
+}
+
+.reveal--right {
+  transform: translateX(calc(var(--reveal-distance, 28px) * -1));
+}
+
+.reveal--zoom {
+  transform: scale(0.97);
+  filter: blur(4px);
+}
+
+.reveal--visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .page-transition-enter,
+  .animate-marquee {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}

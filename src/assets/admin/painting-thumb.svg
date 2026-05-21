@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520" role="img" aria-label="BrushHouse Painting template">
+  <defs>
+    <linearGradient id="ph-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0f6fc"/>
+      <stop offset="50%" stop-color="#e8f0fa"/>
+      <stop offset="100%" stop-color="#dce8f5"/>
+    </linearGradient>
+    <linearGradient id="ph-glow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ea580c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" fill="url(#ph-bg)"/>
+  <rect width="800" height="520" fill="url(#ph-glow)"/>
+  <rect x="48" y="72" width="320" height="376" rx="4" fill="#1a365d" opacity="0.08"/>
+  <rect x="432" y="120" width="320" height="280" rx="4" fill="#ea580c" opacity="0.12"/>
+  <path d="M120 420 L280 280 L400 340 L560 220 L680 300" stroke="#ea580c" stroke-width="2" fill="none" opacity="0.55"/>
+  <g transform="translate(400 248)">
+    <text fill="#1a365d" font-family="Georgia, serif" font-size="42" font-weight="600" text-anchor="middle" y="-12">BrushHouse</text>
+    <text fill="#ea580c" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="0.32em" text-anchor="middle" y="24">PAINTING</text>
+    <rect x="-120" y="44" width="240" height="3" rx="1.5" fill="#ea580c"/>
+    <text fill="#4a5568" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" letter-spacing="0.18em" text-anchor="middle" y="72">NAVY + ORANGE CONTRACTOR</text>
+  </g>
+  <rect x="0" y="0" width="800" height="520" fill="none" stroke="#1a365d" stroke-opacity="0.1" stroke-width="2"/>
+</svg>

@@ -17,6 +17,7 @@ import ridgepeakThumbUrl from "@/assets/admin/ridgepeak-thumb.svg?url";
 import roofixThumbUrl from "@/assets/admin/roofix-thumb.svg?url";
 import electricalThumbUrl from "@/assets/admin/electrical-thumb.svg?url";
 import plumbingThumbUrl from "@/assets/admin/plumbing-thumb.svg?url";
+import paintingThumbUrl from "@/assets/admin/painting-thumb.svg?url";
 
 export interface TemplateOption {
   /** Stable identifier persisted on the `clients.template_id` column. */
@@ -187,6 +188,29 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-plumbing.html",
       scaffoldDir: "template-source-plumbing",
       liveTemplateDir: "src/template-plumbing",
+    },
+  },
+  {
+    id: "painting",
+    name: "BrushHouse Painting",
+    tagline: "Premium painting contractor · navy + orange",
+    description:
+      "Luxury residential & commercial painting template with announcement strip, cinematic hero, interior/exterior showcase, premium finishes, before/after transformations, editorial why-choose, horizontal process timeline, gallery, quote wall testimonials, service areas, and free estimate form. Built specifically for painting companies.",
+    thumbnail: paintingThumbUrl,
+    accent: "#ea580c",
+    available: true,
+    features: [
+      "Luxury warm neutral palette",
+      "Cinematic hero + trust marquee",
+      "15+ painting services",
+      "Finishes & before/after gallery",
+      "Editorial why-choose + process timeline",
+      "SEO city landing pages",
+    ],
+    paths: {
+      previewHtml: "/preview-painting.html",
+      scaffoldDir: "template-source-painting",
+      liveTemplateDir: "src/template-painting",
     },
   },
 ];

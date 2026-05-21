@@ -18,6 +18,8 @@ import { THEME_DEFAULTS as ELECTRICAL_THEME } from "@template-electrical/context
 import { SITE_CONTENT_DEFAULTS as ELECTRICAL_SITE_CONTENT } from "@template-electrical/contexts/SiteContentContext";
 import { THEME_DEFAULTS as PLUMBING_THEME } from "@template-plumbing/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as PLUMBING_SITE_CONTENT } from "@template-plumbing/contexts/SiteContentContext";
+import { THEME_DEFAULTS as PAINTING_THEME } from "@template-painting/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as PAINTING_SITE_CONTENT } from "@template-painting/contexts/SiteContentContext";
 import { THEME_DEFAULTS as SUMMIT_THEME } from "@template-summit/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as SUMMIT_SITE_CONTENT } from "@template-summit/contexts/SiteContentContext";
 import { canonicalTemplateId } from "@/lib/templates";
@@ -46,6 +48,8 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return ELECTRICAL_THEME;
     case "plumbing":
       return PLUMBING_THEME;
+    case "painting":
+      return PAINTING_THEME;
     case "summit":
       return SUMMIT_THEME;
     default:
@@ -67,6 +71,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return ELECTRICAL_SITE_CONTENT as unknown as SiteContentState;
     case "plumbing":
       return PLUMBING_SITE_CONTENT as unknown as SiteContentState;
+    case "painting":
+      return PAINTING_SITE_CONTENT as unknown as SiteContentState;
     case "summit":
       return SUMMIT_SITE_CONTENT as unknown as SiteContentState;
     default:
