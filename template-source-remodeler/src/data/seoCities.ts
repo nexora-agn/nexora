@@ -63,3 +63,9 @@ export const SEO_CITIES = [
     imageKey: "sidingInstall" as const,
   },
 ] as const;
+
+export type SeoCity = (typeof SEO_CITIES)[number];
+
+export function getSeoCity(slug: string): SeoCity | undefined {
+  return SEO_CITIES.find(c => c.slug === slug);
+}
