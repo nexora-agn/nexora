@@ -103,6 +103,14 @@ export const TEMPLATE_REGISTRY = [
     id: "landscaping",
     paths: { scaffoldDir: "template-source-landscaping", liveTemplateDir: "src/template-landscaping" },
   },
+  {
+    id: "homebuilder",
+    paths: { scaffoldDir: "template-source-homebuilder", liveTemplateDir: "src/template-homebuilder" },
+  },
+  {
+    id: "remodeler",
+    paths: { scaffoldDir: "template-source-remodeler", liveTemplateDir: "src/template-remodeler" },
+  },
 ];
 
 /**

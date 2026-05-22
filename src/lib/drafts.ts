@@ -22,6 +22,10 @@ import { THEME_DEFAULTS as PAINTING_THEME } from "@template-painting/contexts/Th
 import { SITE_CONTENT_DEFAULTS as PAINTING_SITE_CONTENT } from "@template-painting/contexts/SiteContentContext";
 import { THEME_DEFAULTS as LANDSCAPING_THEME } from "@template-landscaping/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as LANDSCAPING_SITE_CONTENT } from "@template-landscaping/contexts/SiteContentContext";
+import { THEME_DEFAULTS as HOMEBUILDER_THEME } from "@template-homebuilder/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as HOMEBUILDER_SITE_CONTENT } from "@template-homebuilder/contexts/SiteContentContext";
+import { THEME_DEFAULTS as REMODELER_THEME } from "@template-remodeler/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as REMODELER_SITE_CONTENT } from "@template-remodeler/contexts/SiteContentContext";
 import { THEME_DEFAULTS as SUMMIT_THEME } from "@template-summit/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as SUMMIT_SITE_CONTENT } from "@template-summit/contexts/SiteContentContext";
 import { canonicalTemplateId } from "@/lib/templates";
@@ -54,6 +58,10 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return PAINTING_THEME;
     case "landscaping":
       return LANDSCAPING_THEME;
+    case "homebuilder":
+      return HOMEBUILDER_THEME;
+    case "remodeler":
+      return REMODELER_THEME;
     case "summit":
       return SUMMIT_THEME;
     default:
@@ -79,6 +87,10 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return PAINTING_SITE_CONTENT as unknown as SiteContentState;
     case "landscaping":
       return LANDSCAPING_SITE_CONTENT as unknown as SiteContentState;
+    case "homebuilder":
+      return HOMEBUILDER_SITE_CONTENT as unknown as SiteContentState;
+    case "remodeler":
+      return REMODELER_SITE_CONTENT as unknown as SiteContentState;
     case "summit":
       return SUMMIT_SITE_CONTENT as unknown as SiteContentState;
     default:
@@ -191,6 +203,11 @@ function mergeOntoDefaultsWithStalePrimitives(
       continue;
     }
 
+    // Empty strings in saved drafts (e.g. "Remove" in admin) must not wipe default image/copy URLs.
+    if (typeof pv === "string" && pv.trim() === "" && typeof dv === "string" && dv.trim() !== "") {
+      continue;
+    }
+
     out[key] = mergeScalarPreferStaleConstruct(dv, pv, cv) as (typeof out)[typeof key];
   }
   return out;
@@ -204,6 +221,22 @@ function partialValEquivalentToStale(partialArr: unknown[], staleVal: unknown): 
 
 function isLikelyUserGeneratedRowId(id: string): boolean {
   return USER_CONTENT_ID_PREFIXES.some(p => id.startsWith(p));
+}
+
+/** Do not let saved `image` / `avatar` clears wipe template default URLs on keyed rows. */
+function mergeContentRowPatch(
+  row: Record<string, unknown>,
+  patch: Record<string, unknown>,
+): Record<string, unknown> {
+  const merged = { ...row, ...patch };
+  for (const key of ["image", "avatar"] as const) {
+    const next = merged[key];
+    const prev = row[key];
+    if (typeof next === "string" && next.trim() === "" && typeof prev === "string" && prev.trim() !== "") {
+      merged[key] = prev;
+    }
+  }
+  return merged;
 }
 
 function mergeIdKeyedRows(
@@ -220,7 +253,7 @@ function mergeIdKeyedRows(
   const merged = defaults.map(row => {
     const idStr = String((row as Record<string, unknown>).id);
     const patch = pmap.get(idStr);
-    return patch ? { ...row, ...patch } : row;
+    return patch ? mergeContentRowPatch(row as Record<string, unknown>, patch) : row;
   });
   if (!opts.allowPrefixExtras) return merged;
   for (const raw of partial) {
@@ -247,7 +280,7 @@ function mergeKeyedRows(
   return defaults.map(row => {
     const kVal = row[keyField];
     const patch = typeof kVal === "string" ? pmap.get(kVal) : undefined;
-    return patch ? { ...row, ...patch } : row;
+    return patch ? mergeContentRowPatch(row, patch) : row;
   });
 }
 

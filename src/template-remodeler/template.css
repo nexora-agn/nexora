@@ -1,0 +1,118 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 180 20% 98%;
+    --foreground: 192 35% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 192 35% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 192 35% 12%;
+
+    --primary: 192 72% 18%;
+    --primary-foreground: 40 30% 98%;
+
+    --secondary: 12 68% 58%;
+    --secondary-foreground: 40 30% 98%;
+
+    --muted: 180 18% 94%;
+    --muted-foreground: 192 15% 38%;
+
+    --accent: 168 28% 42%;
+    --accent-foreground: 40 30% 98%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 180 14% 88%;
+    --input: 180 14% 88%;
+    --ring: 12 68% 58%;
+
+    --radius: 2px;
+
+    --rm-teal: 192 72% 18%;
+    --rm-teal-soft: 192 45% 24%;
+    --rm-cream: 40 33% 97%;
+    --rm-sage: 168 28% 42%;
+    --rm-coral: 12 68% 58%;
+    --rm-coral-light: 16 75% 94%;
+    --rm-slate: 210 18% 32%;
+
+    --sidebar-background: 180 20% 98%;
+    --sidebar-foreground: 192 35% 12%;
+    --sidebar-primary: 192 72% 18%;
+    --sidebar-primary-foreground: 40 30% 98%;
+    --sidebar-accent: 180 18% 94%;
+    --sidebar-accent-foreground: 192 35% 12%;
+    --sidebar-border: 180 14% 88%;
+    --sidebar-ring: 12 68% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Source Sans 3", system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "DM Serif Display", Georgia, serif;
+    letter-spacing: 0.01em;
+  }
+  .font-sans-brand {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+  }
+  .container-custom {
+    @apply max-w-[1280px] mx-auto w-full;
+  }
+  .container-inset {
+    @apply px-4 sm:px-6 lg:px-10;
+  }
+  .rm-section-pad,
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-28;
+  }
+  .rm-card-hover {
+    @apply transition-all duration-300 hover:shadow-[0_12px_40px_-12px_hsl(var(--rm-teal)/0.2)];
+  }
+  .rm-rule {
+    @apply h-px w-16 bg-[hsl(var(--secondary))];
+  }
+  .rm-rule-long {
+    @apply h-px w-full max-w-xs bg-[hsl(var(--border))];
+  }
+  .rm-frame {
+    box-shadow: 10px 10px 0 hsl(var(--secondary) / 0.28);
+  }
+  .rm-check-box {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center border-2 border-[hsl(var(--secondary))] text-[hsl(var(--secondary))];
+  }
+  .rm-nav-active {
+    box-shadow: inset 0 -2px 0 hsl(var(--secondary));
+  }
+  .page-transition-enter {
+    animation: rmFadeUp 0.45s ease-out;
+  }
+}
+
+@keyframes rmFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

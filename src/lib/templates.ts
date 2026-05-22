@@ -19,6 +19,8 @@ import electricalThumbUrl from "@/assets/admin/electrical-thumb.svg?url";
 import plumbingThumbUrl from "@/assets/admin/plumbing-thumb.svg?url";
 import paintingThumbUrl from "@/assets/admin/painting-thumb.svg?url";
 import landscapingThumbUrl from "@/assets/admin/landscaping-thumb.svg?url";
+import homebuilderThumbUrl from "@/assets/admin/homebuilder-thumb.svg?url";
+import remodelerThumbUrl from "@/assets/admin/remodeler-thumb.svg?url";
 
 export interface TemplateOption {
   /** Stable identifier persisted on the `clients.template_id` column. */
@@ -235,6 +237,52 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-landscaping.html",
       scaffoldDir: "template-source-landscaping",
       liveTemplateDir: "src/template-landscaping",
+    },
+  },
+  {
+    id: "homebuilder",
+    name: "HarborStone Design-Build",
+    tagline: "Luxury design-build custom homes · navy + copper",
+    description:
+      "Central NJ design-build home builder template inspired by premium contractor IA: hero with trust pillars, design-build expertise, process timeline, portfolio preview, lead magnet guide, county service areas, testimonials, and consultation CTAs. Distinct from trade templates.",
+    thumbnail: homebuilderThumbUrl,
+    accent: "#a67c52",
+    available: true,
+    features: [
+      "Navy + copper palette (Spectral + IBM Plex Sans)",
+      "8 design-build services with detail pages",
+      "Process page + portfolio with filters",
+      "County accordion service areas",
+      "Free custom home guide lead magnet",
+      "SEO city landing pages",
+    ],
+    paths: {
+      previewHtml: "/preview-homebuilder.html",
+      scaffoldDir: "template-source-homebuilder",
+      liveTemplateDir: "src/template-homebuilder",
+    },
+  },
+  {
+    id: "remodeler",
+    name: "Crestline Home Remodeling",
+    tagline: "NJ home improvement & remodeling · deep teal + coral",
+    description:
+      "New Jersey home remodeling template inspired by Magnolia Home Remodeling information architecture (estimate-led hero, broad services, portfolio, process, counties, reviews, resources) with an original visual system — not a clone of other Nexora trade templates.",
+    thumbnail: remodelerThumbUrl,
+    accent: "#e07a5f",
+    available: true,
+    features: [
+      "DM Serif Display + Source Sans 3 (teal + coral)",
+      "14 remodeling services with detail pages",
+      "Before & after portfolio filters",
+      "6-step process + county service areas",
+      "2026 remodeling guide lead magnet",
+      "SEO city landing pages",
+    ],
+    paths: {
+      previewHtml: "/preview-remodeler.html",
+      scaffoldDir: "template-source-remodeler",
+      liveTemplateDir: "src/template-remodeler",
     },
   },
 ];
