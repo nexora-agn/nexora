@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import ChirpsEmbed from "@/components/ChirpsEmbed";
 
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -128,6 +129,7 @@ const App = () => (
         <AuthProvider>
           <ScrollToTop />
           <MarketingDocumentTitle />
+          <ChirpsEmbed />
           <Suspense fallback={<RouteLoading />}>
             <Routes>
               <Route path="/" element={<Index />} />
