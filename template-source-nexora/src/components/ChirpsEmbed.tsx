@@ -21,10 +21,6 @@ const ChirpsEmbed = () => {
       script.async = true;
       document.body.appendChild(script);
     }
-
-    return () => {
-      delete window.chirpsConfig;
-    };
   }, []);
 
   return null;
