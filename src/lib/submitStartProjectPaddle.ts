@@ -1,3 +1,4 @@
+import { openPaddleCheckout } from "@/lib/paddleJs";
 import { paddlePayApiUrl } from "@/lib/paddlePayApiUrl";
 
 function startProjectPaddleEndpoint(): string {
@@ -6,14 +7,20 @@ function startProjectPaddleEndpoint(): string {
   return paddlePayApiUrl("/api/start-project-paddle");
 }
 
+export type StartProjectPaddleResult = {
+  order_id?: string;
+  transaction_id?: string | null;
+  mode: "overlay" | "redirect";
+};
+
 /**
- * Saves the start-project submission on the server and returns the Paddle checkout URL.
- * The browser should assign `window.location.href` to this URL.
+ * Saves the start-project submission, creates a Paddle transaction on the server,
+ * then opens checkout via Paddle.js overlay (or redirects to hosted checkout as fallback).
  */
-export async function submitStartProjectAndGetPaddleRedirect(input: {
+export async function submitStartProjectAndOpenPaddleCheckout(input: {
   requestType: "new_website" | "migrate";
   payload: Record<string, unknown>;
-}): Promise<{ payment_URL: string; order_id?: string }> {
+}): Promise<StartProjectPaddleResult> {
   const url = startProjectPaddleEndpoint();
   const res = await fetch(url, {
     method: "POST",
@@ -23,11 +30,22 @@ export async function submitStartProjectAndGetPaddleRedirect(input: {
   const data = (await res.json()) as {
     ok?: boolean;
     payment_URL?: string;
+    transaction_id?: string | null;
     order_id?: string;
     error?: string;
   };
-  if (!res.ok || !data?.payment_URL) {
+  if (!res.ok) {
     throw new Error(typeof data?.error === "string" ? data.error : `Checkout failed (HTTP ${res.status})`);
   }
-  return { payment_URL: data.payment_URL, order_id: data.order_id };
+
+  const mode = await openPaddleCheckout({
+    transactionId: data.transaction_id,
+    paymentUrl: data.payment_URL,
+  });
+
+  return {
+    order_id: data.order_id,
+    transaction_id: data.transaction_id,
+    mode,
+  };
 }

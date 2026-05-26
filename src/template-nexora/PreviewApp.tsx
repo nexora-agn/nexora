@@ -18,6 +18,7 @@ import {
 import { mergeSiteContentState } from "@/lib/drafts";
 import ScrollToTop from "@template-nexora/components/ScrollToTop";
 import ChatbotWidget from "@template-nexora/components/Chatbot/ChatbotWidget";
+import ChirpsEmbed from "@template-nexora/components/ChirpsEmbed";
 import Index from "@template-nexora/pages/Index";
 import NotFound from "@template-nexora/pages/NotFound";
 import { supabase, isSupabaseConfigured, type Draft } from "@/lib/supabase";
@@ -79,6 +80,7 @@ const TemplateShell = () => (
       <AnimatedRoutes />
     </Suspense>
     {SHOW_TEMPLATE_CHATBOT ? <ChatbotWidget /> : null}
+    <ChirpsEmbed />
   </HashRouter>
 );
 

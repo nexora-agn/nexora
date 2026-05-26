@@ -393,7 +393,9 @@ const ProjectRequests = () => {
         toast.error(result.error ?? "Could not open Paddle checkout.");
         return;
       }
-      window.location.assign(result.payment_URL);
+      if (result.mode === "redirect") {
+        return;
+      }
     } finally {
       setPaddleBusyId(null);
     }
@@ -548,11 +550,20 @@ const ProjectRequests = () => {
               <div className="rounded-lg border border-border/70 bg-muted/15 px-3 py-3 space-y-3">
                 <p className="text-xs font-medium text-foreground">Paddle checkout</p>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Creates a Paddle Billing transaction and <strong>redirects this browser</strong> to{" "}
-                  <code className="text-foreground">checkout.url</code>. The project request UUID is stored in{" "}
-                  <code className="text-foreground">custom_data.project_request_id</code>. Configure{" "}
-                  <code className="text-foreground">PADDLE_API_KEY</code> and catalog price ids (or{" "}
-                  <code className="text-foreground">PADDLE_PAYMENT_AMOUNT_MINOR</code>) on the server. Webhooks to{" "}
+                  Creates a Paddle Billing transaction, then opens checkout with{" "}
+                  <a
+                    href="https://developer.paddle.com/paddle-js/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2"
+                  >
+                    Paddle.js
+                  </a>{" "}
+                  (<code className="text-foreground">VITE_PADDLE_CLIENT_TOKEN</code>) or falls back to hosted{" "}
+                  <code className="text-foreground">checkout.url</code>. Project request UUID is in{" "}
+                  <code className="text-foreground">custom_data.project_request_id</code>. Server:{" "}
+                  <code className="text-foreground">PADDLE_API_KEY</code> + price ids (or{" "}
+                  <code className="text-foreground">PADDLE_PAYMENT_AMOUNT_MINOR</code>). Webhooks:{" "}
                   <code className="text-foreground">/api/paddle-webhook</code> move <strong>New</strong> →{" "}
                   <strong>In progress</strong> when payment completes.
                 </p>
@@ -563,7 +574,7 @@ const ProjectRequests = () => {
                   disabled={paddleBusyId === detail.id}
                   onClick={() => void openPaddleCheckout(detail)}
                 >
-                  {paddleBusyId === detail.id ? "Redirecting…" : "Go to Paddle checkout"}
+                  {paddleBusyId === detail.id ? "Opening checkout…" : "Go to Paddle checkout"}
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 pt-2">

@@ -1,3 +1,4 @@
+import { openPaddleCheckout } from "@/lib/paddleJs";
 import { paddlePayApiUrl } from "@/lib/paddlePayApiUrl";
 
 function paddlePaymentLinkEndpoint(): string {
@@ -20,6 +21,7 @@ export type CreatePaddlePaymentLinkOk = {
   payment_URL: string;
   order_id: string;
   transaction_id?: string | null;
+  mode?: "overlay" | "redirect";
   purchase?: { mode?: string; amount?: number; currency?: string };
 };
 
@@ -29,7 +31,7 @@ export type CreatePaddlePaymentLinkFail = {
 };
 
 /**
- * Calls the server-side Paddle checkout endpoint (credentials stay on the server).
+ * Creates a Paddle transaction on the server and opens checkout via Paddle.js (or hosted URL fallback).
  */
 export async function createPaddlePaymentLink(
   accessToken: string | undefined,
@@ -50,15 +52,22 @@ export async function createPaddlePaymentLink(
       body: JSON.stringify(payload),
     });
     const data = (await res.json()) as CreatePaddlePaymentLinkOk | CreatePaddlePaymentLinkFail;
-    if (res.ok && data && typeof data === "object" && "ok" in data && data.ok) {
-      return data as CreatePaddlePaymentLinkOk;
+    if (!res.ok || !data || typeof data !== "object" || !("ok" in data) || !data.ok) {
+      const errMsg =
+        typeof (data as CreatePaddlePaymentLinkFail).error === "string"
+          ? (data as CreatePaddlePaymentLinkFail).error
+          : `HTTP ${res.status}`;
+      return { ok: false, error: errMsg };
     }
-    const errMsg =
-      typeof (data as CreatePaddlePaymentLinkFail).error === "string"
-        ? (data as CreatePaddlePaymentLinkFail).error
-        : `HTTP ${res.status}`;
-    return { ok: false, error: errMsg };
-  } catch {
-    return { ok: false, error: "Network error while contacting payment API." };
+
+    const ok = data as CreatePaddlePaymentLinkOk;
+    const mode = await openPaddleCheckout({
+      transactionId: ok.transaction_id,
+      paymentUrl: ok.payment_URL,
+    });
+    return { ...ok, mode };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Network error while contacting payment API.";
+    return { ok: false, error: msg };
   }
 }

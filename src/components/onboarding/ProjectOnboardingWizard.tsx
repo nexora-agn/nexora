@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { applyHexColor, extractLogoColors, isValidHex } from "@/lib/extractLogoBrandColors";
 import { PACKAGE_LOGO_MAX_BYTES, PACKAGE_ONBOARD_LIMITS } from "@/lib/projectOnboardingConstants";
-import { submitStartProjectAndGetPaddleRedirect } from "@/lib/submitStartProjectPaddle";
+import { submitStartProjectAndOpenPaddleCheckout } from "@/lib/submitStartProjectPaddle";
 import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
 import type { MarketingPlanId } from "@/lib/pricingPlans";
 import type { PackageOnboardingPayload, ProjectRequestType } from "@/lib/supabase";
@@ -348,11 +348,11 @@ const ProjectOnboardingWizard = () => {
 
     setSubmitting(true);
     try {
-      const { payment_URL } = await submitStartProjectAndGetPaddleRedirect({
+      await submitStartProjectAndOpenPaddleCheckout({
         requestType,
         payload,
       });
-      window.location.assign(payment_URL);
+      setSubmitting(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setSubmitting(false);
@@ -913,13 +913,13 @@ const ProjectOnboardingWizard = () => {
                   <Landmark className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
                   Paddle
                 </span>
-                . When you submit, your browser will go straight to the secure Paddle checkout page. After payment is confirmed we move ahead with
+                . When you submit, a secure Paddle checkout opens on this page. After payment is confirmed we move ahead with
                 production.
               </p>
             </div>
 
             <Button type="submit" className="h-11 rounded-lg px-8 font-semibold" disabled={submitting}>
-              {submitting ? "Redirecting to checkout…" : "Submit & continue to payment"}
+              {submitting ? "Opening checkout…" : "Submit & continue to payment"}
             </Button>
           </motion.form>
         )}
