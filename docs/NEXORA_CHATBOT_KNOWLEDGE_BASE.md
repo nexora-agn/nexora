@@ -18,7 +18,7 @@
 
 ### What Nexora does (high level)
 
-Nexora is a website studio that emphasizes **preview before commitment**: they build sites (with a strong tilt toward construction and trades in hero copy), let prospects **see a live preview**, then the client decides. They offer **packaged plans** (Starter, Growth) plus **Custom** scopes, **ERP-oriented integrations** for catalog/pricing/stock, **AI assistant** tiers, and ongoing **SEO / growth messaging**. Payment options on the packaged flow include Stripe, PayPal, and Paysera.
+Nexora is a website studio that emphasizes **preview before commitment**: they build sites (with a strong tilt toward construction and trades in hero copy), let prospects **see a live preview**, then the client decides. They offer **packaged plans** (Starter, Growth) plus **Custom** scopes, **ERP-oriented integrations** for catalog/pricing/stock, **AI assistant** tiers, and ongoing **SEO / growth messaging**. Payment on the packaged flow is handled by Paddle checkout.
 
 ---
 
@@ -46,7 +46,7 @@ Nexora is a website studio that emphasizes **preview before commitment**: they b
 | `/start` | Start a project \| Nexora | Multi-step onboarding: project type → plan → brand/content → payment preference → confirmation. |
 | `/blog` | Blog \| Nexora | List of insights articles. |
 | `/blog/:slug` | Blog \| Nexora | Individual article (three slugs exist; unknown slug shows 404). |
-| `/privacy` | Privacy policy \| Nexora | Data practices, Paysera mentioned for payments. |
+| `/privacy` | Privacy policy \| Nexora | Data practices, Paddle mentioned for payments. |
 | `/terms` | Terms of service \| Nexora | Engagement terms for site use and services. |
 | `/refund-policy` | Refund policy \| Nexora | Refunds / cancellations policy. |
 | `/shipping-policy` | Shipping policy \| Nexora | Digital delivery only — no physical shipping. |
@@ -200,7 +200,7 @@ Buttons: “Book a Demo”; “Preview Your Site” (scrolls to `#live-preview`)
 **Tagline:** “We build business websites. Small team. You’re with the same people from kickoff to launch.”  
 **Legal & contact links:** Privacy, Terms, Refund policy, Shipping policy, Contact.  
 **Copyright:** © current year Nexora.  
-**Payments:** “Payments securely by” Paysera (logo).  
+**Payments:** “Payments securely by” Paddle (logo).  
 **Legal block repeats:** legal name, legal form, CR number.
 
 ---
@@ -277,7 +277,7 @@ Collects business email, logo upload, brand colors (for new sites), preferred do
 
 ### Step 4 — Payment
 
-**Copy:** Choose Stripe, PayPal, or Paysera; after submit they receive a **secure payment link**; once paid, **full production** begins.  
+**Copy:** Checkout is via Paddle; after submit they are redirected to **secure Paddle checkout**; once paid, **full production** begins.  
 Submit: **Submit request & request payment**.
 
 ### Step 5 — Confirmation
@@ -343,7 +343,7 @@ Optional: **Start another request**.
 2. **Information we collect** — Name, work email, company, phone when requesting consultation or contacting; limited technical/browser data for operation/security.  
 3. **How we use information** — Respond, deliver/improve services, project/account comms, optional updates if opted in; no unrelated profiling beyond business need.  
 4. **Sharing and processors** — No sale of personal data; subprocessors (hosting, email, analytics) under obligations.  
-5. **Payment processing** — Paysera and similar; **payment card details not stored** on Nexora servers.  
+5. **Payment processing** — Paddle; **payment card details not stored** on Nexora servers.  
 6. **Security** — Reasonable safeguards; acknowledges internet transmission risk.  
 7. **Your choices** — Rights to access/correct/delete/restrict depending on jurisdiction; contact via Contact page.  
 8. **Updates** — Policy may change; continued use may constitute acceptance where law allows.
@@ -452,7 +452,7 @@ Optional: **Start another request**.
 2. **Construction emphasis** appears in hero; **portfolio spans** roofing, trades, electrical, lawn, painting, cleaning, etc.—avoid saying “construction only.”  
 3. **Prices** on site are marketing anchors; onsite copy says **final numbers after demo / in writing**.  
 4. **Performance stats** (traffic/leads multiples) are **directional/indicative** — do not present as guarantees.  
-5. **Payments:** Customer-facing checkout mentions **Stripe, PayPal, Paysera**; privacy mentions **Paysera** explicitly for processing.  
+5. **Payments:** Customer-facing checkout uses **Paddle**; privacy mentions **Paddle** for processing.  
 6. **Refund default:** Digital services — generally non-refundable after work starts; exceptions listed on refund policy.  
 7. **No physical shipping.**  
 8. For **technical admin** or **account issues inside `/admin`**, direct users to their internal Nexora operator—those screens are not public.

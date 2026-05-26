@@ -1,18 +1,16 @@
 /**
- * Public start-project + immediate Paysera redirect URL (classic checkout: browser goes to paysera.com/pay).
- * Saves the row with the service role, sends the same confirmation emails as the standalone form endpoint,
- * then returns payment_URL for window.location assignment.
+ * Public start-project + Paddle checkout redirect URL.
  */
 import { createClient } from "@supabase/supabase-js";
 import { parseStartProject, handleSendFormEmails } from "./form-email-resend.mjs";
-import { resolveSupabaseEnv } from "./paysera-staff.mjs";
-import { buildPayseraPaymentRedirectUrl } from "./paysera-redirect-url.mjs";
+import { resolveSupabaseEnv } from "./payment-staff.mjs";
+import { buildPaddlePaymentRedirectUrl } from "./paddle-checkout.mjs";
 
 /**
- * @param {Record<string, unknown>} body — { requestType, payload } (same as start-project email API)
+ * @param {Record<string, unknown>} body — { requestType, payload }
  * @param {NodeJS.ProcessEnv} env
  */
-export async function handlePublicStartProjectPayseraRedirect(body, env) {
+export async function handlePublicStartProjectPaddleRedirect(body, env) {
   const parsed = parseStartProject(body);
   if ("error" in parsed) {
     return { ok: false, status: 400, error: String(parsed.error) };
@@ -52,13 +50,11 @@ export async function handlePublicStartProjectPayseraRedirect(body, env) {
 
   const orderId = String(row.id);
 
-  const redirect = buildPayseraPaymentRedirectUrl(env, {
+  const redirect = await buildPaddlePaymentRedirectUrl(env, {
     orderId,
     payload,
     amount: body.amount,
     currency: typeof body.currency === "string" ? body.currency : undefined,
-    payment: typeof body.payment === "string" ? body.payment : undefined,
-    lang: typeof body.lang === "string" ? body.lang : undefined,
   });
 
   if (!redirect.ok) {
@@ -72,10 +68,10 @@ export async function handlePublicStartProjectPayseraRedirect(body, env) {
       env,
     );
     if (!emailResult.ok) {
-      console.warn("[start-project-paysera] Confirmation emails failed:", emailResult.error);
+      console.warn("[start-project-paddle] Confirmation emails failed:", emailResult.error);
     }
   } catch (e) {
-    console.warn("[start-project-paysera] Confirmation emails error:", e);
+    console.warn("[start-project-paddle] Confirmation emails error:", e);
   }
 
   return {
@@ -83,6 +79,7 @@ export async function handlePublicStartProjectPayseraRedirect(body, env) {
     status: 200,
     payment_URL: redirect.payment_URL,
     order_id: orderId,
+    transaction_id: redirect.transaction_id,
     purchase: redirect.purchase,
   };
 }

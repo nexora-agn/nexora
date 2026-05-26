@@ -67,7 +67,7 @@ const MarketingDocumentTitle = () => {
       return;
     }
     if (pathname === "/privacy") {
-      document.title = "Privacy policy | Nexora";
+      document.title = "Privacy notice | Nexora";
       return;
     }
     if (pathname === "/terms") {

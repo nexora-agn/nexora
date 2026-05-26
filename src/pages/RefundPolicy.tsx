@@ -1,5 +1,7 @@
+import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
+import { COMPANY_LEGAL } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -24,8 +26,12 @@ const RefundPolicy = () => {
 
           <div className="mt-10 space-y-10 text-sm leading-relaxed text-muted-foreground md:text-[0.9375rem]">
             <p>
-              At <span className="font-semibold text-foreground">Nexora</span>, we provide digital
-              services and custom-built websites.
+              This Refund policy applies to services sold by{" "}
+              <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span> (doing
+              business as <span className="font-semibold text-foreground">{COMPANY_LEGAL.brand}</span>
+              ). We provide digital services and custom-built websites, including packaged website
+              plans and related subscriptions billed through our payment partner Paddle where
+              applicable.
             </p>
 
             <section aria-labelledby="refund-general">
@@ -87,6 +93,7 @@ const RefundPolicy = () => {
               </p>
             </section>
           </div>
+          <PolicyPageFooter />
         </div>
       </article>
     </SiteLayout>

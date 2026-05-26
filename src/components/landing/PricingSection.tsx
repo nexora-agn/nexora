@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import LegalPolicyLinks from "@/components/legal/LegalPolicyLinks";
 import { PlanCardBody, PlanPopularBadge } from "@/components/landing/PlanCardBody";
 import { MARKETING_PLANS } from "@/lib/pricingPlans";
 
@@ -58,15 +59,20 @@ const PricingSection = () => {
           })}
         </div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="mx-auto mt-10 max-w-md text-center text-sm font-medium text-neutral-500"
+          className="mx-auto mt-10 max-w-2xl space-y-4 text-center"
         >
-          Final numbers after a quick demo, scoped in writing.
-        </motion.p>
+          <p className="text-sm font-medium text-neutral-500">
+            Each plan includes the features listed on the card. Custom scopes are quoted after a demo.
+            Starter and Growth prices are per month; checkout confirms your package before production begins.
+          </p>
+          <p className="text-sm text-neutral-600">By starting a project you agree to:</p>
+          <LegalPolicyLinks variant="inline" linkClassName="text-neutral-800" />
+        </motion.div>
       </div>
     </section>
   );

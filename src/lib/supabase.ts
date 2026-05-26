@@ -113,8 +113,8 @@ export type NewWebsiteRequestPayload = {
   additional_notes: string;
   /** Marketing plan the user selected before the rest of the flow. */
   selected_plan: "starter" | "growth" | "custom";
-  /** How they want to pay once checkout is available (legacy wizard values). Package onboarding v2 uses Paysera only. */
-  payment_preference: "card" | "paypal" | "stripe" | "paysera";
+  /** How they want to pay once checkout is available (legacy wizard values). Package onboarding v2 uses Paddle. */
+  payment_preference: "card" | "paypal" | "stripe" | "paddle" | "paysera";
 };
 
 export type MigrateRequestPayload = {
@@ -134,7 +134,7 @@ export type MigrateRequestPayload = {
   migration_requirements: string;
   additional_notes: string;
   selected_plan: "starter" | "growth" | "custom";
-  payment_preference: "card" | "paypal" | "stripe" | "paysera";
+  payment_preference: "card" | "paypal" | "stripe" | "paddle" | "paysera";
 };
 
 /** Public “start project” flow — no ERP / AI questionnaires; logo + palette + essentials.
@@ -160,7 +160,7 @@ export type PackageOnboardingPayload = {
   /** New flow only — what the client wants their domain to be (e.g. acme.com). */
   preferred_domain?: string;
   selected_plan: "starter" | "growth" | "custom";
-  payment_preference: "paysera";
+  payment_preference: "paddle";
 };
 
 export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload | PackageOnboardingPayload;

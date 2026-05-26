@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
@@ -73,7 +74,7 @@ const sections = [
     body: (
       <p>
         We use third-party payment providers such as{" "}
-        <span className="font-semibold text-foreground">Paysera</span> to process payments
+        <span className="font-semibold text-foreground">Paddle</span> to process payments
         securely. We do not store your payment details on our servers.
       </p>
     ),
@@ -119,9 +120,9 @@ const Privacy = () => {
   return (
     <SiteLayout>
       <PageHeader
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Privacy policy" }]}
-        title="Privacy policy"
-        description="How we collect, use, and protect personal information when you use Nexora."
+        breadcrumb={[{ label: "Home", to: "/" }, { label: "Privacy notice" }]}
+        title="Privacy notice"
+        description="How NEXORA SOLUTION L.L.C. collects, uses, and protects personal information when you use Nexora."
       />
 
       <article className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
@@ -145,6 +146,7 @@ const Privacy = () => {
               </section>
             ))}
           </div>
+          <PolicyPageFooter />
         </div>
       </article>
     </SiteLayout>

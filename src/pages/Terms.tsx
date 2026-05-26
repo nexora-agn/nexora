@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
@@ -36,6 +38,30 @@ const sections = [
         <p className="mt-3">
           Work begins after scope, schedule, and any deposit or approval requirements are satisfied.
           Client delays in providing assets, feedback, or approvals may affect delivery dates.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Payments and billing",
+    body: (
+      <>
+        <p>
+          Fees for packages and services are shown on our website pricing section or in your written
+          quote. Checkout and recurring billing, where applicable, are processed by our payment
+          partner <span className="font-semibold text-foreground">Paddle</span>. Card and payment
+          details are handled by Paddle; we do not store full payment card numbers on our servers.
+        </p>
+        <p className="mt-3">
+          Refunds and cancellations are governed by our{" "}
+          <Link to="/refund-policy" className="font-medium text-foreground underline-offset-4 hover:underline">
+            Refund policy
+          </Link>
+          . Our{" "}
+          <Link to="/privacy" className="font-medium text-foreground underline-offset-4 hover:underline">
+            Privacy notice
+          </Link>{" "}
+          explains how we handle personal data, including payment-related information.
         </p>
       </>
     ),
@@ -117,6 +143,7 @@ const Terms = () => {
               </section>
             ))}
           </div>
+          <PolicyPageFooter />
         </div>
       </article>
     </SiteLayout>

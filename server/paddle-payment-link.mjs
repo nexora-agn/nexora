@@ -1,10 +1,8 @@
 /**
- * Staff-only: resolve signed Paysera classic redirect URL for an existing project request.
- *
- * Env: same as `paysera-redirect-url.mjs` (PAYSERA_PROJECT_ID, PAYSERA_SIGN_PASSWORD, …)
+ * Staff-only: create Paddle checkout URL for an existing project request.
  */
-import { authenticateStaff, payseraStaffAuthHttpError } from "./paysera-staff.mjs";
-import { buildPayseraPaymentRedirectUrl } from "./paysera-redirect-url.mjs";
+import { authenticateStaff, paymentStaffAuthHttpError } from "./payment-staff.mjs";
+import { buildPaddlePaymentRedirectUrl } from "./paddle-checkout.mjs";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -14,15 +12,11 @@ function isUuid(s) {
 }
 
 /**
- * POST body from admin UI:
- * - projectRequestId (required) — UUID, becomes Paysera orderid
- * - amount, currency, payment, lang — optional overrides
- *
  * @param {Record<string, unknown>} body
  * @param {string | undefined} authorization
  * @param {NodeJS.ProcessEnv} env
  */
-export async function handleCreatePayseraPaymentLink(body, authorization, env) {
+export async function handleCreatePaddlePaymentLink(body, authorization, env) {
   try {
     const projectRequestId = String(body?.projectRequestId || "").trim();
     if (!isUuid(projectRequestId)) {
@@ -35,7 +29,7 @@ export async function handleCreatePayseraPaymentLink(body, authorization, env) {
       adminSb = staff.adminSb;
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      const mapped = payseraStaffAuthHttpError(msg);
+      const mapped = paymentStaffAuthHttpError(msg);
       if (mapped) return mapped;
       return { ok: false, status: 500, error: msg };
     }
@@ -55,13 +49,11 @@ export async function handleCreatePayseraPaymentLink(body, authorization, env) {
 
     const payload = reqRow.payload && typeof reqRow.payload === "object" ? reqRow.payload : {};
 
-    const redirect = buildPayseraPaymentRedirectUrl(env, {
+    const redirect = await buildPaddlePaymentRedirectUrl(env, {
       orderId: projectRequestId,
       payload,
       amount: body.amount ?? body?.purchase?.amount,
       currency: typeof body.currency === "string" ? body.currency : undefined,
-      payment: typeof body.payment === "string" ? body.payment : undefined,
-      lang: typeof body.lang === "string" ? body.lang : undefined,
     });
 
     if (!redirect.ok) {
@@ -73,9 +65,7 @@ export async function handleCreatePayseraPaymentLink(body, authorization, env) {
       status: 200,
       payment_URL: redirect.payment_URL,
       order_id: projectRequestId,
-      link_id: null,
-      expired_at: null,
-      created_at: null,
+      transaction_id: redirect.transaction_id,
       purchase: redirect.purchase,
     };
   } catch (e) {

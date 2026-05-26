@@ -9,7 +9,7 @@ const PaymentComplete = () => (
     <PageHeader
       breadcrumb={[{ label: "Home", to: "/" }, { label: "Payment" }]}
       title="Payment received"
-      description="Thank you — Paysera notified us about your payment."
+      description="Thank you — we received your payment through Paddle."
     />
     <div className="mx-auto w-full max-w-lg px-6 py-16 text-center">
       <div className="flex justify-center">

@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { applyHexColor, extractLogoColors, isValidHex } from "@/lib/extractLogoBrandColors";
 import { PACKAGE_LOGO_MAX_BYTES, PACKAGE_ONBOARD_LIMITS } from "@/lib/projectOnboardingConstants";
-import { submitStartProjectAndGetPayseraRedirect } from "@/lib/submitStartProjectPaysera";
+import { submitStartProjectAndGetPaddleRedirect } from "@/lib/submitStartProjectPaddle";
 import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
 import type { MarketingPlanId } from "@/lib/pricingPlans";
 import type { PackageOnboardingPayload, ProjectRequestType } from "@/lib/supabase";
@@ -343,12 +343,12 @@ const ProjectOnboardingWizard = () => {
       preferred_domain: isMigration ? undefined : preferredDomain.trim() || undefined,
       additional_notes: additionalNotes.trim(),
       selected_plan: selectedPlan,
-      payment_preference: "paysera",
+      payment_preference: "paddle",
     };
 
     setSubmitting(true);
     try {
-      const { payment_URL } = await submitStartProjectAndGetPayseraRedirect({
+      const { payment_URL } = await submitStartProjectAndGetPaddleRedirect({
         requestType,
         payload,
       });
@@ -908,18 +908,18 @@ const ProjectOnboardingWizard = () => {
             <div className="rounded-2xl border border-border/70 bg-card/50 p-6 shadow-sm sm:p-8 space-y-3">
               <Label className="text-foreground">Payment</Label>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Checkout is handled on{" "}
+                Checkout is handled securely by{" "}
                 <span className="font-medium text-foreground inline-flex items-center gap-1.5">
                   <Landmark className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
-                  Paysera
+                  Paddle
                 </span>
-                . When you submit, your browser will go straight to the secure Paysera payment page. After payment is confirmed we move ahead with
+                . When you submit, your browser will go straight to the secure Paddle checkout page. After payment is confirmed we move ahead with
                 production.
               </p>
             </div>
 
             <Button type="submit" className="h-11 rounded-lg px-8 font-semibold" disabled={submitting}>
-              {submitting ? "Redirecting to Paysera…" : "Submit & continue to payment"}
+              {submitting ? "Redirecting to checkout…" : "Submit & continue to payment"}
             </Button>
           </motion.form>
         )}

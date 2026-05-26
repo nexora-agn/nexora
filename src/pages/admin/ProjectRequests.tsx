@@ -19,7 +19,7 @@ import {
 } from "@/lib/supabase";
 import { onboardingTimelineLabel, PREFERRED_FEATURE_OPTIONS } from "@/lib/projectOnboardingConstants";
 import { planLabelById } from "@/lib/pricingPlans";
-import { createPayseraPaymentLink } from "@/lib/createPayseraPaymentLink";
+import { createPaddlePaymentLink } from "@/lib/createPaddlePaymentLink";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
@@ -123,7 +123,15 @@ function formatPayloadLines(req: ProjectRequest): { label: string; value: string
   if (isPackageOnboardingPayload(req.payload)) {
     const pkg = req.payload;
     const payLabel = (v: string) =>
-      v === "card" ? "Card (legacy)" : v === "stripe" ? "Card (Stripe)" : v === "paysera" ? "Paysera" : "PayPal";
+      v === "card"
+        ? "Card (legacy)"
+        : v === "stripe"
+          ? "Card (Stripe)"
+          : v === "paddle"
+            ? "Paddle"
+            : v === "paysera"
+              ? "Paysera (legacy)"
+              : "PayPal";
 
     const isMigration = req.request_type === "migrate";
     const logoNote = pkg.logo_file_name
@@ -174,10 +182,11 @@ function formatPayloadLines(req: ProjectRequest): { label: string; value: string
   };
 
   const payLabel = (v: unknown) => {
-    if (v === "card" || v === "paypal" || v === "stripe" || v === "paysera") {
+    if (v === "card" || v === "paypal" || v === "stripe" || v === "paddle" || v === "paysera") {
       if (v === "card") return "Card (legacy)";
       if (v === "stripe") return "Card (Stripe)";
-      if (v === "paysera") return "Paysera";
+      if (v === "paddle") return "Paddle";
+      if (v === "paysera") return "Paysera (legacy)";
       return "PayPal";
     }
     return str(v) || "N/A";
@@ -290,7 +299,7 @@ const ProjectRequests = () => {
   const [error, setError] = useState<string | null>(null);
   const [detail, setDetail] = useState<ProjectRequest | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [payseraBusyId, setPayseraBusyId] = useState<string | null>(null);
+  const [paddleBusyId, setPaddleBusyId] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -372,21 +381,21 @@ const ProjectRequests = () => {
     void move(id, status);
   };
 
-  const openPayseraCheckout = async (req: ProjectRequest) => {
-    setPayseraBusyId(req.id);
+  const openPaddleCheckout = async (req: ProjectRequest) => {
+    setPaddleBusyId(req.id);
     try {
       const { data } = await supabase.auth.getSession();
       const token = data.session?.access_token;
-      const result = await createPayseraPaymentLink(token, {
+      const result = await createPaddlePaymentLink(token, {
         projectRequestId: req.id,
       });
       if (result.ok !== true) {
-        toast.error(result.error ?? "Could not open Paysera checkout.");
+        toast.error(result.error ?? "Could not open Paddle checkout.");
         return;
       }
       window.location.assign(result.payment_URL);
     } finally {
-      setPayseraBusyId(null);
+      setPaddleBusyId(null);
     }
   };
 
@@ -537,24 +546,24 @@ const ProjectRequests = () => {
                 </pre>
               </details>
               <div className="rounded-lg border border-border/70 bg-muted/15 px-3 py-3 space-y-3">
-                <p className="text-xs font-medium text-foreground">Paysera checkout</p>
+                <p className="text-xs font-medium text-foreground">Paddle checkout</p>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Builds the signed <code className="text-foreground">https://www.paysera.com/pay/</code> URL and{" "}
-                  <strong>redirects this browser</strong> there (classic integration — no separate payment API call). Order id is this
-                  request&apos;s UUID. Configure <code className="text-foreground">PAYSERA_PROJECT_ID</code>,{" "}
-                  <code className="text-foreground">PAYSERA_SIGN_PASSWORD</code>, and{" "}
-                  <code className="text-foreground">PAYSERA_PAYMENT_AMOUNT_MINOR</code> on the server. Paid callbacks hit{" "}
-                  <code className="text-foreground">/api/paysera-callback</code> and move <strong>New</strong> → <strong>In progress</strong>{" "}
-                  when Paysera reports paid.
+                  Creates a Paddle Billing transaction and <strong>redirects this browser</strong> to{" "}
+                  <code className="text-foreground">checkout.url</code>. The project request UUID is stored in{" "}
+                  <code className="text-foreground">custom_data.project_request_id</code>. Configure{" "}
+                  <code className="text-foreground">PADDLE_API_KEY</code> and catalog price ids (or{" "}
+                  <code className="text-foreground">PADDLE_PAYMENT_AMOUNT_MINOR</code>) on the server. Webhooks to{" "}
+                  <code className="text-foreground">/api/paddle-webhook</code> move <strong>New</strong> →{" "}
+                  <strong>In progress</strong> when payment completes.
                 </p>
                 <Button
                   type="button"
                   size="sm"
                   variant="secondary"
-                  disabled={payseraBusyId === detail.id}
-                  onClick={() => void openPayseraCheckout(detail)}
+                  disabled={paddleBusyId === detail.id}
+                  onClick={() => void openPaddleCheckout(detail)}
                 >
-                  {payseraBusyId === detail.id ? "Redirecting…" : "Go to Paysera checkout"}
+                  {paddleBusyId === detail.id ? "Redirecting…" : "Go to Paddle checkout"}
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 pt-2">

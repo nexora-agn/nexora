@@ -129,7 +129,7 @@ const Contact = () => {
                 to="/privacy"
                 className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
               >
-                Privacy policy
+                Privacy notice
               </Link>
               .
             </p>

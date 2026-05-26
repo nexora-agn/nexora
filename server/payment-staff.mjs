@@ -44,7 +44,7 @@ export async function authenticateStaff(authHeader, env) {
   return { user: data.user, adminSb };
 }
 
-export function payseraStaffAuthHttpError(message) {
+export function paymentStaffAuthHttpError(message) {
   if (message === "MISSING_AUTH") return { ok: false, status: 401, error: "Missing Authorization bearer token." };
   if (message === "INVALID_SESSION") return { ok: false, status: 401, error: "Invalid or expired session." };
   if (message === "FORBIDDEN") return { ok: false, status: 403, error: "Not allowed." };

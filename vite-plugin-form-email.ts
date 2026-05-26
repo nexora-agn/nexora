@@ -57,7 +57,7 @@ function parseQuery(urlStr: string | undefined): Record<string, string | undefin
 }
 
 /**
- * Serves dev-only APIs mirrored from Vercel: send-form-emails, start-project+paysera redirect, Paysera payment link, callback.
+ * Serves dev-only APIs mirrored from Vercel: send-form-emails, start-project+paddle redirect, Paddle payment link, webhook.
  */
 export function formEmailApiPlugin(): Plugin {
   return {
@@ -69,11 +69,11 @@ export function formEmailApiPlugin(): Plugin {
       server.middlewares.use(async (req, res, next) => {
         const pathOnly = req.url?.split("?")[0] || "";
         const isForms = pathOnly.startsWith("/api/send-form-emails");
-        const isStartProjectPaysera = pathOnly.startsWith("/api/start-project-paysera");
-        const isPayseraLink = pathOnly.startsWith("/api/paysera-payment-link");
-        const isPayseraCallback = pathOnly.startsWith("/api/paysera-callback");
+        const isStartProjectPaddle = pathOnly.startsWith("/api/start-project-paddle");
+        const isPaddleLink = pathOnly.startsWith("/api/paddle-payment-link");
+        const isPaddleWebhook = pathOnly.startsWith("/api/paddle-webhook");
 
-        if (!isForms && !isStartProjectPaysera && !isPayseraLink && !isPayseraCallback) {
+        if (!isForms && !isStartProjectPaddle && !isPaddleLink && !isPaddleWebhook) {
           return next();
         }
 
@@ -86,31 +86,24 @@ export function formEmailApiPlugin(): Plugin {
 
         const auth = getAuthorization(req);
 
-        if (isPayseraCallback && (req.method === "GET" || req.method === "POST")) {
-          const query = parseQuery(req.url || "") as Record<string, string | undefined>;
-          /** @type {Record<string, string>} */
-          let form: Record<string, string> = {};
-          if (req.method === "POST") {
-            const raw = await readRawTextBody(req);
-            const ct = String(req.headers["content-type"] || "").toLowerCase();
-            if (ct.includes("application/x-www-form-urlencoded") && raw.trim()) {
-              form = Object.fromEntries(new URLSearchParams(raw));
-            }
-          }
-          const qFlat: Record<string, string | undefined> = {};
-          for (const [k, v] of Object.entries(query)) {
-            if (v != null) qFlat[k] = v;
-          }
-          const { handlePayseraCallback } = await import("./server/paysera-callback.mjs");
-          const result = await handlePayseraCallback({
-            query: qFlat,
-            form,
+        if (isPaddleWebhook && req.method === "POST") {
+          const rawBody = await readRawTextBody(req);
+          const signatureHeader =
+            typeof req.headers["paddle-signature"] === "string"
+              ? req.headers["paddle-signature"]
+              : typeof (req.headers as { "Paddle-Signature"?: string })["Paddle-Signature"] === "string"
+                ? (req.headers as { "Paddle-Signature": string })["Paddle-Signature"]
+                : undefined;
+          const { handlePaddleWebhook } = await import("./server/paddle-webhook.mjs");
+          const result = await handlePaddleWebhook({
+            rawBody,
+            signatureHeader,
             env: env as NodeJS.ProcessEnv,
           });
           setDevApiCors(res);
           res.statusCode = result.status;
-          res.setHeader("Content-Type", result.contentType || "text/plain; charset=utf-8");
-          res.end(result.body);
+          res.setHeader("Content-Type", "application/json");
+          res.end(JSON.stringify(result.body));
           return;
         }
 
@@ -137,18 +130,18 @@ export function formEmailApiPlugin(): Plugin {
           return;
         }
 
-        if (isStartProjectPaysera) {
-          const { handlePublicStartProjectPayseraRedirect } = await import(
-            "./server/public-start-project-paysera.mjs"
+        if (isStartProjectPaddle) {
+          const { handlePublicStartProjectPaddleRedirect } = await import(
+            "./server/public-start-project-paddle.mjs"
           );
-          result = (await handlePublicStartProjectPayseraRedirect(body as Record<string, unknown>, env)) as typeof result;
+          result = (await handlePublicStartProjectPaddleRedirect(body as Record<string, unknown>, env)) as typeof result;
           const httpStatus = typeof result.status === "number" ? result.status : result.ok ? 200 : 500;
           writeJson(res, httpStatus, result);
           return;
         }
 
-        const { handleCreatePayseraPaymentLink } = await import("./server/paysera-payment-link.mjs");
-        result = (await handleCreatePayseraPaymentLink(body as Record<string, unknown>, auth, env)) as typeof result;
+        const { handleCreatePaddlePaymentLink } = await import("./server/paddle-payment-link.mjs");
+        result = (await handleCreatePaddlePaymentLink(body as Record<string, unknown>, auth, env)) as typeof result;
         const httpStatus = typeof result.status === "number" ? result.status : result.ok ? 200 : 500;
         writeJson(res, httpStatus, result);
       });

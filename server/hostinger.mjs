@@ -13,8 +13,8 @@ import { fileURLToPath } from "node:url";
 
 import { loadProductionEnv } from "./load-production-env.mjs";
 import { handleSendFormEmails } from "./form-email-resend.mjs";
-import { handleCreatePayseraPaymentLink } from "./paysera-payment-link.mjs";
-import { handlePayseraCallback } from "./paysera-callback.mjs";
+import { handleCreatePaddlePaymentLink } from "./paddle-payment-link.mjs";
+import { handlePaddleWebhook } from "./paddle-webhook.mjs";
 import {
   resolveEnv,
   authenticateRequest,
@@ -256,52 +256,49 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // ── POST /api/start-project-paysera — save request + signed Paysera redirect URL ──
-  if (pathname === "/api/start-project-paysera" && method === "POST") {
+  // ── POST /api/start-project-paddle — save request + Paddle checkout URL ──
+  if (pathname === "/api/start-project-paddle" && method === "POST") {
     try {
       const body = await parseBody(req);
-      const { handlePublicStartProjectPayseraRedirect } = await import("./public-start-project-paysera.mjs");
-      const result = await handlePublicStartProjectPayseraRedirect(body, process.env);
+      const { handlePublicStartProjectPaddleRedirect } = await import("./public-start-project-paddle.mjs");
+      const result = await handlePublicStartProjectPaddleRedirect(body, process.env);
       const code = result.status ?? (result.ok ? 200 : 500);
       return sendJson(res, code, result);
     } catch (err) {
-      console.error("[hostinger] start-project-paysera error:", err);
+      console.error("[hostinger] start-project-paddle error:", err);
       return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
     }
   }
 
-  // ── POST /api/paysera-payment-link ───────────────────────────────────────
-  if (pathname === "/api/paysera-payment-link" && method === "POST") {
+  // ── POST /api/paddle-payment-link ───────────────────────────────────────
+  if (pathname === "/api/paddle-payment-link" && method === "POST") {
     try {
       const body = await parseBody(req);
       const auth = typeof req.headers.authorization === "string" ? req.headers.authorization : undefined;
-      const result = await handleCreatePayseraPaymentLink(body, auth, process.env);
+      const result = await handleCreatePaddlePaymentLink(body, auth, process.env);
       const code = result.status ?? (result.ok ? 200 : 500);
       return sendJson(res, code, result);
     } catch (err) {
-      console.error("[hostinger] paysera-payment-link error:", err);
+      console.error("[hostinger] paddle-payment-link error:", err);
       return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
     }
   }
 
-  // ── GET/POST /api/paysera-callback ──────────────────────────────────────
-  if (pathname === "/api/paysera-callback" && (method === "GET" || method === "POST")) {
+  // ── POST /api/paddle-webhook ─────────────────────────────────────────────
+  if (pathname === "/api/paddle-webhook" && method === "POST") {
     try {
-      const query = parseUrlQuery(req.url || "");
-      /** @type {Record<string, string>} */
-      let form = {};
-      if (method === "POST") {
-        const raw = await readRawBody(req);
-        const ct = String(req.headers["content-type"] || "").toLowerCase();
-        if (ct.includes("application/x-www-form-urlencoded") && raw.trim()) {
-          form = Object.fromEntries(new URLSearchParams(raw));
-        }
-      }
-      const result = await handlePayseraCallback({ query, form, env: process.env });
-      return sendText(res, result.status, result.body, result.contentType);
+      const rawBody = await readRawBody(req);
+      const signatureHeader =
+        typeof req.headers["paddle-signature"] === "string"
+          ? req.headers["paddle-signature"]
+          : typeof req.headers["Paddle-Signature"] === "string"
+            ? req.headers["Paddle-Signature"]
+            : undefined;
+      const result = await handlePaddleWebhook({ rawBody, signatureHeader, env: process.env });
+      return sendJson(res, result.status, result.body);
     } catch (err) {
-      console.error("[hostinger] paysera-callback error:", err);
-      return sendText(res, 500, "FAIL");
+      console.error("[hostinger] paddle-webhook error:", err);
+      return sendJson(res, 500, { error: "webhook_failed" });
     }
   }
 
