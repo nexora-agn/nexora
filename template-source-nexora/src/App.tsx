@@ -10,7 +10,6 @@ import { SiteContentProvider } from "@/contexts/SiteContentContext";
 import CustomizationPanel from "@/components/CustomizationPanel";
 import ScrollToTop from "@/components/ScrollToTop";
 import ChatbotWidget from "@/components/Chatbot/ChatbotWidget";
-import ChirpsEmbed from "@/components/ChirpsEmbed";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -72,7 +71,6 @@ const AppShell = () => (
     </Suspense>
     <CustomizationPanel />
     {SHOW_TEMPLATE_CHATBOT ? <ChatbotWidget /> : null}
-    <ChirpsEmbed />
   </BrowserRouter>
 );
 
