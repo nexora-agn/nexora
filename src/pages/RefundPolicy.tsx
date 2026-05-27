@@ -27,24 +27,27 @@ const RefundPolicy = () => {
           <div className="mt-10 space-y-10 text-sm leading-relaxed text-muted-foreground md:text-[0.9375rem]">
             <p>
               This Refund policy applies to services sold by{" "}
-              <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span> (doing
-              business as <span className="font-semibold text-foreground">{COMPANY_LEGAL.brand}</span>
-              ). We provide digital services and custom-built websites, including packaged website
-              plans and related subscriptions billed through our payment partner Paddle where
-              applicable.
+              <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>{" "}
+              (doing business as{" "}
+              <span className="font-semibold text-foreground">{COMPANY_LEGAL.brand}</span>),
+              registered in the {COMPANY_LEGAL.registeredJurisdiction} (CR{" "}
+              {COMPANY_LEGAL.commercialRegistration}). We provide digital services and
+              custom-built websites, including subscription plans for website hosting, AI
+              assistants, SEO, and marketing. Online checkout and recurring billing are handled by
+              our payment partner{" "}
+              <span className="font-semibold text-foreground">Paddle</span>, which acts as the
+              merchant of record.
             </p>
 
             <section aria-labelledby="refund-general">
-              <h2
-                id="refund-general"
-                className="text-lg font-semibold tracking-tight text-foreground"
-              >
+              <h2 id="refund-general" className="text-lg font-semibold tracking-tight text-foreground">
                 1. General policy
               </h2>
               <p className="mt-3">
-                Due to the nature of our services, all payments are generally{" "}
-                <span className="font-semibold text-foreground">non-refundable</span> once the
-                project has started.
+                Because our services are digital and custom-built per client, all fees are{" "}
+                <span className="font-semibold text-foreground">non-refundable once work has
+                started</span>, except where these terms or applicable consumer law require
+                otherwise.
               </p>
             </section>
 
@@ -57,8 +60,10 @@ const RefundPolicy = () => {
               </h2>
               <p className="mt-3">Refunds may be considered in the following cases:</p>
               <ul className="mt-3 list-disc space-y-1.5 pl-5">
-                <li>The project has not been started</li>
-                <li>There is a failure to deliver the agreed service</li>
+                <li>Work on the project has not yet started.</li>
+                <li>We fail to deliver the agreed service.</li>
+                <li>A duplicate charge or billing error attributable to us or to Paddle.</li>
+                <li>Where required by applicable consumer protection law.</li>
               </ul>
             </section>
 
@@ -70,8 +75,40 @@ const RefundPolicy = () => {
                 3. Subscription-based services
               </h2>
               <p className="mt-3">
-                Clients may cancel at any time, but no refunds will be issued for already billed
-                periods.
+                You can cancel your subscription at any time. To cancel, email us at{" "}
+                <a
+                  href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+                  className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+                >
+                  {COMPANY_LEGAL.contactEmail}
+                </a>{" "}
+                or use any self-service cancellation option provided by Paddle.
+              </p>
+              <p className="mt-3">
+                Cancellation stops future renewals. We do not refund fees already charged for the
+                current or past billing periods unless required by law. After cancellation, your
+                access to subscription features ends at the close of the current billing period.
+              </p>
+            </section>
+
+            <section aria-labelledby="refund-process">
+              <h2
+                id="refund-process"
+                className="text-lg font-semibold tracking-tight text-foreground"
+              >
+                4. How to request a refund
+              </h2>
+              <p className="mt-3">
+                Send a refund request to{" "}
+                <a
+                  href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+                  className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+                >
+                  {COMPANY_LEGAL.contactEmail}
+                </a>{" "}
+                with the email address used at checkout, the order or invoice reference, and a
+                short description of the reason. We aim to respond within five (5) business days.
+                Approved refunds are processed through Paddle to the original payment method.
               </p>
             </section>
 
@@ -80,15 +117,15 @@ const RefundPolicy = () => {
                 id="refund-contact"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                4. Contact
+                5. Contact
               </h2>
               <p className="mt-3">
                 If you have any questions, contact us at:{" "}
                 <a
-                  href="mailto:info@nexora-agn.com"
+                  href={`mailto:${COMPANY_LEGAL.contactEmail}`}
                   className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
                 >
-                  info@nexora-agn.com
+                  {COMPANY_LEGAL.contactEmail}
                 </a>
               </p>
             </section>

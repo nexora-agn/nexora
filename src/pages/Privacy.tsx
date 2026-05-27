@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import { COMPANY_LEGAL } from "@/lib/companyLegal";
+import { COMPANY_LEGAL, companyAddressDisplay } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -14,22 +14,29 @@ const sections = [
   {
     title: "Data controller",
     body: (
-      <p>
-        The operator of this website, and the controller of your personal data described in this
-        policy, is <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
-        {COMPANY_LEGAL.legalForm}. Commercial registration (CR) no.{" "}
-        <span className="whitespace-nowrap">{COMPANY_LEGAL.commercialRegistration}</span>
-        {COMPANY_LEGAL.addressLines.length === 0 ? "." : ""}
-        {COMPANY_LEGAL.addressLines.length > 0 ? (
-          <>
-            . Registered address:{" "}
-            <span className="mt-1 block whitespace-pre-line text-foreground">
-              {COMPANY_LEGAL.addressLines.join("\n")}
-            </span>
-            .
-          </>
-        ) : null}
-      </p>
+      <>
+        <p>
+          The operator of this website, and the controller of your personal data described in this
+          policy, is <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
+          {COMPANY_LEGAL.legalForm}. Commercial registration (CR) no.{" "}
+          <span className="whitespace-nowrap">{COMPANY_LEGAL.commercialRegistration}</span>, registered
+          in the {COMPANY_LEGAL.registeredJurisdiction}.
+        </p>
+        <p className="mt-3">
+          {COMPANY_LEGAL.operatingOffice.label}:{" "}
+          <span className="whitespace-pre-line text-foreground">{companyAddressDisplay()}</span>.
+        </p>
+        <p className="mt-3">
+          For any privacy-related request, contact us at{" "}
+          <a
+            href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+            className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+          >
+            {COMPANY_LEGAL.contactEmail}
+          </a>
+          .
+        </p>
+      </>
     ),
   },
   {
@@ -38,12 +45,17 @@ const sections = [
       <>
         <p>
           We collect information you choose to provide, such as your name, work email, company name,
-          and phone number, when you request a consultation, submit a contact form, or otherwise
-          communicate with us about our services.
+          phone number, and project details, when you request a consultation, submit a form on our
+          site, start a project, or otherwise communicate with us about our services.
         </p>
         <p className="mt-3">
           We may also collect limited technical data automatically (for example, browser type and
           general usage signals) as needed to operate and secure our website.
+        </p>
+        <p className="mt-3">
+          When you interact with the AI assistant on our website or on websites we build for our
+          clients, the conversation messages you send are processed in order to generate a response.
+          We do not require you to share sensitive personal data with the assistant.
         </p>
       </>
     ),
@@ -62,20 +74,69 @@ const sections = [
   {
     title: "Sharing and processors",
     body: (
-      <p>
-        We do not sell your personal information. We may share data with trusted subprocessors
-        (such as hosting, email, or analytics providers) who perform services on our behalf under
-        appropriate confidentiality and security obligations.
-      </p>
+      <>
+        <p>
+          We do not sell your personal information. We share data only with trusted subprocessors
+          that perform services on our behalf under appropriate confidentiality and security
+          obligations. The categories of subprocessors we currently rely on are:
+        </p>
+        <ul className="mt-3 list-disc space-y-1.5 pl-5">
+          <li>
+            <span className="font-medium text-foreground">Payment processing:</span> Paddle (our
+            merchant of record for checkout, subscriptions, billing, and refunds).
+          </li>
+          <li>
+            <span className="font-medium text-foreground">AI conversation providers:</span> third
+            parties that power the AI assistant features on our site and on websites we build for
+            our clients. Messages you send to the assistant are transmitted to these providers to
+            generate a response.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Hosting and infrastructure:</span>{" "}
+            cloud hosting, content delivery, and storage providers used to operate the website and
+            the project workspace.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Email and notifications:</span> email
+            delivery and transactional notification providers used to send updates about your
+            project, account, and lead notifications.
+          </li>
+        </ul>
+      </>
     ),
   },
   {
     title: "Payment processing",
     body: (
       <p>
-        We use third-party payment providers such as{" "}
-        <span className="font-semibold text-foreground">Paddle</span> to process payments
-        securely. We do not store your payment details on our servers.
+        Online payments for our services are processed by{" "}
+        <span className="font-semibold text-foreground">Paddle</span>, which acts as the merchant of
+        record. Card data and payment credentials are handled directly by Paddle on its own
+        infrastructure; we do not store full payment card numbers on our servers. Paddle&apos;s use of
+        your data is governed by its own privacy notice.
+      </p>
+    ),
+  },
+  {
+    title: "International transfers",
+    body: (
+      <p>
+        We are registered in the {COMPANY_LEGAL.registeredJurisdiction} and operate from{" "}
+        {COMPANY_LEGAL.operatingOffice.addressLines[COMPANY_LEGAL.operatingOffice.addressLines.length - 1] ?? "our operating office"}.
+        Some of our subprocessors may store or process personal data outside your country of
+        residence. Where required by law, we put appropriate safeguards in place for those
+        transfers.
+      </p>
+    ),
+  },
+  {
+    title: "Retention",
+    body: (
+      <p>
+        We retain personal information for as long as needed to provide the services, comply with
+        our legal obligations (including accounting and tax requirements), resolve disputes, and
+        enforce our agreements. When personal data is no longer required for these purposes, we
+        delete or anonymize it.
       </p>
     ),
   },
@@ -122,7 +183,7 @@ const Privacy = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Privacy notice" }]}
         title="Privacy notice"
-        description="How NEXORA SOLUTION L.L.C. collects, uses, and protects personal information when you use Nexora."
+        description={`How ${COMPANY_LEGAL.legalName} collects, uses, and protects personal information when you use ${COMPANY_LEGAL.brand}.`}
       />
 
       <article className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">

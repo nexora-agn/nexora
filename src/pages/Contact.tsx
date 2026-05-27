@@ -112,12 +112,19 @@ const Contact = () => {
                     <MapPin className="h-4 w-4" aria-hidden />
                   </span>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Registered office</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {COMPANY_LEGAL.operatingOffice.label}
+                    </p>
                     <p className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                       {companyAddressDisplay()}
                     </p>
-                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                      {COMPANY_LEGAL.legalName} · CR {COMPANY_LEGAL.commercialRegistration}
+                    <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                      <span className="block font-medium text-foreground">Registered entity</span>
+                      {COMPANY_LEGAL.legalName}
+                      <br />
+                      {COMPANY_LEGAL.legalForm}
+                      <br />
+                      CR {COMPANY_LEGAL.commercialRegistration} · {COMPANY_LEGAL.registeredJurisdiction}
                     </p>
                   </div>
                 </li>

@@ -7,10 +7,14 @@ const PolicyPageFooter = () => (
     <p className="text-sm font-medium text-foreground">Related policies</p>
     <LegalPolicyLinks variant="inline" className="justify-start" linkClassName="text-foreground" />
     <p className="text-xs leading-relaxed text-muted-foreground">
-      {COMPANY_LEGAL.legalName} ({COMPANY_LEGAL.legalForm}, CR no. {COMPANY_LEGAL.commercialRegistration}), doing
-      business as {COMPANY_LEGAL.brand}. Questions:{" "}
-      <a href="mailto:info@nexora-agn.com" className="font-medium text-foreground underline-offset-4 hover:underline">
-        info@nexora-agn.com
+      {COMPANY_LEGAL.legalName} ({COMPANY_LEGAL.legalForm}, CR no.{" "}
+      {COMPANY_LEGAL.commercialRegistration}), registered in the{" "}
+      {COMPANY_LEGAL.registeredJurisdiction}, doing business as {COMPANY_LEGAL.brand}. Questions:{" "}
+      <a
+        href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+        className="font-medium text-foreground underline-offset-4 hover:underline"
+      >
+        {COMPANY_LEGAL.contactEmail}
       </a>
       .
     </p>

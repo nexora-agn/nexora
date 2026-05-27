@@ -18,50 +18,138 @@ const sections = [
         <p>
           These Terms of Service (&quot;Terms&quot;) are between you and{" "}
           <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
-          {COMPANY_LEGAL.legalForm}, CR no. {COMPANY_LEGAL.commercialRegistration} (doing business as &quot;
-          {COMPANY_LEGAL.brand}&quot;). They govern your access to {COMPANY_LEGAL.brand}&apos;s website
-          and any services we agree to provide in writing. By submitting a request, using our site, or
-          engaging us for work, you agree to these Terms.
+          {COMPANY_LEGAL.legalForm}, CR no. {COMPANY_LEGAL.commercialRegistration}, registered in the{" "}
+          {COMPANY_LEGAL.registeredJurisdiction} (doing business as &quot;{COMPANY_LEGAL.brand}&quot;).
+          They govern your access to {COMPANY_LEGAL.brand}&apos;s website and any services we agree
+          to provide. By submitting a request, using our site, or engaging us for work, you agree
+          to these Terms.
+        </p>
+        <p className="mt-3">
+          Our operating office is located at{" "}
+          <span className="whitespace-pre-line text-foreground">
+            {COMPANY_LEGAL.operatingOffice.addressLines.join(", ")}
+          </span>
+          .
         </p>
       </>
     ),
   },
   {
-    title: "Services and engagement",
+    title: "Services",
     body: (
       <>
         <p>
-          We provide website design and development services as described in your proposal, statement
-          of work, or order confirmation. Timelines, deliverables, and fees are defined in that
-          documentation and incorporated into these Terms by reference.
+          {COMPANY_LEGAL.brand} provides digital services for businesses, including:
         </p>
+        <ul className="mt-3 list-disc space-y-1.5 pl-5">
+          <li>Design and development of business websites (new builds and migrations).</li>
+          <li>
+            AI-powered website assistants that answer visitor questions and capture leads on behalf
+            of our clients.
+          </li>
+          <li>SEO, marketing setup, and AI infrastructure as part of the subscription plans.</li>
+          <li>Custom software, mobile app, and integration work where scoped separately.</li>
+        </ul>
         <p className="mt-3">
-          Work begins after scope, schedule, and any deposit or approval requirements are satisfied.
-          Client delays in providing assets, feedback, or approvals may affect delivery dates.
+          Specific deliverables, timelines, and any custom-scope fees are defined in your proposal,
+          statement of work, or order confirmation, which are incorporated into these Terms by
+          reference.
         </p>
       </>
     ),
   },
   {
-    title: "Payments and billing",
+    title: "Subscriptions and billing",
     body: (
       <>
         <p>
-          Fees for packages and services are shown on our website pricing section or in your written
-          quote. Checkout and recurring billing, where applicable, are processed by our payment
-          partner <span className="font-semibold text-foreground">Paddle</span>. Card and payment
-          details are handled by Paddle; we do not store full payment card numbers on our servers.
+          Most {COMPANY_LEGAL.brand} services are sold as recurring subscriptions. When you start a
+          subscription you agree to pay the price shown at checkout, plus any applicable taxes, on
+          a recurring basis (typically monthly) until the subscription is cancelled.
         </p>
         <p className="mt-3">
-          Refunds and cancellations are governed by our{" "}
-          <Link to="/refund-policy" className="font-medium text-foreground underline-offset-4 hover:underline">
+          Online checkout and recurring billing are processed by{" "}
+          <span className="font-semibold text-foreground">Paddle</span>, which acts as the merchant
+          of record for these transactions. Paddle handles payment processing, invoicing, sales tax
+          and VAT collection where applicable, and refunds in accordance with our policy. By
+          completing a purchase you also agree to Paddle&apos;s buyer terms presented at checkout.
+        </p>
+        <p className="mt-3">
+          Subscriptions automatically renew at the end of each billing period at the then-current
+          price. We will charge the payment method on file. If a payment fails, we may retry the
+          charge, pause the service, or suspend access until the balance is paid.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Cancellation",
+    body: (
+      <>
+        <p>
+          You may cancel your subscription at any time. To cancel, contact us at{" "}
+          <a
+            href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            {COMPANY_LEGAL.contactEmail}
+          </a>{" "}
+          or use any self-service cancellation option provided by our payment partner Paddle.
+        </p>
+        <p className="mt-3">
+          Cancellation stops future renewals. It does not entitle you to a refund of fees already
+          charged for the current billing period unless required by law or by our{" "}
+          <Link
+            to="/refund-policy"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
             Refund policy
           </Link>
-          . Our{" "}
-          <Link to="/privacy" className="font-medium text-foreground underline-offset-4 hover:underline">
-            Privacy notice
-          </Link>{" "}
-          explains how we handle personal data, including payment-related information.
+          . After cancellation, your access to subscription features (including the live website,
+          AI assistant, and any hosting we provide) will end at the close of the current billing
+          period.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Refunds",
+    body: (
+      <p>
+        Refunds and exceptions are governed by our{" "}
+        <Link
+          to="/refund-policy"
+          className="font-medium text-foreground underline-offset-4 hover:underline"
+        >
+          Refund policy
+        </Link>
+        . Our{" "}
+        <Link
+          to="/privacy"
+          className="font-medium text-foreground underline-offset-4 hover:underline"
+        >
+          Privacy notice
+        </Link>{" "}
+        explains how we handle personal data, including payment-related information processed by
+        Paddle on our behalf.
+      </p>
+    ),
+  },
+  {
+    title: "AI assistant features",
+    body: (
+      <>
+        <p>
+          Our services include AI-powered assistants that converse with visitors, answer questions
+          from a knowledge base you provide, and capture lead details. These assistants use
+          third-party AI conversation providers. Responses are generated automatically and may
+          occasionally be inaccurate, incomplete, or out of date.
+        </p>
+        <p className="mt-3">
+          You are responsible for the information you upload as the assistant&apos;s knowledge base
+          and for reviewing important responses (such as pricing, availability, scope of work, or
+          safety-critical statements) before relying on them. The AI assistant does not provide
+          legal, medical, financial, or other professional advice.
         </p>
       </>
     ),
@@ -71,8 +159,10 @@ const sections = [
     body: (
       <p>
         You agree to provide accurate information, timely feedback, and lawful content (including
-        text, images, and trademarks) for use in your project. You represent that you have the
-        rights necessary for us to incorporate such materials.
+        text, images, logos, and trademarks) for use in your project. You represent that you have
+        the rights necessary for us to incorporate such materials into the deliverables. You will
+        not use our services to publish content that is illegal, infringing, defamatory, or that
+        violates the rights of third parties.
       </p>
     ),
   },
@@ -81,9 +171,11 @@ const sections = [
     body: (
       <p>
         Unless otherwise agreed in writing, upon receipt of full payment for the applicable
-        engagement, we assign to you the deliverables created specifically for your project under that
-        engagement, excluding our pre-existing tools, libraries, and know-how. Third-party
-        components may remain subject to their respective licenses.
+        engagement we assign to you the deliverables created specifically for your project under
+        that engagement, excluding our pre-existing tools, libraries, templates, and know-how.
+        Third-party components remain subject to their respective licenses. While a subscription is
+        active, we grant you a non-exclusive licence to use our hosted features (including the AI
+        assistant) for your business.
       </p>
     ),
   },
@@ -91,11 +183,22 @@ const sections = [
     title: "Limitation of liability",
     body: (
       <p>
-        To the maximum extent permitted by law, Nexora shall not be liable for any indirect,
-        incidental, special, consequential, or punitive damages, or for loss of profits, data, or
-        goodwill. Our aggregate liability arising out of these Terms or the services shall not
-        exceed the fees paid to Nexora for the services giving rise to the claim during the six
-        (6) months preceding the event.
+        To the maximum extent permitted by law, {COMPANY_LEGAL.brand} shall not be liable for any
+        indirect, incidental, special, consequential, or punitive damages, or for loss of profits,
+        data, revenue, or goodwill. Our aggregate liability arising out of these Terms or the
+        services shall not exceed the fees paid to {COMPANY_LEGAL.brand} for the services giving
+        rise to the claim during the six (6) months preceding the event.
+      </p>
+    ),
+  },
+  {
+    title: "Governing law",
+    body: (
+      <p>
+        These Terms are governed by the laws of the {COMPANY_LEGAL.governingLaw}, without regard to
+        conflict-of-law principles. Subject to any mandatory consumer rights in your jurisdiction,
+        the competent courts of the {COMPANY_LEGAL.governingLaw} have exclusive jurisdiction over
+        any dispute arising out of or in connection with these Terms.
       </p>
     ),
   },
@@ -107,6 +210,21 @@ const sections = [
         update the &quot;Last updated&quot; date. Material changes may require additional notice or
         consent where required by law. Continued use of our services after changes become effective
         constitutes acceptance of the revised Terms.
+      </p>
+    ),
+  },
+  {
+    title: "Contact",
+    body: (
+      <p>
+        Questions about these Terms can be sent to{" "}
+        <a
+          href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+          className="font-medium text-foreground underline-offset-4 hover:underline"
+        >
+          {COMPANY_LEGAL.contactEmail}
+        </a>
+        .
       </p>
     ),
   },
