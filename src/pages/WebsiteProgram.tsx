@@ -464,7 +464,7 @@ export default function WebsiteProgram() {
                 <p className="font-semibold text-neutral-900">
                   {COMPANY_LEGAL.legalName}{" "}
                   <span className="font-normal text-neutral-600">
-                    · CR {COMPANY_LEGAL.commercialRegistration}
+                    · EIN {COMPANY_LEGAL.ein}
                   </span>
                 </p>
                 <p className="mt-2">

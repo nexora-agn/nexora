@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import { companyAddressDisplay, COMPANY_LEGAL } from "@/lib/companyLegal";
+import { COMPANY_LEGAL, COMPANY_OFFICES } from "@/lib/companyLegal";
 import { SOCIAL_LINKS } from "@/lib/socialLinks";
 import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
 
@@ -112,21 +112,31 @@ const Contact = () => {
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background text-foreground">
                     <MapPin className="h-4 w-4" aria-hidden />
                   </span>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">
-                      {COMPANY_LEGAL.operatingOffice.label}
-                    </p>
-                    <p className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-                      {companyAddressDisplay()}
-                    </p>
-                    <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  <div className="space-y-4">
+                    <p className="text-sm font-semibold text-foreground">Offices</p>
+                    <ul className="space-y-3">
+                      {COMPANY_OFFICES.map((office) => (
+                        <li key={office.key}>
+                          <p className="text-sm font-medium text-foreground">
+                            <span className="mr-1.5" aria-hidden>
+                              {office.flag}
+                            </span>
+                            {office.label}
+                          </p>
+                          <p className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                            {office.addressLines.join("\n")}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="border-t border-border/60 pt-3 text-xs leading-relaxed text-muted-foreground">
                       <span className="block font-medium text-foreground">Registered entity</span>
                       {COMPANY_LEGAL.legalName}
                       <br />
                       {COMPANY_LEGAL.legalForm}
                       <br />
-                      CR {COMPANY_LEGAL.commercialRegistration} · {COMPANY_LEGAL.registeredJurisdiction}
-                    </p>
+                      EIN {COMPANY_LEGAL.ein} · {COMPANY_LEGAL.registeredJurisdiction}
+                    </div>
                   </div>
                 </li>
               </ul>

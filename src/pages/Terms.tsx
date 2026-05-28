@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import { COMPANY_LEGAL } from "@/lib/companyLegal";
+import { COMPANY_LEGAL, REGISTERED_OFFICE } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -18,16 +18,16 @@ const sections = [
         <p>
           These Terms of Service (&quot;Terms&quot;) are between you and{" "}
           <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
-          {COMPANY_LEGAL.legalForm}, CR no. {COMPANY_LEGAL.commercialRegistration}, registered in the{" "}
-          {COMPANY_LEGAL.registeredJurisdiction} (doing business as &quot;{COMPANY_LEGAL.brand}&quot;).
-          They govern your access to {COMPANY_LEGAL.brand}&apos;s website and any services we agree
-          to provide. By submitting a request, using our site, or engaging us for work, you agree
-          to these Terms.
+          {COMPANY_LEGAL.legalForm} registered in the {COMPANY_LEGAL.registeredJurisdiction} (EIN{" "}
+          {COMPANY_LEGAL.ein}), doing business as &quot;{COMPANY_LEGAL.brand}&quot;. They govern
+          your access to {COMPANY_LEGAL.brand}&apos;s website and any services we agree to provide.
+          By submitting a request, using our site, or engaging us for work, you agree to these
+          Terms.
         </p>
         <p className="mt-3">
-          Our operating office is located at{" "}
+          Our registered office is located at{" "}
           <span className="whitespace-pre-line text-foreground">
-            {COMPANY_LEGAL.operatingOffice.addressLines.join(", ")}
+            {REGISTERED_OFFICE.addressLines.join(", ")}
           </span>
           .
         </p>

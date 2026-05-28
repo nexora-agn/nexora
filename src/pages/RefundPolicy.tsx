@@ -30,11 +30,10 @@ const RefundPolicy = () => {
               <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>{" "}
               (doing business as{" "}
               <span className="font-semibold text-foreground">{COMPANY_LEGAL.brand}</span>),
-              registered in the {COMPANY_LEGAL.registeredJurisdiction} (CR{" "}
-              {COMPANY_LEGAL.commercialRegistration}).               We sell recurring software subscriptions for hosted business websites, AI website
-              assistants, SEO tools, hosting, and related features. Online checkout and recurring
-              billing are handled by
-              our payment partner{" "}
+              registered in the {COMPANY_LEGAL.registeredJurisdiction} (EIN{" "}
+              {COMPANY_LEGAL.ein}). We sell recurring software subscriptions for hosted business
+              websites, AI website assistants, SEO tools, hosting, and related features. Online
+              checkout and recurring billing are handled by our payment partner{" "}
               <span className="font-semibold text-foreground">Paddle</span>, which acts as the
               merchant of record.
             </p>

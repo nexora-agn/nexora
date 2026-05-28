@@ -1,41 +1,69 @@
 /**
  * Registered legal entity for Nexora (website, policies, and correspondence).
  *
- * The company is registered in Bahrain (commercial registration shown below)
- * and operates from an office in Kosovo. The Bahrain commercial address
- * fields on the CR are intentionally not set, so we publish the registered
- * jurisdiction only and surface the Kosovo office as the contact address.
+ * The selling entity is the US LLC (Wyoming). Kosovo and Bahrain are operating
+ * offices that are listed publicly for trust and locality, but the contracting
+ * party in Terms / Privacy / Refund is the US LLC.
  */
 export const COMPANY_LEGAL = {
   brand: "Nexora",
-  legalName: "NEXORA SOLUTION W.L.L",
-  /** Bahraini "With Limited Liability" form (equivalent to L.L.C. in other jurisdictions). */
-  legalForm: "With Limited Liability Company (W.L.L.)",
-  commercialRegistration: "196260-1",
-  registrationDate: "22 April 2026",
-  /** Country of legal registration (Bahrain CR). */
-  registeredJurisdiction: "Kingdom of Bahrain",
-  /** Operating office (where the team works). Shown publicly as the contact address. */
-  operatingOffice: {
-    label: "Operating office",
+  legalName: "NEXORA AGENCY 029 LLC",
+  /** US legal form. */
+  legalForm: "Limited Liability Company (LLC)",
+  /** IRS Employer Identification Number, issued 28 May 2026. */
+  ein: "37-2235275",
+  /** State / country of legal registration. */
+  registeredJurisdiction: "State of Wyoming, United States",
+  /** Governing law for Terms, Privacy, and Refund policies. */
+  governingLaw: "State of Wyoming, United States",
+  /** Primary public contact email (on the company domain). */
+  contactEmail: "info@nexora-agn.com",
+} as const;
+
+/** Office locations shown across the site (footer, contact page, policies). */
+export const COMPANY_OFFICES = [
+  {
+    key: "us",
+    flag: "🇺🇸",
+    label: "USA (Registered office)",
+    addressLines: [
+      "30 N Gould St, Ste R",
+      "Sheridan, WY 82801",
+      "United States",
+    ] as string[],
+  },
+  {
+    key: "kosovo",
+    flag: "🇽🇰",
+    label: "Europe office",
     addressLines: [
       "Rruga Ali Aliu Kelmendi",
       "Prishtina 10000",
       "Republic of Kosovo",
     ] as string[],
   },
-  /** Governing law for Terms, Privacy, and Refund policies. */
-  governingLaw: "Kingdom of Bahrain",
-  /** Primary public contact email (on the company domain). */
-  contactEmail: "info@nexora-agn.com",
-} as const;
+  {
+    key: "bahrain",
+    flag: "🇧🇭",
+    label: "Middle East office",
+    addressLines: [
+      "Office No. 451, Building 318",
+      "Road 328, Block 357",
+      "Manama",
+      "Kingdom of Bahrain",
+    ] as string[],
+  },
+] as const;
 
-/** Multi-line operating office address for display (Contact page, footer, etc.). */
+/** The registered (legal) office — used in policy pages as the formal address. */
+export const REGISTERED_OFFICE = COMPANY_OFFICES[0];
+
+/** Multi-line registered (US) office address for display. */
 export function companyAddressDisplay(): string {
-  return COMPANY_LEGAL.operatingOffice.addressLines.join("\n");
+  return REGISTERED_OFFICE.addressLines.join("\n");
 }
 
 /** One-line registered entity summary (footer credit, policy pages). */
 export function registeredEntitySummary(): string {
-  return `${COMPANY_LEGAL.legalName} · ${COMPANY_LEGAL.legalForm} · CR ${COMPANY_LEGAL.commercialRegistration} · Registered in the ${COMPANY_LEGAL.registeredJurisdiction}`;
+  return `${COMPANY_LEGAL.legalName} · ${COMPANY_LEGAL.legalForm} · EIN ${COMPANY_LEGAL.ein} · Registered in the ${COMPANY_LEGAL.registeredJurisdiction}`;
 }

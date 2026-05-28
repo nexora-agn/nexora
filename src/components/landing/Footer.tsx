@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram } from "lucide-react";
 import LegalPolicyLinks from "@/components/legal/LegalPolicyLinks";
-import { COMPANY_LEGAL, companyAddressDisplay } from "@/lib/companyLegal";
+import { COMPANY_LEGAL, COMPANY_OFFICES } from "@/lib/companyLegal";
 import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 import { SOCIAL_LINKS } from "@/lib/socialLinks";
 
@@ -87,13 +87,24 @@ const Footer = () => {
               <p className="font-medium text-neutral-400">{COMPANY_LEGAL.legalName}</p>
               <p>{COMPANY_LEGAL.legalForm}</p>
               <p>
-                Commercial registration: <span className="tabular-nums">{COMPANY_LEGAL.commercialRegistration}</span>
+                EIN: <span className="tabular-nums">{COMPANY_LEGAL.ein}</span>
               </p>
               <p>Registered in the {COMPANY_LEGAL.registeredJurisdiction}</p>
-              <div className="pt-2">
-                <p className="font-medium text-neutral-400">{COMPANY_LEGAL.operatingOffice.label}</p>
-                <p className="whitespace-pre-line">{companyAddressDisplay()}</p>
-              </div>
+              <ul className="space-y-3 pt-3">
+                {COMPANY_OFFICES.map((office) => (
+                  <li key={office.key}>
+                    <p className="font-medium text-neutral-400">
+                      <span className="mr-1.5" aria-hidden>
+                        {office.flag}
+                      </span>
+                      {office.label}
+                    </p>
+                    <p className="whitespace-pre-line">
+                      {office.addressLines.join("\n")}
+                    </p>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

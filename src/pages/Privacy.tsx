@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import { COMPANY_LEGAL, companyAddressDisplay } from "@/lib/companyLegal";
+import { COMPANY_LEGAL, REGISTERED_OFFICE } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -18,13 +18,16 @@ const sections = [
         <p>
           The operator of this website, and the controller of your personal data described in this
           policy, is <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
-          {COMPANY_LEGAL.legalForm}. Commercial registration (CR) no.{" "}
-          <span className="whitespace-nowrap">{COMPANY_LEGAL.commercialRegistration}</span>, registered
-          in the {COMPANY_LEGAL.registeredJurisdiction}.
+          {COMPANY_LEGAL.legalForm} registered in the {COMPANY_LEGAL.registeredJurisdiction}. Employer
+          Identification Number (EIN):{" "}
+          <span className="whitespace-nowrap">{COMPANY_LEGAL.ein}</span>.
         </p>
         <p className="mt-3">
-          {COMPANY_LEGAL.operatingOffice.label}:{" "}
-          <span className="whitespace-pre-line text-foreground">{companyAddressDisplay()}</span>.
+          Registered office:{" "}
+          <span className="whitespace-pre-line text-foreground">
+            {REGISTERED_OFFICE.addressLines.join(", ")}
+          </span>
+          .
         </p>
         <p className="mt-3">
           For any privacy-related request, contact us at{" "}
@@ -121,11 +124,10 @@ const sections = [
     title: "International transfers",
     body: (
       <p>
-        We are registered in the {COMPANY_LEGAL.registeredJurisdiction} and operate from{" "}
-        {COMPANY_LEGAL.operatingOffice.addressLines[COMPANY_LEGAL.operatingOffice.addressLines.length - 1] ?? "our operating office"}.
-        Some of our subprocessors may store or process personal data outside your country of
-        residence. Where required by law, we put appropriate safeguards in place for those
-        transfers.
+        We are registered in the {COMPANY_LEGAL.registeredJurisdiction} and operate
+        internationally. Some of our subprocessors may store or process personal data outside your
+        country of residence. Where required by law, we put appropriate safeguards in place for
+        those transfers.
       </p>
     ),
   },
