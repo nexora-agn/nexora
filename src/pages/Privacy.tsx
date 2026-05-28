@@ -45,8 +45,8 @@ const sections = [
       <>
         <p>
           We collect information you choose to provide, such as your name, work email, company name,
-          phone number, and project details, when you request a consultation, submit a form on our
-          site, start a project, or otherwise communicate with us about our services.
+          phone number, and account details, when you request product information, submit a form on
+          our site, subscribe to a plan, or otherwise communicate with us about your subscription.
         </p>
         <p className="mt-3">
           We may also collect limited technical data automatically (for example, browser type and

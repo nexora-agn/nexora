@@ -28,7 +28,7 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Pricing</p>
             <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Pick your lane</h2>
             <p className="mx-auto mt-3 max-w-lg text-base font-medium text-neutral-600 md:text-lg">
-              Starter to get live. Growth when you need depth. Custom for anything else.
+              Monthly subscriptions from $199. Preview your site, then subscribe when you&apos;re ready.
             </p>
           </motion.div>
         ) : null}
@@ -61,7 +61,7 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
                   }`}
                 >
                   <Link to={`/start?plan=${encodeURIComponent(plan.id)}`}>
-                    {plan.id === "custom" ? "Start a project" : "Start with this plan"}
+                    {plan.id === "custom" ? "Contact sales" : "Subscribe"}
                   </Link>
                 </Button>
               </motion.div>
@@ -77,10 +77,15 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
           className="mx-auto mt-10 max-w-2xl space-y-4 text-center"
         >
           <p className="text-sm font-medium text-neutral-500">
-            Each plan includes the features listed on the card. Custom scopes are quoted after a demo.
-            Starter and Growth prices are per month; checkout confirms your package before production begins.
+            Starter and Growth are self-serve software subscriptions billed monthly through Paddle
+            checkout. Enterprise plans are quoted separately. Preview your staged site before
+            production begins.
           </p>
-          <p className="text-sm text-neutral-600">By starting a project you agree to:</p>
+          <p className="text-sm text-neutral-600">
+            Nexora sells hosted website software subscriptions only — not call-center services, outbound
+            telemarketing, IT helpdesk, or device repair services.
+          </p>
+          <p className="text-sm text-neutral-600">By subscribing you agree to:</p>
           <LegalPolicyLinks variant="inline" linkClassName="text-neutral-800" />
         </motion.div>
       </div>

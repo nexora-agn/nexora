@@ -39,21 +39,28 @@ const sections = [
     body: (
       <>
         <p>
-          {COMPANY_LEGAL.brand} provides digital services for businesses, including:
+          {COMPANY_LEGAL.brand} sells recurring software subscriptions for hosted business websites
+          and related digital features. Our primary products are the Starter and Growth plans sold
+          through our website checkout.
         </p>
         <ul className="mt-3 list-disc space-y-1.5 pl-5">
-          <li>Design and development of business websites (new builds and migrations).</li>
+          <li>Hosted business websites with preview-before-subscribe onboarding.</li>
           <li>
-            AI-powered website assistants that answer visitor questions and capture leads on behalf
-            of our clients.
+            AI-powered website assistants that answer visitor questions and capture leads on your
+            site.
           </li>
-          <li>SEO, marketing setup, and AI infrastructure as part of the subscription plans.</li>
-          <li>Custom software, mobile app, and integration work where scoped separately.</li>
+          <li>SEO tools, marketing setup, hosting, SSL, and plan-based product updates.</li>
+          <li>ERP catalog and pricing sync on eligible Growth subscriptions.</li>
         </ul>
         <p className="mt-3">
-          Specific deliverables, timelines, and any custom-scope fees are defined in your proposal,
-          statement of work, or order confirmation, which are incorporated into these Terms by
-          reference.
+          {COMPANY_LEGAL.brand} does not operate a call center, provide outbound telemarketing, or
+          sell IT helpdesk, device repair, malware removal, or other technical-support services.
+          Account assistance covers your subscription, billing, and included product features only.
+        </p>
+        <p className="mt-3">
+          Plan features, onboarding timelines, and any separately quoted enterprise add-ons are
+          described on our pricing page and in your checkout or order confirmation, which are
+          incorporated into these Terms by reference.
         </p>
       </>
     ),

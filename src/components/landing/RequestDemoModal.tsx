@@ -10,9 +10,9 @@ import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
 import { toast } from "sonner";
 
 const benefits = [
-  "Custom site + preview before you commit",
-  "We ship. You don’t manage devs",
-  "Ongoing support on your plan",
+  "Preview your staged site before you subscribe",
+  "Self-serve Starter and Growth checkout",
+  "Account support included with your plan",
 ];
 
 const industries = [
@@ -87,7 +87,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
     if (!name.trim()) next.name = "Add your name.";
     const emailErr = getWorkEmailError(email, "Add your work email.");
     if (emailErr) next.email = emailErr;
-    if (!phone.trim()) next.phone = "Add a phone number we can call.";
+    if (!phone.trim()) next.phone = "Add your phone number.";
     if (!industry) next.industry = "Select an industry.";
     if (hasWebsite !== "yes" && hasWebsite !== "no") {
       next.hasWebsite = "Let us know if you already have a website (yes or no).";
@@ -142,9 +142,9 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
 
             <div className="flex flex-col justify-center p-8 md:p-10">
               <h2 className="mb-6 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
-                Book a demo
+                Product questions
                 <br />
-                <span className="text-neutral-600">See it in 15 minutes.</span>
+                <span className="text-neutral-600">Before you subscribe.</span>
               </h2>
 
               <div className="mb-8 space-y-3">
@@ -281,13 +281,13 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                       id="demo-phone"
                       type="tel"
                       autoComplete="tel"
-                      placeholder="+1 (888) 535-9177"
+                      placeholder="+1 (888) 555-0198 *"
                       value={phone}
                       onChange={e => {
                         setPhone(e.target.value);
                         clear("phone");
                       }}
-                      onBlur={() => setDemoError("phone", !phone.trim() ? "Add a phone number we can call." : undefined)}
+                      onBlur={() => setDemoError("phone", !phone.trim() ? "Add your phone number." : undefined)}
                       className={cn("mt-1.5 h-12 rounded-xl bg-background", errors.phone && "border-destructive")}
                       aria-invalid={!!errors.phone}
                       aria-describedby={errors.phone ? "e-phone" : undefined}
@@ -368,7 +368,7 @@ const RequestDemoModal = ({ open, onClose }: RequestDemoModalProps) => {
                     className="h-12 w-full rounded-xl border-0 bg-brand text-base font-semibold text-brand-foreground hover:bg-brand-muted"
                     disabled={sending}
                   >
-                    {sending ? "Sending…" : "Request demo"}
+                    {sending ? "Sending…" : "Send message"}
                   </Button>
                 </form>
               )}

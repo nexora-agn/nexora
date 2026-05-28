@@ -8,11 +8,15 @@ const PaymentCancelled = () => (
     <PageHeader
       breadcrumb={[{ label: "Home", to: "/" }, { label: "Payment" }]}
       title="Payment cancelled"
-      description="No charge was completed. You can try again from the link we emailed you."
+      description="No charge was completed. Return to checkout and try again when you're ready."
     />
     <div className="mx-auto w-full max-w-lg px-6 py-16 text-center">
       <p className="text-sm leading-relaxed text-muted-foreground">
-        If something looked wrong or you need a new link, contact{" "}
+        If something looked wrong, return to{" "}
+        <Link to="/start" className="font-medium text-foreground underline-offset-4 hover:underline">
+          checkout
+        </Link>{" "}
+        or contact{" "}
         <a href="mailto:info@nexora-agn.com" className="font-medium text-foreground underline-offset-4 hover:underline">
           info@nexora-agn.com
         </a>

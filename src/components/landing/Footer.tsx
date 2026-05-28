@@ -40,7 +40,7 @@ const Footer = () => {
               />
             </Link>
             <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-400">
-              We build business websites. Small team. You’re with the same people from kickoff to launch.
+              We sell hosted website software subscriptions. Starter and Growth plans are available through self-serve checkout.
             </p>
             <a
               href={SOCIAL_LINKS.instagram}

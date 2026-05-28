@@ -52,7 +52,7 @@ const Contact = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Contact" }]}
         title="Contact"
-        description="Questions or demos. We reply within one business day."
+        description="Billing and account questions. Plans and checkout are available on our pricing page."
       />
 
       <div className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
@@ -83,6 +83,7 @@ const Contact = () => {
                   </span>
                   <div>
                     <p className="text-sm font-semibold text-foreground">Phone</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">Business line for account and billing support.</p>
                     <a
                       href="tel:+18885359177"
                       className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"

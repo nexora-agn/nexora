@@ -580,7 +580,7 @@ const ProjectOnboardingWizard = () => {
                 <p className="mt-1 text-sm text-muted-foreground">
                   {requestType === "migrate"
                     ? "Just paste the URL of your existing site — we’ll extract your logo, brand colours, and copy from there. Domain & hosting are already in place, nothing else needed."
-                    : "ERP and AI scope are finalised on your call — nothing to answer about them here. Domain & hosting are handled internally after kickoff."}
+                    : "ERP and AI scope are selected in your Growth plan during onboarding — nothing to answer about them here. Domain and hosting are handled internally after checkout."}
                 </p>
               </div>
 

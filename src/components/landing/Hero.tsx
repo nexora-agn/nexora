@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   BarChart2,
@@ -26,10 +27,10 @@ const scrollToId = (id: string) => {
   window.scrollTo({ top, behavior: "smooth" });
 };
 
-const HERO_EYEBROW = "WEBSITES FOR CONSTRUCTION COMPANIES";
+const HERO_EYEBROW = "BUSINESS WEBSITE SOFTWARE";
 
 const HERO_BODY =
-  "Nexora builds high-converting websites for construction companies, and lets you preview the live site before you buy. Love it? We launch it and migrate everything seamlessly.";
+  "Nexora is a subscription platform for hosted business websites. Preview your staged site, then subscribe through secure checkout when you're ready.";
 
 const GALLERY = PROJECTS.slice(0, 3);
 const HERO_LIVE_HEADLINE = [HOME_HERO.headlineBefore, HOME_HERO.headlineHighlight, HOME_HERO.headlineAfter].join(" ");
@@ -43,11 +44,11 @@ const HERO_BOTTOM_FEATURES = [
   { Icon: Clock, title: "Preview Before You Buy", line: "See your live website first." },
   { Icon: Rocket, title: "Built for Construction", line: "Designed to win more projects." },
   { Icon: RefreshCw, title: "We Handle Everything", line: "Design, build, migrate, launch." },
-  { Icon: BarChart2, title: "Results That Matter", line: "More leads. More calls. More builds." },
+  { Icon: BarChart2, title: "Results That Matter", line: "More inbound leads for your business." },
 ] as const;
 
 const HERO_TRUST_POINTS = [
-  { Icon: Package, title: "Clear packages", line: "Starter, Growth, or Custom." },
+  { Icon: Package, title: "Clear plans", line: "Starter, Growth, or Enterprise." },
   { Icon: Lock, title: "Zero Risk", line: "You Decide" },
   { Icon: CloudUpload, title: "We Migrate Everything", line: "Stress-Free" },
 ] as const;
@@ -91,12 +92,12 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
           </p>
 
           <h1 className="mt-3 text-balance text-3xl font-bold leading-[1.12] tracking-tight text-neutral-950 sm:mt-4 sm:text-4xl sm:leading-[1.1] md:text-5xl md:leading-[1.08] lg:text-[3.1rem]">
-            <span className="block">We Build Your Website.</span>
-            <span className="block text-neutral-600">You Preview It.</span>
+            <span className="block">Preview Your Website.</span>
+            <span className="block text-neutral-600">Subscribe When Ready.</span>
             <span className="block text-neutral-600">
-              Then You{" "}
+              Hosted{" "}
               <span className="relative font-bold text-neutral-950">
-                <span className="relative z-[1]">Decide</span>
+                <span className="relative z-[1]">Software</span>
                 <span
                   aria-hidden
                   className="pointer-events-none absolute -bottom-0.5 left-[-2%] h-1.5 w-[104%] rounded-sm bg-brand/80 sm:bottom-0 sm:h-2"
@@ -130,21 +131,24 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
                 </span>
               </span>
             </button>
-            <button
+            <Button
               type="button"
-              onClick={() => onRequestDemo?.()}
-              className="group flex min-h-[3.25rem] w-full flex-1 items-center gap-3 rounded-2xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 text-left text-neutral-950 shadow-sm backdrop-blur-sm transition active:scale-[0.99] hover:border-neutral-300 hover:bg-white sm:min-w-0"
+              variant="outline"
+              asChild
+              className="group flex min-h-[3.25rem] h-auto w-full flex-1 items-center justify-start gap-3 rounded-2xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 text-left text-neutral-950 shadow-sm backdrop-blur-sm transition active:scale-[0.99] hover:border-neutral-300 hover:bg-white sm:min-w-0"
             >
-              <Calendar
-                className="h-6 w-6 shrink-0"
-                strokeWidth={1.75}
-                aria-hidden
-              />
-              <span className="min-w-0">
-                <span className="block text-[0.95rem] font-semibold leading-tight sm:text-base">Book a Demo</span>
-                <span className="mt-0.5 block text-xs font-medium text-neutral-500">Talk to a Specialist</span>
-              </span>
-            </button>
+              <Link to="/pricing" className="flex w-full items-center justify-start gap-3 text-left">
+                <Calendar
+                  className="h-6 w-6 shrink-0"
+                  strokeWidth={1.75}
+                  aria-hidden
+                />
+                <span className="min-w-0">
+                  <span className="block text-[0.95rem] font-semibold leading-tight sm:text-base">View plans</span>
+                  <span className="mt-0.5 block text-xs font-medium text-neutral-500">Subscribe online</span>
+                </span>
+              </Link>
+            </Button>
           </div>
 
           <ul className="mt-5 grid w-full max-w-md grid-cols-1 gap-0 overflow-hidden text-left sm:mx-auto sm:mt-6 sm:max-w-2xl sm:grid-cols-3 sm:rounded-2xl sm:border sm:border-neutral-200/60 sm:bg-gradient-to-b sm:from-white/90 sm:to-neutral-50/50 sm:shadow-sm md:mt-7 lg:mx-0 lg:max-w-3xl">

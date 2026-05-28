@@ -53,7 +53,7 @@ const MarketingDocumentTitle = () => {
       return;
     }
     if (pathname === "/start") {
-      document.title = "Start a project | Nexora";
+      document.title = "Subscribe | Nexora";
       return;
     }
     if (pathname === "/website-program") {

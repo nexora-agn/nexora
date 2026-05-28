@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Quote, Rocket, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -231,18 +232,20 @@ const WhyChooseNexoraSection = ({ onRequestDemo }: WhyChooseNexoraSectionProps) 
                   <span className="text-brand">visibility</span>?
                 </p>
                 <p className="mt-1 max-w-xl text-sm leading-relaxed text-neutral-400">
-                  More qualified traffic, more enquiries, and more booked conversations without guesswork. Start with a
-                  short strategy call.
+                  More qualified traffic and more inbound enquiries from a site built to convert.
+                  Preview your plan options, then subscribe online.
                 </p>
               </div>
             </div>
             <Button
               size="lg"
               className="h-12 shrink-0 rounded-xl border-0 bg-brand px-7 text-base font-semibold text-brand-foreground shadow-sm hover:bg-brand-muted"
-              onClick={onRequestDemo}
+              asChild
             >
-              Book a free strategy call
-              <ArrowRight className="h-4 w-4" strokeWidth={2} />
+              <Link to="/pricing">
+                View plans
+                <ArrowRight className="h-4 w-4" strokeWidth={2} />
+              </Link>
             </Button>
           </div>
         </motion.div>

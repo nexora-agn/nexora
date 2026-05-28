@@ -19,7 +19,7 @@ export const MARKETING_PLANS: {
     price: "$199",
     period: "/month",
     highlight: false,
-    cta: "Book a demo",
+    cta: "Subscribe",
     features: [
       "Web & mobile responsive",
       "Essential structure & key sections",
@@ -36,7 +36,7 @@ export const MARKETING_PLANS: {
     price: "$399",
     period: "/month",
     highlight: true,
-    cta: "Book a demo",
+    cta: "Subscribe",
     features: [
       "Web & mobile responsive",
       "Unlimited pages",
@@ -48,17 +48,17 @@ export const MARKETING_PLANS: {
   },
   {
     id: "custom",
-    name: "Custom",
-    tagline: "Site, mobile app, or custom software for your job. We scope it to what you actually run.",
+    name: "Enterprise",
+    tagline: "Higher limits, multi-location brands, and advanced integrations on a dedicated subscription.",
     price: "Custom",
     period: "",
     highlight: false,
-    cta: "Talk to us",
+    cta: "Contact sales",
     features: [
-      "Web & mobile responsive",
-      "App Store & Google Play when your scope needs native apps",
-      "Admin dashboard & workflows",
-      "Dedicated scoping, integrations & handoff",
+      "Everything in Growth",
+      "Multi-site or multi-brand rollouts",
+      "Advanced integrations & workflows",
+      "Dedicated account onboarding",
     ],
   },
 ];

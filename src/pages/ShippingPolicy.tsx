@@ -51,8 +51,9 @@ const ShippingPolicy = () => {
                 2. Delivery timelines
               </h2>
               <p className="mt-3">
-                Delivery timelines depend on the selected service and will be communicated during
-                the project agreement phase.
+                After successful checkout, onboarding begins according to your selected subscription
+                plan. Timelines for preview, staging, and launch are shown during checkout and in
+                your account onboarding flow.
               </p>
             </section>
 

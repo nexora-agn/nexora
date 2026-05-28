@@ -61,7 +61,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
         Blog
       </Link>
       <Link to="/start" onClick={() => setOpen(false)} className={className}>
-        Start a project
+        Subscribe
       </Link>
       <Link to="/contact" onClick={() => setOpen(false)} className={className}>
         Contact
@@ -97,7 +97,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
               className="rounded-xl border-0 bg-brand px-6 font-semibold text-brand-foreground shadow-sm hover:bg-brand-muted"
               onClick={onRequestDemo}
             >
-              Book a Demo
+              Book a walkthrough
             </Button>
           </div>
 
@@ -123,7 +123,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
                 onRequestDemo?.();
               }}
             >
-              Book a Demo
+              Book a walkthrough
             </Button>
           </div>
         ) : null}

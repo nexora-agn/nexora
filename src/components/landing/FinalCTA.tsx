@@ -37,15 +37,15 @@ const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
                 Live in days, not months
               </h2>
               <p className="max-w-md text-base font-medium leading-relaxed text-neutral-400 md:text-[1.0625rem]">
-                15-minute walkthrough. See preview, timeline, and launch. No fluff.
+                Choose a plan, preview your staged site, and subscribe through secure Paddle checkout.
               </p>
               <p className="mt-5 max-w-md text-sm leading-relaxed text-neutral-500">
-                Prefer to share details first?{" "}
+                Ready to subscribe?{" "}
                 <Link
                   to="/start"
                   className="font-medium text-brand underline decoration-brand/40 underline-offset-4 transition-colors hover:decoration-brand"
                 >
-                  Start a project
+                  Start checkout
                 </Link>{" "}
                 in our short online flow.
               </p>
@@ -57,7 +57,7 @@ const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
                 className="h-12 rounded-xl border-0 bg-brand px-8 text-base font-semibold text-brand-foreground shadow-none hover:bg-brand-muted"
                 onClick={onRequestDemo}
               >
-                Book a Demo
+                Book a walkthrough
                 <ArrowRight className="h-4 w-4" strokeWidth={2} />
               </Button>
               <Button

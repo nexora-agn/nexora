@@ -15,7 +15,7 @@ const RefundPolicy = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Refund policy" }]}
         title="Refund policy"
-        description="Our policy on refunds and cancellations for Nexora services."
+        description="Refunds and cancellations for Nexora software subscriptions."
       />
 
       <article className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
@@ -31,9 +31,9 @@ const RefundPolicy = () => {
               (doing business as{" "}
               <span className="font-semibold text-foreground">{COMPANY_LEGAL.brand}</span>),
               registered in the {COMPANY_LEGAL.registeredJurisdiction} (CR{" "}
-              {COMPANY_LEGAL.commercialRegistration}). We provide digital services and
-              custom-built websites, including subscription plans for website hosting, AI
-              assistants, SEO, and marketing. Online checkout and recurring billing are handled by
+              {COMPANY_LEGAL.commercialRegistration}).               We sell recurring software subscriptions for hosted business websites, AI website
+              assistants, SEO tools, hosting, and related features. Online checkout and recurring
+              billing are handled by
               our payment partner{" "}
               <span className="font-semibold text-foreground">Paddle</span>, which acts as the
               merchant of record.
@@ -44,10 +44,10 @@ const RefundPolicy = () => {
                 1. General policy
               </h2>
               <p className="mt-3">
-                Because our services are digital and custom-built per client, all fees are{" "}
-                <span className="font-semibold text-foreground">non-refundable once work has
-                started</span>, except where these terms or applicable consumer law require
-                otherwise.
+                Subscription fees are billed in advance for digital software services. You may cancel
+                at any time; access continues through the current billing period. Refund eligibility
+                depends on the circumstances below, our subscription terms, Paddle&apos;s buyer terms,
+                and applicable consumer protection law.
               </p>
             </section>
 
@@ -60,8 +60,8 @@ const RefundPolicy = () => {
               </h2>
               <p className="mt-3">Refunds may be considered in the following cases:</p>
               <ul className="mt-3 list-disc space-y-1.5 pl-5">
-                <li>Work on the project has not yet started.</li>
-                <li>We fail to deliver the agreed service.</li>
+                <li>You cancel within any applicable cooling-off period before substantial service delivery begins.</li>
+                <li>We fail to deliver the subscribed service or product features.</li>
                 <li>A duplicate charge or billing error attributable to us or to Paddle.</li>
                 <li>Where required by applicable consumer protection law.</li>
               </ul>
@@ -85,9 +85,10 @@ const RefundPolicy = () => {
                 or use any self-service cancellation option provided by Paddle.
               </p>
               <p className="mt-3">
-                Cancellation stops future renewals. We do not refund fees already charged for the
-                current or past billing periods unless required by law. After cancellation, your
-                access to subscription features ends at the close of the current billing period.
+                Cancellation stops future renewals. Partial-period refunds are generally not provided
+                after service delivery for that billing period has begun, except where required by
+                law or Paddle policy. After cancellation, your access to subscription features ends
+                at the close of the current billing period.
               </p>
             </section>
 
