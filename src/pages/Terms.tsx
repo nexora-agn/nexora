@@ -63,6 +63,7 @@ const sections = [
     body: (
       <>
         <p>
+          Fees for packages and services are shown on our pricing page or in your written quote.
           Most {COMPANY_LEGAL.brand} services are sold as recurring subscriptions. When you start a
           subscription you agree to pay the price shown at checkout, plus any applicable taxes, on
           a recurring basis (typically monthly) until the subscription is cancelled.

@@ -5,23 +5,33 @@ import LegalPolicyLinks from "@/components/legal/LegalPolicyLinks";
 import { PlanCardBody, PlanPopularBadge } from "@/components/landing/PlanCardBody";
 import { MARKETING_PLANS } from "@/lib/pricingPlans";
 
-const PricingSection = () => {
+interface PricingSectionProps {
+  /** When false, renders as a standalone page section (no duplicate intro — use PageHeader). */
+  embedded?: boolean;
+}
+
+const PricingSection = ({ embedded = true }: PricingSectionProps) => {
   return (
-    <section id="pricing" className="scroll-mt-28 py-24 lg:py-32">
+    <section
+      id={embedded ? "pricing" : undefined}
+      className={embedded ? "scroll-mt-28 py-24 lg:py-32" : "py-12 lg:py-16"}
+    >
       <div className="mx-auto max-w-6xl px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
-          className="mb-12 text-center md:mb-16"
-        >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Pricing</p>
-          <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Pick your lane</h2>
-          <p className="mx-auto mt-3 max-w-lg text-base font-medium text-neutral-600 md:text-lg">
-            Starter to get live. Growth when you need depth. Custom for anything else.
-          </p>
-        </motion.div>
+        {embedded ? (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45 }}
+            className="mb-12 text-center md:mb-16"
+          >
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Pricing</p>
+            <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Pick your lane</h2>
+            <p className="mx-auto mt-3 max-w-lg text-base font-medium text-neutral-600 md:text-lg">
+              Starter to get live. Growth when you need depth. Custom for anything else.
+            </p>
+          </motion.div>
+        ) : null}
 
         <div className="grid gap-6 lg:grid-cols-3 lg:gap-5">
           {MARKETING_PLANS.map((plan, i) => {

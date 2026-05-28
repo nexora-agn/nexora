@@ -34,6 +34,10 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
     (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
       setOpen(false);
+      if (id === "pricing" && location.pathname !== "/") {
+        navigate("/pricing");
+        return;
+      }
       if (location.pathname !== "/") {
         navigate("/", { state: { scrollTo: id } });
         return;

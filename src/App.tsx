@@ -14,6 +14,7 @@ import Terms from "./pages/Terms.tsx";
 import RefundPolicy from "./pages/RefundPolicy.tsx";
 import ShippingPolicy from "./pages/ShippingPolicy.tsx";
 import Contact from "./pages/Contact.tsx";
+import Pricing from "./pages/Pricing.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogArticle from "./pages/BlogArticle.tsx";
 import StartProject from "./pages/StartProject.tsx";
@@ -45,6 +46,10 @@ const MarketingDocumentTitle = () => {
     }
     if (pathname === "/contact") {
       document.title = "Contact | Nexora";
+      return;
+    }
+    if (pathname === "/pricing") {
+      document.title = "Pricing | Nexora";
       return;
     }
     if (pathname === "/start") {
@@ -138,6 +143,7 @@ const App = () => (
               <Route path="/refund-policy" element={<RefundPolicy />} />
               <Route path="/shipping-policy" element={<ShippingPolicy />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/pricing" element={<Pricing />} />
               <Route path="/start" element={<StartProject />} />
               <Route path="/payment/complete" element={<PaymentComplete />} />
               <Route path="/payment/cancelled" element={<PaymentCancelled />} />
