@@ -1,6 +1,9 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { TemplateRouterShell } from "@/lib/templateShowcase/TemplateRouterShell";
+import { TemplateShowcaseRoot } from "@/lib/templateShowcase/TemplateShowcaseRoot";
+import { TemplateChirpsEmbed } from "@/lib/templateShowcase/TemplateChirpsEmbed";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -72,13 +75,17 @@ const AnimatedRoutes = () => {
   );
 };
 
-const TemplateShell = () => (
-  <HashRouter>
+/** Chirps slug for Roofix — preview + /templates/roofix showcase. */
+const ROOFIX_CHIRPS_SLUG = "roofix";
+
+const TemplateShell = ({ basename, chirpsSlug }: { basename?: string; chirpsSlug?: string }) => (
+  <TemplateRouterShell basename={basename}>
     <ScrollToTop />
     <Suspense fallback={<RouteLoading />}>
       <AnimatedRoutes />
     </Suspense>
-  </HashRouter>
+    <TemplateChirpsEmbed chirpsSlug={chirpsSlug ?? ROOFIX_CHIRPS_SLUG} />
+  </TemplateRouterShell>
 );
 
 const PreviewMessage = ({ title, body }: { title: string; body: string }) => (
@@ -191,5 +198,18 @@ const PreviewApp = () => {
     </HelmetProvider>
   );
 };
+
+export function TemplateShowcase({ chirpsSlug }: { chirpsSlug: string }) {
+  const basename = `/templates/${chirpsSlug}`;
+  return (
+    <TemplateShowcaseRoot>
+      <SiteContentProvider value={SITE_CONTENT_DEFAULTS} external>
+        <ThemeProvider value={THEME_DEFAULTS} external>
+          <TemplateShell basename={basename} chirpsSlug={chirpsSlug} />
+        </ThemeProvider>
+      </SiteContentProvider>
+    </TemplateShowcaseRoot>
+  );
+}
 
 export default PreviewApp;

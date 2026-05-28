@@ -179,6 +179,9 @@ async function serveStatic(res, urlPath) {
     return;
   }
 
+  /** SPA fallback for public template showcases: /templates/{slug}/… */
+  const templatesIndex = path.join(distDir, "templates", "index.html");
+
   try {
     const stat = await fs.stat(filePath);
     if (stat.isDirectory()) filePath = path.join(filePath, "index.html");
@@ -193,7 +196,21 @@ async function serveStatic(res, urlPath) {
     });
     res.end(data);
   } catch {
-    // SPA fallback — serve index.html for any unknown path
+    // Template showcase SPA — real paths for Chirps (/templates/plumber/about)
+    if (clean === "/templates" || clean.startsWith("/templates/")) {
+      try {
+        const index = await fs.readFile(templatesIndex);
+        res.writeHead(200, {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-cache",
+        });
+        res.end(index);
+        return;
+      } catch {
+        /* fall through to main SPA */
+      }
+    }
+    // Main marketing SPA fallback
     try {
       const index = await fs.readFile(path.join(distDir, "index.html"));
       res.writeHead(200, {

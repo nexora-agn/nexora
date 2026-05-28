@@ -22,6 +22,20 @@ import landscapingThumbUrl from "@/assets/admin/landscaping-thumb.svg?url";
 import homebuilderThumbUrl from "@/assets/admin/homebuilder-thumb.svg?url";
 import remodelerThumbUrl from "@/assets/admin/remodeler-thumb.svg?url";
 
+/** Public URL slug per template id — used for /templates/{slug} and Chirps. */
+export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
+  constructo: "constructo",
+  summit: "summit",
+  nexora: "roofing",
+  roofix: "roofix",
+  electrical: "electrician",
+  plumbing: "plumber",
+  painting: "painting",
+  landscaping: "landscaping",
+  homebuilder: "homebuilder",
+  remodeler: "remodeler",
+};
+
 export interface TemplateOption {
   /** Stable identifier persisted on the `clients.template_id` column. */
   id: string;
@@ -35,6 +49,11 @@ export interface TemplateOption {
   thumbnail: string;
   /** Brand accent color shown on the card chrome. */
   accent: string;
+  /**
+   * Public URL slug for Chirps training & embed scope: `/templates/{chirpsSlug}`.
+   * @see src/lib/chirpsConfig.ts
+   */
+  chirpsSlug: string;
   /** When false, card is shown but cannot be selected. */
   available: boolean;
   /** Bullet list of marquee features for the picker card. */
@@ -63,6 +82,7 @@ export const TEMPLATES: TemplateOption[] = [
     /** Vite resolves URL; avoids broken /public SVG in some setups. */
     thumbnail: constructoThumbUrl,
     accent: "#e4b012",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.constructo,
     available: true,
     features: [
       "Navy + gold brand",
@@ -86,6 +106,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Newer construction template with an announcement bar, Google reviews strip, big hero, services ribbon, signature projects, and a dark estimate CTA. Built for general contractors leaning into trust + bookings.",
     thumbnail: summitThumbUrl,
     accent: "#8c4f1f",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.summit,
     available: true,
     features: [
       "Trust + reviews announcement bar",
@@ -109,6 +130,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Premium roofing template with 24/7 emergency bar, Google rating header, hero with trust pills, 4-card service grid, why-choose-us with credentials, customer reviews carousel, before/after gallery, and a dark estimate CTA. Best fit for roofing companies and storm-damage specialists.",
     thumbnail: ridgepeakThumbUrl,
     accent: "#f97316",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.nexora,
     available: true,
     features: [
       "24/7 emergency bar",
@@ -132,6 +154,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Premium roofing template with announcement bar, big hero on a dark navy backdrop, services grid, why-choose-us card stack, recent projects gallery, testimonials, pricing tiers, blog and contact. Built for roofing companies focused on lead generation.",
     thumbnail: roofixThumbUrl,
     accent: "#2563eb",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.roofix,
     available: true,
     features: [
       "Dark navy + blue accent brand",
@@ -155,6 +178,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Premium electrical contractor template with 24/7 emergency bar, split hero, residential & commercial highlights, services grid, troubleshooting section, project gallery, reviews spotlight, emergency financing band, service areas, and estimate form. Built specifically for electricians.",
     thumbnail: electricalThumbUrl,
     accent: "#38bdf8",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.electrical,
     available: true,
     features: [
       "24/7 emergency + contact strip",
@@ -178,6 +202,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Premium plumbing contractor template with 24/7 emergency bar, white premium hero, service categories, process timeline, before/after projects, Google reviews, financing, service areas, SEO city pages, and lead forms. Built specifically for plumbing companies.",
     thumbnail: plumbingThumbUrl,
     accent: "#2b7cd3",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.plumbing,
     available: true,
     features: [
       "24/7 emergency + contact strip",
@@ -201,6 +226,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Luxury residential & commercial painting template with announcement strip, cinematic hero, interior/exterior showcase, premium finishes, before/after transformations, editorial why-choose, horizontal process timeline, gallery, quote wall testimonials, service areas, and free estimate form. Built specifically for painting companies.",
     thumbnail: paintingThumbUrl,
     accent: "#ea580c",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.painting,
     available: true,
     features: [
       "Luxury warm neutral palette",
@@ -224,6 +250,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Luxury landscaping and tree service template with emergency contact strip, cinematic nature hero, tree service highlights, lawn care showcase, outdoor transformations gallery, seasonal services, process timeline, and estimate form. Built specifically for landscaping contractors.",
     thumbnail: landscapingThumbUrl,
     accent: "#3d6b4f",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.landscaping,
     available: true,
     features: [
       "Forest green + warm stone palette",
@@ -247,6 +274,7 @@ export const TEMPLATES: TemplateOption[] = [
       "Central NJ design-build home builder template inspired by premium contractor IA: hero with trust pillars, design-build expertise, process timeline, portfolio preview, lead magnet guide, county service areas, testimonials, and consultation CTAs. Distinct from trade templates.",
     thumbnail: homebuilderThumbUrl,
     accent: "#a67c52",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.homebuilder,
     available: true,
     features: [
       "Navy + copper palette (Spectral + IBM Plex Sans)",
@@ -270,6 +298,7 @@ export const TEMPLATES: TemplateOption[] = [
       "New Jersey home remodeling template inspired by Magnolia Home Remodeling information architecture (estimate-led hero, broad services, portfolio, process, counties, reviews, resources) with an original visual system — not a clone of other Nexora trade templates.",
     thumbnail: remodelerThumbUrl,
     accent: "#e07a5f",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.remodeler,
     available: true,
     features: [
       "DM Serif Display + Source Sans 3 (teal + coral)",
@@ -321,4 +350,9 @@ export function getTemplate(id: string | null | undefined): TemplateOption {
   const canonical = canonicalTemplateId(id);
   if (!canonical) return TEMPLATES[0];
   return TEMPLATES.find(t => t.id === canonical) ?? TEMPLATES[0];
+}
+
+export function getTemplateByChirpsSlug(slug: string): TemplateOption | undefined {
+  const normalized = slug.trim().toLowerCase();
+  return TEMPLATES.find(t => t.chirpsSlug === normalized);
 }

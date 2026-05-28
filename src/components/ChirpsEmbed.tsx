@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import {
+  getChirpsAssistantIdForSlug,
+  getChirpsMarketingAssistantId,
+  isChirpsTemplateShowcasePath,
+  parseChirpsTemplateSlug,
+} from "@/lib/chirpsConfig";
 
-const CHIRPS_ASSISTANT_ID = "8b62b3a8-d8ca-4bae-814d-805577e0a187";
 const CHIRPS_SCRIPT_ID = "chirps-embed-script";
 const CHIRPS_SCRIPT_SRC = "https://chirps.cc/embed.js";
 
@@ -11,10 +16,18 @@ declare global {
   }
 }
 
+type ChirpsEmbedProps = {
+  /** Override auto-detection (template showcase modules pass this explicitly). */
+  assistantId?: string;
+};
+
 /**
- * Loads the Chirps chat widget on the public Nexora marketing site only (not admin, not client templates).
+ * Loads the Chirps widget:
+ * - `/` marketing routes → marketing assistant
+ * - `/templates/{slug}` → template assistant (when configured)
+ * - `/admin/*` → hidden
  */
-const ChirpsEmbed = () => {
+const ChirpsEmbed = ({ assistantId: assistantIdProp }: ChirpsEmbedProps) => {
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -22,7 +35,21 @@ const ChirpsEmbed = () => {
       return;
     }
 
-    window.chirpsConfig = { assistantId: CHIRPS_ASSISTANT_ID };
+    let assistantId = assistantIdProp?.trim();
+    if (!assistantId) {
+      if (isChirpsTemplateShowcasePath(pathname)) {
+        const slug = parseChirpsTemplateSlug(pathname);
+        assistantId = slug ? getChirpsAssistantIdForSlug(slug) : undefined;
+      } else {
+        assistantId = getChirpsMarketingAssistantId();
+      }
+    }
+
+    if (!assistantId) {
+      return;
+    }
+
+    window.chirpsConfig = { assistantId };
 
     if (!document.getElementById(CHIRPS_SCRIPT_ID)) {
       const script = document.createElement("script");
@@ -35,7 +62,7 @@ const ChirpsEmbed = () => {
     return () => {
       delete window.chirpsConfig;
     };
-  }, [pathname]);
+  }, [pathname, assistantIdProp]);
 
   return null;
 };

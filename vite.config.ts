@@ -34,6 +34,18 @@ export default defineConfig(({ mode }) => {
     react(),
     formEmailApiPlugin(),
     {
+      name: "templates-showcase-dev-fallback",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          const url = req.url?.split("?")[0] ?? "";
+          if (url === "/templates" || url.startsWith("/templates/")) {
+            req.url = "/templates/index.html";
+          }
+          next();
+        });
+      },
+    },
+    {
       name: "html-public-site-base",
       transformIndexHtml(html) {
         return html.replaceAll("__OG_SITE_BASE__", publicSiteBase);
@@ -54,6 +66,7 @@ export default defineConfig(({ mode }) => {
         previewLandscaping: path.resolve(__dirname, "preview-landscaping.html"),
         previewHomebuilder: path.resolve(__dirname, "preview-homebuilder.html"),
         previewRemodeler: path.resolve(__dirname, "preview-remodeler.html"),
+        templatesShowcase: path.resolve(__dirname, "templates/index.html"),
       },
     },
   },
