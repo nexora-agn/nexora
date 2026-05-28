@@ -24,8 +24,7 @@ export const COMPANY_LEGAL = {
 export const COMPANY_OFFICES = [
   {
     key: "us",
-    flag: "🇺🇸",
-    label: "USA (Registered office)",
+    label: "US Registered Company",
     addressLines: [
       "30 N Gould St, Ste R",
       "Sheridan, WY 82801",
@@ -34,22 +33,19 @@ export const COMPANY_OFFICES = [
   },
   {
     key: "kosovo",
-    flag: "🇽🇰",
-    label: "Europe office",
+    label: "Nexora Europe",
     addressLines: [
-      "Rruga Ali Aliu Kelmendi",
-      "Prishtina 10000",
+      "Rruga C Enver Maloku",
+      "Prishtinë 10000",
       "Republic of Kosovo",
     ] as string[],
   },
   {
     key: "bahrain",
-    flag: "🇧🇭",
-    label: "Middle East office",
+    label: "Nexora Middle East",
     addressLines: [
       "Office No. 451, Building 318",
       "Road 328, Block 357",
-      "Manama",
       "Kingdom of Bahrain",
     ] as string[],
   },

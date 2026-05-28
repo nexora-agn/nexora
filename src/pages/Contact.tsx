@@ -117,12 +117,7 @@ const Contact = () => {
                     <ul className="space-y-3">
                       {COMPANY_OFFICES.map((office) => (
                         <li key={office.key}>
-                          <p className="text-sm font-medium text-foreground">
-                            <span className="mr-1.5" aria-hidden>
-                              {office.flag}
-                            </span>
-                            {office.label}
-                          </p>
+                          <p className="text-sm font-medium text-foreground">{office.label}</p>
                           <p className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                             {office.addressLines.join("\n")}
                           </p>

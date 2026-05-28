@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram } from "lucide-react";
 import LegalPolicyLinks from "@/components/legal/LegalPolicyLinks";
-import { COMPANY_LEGAL, COMPANY_OFFICES } from "@/lib/companyLegal";
+import { COMPANY_LEGAL, COMPANY_OFFICES, REGISTERED_OFFICE } from "@/lib/companyLegal";
 import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 import { SOCIAL_LINKS } from "@/lib/socialLinks";
 
@@ -80,32 +80,49 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="text-neutral-500 lg:max-w-sm lg:text-right">
+          <div className="text-neutral-500 lg:max-w-sm">
             <p className="text-sm text-neutral-400">© {year} {COMPANY_LEGAL.brand}.</p>
             <p className="mt-1 text-sm text-neutral-500">All rights reserved.</p>
-            <div className="mt-4 max-md:text-left space-y-2.5 border-t border-neutral-800 pt-4 text-xs leading-relaxed text-neutral-500 md:text-right">
+            <div className="mt-4 space-y-1.5 border-t border-neutral-800 pt-4 text-xs leading-relaxed text-neutral-500">
               <p className="font-medium text-neutral-400">{COMPANY_LEGAL.legalName}</p>
               <p>{COMPANY_LEGAL.legalForm}</p>
               <p>
                 EIN: <span className="tabular-nums">{COMPANY_LEGAL.ein}</span>
               </p>
-              <p>Registered in the {COMPANY_LEGAL.registeredJurisdiction}</p>
-              <ul className="space-y-3 pt-3">
-                {COMPANY_OFFICES.map((office) => (
-                  <li key={office.key}>
-                    <p className="font-medium text-neutral-400">
-                      <span className="mr-1.5" aria-hidden>
-                        {office.flag}
-                      </span>
-                      {office.label}
-                    </p>
-                    <p className="whitespace-pre-line">
-                      {office.addressLines.join("\n")}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+              <div className="pt-1">
+                <p className="font-medium uppercase tracking-[0.15em] text-neutral-400">
+                  US Registered Company
+                </p>
+                <div className="mt-1 space-y-0.5">
+                  {REGISTERED_OFFICE.addressLines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
+              </div>
+              <p className="pt-1">
+                Phone:{" "}
+                <a
+                  href="tel:+18885359177"
+                  className="tabular-nums text-neutral-400 transition-colors hover:text-white"
+                >
+                  +1 (888) 535-9177
+                </a>
+              </p>
             </div>
+
+            {COMPANY_OFFICES.filter((office) => office.key !== "us").map((office) => (
+              <div
+                key={office.key}
+                className="mt-5 space-y-1 text-xs leading-relaxed text-neutral-500"
+              >
+                <p className="font-medium uppercase tracking-[0.15em] text-neutral-400">
+                  {office.label}
+                </p>
+                {office.addressLines.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </div>
