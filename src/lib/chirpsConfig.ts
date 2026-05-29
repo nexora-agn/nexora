@@ -21,6 +21,7 @@ export const CHIRPS_TEMPLATE_ASSISTANT_DEFAULTS: Partial<Record<string, string>>
   landscaping: "c5b3831b-7684-4473-bee1-0186a530ed45",
   plumbing: "2ffd60ad-15bc-4967-b712-c2dc2ed22e1b",
   roofix: "4b3d26a5-02a2-46de-8fb1-a712827ecac6",
+  summit: "6cc4e746-f1cd-424d-98d8-f4f7f600b470",
 };
 
 export { CHIRPS_TEMPLATE_SLUG_BY_ID };

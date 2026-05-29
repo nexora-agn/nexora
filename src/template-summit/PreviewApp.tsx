@@ -73,13 +73,16 @@ const AnimatedRoutes = () => {
   );
 };
 
+/** Chirps slug for Summit Construction — preview + /templates/summit showcase. */
+const SUMMIT_CHIRPS_SLUG = "summit";
+
 const TemplateShell = ({ basename, chirpsSlug }: { basename?: string; chirpsSlug?: string }) => (
   <TemplateRouterShell basename={basename}>
     <ScrollToTop />
     <Suspense fallback={<RouteLoading />}>
       <AnimatedRoutes />
     </Suspense>
-    {chirpsSlug ? <TemplateChirpsEmbed chirpsSlug={chirpsSlug} /> : null}
+    <TemplateChirpsEmbed chirpsSlug={chirpsSlug ?? SUMMIT_CHIRPS_SLUG} />
   </TemplateRouterShell>
 );
 
