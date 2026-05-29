@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Check, Globe, Landmark, Palette, Sparkles, Upload } from "lucide-react";
+import { ArrowLeft, Check, Globe, Palette, Sparkles, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -908,13 +908,8 @@ const ProjectOnboardingWizard = () => {
             <div className="rounded-2xl border border-border/70 bg-card/50 p-6 shadow-sm sm:p-8 space-y-3">
               <Label className="text-foreground">Payment</Label>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Checkout is handled securely by{" "}
-                <span className="font-medium text-foreground inline-flex items-center gap-1.5">
-                  <Landmark className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
-                  Paddle
-                </span>
-                . When you submit, a secure Paddle checkout opens on this page. After payment is confirmed we move ahead with
-                production.
+                When you submit, secure checkout opens on this page. After payment is confirmed we
+                move ahead with production.
               </p>
             </div>
 

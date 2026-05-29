@@ -9,6 +9,9 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
   year: "numeric",
 });
 
+/** Discretionary refund request window — aligned with our merchant-of-record refund policy. */
+const REFUND_REQUEST_WINDOW_DAYS = 14;
+
 const RefundPolicy = () => {
   return (
     <SiteLayout>
@@ -26,44 +29,97 @@ const RefundPolicy = () => {
 
           <div className="mt-10 space-y-10 text-sm leading-relaxed text-muted-foreground md:text-[0.9375rem]">
             <p>
-              This Refund policy applies to services sold by{" "}
+              This Refund policy applies to software subscriptions sold by{" "}
               <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>{" "}
               (doing business as{" "}
               <span className="font-semibold text-foreground">{COMPANY_LEGAL.brand}</span>),
-              registered in the {COMPANY_LEGAL.registeredJurisdiction} (EIN{" "}
-              {COMPANY_LEGAL.ein}). We sell recurring software subscriptions for hosted business
-              websites, AI website assistants, SEO tools, hosting, and related features. Online
-              checkout and recurring billing are handled by our payment partner{" "}
-              <span className="font-semibold text-foreground">Paddle</span>, which acts as the
-              merchant of record.
+              registered in the {COMPANY_LEGAL.registeredJurisdiction} (EIN {COMPANY_LEGAL.ein}).
+              We sell recurring subscriptions for hosted business websites, AI website assistants,
+              SEO tools, hosting, and related digital features to customers in the United States.
+              Checkout, invoicing, and recurring billing are handled by our payment partner, which
+              acts as the merchant of record for these transactions.
+            </p>
+            <p>
+              If mandatory consumer protection laws provide you with additional or non-waivable
+              rights, those rights apply. Nothing in this policy limits your mandatory consumer
+              rights.
             </p>
 
-            <section aria-labelledby="refund-general">
-              <h2 id="refund-general" className="text-lg font-semibold tracking-tight text-foreground">
-                1. General policy
+            <section aria-labelledby="refund-global">
+              <h2 id="refund-global" className="text-lg font-semibold tracking-tight text-foreground">
+                1. Refund policy
+              </h2>
+              <ul className="mt-3 list-disc space-y-2 pl-5">
+                <li>
+                  Unless required by applicable law, all transactions are non-refundable and
+                  non-exchangeable.
+                </li>
+                <li>
+                  Our payment partner may issue refunds on a discretionary basis, or where you
+                  exercise an applicable statutory refund right.
+                </li>
+                <li>
+                  Refunds will not be issued where there is evidence of fraud, refund abuse, or
+                  other manipulative behavior.
+                </li>
+                <li>
+                  This policy does not affect consumer rights in relation to products or services
+                  that are not as described, faulty, or not fit for purpose.
+                </li>
+                <li>
+                  Refund requests must be made within the applicable period described in this
+                  policy.
+                </li>
+                <li>
+                  If you receive a refund in accordance with this policy, access to the relevant
+                  subscription features will cease.
+                </li>
+              </ul>
+            </section>
+
+            <section aria-labelledby="refund-discretionary">
+              <h2
+                id="refund-discretionary"
+                className="text-lg font-semibold tracking-tight text-foreground"
+              >
+                2. Discretionary refund requests
               </h2>
               <p className="mt-3">
-                Subscription fees are billed in advance for digital software services. You may cancel
-                at any time; access continues through the current billing period. Refund eligibility
-                depends on the circumstances below, our subscription terms, Paddle&apos;s buyer terms,
-                and applicable consumer protection law.
+                Our payment partner may, at its sole discretion, issue a refund if a request is
+                submitted within {REFUND_REQUEST_WINDOW_DAYS} days of your transaction date.
+                Submitting a request within this {REFUND_REQUEST_WINDOW_DAYS}-day period does not
+                guarantee a refund.
+              </p>
+              <p className="mt-3">
+                All refund requests are reviewed on a case-by-case basis. Relevant factors may
+                include the nature of the subscription, the reason for the request, usage or
+                consumption during the period, and the terms of your subscription. A refund may be
+                approved in full, approved as a partial refund, or declined.
               </p>
             </section>
 
-            <section aria-labelledby="refund-exceptions">
+            <section aria-labelledby="refund-defects">
               <h2
-                id="refund-exceptions"
+                id="refund-defects"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                2. Exceptions
+                3. Technical or product defects
               </h2>
-              <p className="mt-3">Refunds may be considered in the following cases:</p>
-              <ul className="mt-3 list-disc space-y-1.5 pl-5">
-                <li>You cancel within any applicable cooling-off period before substantial service delivery begins.</li>
-                <li>We fail to deliver the subscribed service or product features.</li>
-                <li>A duplicate charge or billing error attributable to us or to Paddle.</li>
-                <li>Where required by applicable consumer protection law.</li>
-              </ul>
+              <p className="mt-3">
+                If you experience persistent technical issues or a material defect that prevents you
+                from accessing subscription features as described, contact us first at{" "}
+                <a
+                  href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+                  className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+                >
+                  {COMPANY_LEGAL.contactEmail}
+                </a>{" "}
+                so we can attempt to resolve the issue. If the issue cannot be resolved, contact our
+                payment partner using the method described in section 5 below and provide details of
+                the issue and any response you received from us. Where there is evidence of a
+                material technical or product defect, a refund may be issued in accordance with
+                applicable consumer protection laws.
+              </p>
             </section>
 
             <section aria-labelledby="refund-subscriptions">
@@ -71,23 +127,27 @@ const RefundPolicy = () => {
                 id="refund-subscriptions"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                3. Subscription-based services
+                4. Subscriptions and cancellation
               </h2>
               <p className="mt-3">
-                You can cancel your subscription at any time. To cancel, email us at{" "}
+                You can cancel a subscription at any time with effect from the end of your current
+                billing period. Your cancellation takes effect at the end of the current billing
+                period, and you will not be charged again after that.
+              </p>
+              <p className="mt-3">
+                You may cancel through the self-service options in your transaction confirmation
+                email or receipt, or by contacting us at{" "}
                 <a
                   href={`mailto:${COMPANY_LEGAL.contactEmail}`}
                   className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
                 >
                   {COMPANY_LEGAL.contactEmail}
-                </a>{" "}
-                or use any self-service cancellation option provided by Paddle.
+                </a>
+                .
               </p>
               <p className="mt-3">
-                Cancellation stops future renewals. Partial-period refunds are generally not provided
-                after service delivery for that billing period has begun, except where required by
-                law or Paddle policy. After cancellation, your access to subscription features ends
-                at the close of the current billing period.
+                If a transaction is not eligible for a refund, you may still cancel the subscription
+                at any time to prevent future billing.
               </p>
             </section>
 
@@ -96,19 +156,44 @@ const RefundPolicy = () => {
                 id="refund-process"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                4. How to request a refund
+                5. How to request a refund
+              </h2>
+              <p className="mt-3">To request a refund, use one of the following methods:</p>
+              <ul className="mt-3 list-disc space-y-1.5 pl-5">
+                <li>
+                  Use the receipt or subscription management options in your transaction
+                  confirmation email.
+                </li>
+                <li>
+                  Email us at{" "}
+                  <a
+                    href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+                    className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+                  >
+                    {COMPANY_LEGAL.contactEmail}
+                  </a>{" "}
+                  with the email address used at checkout, your order or invoice reference, and a
+                  short description of your request.
+                </li>
+              </ul>
+              <p className="mt-3">
+                If eligible, refunds will be processed to the original payment method where
+                possible and within {REFUND_REQUEST_WINDOW_DAYS} days of approval of the request.
+              </p>
+            </section>
+
+            <section aria-labelledby="refund-chargebacks">
+              <h2
+                id="refund-chargebacks"
+                className="text-lg font-semibold tracking-tight text-foreground"
+              >
+                6. Chargebacks and payment disputes
               </h2>
               <p className="mt-3">
-                Send a refund request to{" "}
-                <a
-                  href={`mailto:${COMPANY_LEGAL.contactEmail}`}
-                  className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
-                >
-                  {COMPANY_LEGAL.contactEmail}
-                </a>{" "}
-                with the email address used at checkout, the order or invoice reference, and a
-                short description of the reason. We aim to respond within five (5) business days.
-                Approved refunds are processed through Paddle to the original payment method.
+                We encourage you to contact us or our payment partner before initiating a chargeback
+                or payment dispute with your bank or card issuer. If you initiate a chargeback or
+                payment reversal, access to the relevant subscription may be temporarily suspended
+                while the matter is reviewed.
               </p>
             </section>
 
@@ -117,16 +202,17 @@ const RefundPolicy = () => {
                 id="refund-contact"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                5. Contact
+                7. Contact
               </h2>
               <p className="mt-3">
-                If you have any questions, contact us at:{" "}
+                Questions about this policy can be sent to{" "}
                 <a
                   href={`mailto:${COMPANY_LEGAL.contactEmail}`}
                   className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
                 >
                   {COMPANY_LEGAL.contactEmail}
                 </a>
+                .
               </p>
             </section>
           </div>

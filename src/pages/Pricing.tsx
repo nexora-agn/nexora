@@ -8,7 +8,7 @@ const Pricing = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Pricing" }]}
         title="Pricing"
-        description="Monthly subscriptions from $199. Preview your staged website, then subscribe through secure Paddle checkout."
+        description="Monthly subscriptions from $199. Preview your staged website, then subscribe when you're ready."
       />
       <PricingSection embedded={false} />
     </SiteLayout>

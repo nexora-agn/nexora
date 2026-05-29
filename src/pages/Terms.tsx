@@ -40,8 +40,9 @@ const sections = [
       <>
         <p>
           {COMPANY_LEGAL.brand} sells recurring software subscriptions for hosted business websites
-          and related digital features. Our primary products are the Starter and Growth plans sold
-          through our website checkout.
+          and related digital features to customers in the United States. Our primary products are
+          the Starter and Growth plans sold through our website checkout. Enterprise plans are
+          custom-quoted software subscriptions sold under a written quote.
         </p>
         <ul className="mt-3 list-disc space-y-1.5 pl-5">
           <li>Hosted business websites with preview-before-subscribe onboarding.</li>
@@ -53,9 +54,11 @@ const sections = [
           <li>ERP catalog and pricing sync on eligible Growth subscriptions.</li>
         </ul>
         <p className="mt-3">
-          {COMPANY_LEGAL.brand} does not operate a call center, provide outbound telemarketing, or
-          sell IT helpdesk, device repair, malware removal, or other technical-support services.
-          Account assistance covers your subscription, billing, and included product features only.
+          Our offering is software delivered electronically. We do not sell human-driven services
+          such as call-center operations, outbound telemarketing, managed IT helpdesk, device
+          repair, malware removal, or on-site technical support. Any account or onboarding
+          communication supports delivery of your subscription features and is not a standalone
+          professional service.
         </p>
         <p className="mt-3">
           Plan features, onboarding timelines, and any separately quoted enterprise add-ons are
@@ -76,11 +79,17 @@ const sections = [
           a recurring basis (typically monthly) until the subscription is cancelled.
         </p>
         <p className="mt-3">
-          Online checkout and recurring billing are processed by{" "}
-          <span className="font-semibold text-foreground">Paddle</span>, which acts as the merchant
-          of record for these transactions. Paddle handles payment processing, invoicing, sales tax
-          and VAT collection where applicable, and refunds in accordance with our policy. By
-          completing a purchase you also agree to Paddle&apos;s buyer terms presented at checkout.
+          Online checkout and recurring billing are processed by our payment partner, which acts as
+          the merchant of record for these transactions. It handles payment processing, invoicing,
+          applicable sales tax collection, and refunds in accordance with our{" "}
+          <Link
+            to="/refund-policy"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Refund policy
+          </Link>
+          . By completing a purchase you also agree to the checkout terms presented during your
+          transaction.
         </p>
         <p className="mt-3">
           Subscriptions automatically renew at the end of each billing period at the then-current
@@ -102,11 +111,12 @@ const sections = [
           >
             {COMPANY_LEGAL.contactEmail}
           </a>{" "}
-          or use any self-service cancellation option provided by our payment partner Paddle.
+          or use the self-service cancellation options in your transaction confirmation email or
+          receipt.
         </p>
         <p className="mt-3">
-          Cancellation stops future renewals. It does not entitle you to a refund of fees already
-          charged for the current billing period unless required by law or by our{" "}
+          Cancellation stops future renewals and takes effect at the end of your current billing
+          period. Refunds are governed by our{" "}
           <Link
             to="/refund-policy"
             className="font-medium text-foreground underline-offset-4 hover:underline"
@@ -114,8 +124,7 @@ const sections = [
             Refund policy
           </Link>
           . After cancellation, your access to subscription features (including the live website,
-          AI assistant, and any hosting we provide) will end at the close of the current billing
-          period.
+          AI assistant, and hosting) ends at the close of the current billing period.
         </p>
       </>
     ),
@@ -124,22 +133,23 @@ const sections = [
     title: "Refunds",
     body: (
       <p>
-        Refunds and exceptions are governed by our{" "}
+        Refunds are governed by our{" "}
         <Link
           to="/refund-policy"
           className="font-medium text-foreground underline-offset-4 hover:underline"
         >
           Refund policy
         </Link>
-        . Our{" "}
+        . Unless required by applicable law, transactions are non-refundable. Discretionary refund
+        requests must be submitted within 14 days of the transaction date. Our{" "}
         <Link
           to="/privacy"
           className="font-medium text-foreground underline-offset-4 hover:underline"
         >
           Privacy notice
         </Link>{" "}
-        explains how we handle personal data, including payment-related information processed by
-        Paddle on our behalf.
+        explains how we handle personal data, including payment-related information processed by our
+        payment partner on our behalf.
       </p>
     ),
   },

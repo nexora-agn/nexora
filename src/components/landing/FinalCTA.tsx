@@ -37,7 +37,7 @@ const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
                 Live in days, not months
               </h2>
               <p className="max-w-md text-base font-medium leading-relaxed text-neutral-400 md:text-[1.0625rem]">
-                Choose a plan, preview your staged site, and subscribe through secure Paddle checkout.
+                Choose a plan, preview your staged site, and subscribe through secure checkout.
               </p>
               <p className="mt-5 max-w-md text-sm leading-relaxed text-neutral-500">
                 Ready to subscribe?{" "}

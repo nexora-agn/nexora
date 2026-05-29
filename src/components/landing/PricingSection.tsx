@@ -28,10 +28,14 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Pricing</p>
             <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Pick your lane</h2>
             <p className="mx-auto mt-3 max-w-lg text-base font-medium text-neutral-600 md:text-lg">
-              Monthly subscriptions from $199. Preview your site, then subscribe when you&apos;re ready.
+              Monthly subscriptions from $199. Preview your staged website, then subscribe when you're ready.
             </p>
           </motion.div>
-        ) : null}
+        ) : (
+          <p className="mb-10 text-center text-base font-medium text-neutral-600 md:text-lg">
+            Preview your staged website, then subscribe through secure Paddle checkout.
+          </p>
+        )}
 
         <div className="grid gap-6 lg:grid-cols-3 lg:gap-5">
           {MARKETING_PLANS.map((plan, i) => {
@@ -74,17 +78,8 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="mx-auto mt-10 max-w-2xl space-y-4 text-center"
+          className="mx-auto mt-10 max-w-2xl text-center"
         >
-          <p className="text-sm font-medium text-neutral-500">
-            Starter and Growth are self-serve software subscriptions billed monthly through Paddle
-            checkout. Enterprise plans are quoted separately. Preview your staged site before
-            production begins.
-          </p>
-          <p className="text-sm text-neutral-600">
-            Nexora sells hosted website software subscriptions only — not call-center services, outbound
-            telemarketing, IT helpdesk, or device repair services.
-          </p>
           <p className="text-sm text-neutral-600">By subscribing you agree to:</p>
           <LegalPolicyLinks variant="inline" linkClassName="text-neutral-800" />
         </motion.div>
