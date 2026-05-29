@@ -33,7 +33,7 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
           </motion.div>
         ) : (
           <p className="mb-10 text-center text-base font-medium text-neutral-600 md:text-lg">
-            Preview your staged website, then subscribe through secure Paddle checkout.
+            Preview your staged website, then subscribe through secure checkout.
           </p>
         )}
 
