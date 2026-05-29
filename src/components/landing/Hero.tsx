@@ -27,10 +27,10 @@ const scrollToId = (id: string) => {
   window.scrollTo({ top, behavior: "smooth" });
 };
 
-const HERO_EYEBROW = "BUSINESS WEBSITE SOFTWARE";
+const HERO_EYEBROW = "WEBSITES FOR LOCAL BUSINESSES";
 
 const HERO_BODY =
-  "Nexora is a subscription platform for hosted business websites. Preview your staged site, then subscribe through secure checkout when you're ready.";
+  "Nexora builds high-converting websites for local businesses, and lets you preview the live site before you buy. Love it? We launch it and migrate everything seamlessly.";
 
 const GALLERY = PROJECTS.slice(0, 3);
 const HERO_LIVE_HEADLINE = [HOME_HERO.headlineBefore, HOME_HERO.headlineHighlight, HOME_HERO.headlineAfter].join(" ");
@@ -44,11 +44,11 @@ const HERO_BOTTOM_FEATURES = [
   { Icon: Clock, title: "Preview Before You Buy", line: "See your live website first." },
   { Icon: Rocket, title: "Built for Construction", line: "Designed to win more projects." },
   { Icon: RefreshCw, title: "We Handle Everything", line: "Design, build, migrate, launch." },
-  { Icon: BarChart2, title: "Results That Matter", line: "More inbound leads for your business." },
+  { Icon: BarChart2, title: "Results That Matter", line: "More leads. More calls. More builds." },
 ] as const;
 
 const HERO_TRUST_POINTS = [
-  { Icon: Package, title: "Clear plans", line: "Starter, Growth, or Enterprise." },
+  { Icon: Package, title: "Clear packages", line: "Starter, Growth, or Custom." },
   { Icon: Lock, title: "Zero Risk", line: "You Decide" },
   { Icon: CloudUpload, title: "We Migrate Everything", line: "Stress-Free" },
 ] as const;
@@ -92,12 +92,12 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
           </p>
 
           <h1 className="mt-3 text-balance text-3xl font-bold leading-[1.12] tracking-tight text-neutral-950 sm:mt-4 sm:text-4xl sm:leading-[1.1] md:text-5xl md:leading-[1.08] lg:text-[3.1rem]">
-            <span className="block">Preview Your Website.</span>
-            <span className="block text-neutral-600">Subscribe When Ready.</span>
+            <span className="block">We Build Your Website.</span>
+            <span className="block text-neutral-600">You Preview It.</span>
             <span className="block text-neutral-600">
-              Hosted{" "}
+              Then You{" "}
               <span className="relative font-bold text-neutral-950">
-                <span className="relative z-[1]">Software</span>
+                <span className="relative z-[1]">Decide</span>
                 <span
                   aria-hidden
                   className="pointer-events-none absolute -bottom-0.5 left-[-2%] h-1.5 w-[104%] rounded-sm bg-brand/80 sm:bottom-0 sm:h-2"
