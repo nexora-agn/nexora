@@ -30,7 +30,7 @@ const scrollToId = (id: string) => {
 const HERO_EYEBROW = "WEBSITES FOR LOCAL BUSINESSES";
 
 const HERO_BODY =
-  "Nexora builds high-converting websites for local businesses, and lets you preview the live site before you buy. Love it? We launch it and migrate everything seamlessly.";
+  "Nexora builds high-converting websites for local businesses, and lets you preview the live site before you activate your subscription. Love it? We launch it and migrate everything seamlessly.";
 
 const GALLERY = PROJECTS.slice(0, 3);
 const HERO_LIVE_HEADLINE = [HOME_HERO.headlineBefore, HOME_HERO.headlineHighlight, HOME_HERO.headlineAfter].join(" ");
@@ -41,7 +41,7 @@ const LANDING_DESKTOP_HERO_CONSTRUCTION =
   "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&h=1012&fit=crop&q=82";
 
 const HERO_BOTTOM_FEATURES = [
-  { Icon: Clock, title: "Preview Before You Buy", line: "See your live website first." },
+  { Icon: Clock, title: "Preview Before You Subscribe", line: "See your live website first." },
   { Icon: Rocket, title: "Built for Construction", line: "Designed to win more projects." },
   { Icon: RefreshCw, title: "We Handle Everything", line: "Design, build, migrate, launch." },
   { Icon: BarChart2, title: "Results That Matter", line: "More leads. More calls. More builds." },

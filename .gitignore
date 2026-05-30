@@ -30,3 +30,4 @@ tmp/
 *.njsproj
 *.sln
 *.sw?
+.mcp.json

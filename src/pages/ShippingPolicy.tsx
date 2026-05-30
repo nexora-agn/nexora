@@ -1,5 +1,6 @@
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
+import { COMPANY_LEGAL } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -11,9 +12,9 @@ const ShippingPolicy = () => {
   return (
     <SiteLayout>
       <PageHeader
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Shipping policy" }]}
-        title="Shipping policy"
-        description="How Nexora delivers its digital products and services."
+        breadcrumb={[{ label: "Home", to: "/" }, { label: "Service delivery" }]}
+        title="Service delivery"
+        description="How Nexora delivers its digital subscriptions and services."
       />
 
       <article className="mx-auto w-full max-w-6xl px-6 py-12 md:py-16">
@@ -24,53 +25,81 @@ const ShippingPolicy = () => {
 
           <div className="mt-10 space-y-10 text-sm leading-relaxed text-muted-foreground md:text-[0.9375rem]">
             <p>
-              <span className="font-semibold text-foreground">Nexora</span> provides digital
-              products and services only. No physical items are shipped.
+              <span className="font-semibold text-foreground">{COMPANY_LEGAL.brand}</span> provides
+              digital software subscriptions and services only. Everything is delivered
+              electronically — <span className="font-medium text-foreground">no physical goods are
+              shipped</span>, and there are no shipping fees.
             </p>
 
-            <section aria-labelledby="shipping-delivery">
+            <section aria-labelledby="delivery-method">
               <h2
-                id="shipping-delivery"
+                id="delivery-method"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                1. Electronic delivery
+                1. How we deliver
               </h2>
-              <p className="mt-3">All services are delivered electronically via:</p>
+              <p className="mt-3">Your subscription is delivered electronically through:</p>
               <ul className="mt-3 list-disc space-y-1.5 pl-5">
-                <li>Email</li>
-                <li>Online platforms</li>
-                <li>Client dashboards</li>
+                <li>Your hosted website, published on the internet</li>
+                <li>Your online account and onboarding dashboard</li>
+                <li>Email for confirmations, updates, and lead notifications</li>
               </ul>
             </section>
 
-            <section aria-labelledby="shipping-timelines">
+            <section aria-labelledby="delivery-timeline">
               <h2
-                id="shipping-timelines"
+                id="delivery-timeline"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                2. Delivery timelines
+                2. When delivery happens
               </h2>
               <p className="mt-3">
-                After successful checkout, onboarding begins according to your selected subscription
-                plan. Timelines for preview, staging, and launch are shown during checkout and in
-                your account onboarding flow.
+                For new websites, we prepare a preview for you to review before you activate a
+                subscription. Once you approve your website and activate your plan, your
+                subscription becomes active immediately and your website is published (typically
+                within minutes of activation).
+              </p>
+              <p className="mt-3">
+                Ongoing subscription features — hosting, the AI assistant, SEO, and plan-based
+                updates — remain available for as long as your subscription is active.
               </p>
             </section>
 
-            <section aria-labelledby="shipping-contact">
+            <section aria-labelledby="delivery-access">
               <h2
-                id="shipping-contact"
+                id="delivery-access"
                 className="text-lg font-semibold tracking-tight text-foreground"
               >
-                3. Contact
+                3. Access and cancellation
               </h2>
               <p className="mt-3">
-                If you have questions, contact us at:{" "}
+                Access to your subscription continues until you cancel. When you cancel, access to
+                subscription features continues until the end of your current billing period. See
+                our{" "}
                 <a
-                  href="mailto:info@nexora-agn.com"
+                  href="/refund-policy"
                   className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
                 >
-                  info@nexora-agn.com
+                  Refund policy
+                </a>{" "}
+                for cancellation and refund details.
+              </p>
+            </section>
+
+            <section aria-labelledby="delivery-contact">
+              <h2
+                id="delivery-contact"
+                className="text-lg font-semibold tracking-tight text-foreground"
+              >
+                4. Contact
+              </h2>
+              <p className="mt-3">
+                If you have questions about delivery, contact us at:{" "}
+                <a
+                  href={`mailto:${COMPANY_LEGAL.contactEmail}`}
+                  className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+                >
+                  {COMPANY_LEGAL.contactEmail}
                 </a>
               </p>
             </section>

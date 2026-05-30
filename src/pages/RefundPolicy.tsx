@@ -9,7 +9,7 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
   year: "numeric",
 });
 
-/** Discretionary refund request window — aligned with our merchant-of-record refund policy. */
+/** Discretionary refund request window. */
 const REFUND_REQUEST_WINDOW_DAYS = 14;
 
 const RefundPolicy = () => {
@@ -36,8 +36,9 @@ const RefundPolicy = () => {
               registered in the {COMPANY_LEGAL.registeredJurisdiction} (EIN {COMPANY_LEGAL.ein}).
               We sell recurring subscriptions for hosted business websites, AI website assistants,
               SEO tools, hosting, and related digital features to customers in the United States.
-              Checkout, invoicing, and recurring billing are handled by our payment partner, which
-              acts as the merchant of record for these transactions.
+              Checkout and recurring billing are processed by{" "}
+              <span className="font-semibold text-foreground">Stripe, Inc.</span>, our third-party
+              payment processor, on our behalf.
             </p>
             <p>
               If mandatory consumer protection laws provide you with additional or non-waivable
@@ -51,28 +52,25 @@ const RefundPolicy = () => {
               </h2>
               <ul className="mt-3 list-disc space-y-2 pl-5">
                 <li>
-                  Unless required by applicable law, all transactions are non-refundable and
-                  non-exchangeable.
+                  For new websites, you can preview your site before activating a subscription. No
+                  charge is taken during the preview stage.
                 </li>
                 <li>
-                  Our payment partner may issue refunds on a discretionary basis, or where you
-                  exercise an applicable statutory refund right.
+                  Once you approve your website and your subscription begins, fees for the current
+                  and any past billing periods are non-refundable, except where required by
+                  applicable law.
+                </li>
+                <li>
+                  You can cancel at any time to stop future billing. Cancellation takes effect at
+                  the end of your current billing period (see section 4).
                 </li>
                 <li>
                   Refunds will not be issued where there is evidence of fraud, refund abuse, or
                   other manipulative behavior.
                 </li>
                 <li>
-                  This policy does not affect consumer rights in relation to products or services
-                  that are not as described, faulty, or not fit for purpose.
-                </li>
-                <li>
-                  Refund requests must be made within the applicable period described in this
-                  policy.
-                </li>
-                <li>
-                  If you receive a refund in accordance with this policy, access to the relevant
-                  subscription features will cease.
+                  This policy does not affect your rights in relation to features that are not as
+                  described, faulty, or not fit for purpose.
                 </li>
               </ul>
             </section>
@@ -85,16 +83,15 @@ const RefundPolicy = () => {
                 2. Discretionary refund requests
               </h2>
               <p className="mt-3">
-                Our payment partner may, at its sole discretion, issue a refund if a request is
-                submitted within {REFUND_REQUEST_WINDOW_DAYS} days of your transaction date.
+                If you believe your situation warrants a refund outside the terms above, you may
+                submit a request within {REFUND_REQUEST_WINDOW_DAYS} days of the transaction date.
                 Submitting a request within this {REFUND_REQUEST_WINDOW_DAYS}-day period does not
                 guarantee a refund.
               </p>
               <p className="mt-3">
-                All refund requests are reviewed on a case-by-case basis. Relevant factors may
-                include the nature of the subscription, the reason for the request, usage or
-                consumption during the period, and the terms of your subscription. A refund may be
-                approved in full, approved as a partial refund, or declined.
+                We review each request individually. Relevant factors may include the nature of the
+                subscription, the reason for the request, and usage during the period. A request may
+                be approved in full, approved as a partial refund, or declined.
               </p>
             </section>
 
@@ -114,11 +111,9 @@ const RefundPolicy = () => {
                 >
                   {COMPANY_LEGAL.contactEmail}
                 </a>{" "}
-                so we can attempt to resolve the issue. If the issue cannot be resolved, contact our
-                payment partner using the method described in section 5 below and provide details of
-                the issue and any response you received from us. Where there is evidence of a
-                material technical or product defect, a refund may be issued in accordance with
-                applicable consumer protection laws.
+                so we can attempt to resolve the issue. Where there is evidence of a material
+                technical or product defect that we are unable to resolve, a refund may be issued in
+                accordance with applicable consumer protection laws.
               </p>
             </section>
 
@@ -135,15 +130,15 @@ const RefundPolicy = () => {
                 period, and you will not be charged again after that.
               </p>
               <p className="mt-3">
-                You may cancel through the self-service options in your transaction confirmation
-                email or receipt, or by contacting us at{" "}
+                To cancel, email us at{" "}
                 <a
                   href={`mailto:${COMPANY_LEGAL.contactEmail}`}
                   className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
                 >
                   {COMPANY_LEGAL.contactEmail}
                 </a>
-                .
+                , or use any subscription-management link in your Stripe receipt or customer portal
+                if available.
               </p>
               <p className="mt-3">
                 If a transaction is not eligible for a refund, you may still cancel the subscription
@@ -161,7 +156,7 @@ const RefundPolicy = () => {
               <p className="mt-3">To request a refund, use one of the following methods:</p>
               <ul className="mt-3 list-disc space-y-1.5 pl-5">
                 <li>
-                  Use the receipt or subscription management options in your transaction
+                  Use any subscription-management or receipt link Stripe provides in your payment
                   confirmation email.
                 </li>
                 <li>
@@ -190,10 +185,10 @@ const RefundPolicy = () => {
                 6. Chargebacks and payment disputes
               </h2>
               <p className="mt-3">
-                We encourage you to contact us or our payment partner before initiating a chargeback
-                or payment dispute with your bank or card issuer. If you initiate a chargeback or
-                payment reversal, access to the relevant subscription may be temporarily suspended
-                while the matter is reviewed.
+                We encourage you to contact us before initiating a chargeback or payment dispute
+                with your bank or card issuer, so we can try to resolve the matter directly. If you
+                initiate a chargeback or payment reversal, access to the relevant subscription may
+                be temporarily suspended while the matter is reviewed.
               </p>
             </section>
 

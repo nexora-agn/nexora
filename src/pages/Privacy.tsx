@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import { COMPANY_LEGAL, REGISTERED_OFFICE } from "@/lib/companyLegal";
+import { COMPANY_LEGAL } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -21,13 +21,6 @@ const sections = [
           {COMPANY_LEGAL.legalForm} registered in the {COMPANY_LEGAL.registeredJurisdiction}. Employer
           Identification Number (EIN):{" "}
           <span className="whitespace-nowrap">{COMPANY_LEGAL.ein}</span>.
-        </p>
-        <p className="mt-3">
-          Registered office:{" "}
-          <span className="whitespace-pre-line text-foreground">
-            {REGISTERED_OFFICE.addressLines.join(", ")}
-          </span>
-          .
         </p>
         <p className="mt-3">
           For any privacy-related request, contact us at{" "}
@@ -85,8 +78,10 @@ const sections = [
         </p>
         <ul className="mt-3 list-disc space-y-1.5 pl-5">
           <li>
-            <span className="font-medium text-foreground">Payment processing:</span> Paddle (our
-            merchant of record for checkout, subscriptions, billing, and refunds).
+            <span className="font-medium text-foreground">Payment processing:</span> Stripe, Inc.
+            processes subscription payments and stores payment credentials on our behalf. We share
+            limited transaction data (such as amount, date, and customer email) with Stripe solely
+            to process payments and manage subscriptions.
           </li>
           <li>
             <span className="font-medium text-foreground">AI conversation providers:</span> third
@@ -112,11 +107,12 @@ const sections = [
     title: "Payment processing",
     body: (
       <p>
-        Online payments for our services are processed by{" "}
-        <span className="font-semibold text-foreground">Paddle</span>, which acts as the merchant of
-        record. Card data and payment credentials are handled directly by Paddle on its own
-        infrastructure; we do not store full payment card numbers on our servers. Paddle&apos;s use of
-        your data is governed by its own privacy notice.
+        Online payments for our subscriptions are processed by{" "}
+        <span className="font-semibold text-foreground">Stripe, Inc.</span>, our third-party payment
+        processor, on behalf of {COMPANY_LEGAL.legalName}. Card data and payment credentials are
+        entered directly into Stripe&apos;s secure systems and handled on Stripe&apos;s
+        infrastructure; we do not store full payment card numbers on our servers. Stripe&apos;s use
+        of your data is governed by its own privacy policy, available at stripe.com.
       </p>
     ),
   },
@@ -164,6 +160,18 @@ const sections = [
           contact page
         </Link>
         .
+      </p>
+    ),
+  },
+  {
+    title: "Cookies and tracking",
+    body: (
+      <p>
+        We use cookies and similar technologies to operate the website, remember your preferences,
+        keep you signed in, and understand general usage so we can improve the service. Our payment
+        processor Stripe may also set cookies needed to process payments securely and prevent fraud.
+        You can control or disable cookies through your browser settings; some features may not work
+        correctly if cookies are disabled.
       </p>
     ),
   },

@@ -85,7 +85,7 @@ const MarketingDocumentTitle = () => {
       return;
     }
     if (pathname === "/shipping-policy") {
-      document.title = "Shipping policy | Nexora";
+      document.title = "Service delivery | Nexora";
       return;
     }
     if (pathname === "/payment/complete") {

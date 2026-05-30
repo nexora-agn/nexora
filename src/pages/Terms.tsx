@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import { COMPANY_LEGAL, REGISTERED_OFFICE } from "@/lib/companyLegal";
+import { COMPANY_LEGAL } from "@/lib/companyLegal";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -14,24 +14,14 @@ const sections = [
   {
     title: "Agreement",
     body: (
-      <>
-        <p>
-          These Terms of Service (&quot;Terms&quot;) are between you and{" "}
-          <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
-          {COMPANY_LEGAL.legalForm} registered in the {COMPANY_LEGAL.registeredJurisdiction} (EIN{" "}
-          {COMPANY_LEGAL.ein}), doing business as &quot;{COMPANY_LEGAL.brand}&quot;. They govern
-          your access to {COMPANY_LEGAL.brand}&apos;s website and any services we agree to provide.
-          By submitting a request, using our site, or engaging us for work, you agree to these
-          Terms.
-        </p>
-        <p className="mt-3">
-          Our registered office is located at{" "}
-          <span className="whitespace-pre-line text-foreground">
-            {REGISTERED_OFFICE.addressLines.join(", ")}
-          </span>
-          .
-        </p>
-      </>
+      <p>
+        These Terms of Service (&quot;Terms&quot;) are between you and{" "}
+        <span className="font-semibold text-foreground">{COMPANY_LEGAL.legalName}</span>, a{" "}
+        {COMPANY_LEGAL.legalForm} registered in the {COMPANY_LEGAL.registeredJurisdiction} (EIN{" "}
+        {COMPANY_LEGAL.ein}), doing business as &quot;{COMPANY_LEGAL.brand}&quot;. They govern your
+        access to {COMPANY_LEGAL.brand}&apos;s website and any services we agree to provide. By
+        submitting a request, using our site, or engaging us for work, you agree to these Terms.
+      </p>
     ),
   },
   {
@@ -73,27 +63,28 @@ const sections = [
     body: (
       <>
         <p>
-          Fees for packages and services are shown on our pricing page or in your written quote.
-          Most {COMPANY_LEGAL.brand} services are sold as recurring subscriptions. When you start a
-          subscription you agree to pay the price shown at checkout, plus any applicable taxes, on
-          a recurring basis (typically monthly) until the subscription is cancelled.
+          Fees for plans are shown on our pricing page or in your written quote. Most{" "}
+          {COMPANY_LEGAL.brand} services are sold as recurring subscriptions. When you start a
+          subscription you agree to pay the price shown at checkout, plus any applicable taxes, on a
+          recurring basis (monthly unless stated otherwise) until the subscription is cancelled.
         </p>
         <p className="mt-3">
-          Online checkout and recurring billing are processed by our payment partner, which acts as
-          the merchant of record for these transactions. It handles payment processing, invoicing,
-          applicable sales tax collection, and refunds in accordance with our{" "}
-          <Link
-            to="/refund-policy"
-            className="font-medium text-foreground underline-offset-4 hover:underline"
-          >
-            Refund policy
-          </Link>
-          . By completing a purchase you also agree to the checkout terms presented during your
+          Online checkout and recurring billing are processed by{" "}
+          <span className="font-semibold text-foreground">Stripe, Inc.</span>, our third-party
+          payment processor, on behalf of {COMPANY_LEGAL.legalName}. Card details are entered
+          directly into Stripe&apos;s secure systems; we do not store full payment card numbers. By
+          completing checkout you also agree to any payment terms Stripe presents during your
           transaction.
         </p>
         <p className="mt-3">
+          <span className="font-medium text-foreground">When billing starts.</span> For new
+          websites, you can preview your site before activating a subscription. Billing begins only
+          after you approve your website and activate your plan, starting with your first monthly
+          subscription payment.
+        </p>
+        <p className="mt-3">
           Subscriptions automatically renew at the end of each billing period at the then-current
-          price. We will charge the payment method on file. If a payment fails, we may retry the
+          price, and we charge the payment method on file. If a payment fails, we may retry the
           charge, pause the service, or suspend access until the balance is paid.
         </p>
       </>
@@ -148,8 +139,8 @@ const sections = [
         >
           Privacy notice
         </Link>{" "}
-        explains how we handle personal data, including payment-related information processed by our
-        payment partner on our behalf.
+        explains how we handle personal data, including payment-related information processed by
+        Stripe on our behalf.
       </p>
     ),
   },
