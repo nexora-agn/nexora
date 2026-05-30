@@ -160,7 +160,8 @@ export type PackageOnboardingPayload = {
   /** New flow only — what the client wants their domain to be (e.g. acme.com). */
   preferred_domain?: string;
   selected_plan: "starter" | "growth" | "custom";
-  payment_preference: "paddle";
+  /** Current method is Stripe; "paddle"/"paysera" retained only for reading legacy rows. */
+  payment_preference: "stripe" | "paddle" | "paysera";
 };
 
 export type ProjectRequestPayload = NewWebsiteRequestPayload | MigrateRequestPayload | PackageOnboardingPayload;

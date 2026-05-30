@@ -33,13 +33,6 @@ function writeJson(res: ServerResponse, status: number, payload: unknown) {
   res.end(JSON.stringify(payload));
 }
 
-function getAuthorization(req: IncomingMessage): string | undefined {
-  if (typeof req.headers.authorization === "string") return req.headers.authorization;
-  const caps = req.headers as { Authorization?: string };
-  if (typeof caps.Authorization === "string") return caps.Authorization;
-  return undefined;
-}
-
 function parseQuery(urlStr: string | undefined): Record<string, string | undefined> {
   if (!urlStr) return {};
   try {
@@ -57,7 +50,8 @@ function parseQuery(urlStr: string | undefined): Record<string, string | undefin
 }
 
 /**
- * Serves dev-only APIs mirrored from Vercel: send-form-emails, start-project+paddle redirect, Paddle payment link, webhook.
+ * Serves dev-only APIs mirrored from the production server (server/hostinger.mjs):
+ * send-form-emails, start-project Stripe Checkout redirect, and the Stripe webhook.
  */
 export function formEmailApiPlugin(): Plugin {
   return {
@@ -69,11 +63,10 @@ export function formEmailApiPlugin(): Plugin {
       server.middlewares.use(async (req, res, next) => {
         const pathOnly = req.url?.split("?")[0] || "";
         const isForms = pathOnly.startsWith("/api/send-form-emails");
-        const isStartProjectPaddle = pathOnly.startsWith("/api/start-project-paddle");
-        const isPaddleLink = pathOnly.startsWith("/api/paddle-payment-link");
-        const isPaddleWebhook = pathOnly.startsWith("/api/paddle-webhook");
+        const isStartProjectStripe = pathOnly.startsWith("/api/start-project-stripe");
+        const isStripeWebhook = pathOnly.startsWith("/api/stripe-webhook");
 
-        if (!isForms && !isStartProjectPaddle && !isPaddleLink && !isPaddleWebhook) {
+        if (!isForms && !isStartProjectStripe && !isStripeWebhook) {
           return next();
         }
 
@@ -84,26 +77,19 @@ export function formEmailApiPlugin(): Plugin {
           return;
         }
 
-        const auth = getAuthorization(req);
-
-        if (isPaddleWebhook && req.method === "POST") {
+        if (isStripeWebhook && req.method === "POST") {
           const rawBody = await readRawTextBody(req);
           const signatureHeader =
-            typeof req.headers["paddle-signature"] === "string"
-              ? req.headers["paddle-signature"]
-              : typeof (req.headers as { "Paddle-Signature"?: string })["Paddle-Signature"] === "string"
-                ? (req.headers as { "Paddle-Signature": string })["Paddle-Signature"]
-                : undefined;
-          const { handlePaddleWebhook } = await import("./server/paddle-webhook.mjs");
-          const result = await handlePaddleWebhook({
+            typeof req.headers["stripe-signature"] === "string"
+              ? req.headers["stripe-signature"]
+              : undefined;
+          const { handleStripeWebhook } = await import("./server/stripe-webhook.mjs");
+          const result = await handleStripeWebhook({
             rawBody,
             signatureHeader,
             env: env as NodeJS.ProcessEnv,
           });
-          setDevApiCors(res);
-          res.statusCode = result.status;
-          res.setHeader("Content-Type", "application/json");
-          res.end(JSON.stringify(result.body));
+          writeJson(res, result.status ?? 200, result);
           return;
         }
 
@@ -130,18 +116,21 @@ export function formEmailApiPlugin(): Plugin {
           return;
         }
 
-        if (isStartProjectPaddle) {
-          const { handlePublicStartProjectPaddleRedirect } = await import(
-            "./server/public-start-project-paddle.mjs"
-          );
-          result = (await handlePublicStartProjectPaddleRedirect(body as Record<string, unknown>, env)) as typeof result;
-          const httpStatus = typeof result.status === "number" ? result.status : result.ok ? 200 : 500;
-          writeJson(res, httpStatus, result);
-          return;
-        }
-
-        const { handleCreatePaddlePaymentLink } = await import("./server/paddle-payment-link.mjs");
-        result = (await handleCreatePaddlePaymentLink(body as Record<string, unknown>, auth, env)) as typeof result;
+        // isStartProjectStripe
+        const reqOrigin =
+          typeof req.headers.origin === "string"
+            ? req.headers.origin
+            : typeof req.headers.host === "string"
+              ? `http://${req.headers.host}`
+              : undefined;
+        const { handlePublicStartProjectStripeRedirect } = await import(
+          "./server/public-start-project-stripe.mjs"
+        );
+        result = (await handlePublicStartProjectStripeRedirect(
+          body as Record<string, unknown>,
+          env as NodeJS.ProcessEnv,
+          reqOrigin,
+        )) as typeof result;
         const httpStatus = typeof result.status === "number" ? result.status : result.ok ? 200 : 500;
         writeJson(res, httpStatus, result);
       });

@@ -19,7 +19,6 @@ import {
 } from "@/lib/supabase";
 import { onboardingTimelineLabel, PREFERRED_FEATURE_OPTIONS } from "@/lib/projectOnboardingConstants";
 import { planLabelById } from "@/lib/pricingPlans";
-import { createPaddlePaymentLink } from "@/lib/createPaddlePaymentLink";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
@@ -299,7 +298,6 @@ const ProjectRequests = () => {
   const [error, setError] = useState<string | null>(null);
   const [detail, setDetail] = useState<ProjectRequest | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [paddleBusyId, setPaddleBusyId] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -381,25 +379,6 @@ const ProjectRequests = () => {
     void move(id, status);
   };
 
-  const openPaddleCheckout = async (req: ProjectRequest) => {
-    setPaddleBusyId(req.id);
-    try {
-      const { data } = await supabase.auth.getSession();
-      const token = data.session?.access_token;
-      const result = await createPaddlePaymentLink(token, {
-        projectRequestId: req.id,
-      });
-      if (result.ok !== true) {
-        toast.error(result.error ?? "Could not open Paddle checkout.");
-        return;
-      }
-      if (result.mode === "redirect") {
-        return;
-      }
-    } finally {
-      setPaddleBusyId(null);
-    }
-  };
 
   return (
     <AdminShell>
@@ -547,35 +526,15 @@ const ProjectRequests = () => {
                   {JSON.stringify(detail.payload, null, 2)}
                 </pre>
               </details>
-              <div className="rounded-lg border border-border/70 bg-muted/15 px-3 py-3 space-y-3">
-                <p className="text-xs font-medium text-foreground">Paddle checkout</p>
+              <div className="rounded-lg border border-border/70 bg-muted/15 px-3 py-3 space-y-2">
+                <p className="text-xs font-medium text-foreground">Stripe checkout</p>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Creates a Paddle Billing transaction, then opens checkout with{" "}
-                  <a
-                    href="https://developer.paddle.com/paddle-js/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-2"
-                  >
-                    Paddle.js
-                  </a>{" "}
-                  (<code className="text-foreground">VITE_PADDLE_CLIENT_TOKEN</code>) or falls back to hosted{" "}
-                  <code className="text-foreground">checkout.url</code>. Project request UUID is in{" "}
-                  <code className="text-foreground">custom_data.project_request_id</code>. Server:{" "}
-                  <code className="text-foreground">PADDLE_API_KEY</code> + price ids (or{" "}
-                  <code className="text-foreground">PADDLE_PAYMENT_AMOUNT_MINOR</code>). Webhooks:{" "}
-                  <code className="text-foreground">/api/paddle-webhook</code> move <strong>New</strong> →{" "}
-                  <strong>In progress</strong> when payment completes.
+                  Customers are sent to Stripe Checkout automatically when they submit the
+                  package wizard. The{" "}
+                  <code className="text-foreground">/api/stripe-webhook</code> endpoint moves{" "}
+                  <strong>New</strong> → <strong>In progress</strong> when payment completes and
+                  records the Stripe session/subscription in the request payload.
                 </p>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="secondary"
-                  disabled={paddleBusyId === detail.id}
-                  onClick={() => void openPaddleCheckout(detail)}
-                >
-                  {paddleBusyId === detail.id ? "Opening checkout…" : "Go to Paddle checkout"}
-                </Button>
               </div>
               <div className="flex flex-wrap gap-2 pt-2">
                 {COLUMNS.filter(c => c.status !== detail.status).map(c => (

@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { applyHexColor, extractLogoColors, isValidHex } from "@/lib/extractLogoBrandColors";
 import { PACKAGE_LOGO_MAX_BYTES, PACKAGE_ONBOARD_LIMITS } from "@/lib/projectOnboardingConstants";
-import { submitStartProjectAndOpenPaddleCheckout } from "@/lib/submitStartProjectPaddle";
+import { submitStartProjectAndRedirectToStripe } from "@/lib/submitStartProjectStripe";
 import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
 import type { MarketingPlanId } from "@/lib/pricingPlans";
 import type { PackageOnboardingPayload, ProjectRequestType } from "@/lib/supabase";
@@ -343,16 +343,22 @@ const ProjectOnboardingWizard = () => {
       preferred_domain: isMigration ? undefined : preferredDomain.trim() || undefined,
       additional_notes: additionalNotes.trim(),
       selected_plan: selectedPlan,
-      payment_preference: "paddle",
+      payment_preference: "stripe",
     };
 
     setSubmitting(true);
     try {
-      await submitStartProjectAndOpenPaddleCheckout({
+      const result = await submitStartProjectAndRedirectToStripe({
         requestType,
         payload,
       });
-      setSubmitting(false);
+      // Only reached for Enterprise / contact-sales (no checkout URL)
+      if (result.mode === "contact") {
+        window.location.href = "/payment/complete";
+      }
+      // For "redirect" mode the browser has already navigated to Stripe —
+      // setSubmitting(false) is intentionally omitted so the button stays
+      // in loading state while the redirect happens.
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setSubmitting(false);

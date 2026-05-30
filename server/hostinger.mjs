@@ -13,8 +13,7 @@ import { fileURLToPath } from "node:url";
 
 import { loadProductionEnv } from "./load-production-env.mjs";
 import { handleSendFormEmails } from "./form-email-resend.mjs";
-import { handleCreatePaddlePaymentLink } from "./paddle-payment-link.mjs";
-import { handlePaddleWebhook } from "./paddle-webhook.mjs";
+import { handleStripeWebhook } from "./stripe-webhook.mjs";
 import {
   resolveEnv,
   authenticateRequest,
@@ -273,48 +272,38 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // ── POST /api/start-project-paddle — save request + Paddle checkout URL ──
-  if (pathname === "/api/start-project-paddle" && method === "POST") {
+  // ── POST /api/start-project-stripe — save request + Stripe Checkout URL ──
+  if (pathname === "/api/start-project-stripe" && method === "POST") {
     try {
       const body = await parseBody(req);
-      const { handlePublicStartProjectPaddleRedirect } = await import("./public-start-project-paddle.mjs");
-      const result = await handlePublicStartProjectPaddleRedirect(body, process.env);
+      const reqOrigin =
+        typeof req.headers.origin === "string"
+          ? req.headers.origin
+          : req.headers.host
+            ? `${req.headers["x-forwarded-proto"] || "https"}://${req.headers.host}`
+            : undefined;
+      const { handlePublicStartProjectStripeRedirect } = await import("./public-start-project-stripe.mjs");
+      const result = await handlePublicStartProjectStripeRedirect(body, process.env, reqOrigin);
       const code = result.status ?? (result.ok ? 200 : 500);
       return sendJson(res, code, result);
     } catch (err) {
-      console.error("[hostinger] start-project-paddle error:", err);
+      console.error("[hostinger] start-project-stripe error:", err);
       return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
     }
   }
 
-  // ── POST /api/paddle-payment-link ───────────────────────────────────────
-  if (pathname === "/api/paddle-payment-link" && method === "POST") {
-    try {
-      const body = await parseBody(req);
-      const auth = typeof req.headers.authorization === "string" ? req.headers.authorization : undefined;
-      const result = await handleCreatePaddlePaymentLink(body, auth, process.env);
-      const code = result.status ?? (result.ok ? 200 : 500);
-      return sendJson(res, code, result);
-    } catch (err) {
-      console.error("[hostinger] paddle-payment-link error:", err);
-      return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
-    }
-  }
-
-  // ── POST /api/paddle-webhook ─────────────────────────────────────────────
-  if (pathname === "/api/paddle-webhook" && method === "POST") {
+  // ── POST /api/stripe-webhook ─────────────────────────────────────────────
+  if (pathname === "/api/stripe-webhook" && method === "POST") {
     try {
       const rawBody = await readRawBody(req);
       const signatureHeader =
-        typeof req.headers["paddle-signature"] === "string"
-          ? req.headers["paddle-signature"]
-          : typeof req.headers["Paddle-Signature"] === "string"
-            ? req.headers["Paddle-Signature"]
-            : undefined;
-      const result = await handlePaddleWebhook({ rawBody, signatureHeader, env: process.env });
-      return sendJson(res, result.status, result.body);
+        typeof req.headers["stripe-signature"] === "string"
+          ? req.headers["stripe-signature"]
+          : undefined;
+      const result = await handleStripeWebhook({ rawBody, signatureHeader, env: process.env });
+      return sendJson(res, result.status ?? 200, result);
     } catch (err) {
-      console.error("[hostinger] paddle-webhook error:", err);
+      console.error("[hostinger] stripe-webhook error:", err);
       return sendJson(res, 500, { error: "webhook_failed" });
     }
   }

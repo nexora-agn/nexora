@@ -1,5 +1,5 @@
-// POST /api/start-project-paddle — save project request, return Paddle checkout URL (browser should redirect).
-import { handlePublicStartProjectPaddleRedirect } from "../server/public-start-project-paddle.mjs";
+// POST /api/start-project-stripe — save project request, return Stripe Checkout URL (browser should redirect).
+import { handlePublicStartProjectStripeRedirect } from "../server/public-start-project-stripe.mjs";
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -15,7 +15,13 @@ export default async function handler(req, res) {
   }
 
   const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-  const result = await handlePublicStartProjectPaddleRedirect(body, process.env);
+  const reqOrigin =
+    typeof req.headers.origin === "string"
+      ? req.headers.origin
+      : req.headers.host
+        ? `${req.headers["x-forwarded-proto"] || "https"}://${req.headers.host}`
+        : undefined;
+  const result = await handlePublicStartProjectStripeRedirect(body, process.env, reqOrigin);
   const code = result.status ?? (result.ok ? 200 : 500);
   return res.status(code).json(result);
 }

@@ -512,9 +512,10 @@ function planLabel(id) {
 }
 
 function paymentLabel(p) {
-  if (p === "paddle") return "Paddle";
+  if (p === "stripe") return "Stripe";
+  if (p === "card") return "Card";
+  if (p === "paddle") return "Paddle (legacy)";
   if (p === "paysera") return "Paysera (legacy)";
-  if (p === "stripe" || p === "card") return "Stripe (legacy)";
   if (p === "paypal") return "PayPal (legacy)";
   return String(p || "—");
 }
@@ -637,7 +638,7 @@ function buildStartProjectClient({ requestType, payload }, ctx) {
       innerHtml: `
     <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${greetLocal}</strong>,</p>
     <p style="margin:0 0 14px 0;">${pathSentence}</p>
-    <p style="margin:0 0 14px 0;">You should now be on the secure Paddle checkout page in your browser to complete payment. Once payment is confirmed we move ahead with production.</p>
+    <p style="margin:0 0 14px 0;">You should now be on the secure Stripe checkout page in your browser to complete payment. Once payment is confirmed we move ahead with production.</p>
     <p style="margin:0 0 14px 0;">This confirmation goes to <strong>${escapeHtml(payload.contact_email)}</strong>. Reply here or reach <a href="mailto:info@nexora-agn.com" style="color:#0f172a;font-weight:500;">info@nexora-agn.com</a> if you need updates.</p>
     <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
   `,
@@ -724,7 +725,7 @@ export function parseStartProject(body) {
     const plan = String(p.selected_plan ?? "");
     if (plan !== "starter" && plan !== "growth" && plan !== "custom") return { error: "Invalid payload" };
     const pay = p.payment_preference;
-    if (pay !== "paddle") {
+    if (pay !== "stripe") {
       return { error: "Invalid payload" };
     }
     return { data: { requestType: body.requestType, payload: p } };
