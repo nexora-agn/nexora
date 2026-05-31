@@ -23,6 +23,7 @@ import PaymentCancelled from "./pages/PaymentCancelled.tsx";
 
 const SalesDeck = lazy(() => import("./pages/SalesDeck"));
 const WebsiteProgram = lazy(() => import("./pages/WebsiteProgram"));
+const AiAssistant = lazy(() => import("./pages/AiAssistant"));
 
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
 const AdminClients = lazy(() => import("./pages/admin/Clients"));
@@ -144,6 +145,7 @@ const App = () => (
               <Route path="/shipping-policy" element={<ShippingPolicy />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/ai" element={<AiAssistant />} />
               <Route path="/start" element={<StartProject />} />
               <Route path="/payment/complete" element={<PaymentComplete />} />
               <Route path="/payment/cancelled" element={<PaymentCancelled />} />

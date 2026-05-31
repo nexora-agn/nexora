@@ -34,6 +34,11 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
     (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
       setOpen(false);
+      // AI has its own dedicated page — always route there.
+      if (id === "ai") {
+        navigate("/ai");
+        return;
+      }
       if (id === "pricing" && location.pathname !== "/") {
         navigate("/pricing");
         return;
