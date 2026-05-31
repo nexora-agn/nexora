@@ -19,20 +19,30 @@ function startProjectStripeEndpoint(): string {
 export type StartProjectStripeResult = {
   order_id: string;
   session_id: string | null;
-  /** "redirect" — browser navigated away to Stripe; "contact" — Enterprise enquiry saved */
-  mode: "redirect" | "contact";
+  /**
+   * "redirect"    — browser navigated away to Stripe Checkout.
+   * "contact"     — Enterprise / custom enquiry saved (no payment).
+   * "email_link"  — a secure payment link was emailed to the client (no redirect).
+   */
+  mode: "redirect" | "contact" | "email_link";
 };
 
 /**
- * Saves the start-project submission, creates a Stripe Checkout Session on the
- * server, then redirects the user to Stripe Checkout.
+ * Saves the start-project submission and creates a Stripe Checkout Session on
+ * the server.
  *
- * This function never resolves normally on success — the browser navigates
- * away. It only throws on error.
+ * Delivery modes:
+ * - "redirect" (default): the browser navigates straight to Stripe Checkout and
+ *   this function never resolves normally on success.
+ * - "email": the server emails the secure checkout link to the client instead.
+ *   The function resolves with mode "email_link" (no redirect).
+ *
+ * Throws on error.
  */
 export async function submitStartProjectAndRedirectToStripe(input: {
   requestType: "new_website" | "migrate";
   payload: Record<string, unknown>;
+  delivery?: "redirect" | "email";
 }): Promise<StartProjectStripeResult> {
   const url = startProjectStripeEndpoint();
   const res = await fetch(url, {
@@ -46,11 +56,17 @@ export async function submitStartProjectAndRedirectToStripe(input: {
     checkout_url?: string | null;
     order_id?: string;
     session_id?: string | null;
+    delivery?: "email" | "redirect";
     error?: string;
   };
 
   if (!res.ok || !data.ok) {
     throw new Error(typeof data?.error === "string" ? data.error : `Checkout failed (HTTP ${res.status})`);
+  }
+
+  // Email delivery — the link was sent to the client's inbox; no redirect.
+  if (data.delivery === "email") {
+    return { order_id: data.order_id ?? "", session_id: data.session_id ?? null, mode: "email_link" };
   }
 
   // Enterprise / custom plan — no checkout URL, just confirmed

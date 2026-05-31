@@ -18,6 +18,10 @@ export async function handlePublicStartProjectStripeRedirect(body, env, requestO
     return { ok: false, status: 400, error: String(parsed.error) };
   }
 
+  // Delivery mode: "email" emails a secure checkout link to the client instead
+  // of redirecting the browser. Anything else defaults to the redirect flow.
+  const delivery = body?.delivery === "email" ? "email" : "redirect";
+
   const { requestType, payload } = parsed.data;
   if (payload?.onboarding_version !== 2) {
     return { ok: false, status: 400, error: "Unsupported submission for this checkout." };
@@ -66,7 +70,38 @@ export async function handlePublicStartProjectStripeRedirect(body, env, requestO
     return { ok: false, status: redirect.status ?? 500, error: redirect.error };
   }
 
-  // Fire confirmation emails (non-blocking)
+  // ── Email-link delivery ──────────────────────────────────────────────────
+  // The client asked us to email the payment link instead of redirecting. The
+  // email IS the deliverable here, so a send failure is a hard error (the order
+  // row is left as 'new' — harmless, admins can re-send). The same Checkout
+  // Session carries metadata.order_id, so the webhook still flips the order.
+  if (delivery === "email") {
+    let emailResult;
+    try {
+      emailResult = await handleSendFormEmails(
+        { formType: "start_project", requestType, payload, paymentLink: redirect.checkout_url },
+        env,
+      );
+    } catch (e) {
+      console.error("[start-project-stripe] Payment-link email error:", e);
+      return { ok: false, status: 502, error: "Could not send the payment link email. Please try paying now instead." };
+    }
+    if (!emailResult.ok) {
+      console.error("[start-project-stripe] Payment-link email failed:", emailResult.error);
+      return { ok: false, status: 502, error: "Could not send the payment link email. Please try paying now instead." };
+    }
+    return {
+      ok: true,
+      status: 200,
+      checkout_url: null,
+      order_id: orderId,
+      session_id: redirect.session_id,
+      delivery: "email",
+    };
+  }
+
+  // ── Redirect delivery (default) ──────────────────────────────────────────
+  // Fire confirmation emails (non-blocking) and return the URL for redirect.
   try {
     const emailResult = await handleSendFormEmails(
       { formType: "start_project", requestType, payload },

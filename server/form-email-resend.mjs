@@ -624,7 +624,7 @@ function buildStartProjectInternal({ requestType, payload }, ctx) {
   });
 }
 
-function buildStartProjectClient({ requestType, payload }, ctx) {
+function buildStartProjectClient({ requestType, payload }, ctx, paymentLink) {
   if (payload.onboarding_version === 2) {
     const plan = planLabel(payload.selected_plan);
     const greetLocal = escapeHtml(payload.contact_email.split("@")[0] || "there");
@@ -632,13 +632,35 @@ function buildStartProjectClient({ requestType, payload }, ctx) {
       requestType === "migrate"
         ? `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package for your <strong>site migration</strong>. We received the URL of your existing site — our team will pull your logo, brand colours, and content from there.`
         : `Thank you for choosing the <strong>${escapeHtml(plan)}</strong> package. We received your logo, brand colours, and any content notes you shared.`;
+
+    // When a payment link is provided, the client asked us to email it (sales
+    // flow) — render a prominent CTA button instead of the "you're at checkout"
+    // copy. The link is a hosted Stripe Checkout Session, valid ~24h.
+    const paymentSection =
+      typeof paymentLink === "string" && paymentLink
+        ? `
+    <p style="margin:0 0 16px 0;">Tap the button below to complete your payment securely with Stripe. The link is valid for <strong>24 hours</strong>. Once payment is confirmed we move ahead with production.</p>
+    <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 18px 0;">
+      <tr>
+        <td style="border-radius:8px;background:#0a0a0a;">
+          <a href="${escapeHtml(paymentLink)}" style="display:inline-block;padding:13px 30px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">Complete your payment</a>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0 0 14px 0;font-size:13px;color:#64748b;">If the button doesn't work, copy this link into your browser:<br><a href="${escapeHtml(paymentLink)}" style="color:#0f172a;word-break:break-all;">${escapeHtml(paymentLink)}</a></p>`
+        : `
+    <p style="margin:0 0 14px 0;">You should now be on the secure Stripe checkout page in your browser to complete payment. Once payment is confirmed we move ahead with production.</p>`;
+
     return clientLetterHtml({
-      preheader: `We received your ${plan} package request`,
+      preheader:
+        typeof paymentLink === "string" && paymentLink
+          ? `Your secure payment link for the ${plan} package`
+          : `We received your ${plan} package request`,
       headline: "Request received — next: payment",
       innerHtml: `
     <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${greetLocal}</strong>,</p>
     <p style="margin:0 0 14px 0;">${pathSentence}</p>
-    <p style="margin:0 0 14px 0;">You should now be on the secure Stripe checkout page in your browser to complete payment. Once payment is confirmed we move ahead with production.</p>
+    ${paymentSection}
     <p style="margin:0 0 14px 0;">This confirmation goes to <strong>${escapeHtml(payload.contact_email)}</strong>. Reply here or reach <a href="mailto:info@nexora-agn.com" style="color:#0f172a;font-weight:500;">info@nexora-agn.com</a> if you need updates.</p>
     <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
   `,
@@ -801,10 +823,11 @@ export async function handleSendFormEmails(body, env) {
     const parsed = parseStartProject(body);
     if (parsed.error) return { ok: false, error: parsed.error };
     const { requestType, payload } = parsed.data;
+    const paymentLink = typeof body.paymentLink === "string" && body.paymentLink ? body.paymentLink : undefined;
     clientTo = payload.contact_email;
     replyTo = payload.contact_email;
     internalHtml = buildStartProjectInternal({ requestType, payload }, emailCtx);
-    clientHtml = buildStartProjectClient({ requestType, payload }, emailCtx);
+    clientHtml = buildStartProjectClient({ requestType, payload }, emailCtx, paymentLink);
     const short =
       payload.onboarding_version === 2
         ? requestType === "migrate"
@@ -816,7 +839,9 @@ export async function handleSendFormEmails(body, env) {
     const leadSubject =
       payload.onboarding_version === 2 ? payload.contact_email : payload.full_name;
     internalSubject = `[Nexora] ${short}: ${leadSubject}`;
-    clientSubject = "We received your project request — Nexora";
+    clientSubject = paymentLink
+      ? "Your secure payment link — Nexora"
+      : "We received your project request — Nexora";
   }
 
   const resend = new Resend(apiKey);

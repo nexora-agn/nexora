@@ -96,6 +96,8 @@ const ProjectOnboardingWizard = () => {
   const [selectedPlan, setSelectedPlan] = useState<MarketingPlanId | null>(() => readInitialPlanFromLocation());
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [emailing, setEmailing] = useState(false);
+  const [linkSent, setLinkSent] = useState(false);
 
   const [workEmail, setWorkEmail] = useState("");
   const [primaryColor, setPrimaryColor] = useState(DEFAULT_PRIMARY);
@@ -168,6 +170,8 @@ const ProjectOnboardingWizard = () => {
     setFieldErrors({});
     setSelectedPlan(null);
     setRequestType(null);
+    setLinkSent(false);
+    setEmailing(false);
   };
 
   const goBack = () => {
@@ -176,6 +180,7 @@ const ProjectOnboardingWizard = () => {
     } else if (step === 3) {
       setStep(2);
     } else if (step === 4) {
+      setLinkSent(false);
       setStep(3);
     }
   };
@@ -303,8 +308,10 @@ const ProjectOnboardingWizard = () => {
     setStep(4);
   };
 
-  const handleFinalSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Shared submit for both payment actions on step 4:
+  //   • delivery "redirect" → browser navigates to Stripe Checkout (default).
+  //   • delivery "email"    → server emails a secure payment link to the client.
+  const runSubmit = async (delivery: "redirect" | "email") => {
     if (!requestType) {
       toast.error("Choose whether this is a new website or a migration.");
       return;
@@ -346,23 +353,36 @@ const ProjectOnboardingWizard = () => {
       payment_preference: "stripe",
     };
 
-    setSubmitting(true);
+    const setBusy = delivery === "email" ? setEmailing : setSubmitting;
+    setBusy(true);
     try {
       const result = await submitStartProjectAndRedirectToStripe({
         requestType,
         payload,
+        delivery,
       });
+      if (result.mode === "email_link") {
+        setLinkSent(true);
+        setEmailing(false);
+        return;
+      }
       // Only reached for Enterprise / contact-sales (no checkout URL)
       if (result.mode === "contact") {
         window.location.href = "/payment/complete";
+        return;
       }
       // For "redirect" mode the browser has already navigated to Stripe —
       // setSubmitting(false) is intentionally omitted so the button stays
       // in loading state while the redirect happens.
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong. Please try again.");
-      setSubmitting(false);
+      setBusy(false);
     }
+  };
+
+  const handleFinalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void runSubmit("redirect");
   };
 
   const startOver = () => {
@@ -911,17 +931,60 @@ const ProjectOnboardingWizard = () => {
               )}
             </div>
 
-            <div className="rounded-2xl border border-border/70 bg-card/50 p-6 shadow-sm sm:p-8 space-y-3">
-              <Label className="text-foreground">Payment</Label>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                When you submit, secure checkout opens on this page. After payment is confirmed we
-                move ahead with production.
-              </p>
-            </div>
+            {linkSent ? (
+              <div className="space-y-3 rounded-2xl border border-emerald-500/40 bg-emerald-50/60 p-6 shadow-sm sm:p-8">
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-emerald-600" strokeWidth={2.5} aria-hidden />
+                  <p className="font-semibold text-foreground">Payment link sent</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  We've emailed a secure payment link to{" "}
+                  <span className="font-medium text-foreground">{workEmail.trim()}</span>. It's valid
+                  for 24 hours — pay anytime and we'll start as soon as it lands. Check spam if it
+                  doesn't arrive in a minute.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-11 rounded-lg px-6 font-semibold"
+                  disabled={submitting}
+                  onClick={() => void runSubmit("redirect")}
+                >
+                  {submitting ? "Opening checkout…" : "Pay now instead"}
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div className="rounded-2xl border border-border/70 bg-card/50 p-6 shadow-sm sm:p-8 space-y-3">
+                  <Label className="text-foreground">Payment</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    When you submit, secure checkout opens on this page. After payment is confirmed we
+                    move ahead with production.
+                  </p>
+                </div>
 
-            <Button type="submit" className="h-11 rounded-lg px-8 font-semibold" disabled={submitting}>
-              {submitting ? "Opening checkout…" : "Submit & continue to payment"}
-            </Button>
+                <div className="flex flex-col items-start gap-3">
+                  <Button
+                    type="submit"
+                    className="h-11 rounded-lg px-8 font-semibold"
+                    disabled={submitting || emailing}
+                  >
+                    {submitting ? "Opening checkout…" : "Submit & continue to payment"}
+                  </Button>
+
+                  {selectedPlan !== "custom" ? (
+                    <button
+                      type="button"
+                      onClick={() => void runSubmit("email")}
+                      disabled={submitting || emailing}
+                      className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {emailing ? "Sending link…" : "Or email me a secure payment link"}
+                    </button>
+                  ) : null}
+                </div>
+              </>
+            )}
           </motion.form>
         )}
       </AnimatePresence>
