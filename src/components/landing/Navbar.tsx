@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 
-/** Order follows homepage scroll: How it works → ERP → AI → Work → Why Nexora → Pricing */
+/** Order follows homepage scroll: How it works → Nexora AI → Our work → Why Nexora → Pricing */
 const sectionLinks = [
   { id: "how-it-works", label: "How it works" },
-  { id: "erp-sync", label: "ERP" },
-  { id: "ai", label: "AI" },
-  { id: "projects", label: "Work" },
+  { id: "ai", label: "Nexora AI" },
+  { id: "projects", label: "Our work" },
   { id: "why-choose-us", label: "Why Nexora" },
   { id: "pricing", label: "Pricing" },
 ] as const;
@@ -65,11 +64,11 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
       <Link to="/blog" onClick={() => setOpen(false)} className={className}>
         Blog
       </Link>
-      <Link to="/start" onClick={() => setOpen(false)} className={className}>
-        Subscribe
-      </Link>
       <Link to="/contact" onClick={() => setOpen(false)} className={className}>
         Contact
+      </Link>
+      <Link to="/start" onClick={() => setOpen(false)} className={className}>
+        Start your project
       </Link>
     </>
   );
@@ -102,7 +101,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
               className="rounded-xl border-0 bg-brand px-6 font-semibold text-brand-foreground shadow-sm hover:bg-brand-muted"
               onClick={onRequestDemo}
             >
-              Book a walkthrough
+              Book a demo
             </Button>
           </div>
 
@@ -128,7 +127,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
                 onRequestDemo?.();
               }}
             >
-              Book a walkthrough
+              Book a demo
             </Button>
           </div>
         ) : null}

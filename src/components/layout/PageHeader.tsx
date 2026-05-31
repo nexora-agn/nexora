@@ -9,13 +9,17 @@ interface PageHeaderProps {
   breadcrumb: BreadcrumbItem[];
   title: string;
   description?: string;
+  /** Tighter vertical padding — use when the page content follows immediately (e.g. a wizard). */
+  compact?: boolean;
 }
 
-const PageHeader = ({ breadcrumb, title, description }: PageHeaderProps) => {
+const PageHeader = ({ breadcrumb, title, description, compact = false }: PageHeaderProps) => {
   return (
     <header className="border-b border-border/80 bg-muted/25">
-      <div className="mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6 lg:px-8 py-10 md:py-14">
-        <nav aria-label="Breadcrumb" className="mb-5">
+      <div
+        className={`mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6 lg:px-8 ${compact ? "py-7 md:py-9" : "py-10 md:py-14"}`}
+      >
+        <nav aria-label="Breadcrumb" className={compact ? "mb-3" : "mb-5"}>
           <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-muted-foreground">
             {breadcrumb.map((item, i) => (
               <li key={`${item.label}-${i}`} className="flex items-center gap-1.5">

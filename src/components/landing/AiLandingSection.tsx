@@ -15,7 +15,7 @@ const AiLandingSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
           >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">AI assistant</p>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">AI chatbot</p>
             <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl md:leading-[1.12]">
               Most websites lose visitors. <span className="text-brand">Yours won’t.</span>
             </h2>

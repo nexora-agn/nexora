@@ -9,7 +9,7 @@ interface FinalCTAProps {
 
 const FinalCTA = ({ onRequestDemo }: FinalCTAProps) => {
   return (
-    <section id="cta" className="relative scroll-mt-28 py-24 md:py-32">
+    <section id="cta" className="relative scroll-mt-28 py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

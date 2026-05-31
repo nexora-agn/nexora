@@ -19,7 +19,7 @@ const WhyChooseNexoraSection = ({ onRequestDemo }: WhyChooseNexoraSectionProps) 
   return (
     <section
       id="why-choose-us"
-      className="scroll-mt-28 bg-gradient-to-b from-slate-50/80 via-background to-background py-24 md:py-32"
+      className="scroll-mt-28 bg-gradient-to-b from-slate-50/80 via-background to-background py-16 md:py-20"
       aria-labelledby="why-choose-nexora-heading"
     >
       <div className="mx-auto max-w-6xl px-6">

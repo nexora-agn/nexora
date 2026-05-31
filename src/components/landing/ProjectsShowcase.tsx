@@ -6,7 +6,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 
 const ProjectsShowcase = () => {
   return (
-    <section id="projects" className="scroll-mt-28 border-t border-neutral-200/80 bg-white py-24 lg:py-28">
+    <section id="projects" className="scroll-mt-28 border-t border-neutral-200/80 bg-white py-16 lg:py-20">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -24,7 +24,7 @@ const ProjectsShowcase = () => {
           >
             <div className="mb-8 flex flex-col gap-5 sm:mb-10 md:flex-row md:items-end md:justify-between md:gap-8">
               <div className="max-w-xl">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Client work</p>
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Our work</p>
                 <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Websites we’ve put live for our clients</h2>
                 <p className="mt-3 text-base font-medium text-neutral-600">
                   Live sites you can click through, not mockups.

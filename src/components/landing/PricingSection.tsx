@@ -14,7 +14,7 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
   return (
     <section
       id={embedded ? "pricing" : undefined}
-      className={embedded ? "scroll-mt-28 py-24 lg:py-32" : "py-12 lg:py-16"}
+      className={embedded ? "scroll-mt-28 py-16 lg:py-24" : "py-12 lg:py-16"}
     >
       <div className="mx-auto max-w-6xl px-6">
         {embedded ? (
