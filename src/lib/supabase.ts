@@ -113,7 +113,7 @@ export type NewWebsiteRequestPayload = {
   additional_notes: string;
   /** Marketing plan the user selected before the rest of the flow. */
   selected_plan: "starter" | "growth" | "custom";
-  /** How they want to pay once checkout is available (legacy wizard values). Package onboarding v2 uses Paddle. */
+  /** How they want to pay once checkout is available (legacy wizard values). Package onboarding uses Stripe. */
   payment_preference: "card" | "paypal" | "stripe" | "paddle" | "paysera";
 };
 

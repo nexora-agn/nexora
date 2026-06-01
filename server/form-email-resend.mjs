@@ -514,7 +514,7 @@ function planLabel(id) {
 function paymentLabel(p) {
   if (p === "stripe") return "Stripe";
   if (p === "card") return "Card";
-  if (p === "paddle") return "Paddle (legacy)";
+  if (p === "paddle") return "Legacy checkout";
   if (p === "paysera") return "Paysera (legacy)";
   if (p === "paypal") return "PayPal (legacy)";
   return String(p || "—");

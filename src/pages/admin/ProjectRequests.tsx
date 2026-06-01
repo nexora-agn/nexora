@@ -127,7 +127,7 @@ function formatPayloadLines(req: ProjectRequest): { label: string; value: string
         : v === "stripe"
           ? "Card (Stripe)"
           : v === "paddle"
-            ? "Paddle"
+            ? "Legacy checkout"
             : v === "paysera"
               ? "Paysera (legacy)"
               : "PayPal";
@@ -184,7 +184,7 @@ function formatPayloadLines(req: ProjectRequest): { label: string; value: string
     if (v === "card" || v === "paypal" || v === "stripe" || v === "paddle" || v === "paysera") {
       if (v === "card") return "Card (legacy)";
       if (v === "stripe") return "Card (Stripe)";
-      if (v === "paddle") return "Paddle";
+      if (v === "paddle") return "Legacy checkout";
       if (v === "paysera") return "Paysera (legacy)";
       return "PayPal";
     }

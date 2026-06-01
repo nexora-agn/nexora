@@ -1,7 +1,7 @@
 import LegalPolicyLinks from "@/components/legal/LegalPolicyLinks";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
 
-/** Standard footer block on Terms, Privacy notice, and Refund policy pages (Paddle domain review). */
+/** Standard footer block on Terms, Privacy notice, and Refund policy pages. */
 const PolicyPageFooter = () => (
   <footer className="mt-10 border-t border-border/70 pt-8 space-y-4">
     <p className="text-sm font-medium text-foreground">Related policies</p>
