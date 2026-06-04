@@ -8,6 +8,7 @@ import {
 } from "@/lib/drafts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ThemeColorEditor } from "@/components/theme/ThemeColorEditor";
 
 const tabs = [
   { id: "services", label: "Services" },
@@ -24,17 +25,19 @@ const CustomizationPanel = () => {
   const logoInputRef = useRef<HTMLInputElement | null>(null);
   const faviconInputRef = useRef<HTMLInputElement | null>(null);
   const theme = useTheme();
-  const {
-    primaryColor,
+  const {primaryColor,
     secondaryColor,
+    backgroundColor,
+    foregroundColor,
+    mutedColor,
     logoUrl,
     faviconUrl,
     serviceImages,
     serviceSectionImages,
     teamImages,
-    projectImages,
-    setPrimaryColor,
+    projectImages,setPrimaryColor,
     setSecondaryColor,
+    updateThemeColors,
     setLogoUrl,
     setFaviconUrl,
     setServiceImage,
@@ -280,22 +283,16 @@ const CustomizationPanel = () => {
                   />
                 </div>
               </div>
-
-              <div>
-                <label className="text-sm font-medium text-foreground block mb-2">Brand dark (primary)</label>
-                <div className="flex items-center gap-3">
-                  <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="h-10 w-14 rounded cursor-pointer border-0" />
-                  <Input value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="font-mono text-sm" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-foreground block mb-2">Accent (secondary)</label>
-                <div className="flex items-center gap-3">
-                  <input type="color" value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)} className="h-10 w-14 rounded cursor-pointer border-0" />
-                  <Input value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)} className="font-mono text-sm" />
-                </div>
-              </div>
+              <ThemeColorEditor
+                colors={{
+                  primaryColor,
+                  secondaryColor,
+                  backgroundColor,
+                  foregroundColor,
+                  mutedColor,
+                }}
+                onChange={updateThemeColors}
+              />
 
               <Button variant="outline" className="w-full" onClick={resetTheme}>
                 <RotateCcw className="h-4 w-4 mr-2" />

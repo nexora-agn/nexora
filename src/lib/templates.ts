@@ -23,6 +23,7 @@ import landscapingThumbUrl from "@/assets/admin/landscaping-thumb.svg?url";
 import homebuilderThumbUrl from "@/assets/admin/homebuilder-thumb.svg?url";
 import remodelerThumbUrl from "@/assets/admin/remodeler-thumb.svg?url";
 import mrbuildernycThumbUrl from "@/assets/admin/mrbuildernyc-thumb.svg?url";
+import minhsThumbUrl from "@/assets/admin/minhs-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -38,6 +39,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   remodeler: "remodeler",
   mrbuildernyc: "mrbuildernyc",
   familyfirst: "familyfirst-plumber",
+  minhs: "automotive",
 };
 
 export interface TemplateOption {
@@ -364,6 +366,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-familyfirst.html",
       scaffoldDir: "template-source-familyfirst",
       liveTemplateDir: "src/template-familyfirst",
+    },
+  },
+  {
+    id: "minhs",
+    name: "MINHS Automotive",
+    tagline: "Premium European auto repair · charcoal + electric blue",
+    description:
+      "Premium European automotive service template for Brooklyn luxury repair shops. Dark charcoal hero, trust bar, vehicle brand showcase, 10-service grid, why-choose, nationwide warranty section, testimonials, shop gallery, about story, FAQ, service areas, appointment forms, and sticky mobile call CTA. Built for BMW, Mercedes, Audi, Porsche, and European specialists.",
+    thumbnail: minhsThumbUrl,
+    accent: "#2563eb",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.minhs,
+    available: true,
+    features: [
+      "MINHS logo + charcoal/blue luxury brand",
+      "9 European manufacturer showcase",
+      "10 automotive services with detail pages",
+      "5 year / 50,000 mile warranty section",
+      "Shop gallery + customer testimonials",
+      "Sticky nav + mobile call button",
+    ],
+    paths: {
+      previewHtml: "/preview-minhs.html",
+      scaffoldDir: "template-source-minhs",
+      liveTemplateDir: "src/template-minhs",
     },
   },
 ];

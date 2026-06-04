@@ -119,6 +119,10 @@ export const TEMPLATE_REGISTRY = [
     id: "mrbuildernyc",
     paths: { scaffoldDir: "template-source-mrbuildernyc", liveTemplateDir: "src/template-mrbuildernyc" },
   },
+  {
+    id: "minhs",
+    paths: { scaffoldDir: "template-source-minhs", liveTemplateDir: "src/template-minhs" },
+  },
 ];
 
 /**

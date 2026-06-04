@@ -35,8 +35,12 @@ import {
   migrateMrBuilderNycThemeConfig,
 } from "@template-mrbuildernyc/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as MRBUILDERNYC_SITE_CONTENT } from "@template-mrbuildernyc/contexts/SiteContentContext";
+import { THEME_DEFAULTS as MINHS_THEME } from "@template-minhs/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as MINHS_SITE_CONTENT } from "@template-minhs/contexts/SiteContentContext";
+import { hydrateMinhsSiteContent, hydrateMinhsThemeConfig } from "@template-minhs/lib/media";
 import { migrateMrBuilderNycCompanyPhone } from "@template-mrbuildernyc/data/siteData";
 import { canonicalTemplateId } from "@/lib/templates";
+import { normalizeThemeConfig } from "@/lib/templateTheme";
 import { withCanonicalRoofixHeroImage } from "@/lib/roofixHeroImage";
 
 export interface DraftState {
@@ -76,6 +80,8 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return SUMMIT_THEME;
     case "mrbuildernyc":
       return MRBUILDERNYC_THEME;
+    case "minhs":
+      return MINHS_THEME;
     default:
       return CONSTRUCTO_THEME;
   }
@@ -144,6 +150,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return SUMMIT_SITE_CONTENT as unknown as SiteContentState;
     case "mrbuildernyc":
       return MRBUILDERNYC_SITE_CONTENT as unknown as SiteContentState;
+    case "minhs":
+      return MINHS_SITE_CONTENT as unknown as SiteContentState;
     default:
       return CONSTRUCTO_SITE_CONTENT;
   }
@@ -600,14 +608,21 @@ export async function getDraft(clientId: string): Promise<DraftState> {
       company: migrateMrBuilderNycCompanyPhone(content.company),
     };
   }
+  if (templateKey === "minhs") {
+    content = hydrateMinhsSiteContent(mergedContent as Record<string, unknown>) as SiteContentState;
+  }
 
-  let theme: ThemeConfig = { ...themeBase, ...((row?.theme as Partial<ThemeConfig>) ?? {}) };
+  let theme: ThemeConfig = normalizeThemeConfig(themeBase, (row?.theme as Partial<ThemeConfig>) ?? {});
   if (templateKey === "roofix") {
     theme = migrateRoofixThemeConfig(theme) as ThemeConfig;
   }
   if (templateKey === "mrbuildernyc") {
     theme = migrateMrBuilderNycThemeConfig(theme) as ThemeConfig;
   }
+  if (templateKey === "minhs") {
+    theme = hydrateMinhsThemeConfig(theme);
+  }
+  theme = normalizeThemeConfig(themeBase, theme);
 
   return {
     theme,

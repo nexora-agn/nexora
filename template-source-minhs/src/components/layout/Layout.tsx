@@ -1,0 +1,15 @@
+import { ReactNode } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import FloatingCallButton from "./FloatingCallButton";
+
+const Layout = ({ children }: { children: ReactNode }) => (
+  <div className="flex flex-col min-h-screen">
+    <Header />
+    <main className="flex-1 min-w-0">{children}</main>
+    <Footer />
+    <FloatingCallButton />
+  </div>
+);
+
+export default Layout;

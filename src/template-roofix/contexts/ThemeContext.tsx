@@ -1,19 +1,18 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import {
+  applyThemePalette,
+  buildThemeDefaults,
+  normalizeThemeConfig,
+  type ThemeColorFields,
+  type ThemeConfig,
+} from "@/lib/templateTheme";
 
-export interface ThemeConfig {
-  primaryColor: string;
-  secondaryColor: string;
-  logoUrl: string | null;
-  faviconUrl: string | null;
-  serviceImages: Record<string, string>;
-  serviceSectionImages: Record<string, string>;
-  teamImages: Record<string, string>;
-  projectImages: Record<string, string>;
-}
+export type { ThemeConfig };
 
 interface ThemeContextType extends ThemeConfig {
   setPrimaryColor: (color: string) => void;
   setSecondaryColor: (color: string) => void;
+  updateThemeColors: (patch: Partial<ThemeColorFields>) => void;
   setLogoUrl: (url: string | null) => void;
   setFaviconUrl: (url: string | null) => void;
   setServiceImage: (id: string, url: string | null) => void;
@@ -27,10 +26,13 @@ interface ThemeContextType extends ThemeConfig {
   resetTheme: () => void;
 }
 
-/** Primary = brand dark (nav, footer). Secondary = accent (CTAs, highlights). */
-export const THEME_DEFAULTS: ThemeConfig = {
+const BRAND = buildThemeDefaults({
   primaryColor: "#1c1917",
   secondaryColor: "#15803d",
+});
+
+export const THEME_DEFAULTS: ThemeConfig = {
+  ...BRAND,
   logoUrl: null,
   faviconUrl: null,
   serviceImages: {},
@@ -42,10 +44,6 @@ export const THEME_DEFAULTS: ThemeConfig = {
 const STORAGE_KEY = "roofix-theme";
 const EXPORT_MARKER_KEY = "roofix-export-applied-at";
 
-/**
- * Hex values historically shipped as Roofix secondary (gold / orange). Persisted drafts and
- * `localStorage` may still carry these so the UI overrides THEME_DEFAULTS until users pick a custom accent.
- */
 const LEGACY_ROOFIX_SECONDARY_HEX = new Set([
   "#ea580c",
   "#f97316",
@@ -61,7 +59,7 @@ const LEGACY_ROOFIX_SECONDARY_HEX = new Set([
 ]);
 
 export function migrateRoofixThemeConfig(partial: Partial<ThemeConfig>): ThemeConfig {
-  const merged: ThemeConfig = { ...THEME_DEFAULTS, ...partial };
+  const merged = normalizeThemeConfig(THEME_DEFAULTS, partial);
   const hex = merged.secondaryColor?.trim().toLowerCase() ?? "";
   if (hex && LEGACY_ROOFIX_SECONDARY_HEX.has(hex)) {
     merged.secondaryColor = THEME_DEFAULTS.secondaryColor;
@@ -69,40 +67,10 @@ export function migrateRoofixThemeConfig(partial: Partial<ThemeConfig>): ThemeCo
   return merged;
 }
 
-function hexToHSL(hex: string): string {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h = 0;
-  let s = 0;
-  const l = (max + min) / 2;
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-      case g: h = ((b - r) / d + 2) / 6; break;
-      case b: h = ((r - g) / d + 4) / 6; break;
-    }
-  }
-  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+function migrateSavedTheme(partial: Partial<ThemeConfig>): ThemeConfig {
+  return migrateRoofixThemeConfig(partial);
 }
-
-function relativeLuminanceFromHex(hex: string): number {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
-  const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-}
-
-function secondaryForegroundHex(secondaryHex: string, primaryHex: string): string {
-  const L = relativeLuminanceFromHex(secondaryHex);
-  if (L > 0.45) return primaryHex;
-  return "#ffffff";
-}
+const wrapTheme = (cfg: ThemeConfig) => cfg;
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -110,7 +78,6 @@ interface ProviderProps {
   children: React.ReactNode;
   value?: ThemeConfig;
   onChange?: (next: ThemeConfig) => void;
-  /** When true, skips localStorage read + `/site-builder-export.json` fetch. */
   external?: boolean;
 }
 
@@ -118,66 +85,56 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children, value, onChan
   const isControlled = value !== undefined && typeof onChange === "function";
 
   const [internalConfig, setInternalConfig] = useState<ThemeConfig>(() => {
-    if (isControlled) return value as ThemeConfig;
+    if (isControlled) return wrapTheme(normalizeThemeConfig(THEME_DEFAULTS, value));
     if (external) return THEME_DEFAULTS;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return THEME_DEFAULTS;
       const parsed = JSON.parse(saved) as Partial<ThemeConfig>;
-      const migrated = migrateRoofixThemeConfig(parsed);
-      if (migrated.secondaryColor !== parsed.secondaryColor) {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
-        } catch {
-          // ignore quota errors
-        }
+      const migrated = migrateSavedTheme(parsed);
+      if (JSON.stringify(migrated) !== JSON.stringify(parsed)) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated)); } catch {}
       }
-      return migrated;
+      return wrapTheme(migrated);
     } catch {
       return THEME_DEFAULTS;
     }
   });
 
-  const config: ThemeConfig = isControlled ? (value as ThemeConfig) : internalConfig;
+  const config: ThemeConfig = isControlled
+    ? wrapTheme(normalizeThemeConfig(THEME_DEFAULTS, value))
+    : internalConfig;
 
   const commit = (next: ThemeConfig) => {
+    const normalized = wrapTheme(normalizeThemeConfig(THEME_DEFAULTS, next));
     if (isControlled) {
-      onChange!(next);
+      onChange!(normalized);
       return;
     }
-    setInternalConfig(next);
+    setInternalConfig(normalized);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      // ignore quota errors
-    }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+    } catch {}
   };
 
-  const applyColors = useCallback((primary: string, secondary: string) => {
-    const root = document.documentElement;
-    const onSecondary = secondaryForegroundHex(secondary, primary);
-    root.style.setProperty("--primary", hexToHSL(primary));
-    root.style.setProperty("--secondary", hexToHSL(secondary));
-    root.style.setProperty("--ring", hexToHSL(primary));
-    root.style.setProperty("--accent", hexToHSL(secondary));
-    root.style.setProperty("--secondary-foreground", hexToHSL(onSecondary));
-    root.style.setProperty("--accent-foreground", hexToHSL(onSecondary));
-  }, []);
-
   useEffect(() => {
-    applyColors(config.primaryColor, config.secondaryColor);
-  }, [config.primaryColor, config.secondaryColor, applyColors]);
+    applyThemePalette(document.documentElement, config);
+  }, [
+    config.primaryColor,
+    config.secondaryColor,
+    config.backgroundColor,
+    config.foregroundColor,
+    config.mutedColor,
+  ]);
 
   useEffect(() => {
     const current = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
-    const link =
-      current ||
-      (() => {
-        const el = document.createElement("link");
-        el.rel = "icon";
-        document.head.appendChild(el);
-        return el;
-      })();
+    const link = current || (() => {
+      const el = document.createElement("link");
+      el.rel = "icon";
+      document.head.appendChild(el);
+      return el;
+    })();
     link.href = config.faviconUrl || "/favicon.svg";
     link.type = config.faviconUrl?.startsWith("data:image/svg") ? "image/svg+xml" : "image/png";
   }, [config.faviconUrl]);
@@ -192,31 +149,18 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children, value, onChan
         const generatedAt = String(data?.generatedAt || "");
         const alreadyApplied = localStorage.getItem(EXPORT_MARKER_KEY);
         if (generatedAt && alreadyApplied === generatedAt) return;
-        setInternalConfig(prev => {
-          const next = migrateRoofixThemeConfig({ ...prev, ...data.theme });
-          try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-          } catch {
-            // ignore
-          }
-          return next;
-        });
+        setInternalConfig(prev => wrapTheme(normalizeThemeConfig(THEME_DEFAULTS, { ...prev, ...data.theme })));
         if (generatedAt) {
-          try {
-            localStorage.setItem(EXPORT_MARKER_KEY, generatedAt);
-          } catch {
-            // ignore
-          }
+          try { localStorage.setItem(EXPORT_MARKER_KEY, generatedAt); } catch {}
         }
       })
       .catch(() => undefined);
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, [isControlled, external]);
 
   const setPrimaryColor = (color: string) => commit({ ...config, primaryColor: color });
   const setSecondaryColor = (color: string) => commit({ ...config, secondaryColor: color });
+  const updateThemeColors = (patch: Partial<ThemeColorFields>) => commit({ ...config, ...patch });
   const setLogoUrl = (url: string | null) => commit({ ...config, logoUrl: url });
   const setFaviconUrl = (url: string | null) => commit({ ...config, faviconUrl: url });
   const updateImageMap = (
@@ -233,6 +177,7 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children, value, onChan
   const setServiceSectionImage = (id: string, url: string | null) => updateImageMap("serviceSectionImages", id, url);
   const setTeamImage = (id: string, url: string | null) => updateImageMap("teamImages", id, url);
   const setProjectImage = (id: string, url: string | null) => updateImageMap("projectImages", id, url);
+
   const resolveServiceImage = (id: string, fallback: string) => config.serviceImages[id] || fallback;
   const resolveServiceSectionImage = (id: string, fallback: string) => config.serviceSectionImages[id] || fallback;
   const resolveTeamImage = (id: string, fallback: string) => config.teamImages[id] || fallback;
@@ -245,6 +190,7 @@ export const ThemeProvider: React.FC<ProviderProps> = ({ children, value, onChan
         ...config,
         setPrimaryColor,
         setSecondaryColor,
+        updateThemeColors,
         setLogoUrl,
         setFaviconUrl,
         setServiceImage,

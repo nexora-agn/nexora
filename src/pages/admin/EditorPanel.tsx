@@ -24,6 +24,8 @@ import {
   type DraftState,
 } from "@/lib/drafts";
 import { canonicalTemplateId, getTemplate } from "@/lib/templates";
+import { ThemeColorEditor } from "@/components/theme/ThemeColorEditor";
+import type { ThemeColorFields } from "@/lib/templateTheme";
 import { supabase } from "@/lib/supabase";
 
 interface EditorPanelProps {
@@ -157,8 +159,16 @@ const EditorPanel = ({ state, onChange, clientId, templateId }: EditorPanelProps
           onRemove={() => setTheme({ faviconUrl: null })}
         />
 
-        <ColorField label="Brand dark (primary)" value={theme.primaryColor} onChange={v => setTheme({ primaryColor: v })} />
-        <ColorField label="Accent (secondary)" value={theme.secondaryColor} onChange={v => setTheme({ secondaryColor: v })} />
+        <ThemeColorEditor
+          colors={{
+            primaryColor: theme.primaryColor,
+            secondaryColor: theme.secondaryColor,
+            backgroundColor: theme.backgroundColor,
+            foregroundColor: theme.foregroundColor,
+            mutedColor: theme.mutedColor,
+          }}
+          onChange={(patch: Partial<ThemeColorFields>) => setTheme(patch)}
+        />
 
         <Button
           variant="outline"
@@ -168,6 +178,9 @@ const EditorPanel = ({ state, onChange, clientId, templateId }: EditorPanelProps
             setTheme({
               primaryColor: templateDefaults.theme.primaryColor,
               secondaryColor: templateDefaults.theme.secondaryColor,
+              backgroundColor: templateDefaults.theme.backgroundColor,
+              foregroundColor: templateDefaults.theme.foregroundColor,
+              mutedColor: templateDefaults.theme.mutedColor,
               logoUrl: null,
               faviconUrl: null,
             })

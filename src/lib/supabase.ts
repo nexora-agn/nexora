@@ -63,6 +63,9 @@ export type Client = {
 export type DraftThemeConfig = {
   primaryColor: string;
   secondaryColor: string;
+  backgroundColor?: string;
+  foregroundColor?: string;
+  mutedColor?: string;
   logoUrl: string | null;
   faviconUrl: string | null;
   serviceImages: Record<string, string>;
