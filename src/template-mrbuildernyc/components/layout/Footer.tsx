@@ -67,8 +67,8 @@ const Footer = () => {
                   </svg>
                 </span>
                 <div className="leading-tight">
-                  <p className="text-lg font-black tracking-tight uppercase">
-                    {(COMPANY.name || "MrBuilderNYC").toUpperCase()}
+                  <p className="text-lg font-black tracking-tight">
+                    {COMPANY.name || "MrBuilderNYC"}
                   </p>
                   <p className="text-[10px] font-bold tracking-[0.18em] text-white/70 uppercase">
                     NYC Roofing & Exterior

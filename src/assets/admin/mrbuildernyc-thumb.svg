@@ -18,7 +18,7 @@
   </g>
   <path d="M0 472 L100 472 L148 438 L280 438 L340 472 L500 472 L572 400 L660 472 L800 472 V520 H0 Z" fill="#050810" opacity="0.46"/>
   <g transform="translate(400 228)">
-    <text xml:space="preserve" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="800" letter-spacing="0.06em" text-anchor="middle" y="0" dominant-baseline="middle">MRBUILDERNYC</text>
+    <text xml:space="preserve" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="800" letter-spacing="0.01em" text-anchor="middle" y="0" dominant-baseline="middle">MrBuilderNYC</text>
     <rect x="-198" y="30" width="396" height="5" rx="2" fill="#f97316" opacity="0.95"/>
     <text xml:space="preserve" fill="#fdba74" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" letter-spacing="0.14em" text-anchor="middle" y="68" opacity="0.94">NYC ROOFING &amp; EXTERIOR</text>
   </g>

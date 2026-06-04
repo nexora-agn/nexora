@@ -64,7 +64,7 @@ const Header = () => {
               <RoofLogoMark />
               <div className="flex flex-col leading-tight">
                 <span className="text-[19px] md:text-2xl font-black text-white tracking-tight">
-                  {(COMPANY.name || "MrBuilderNYC").toUpperCase()}
+                  {COMPANY.name || "MrBuilderNYC"}
                 </span>
                 <span className="text-[10px] font-semibold tracking-[0.18em] text-white/60 uppercase">
                   NYC Roofing & Exterior

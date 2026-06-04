@@ -1,6 +1,6 @@
 export const COMPANY = {
   name: "MrBuilderNYC",
-  legalName: "MRBUILDERNYC",
+  legalName: "MrBuilderNYC",
   tagline:
     "NYC's trusted roofing and exterior construction experts. Roof installs, repairs, replacements and full exterior renovations across the five boroughs.",
   phone: "(212) 555-0184",
