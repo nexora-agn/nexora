@@ -10,6 +10,7 @@ const LOADERS: Record<string, () => Promise<{ default: TemplateShowcaseModule }>
   roofix: () => import("@template-roofix/showcase"),
   electrical: () => import("@template-electrical/showcase"),
   plumbing: () => import("@template-plumbing/showcase"),
+  familyfirst: () => import("@template-familyfirst/showcase"),
   painting: () => import("@template-painting/showcase"),
   landscaping: () => import("@template-landscaping/showcase"),
   homebuilder: () => import("@template-homebuilder/showcase"),

@@ -18,6 +18,8 @@ import { THEME_DEFAULTS as ELECTRICAL_THEME } from "@template-electrical/context
 import { SITE_CONTENT_DEFAULTS as ELECTRICAL_SITE_CONTENT } from "@template-electrical/contexts/SiteContentContext";
 import { THEME_DEFAULTS as PLUMBING_THEME } from "@template-plumbing/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as PLUMBING_SITE_CONTENT } from "@template-plumbing/contexts/SiteContentContext";
+import { THEME_DEFAULTS as FAMILYFIRST_THEME } from "@template-familyfirst/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as FAMILYFIRST_SITE_CONTENT } from "@template-familyfirst/contexts/SiteContentContext";
 import { THEME_DEFAULTS as PAINTING_THEME } from "@template-painting/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as PAINTING_SITE_CONTENT } from "@template-painting/contexts/SiteContentContext";
 import { THEME_DEFAULTS as LANDSCAPING_THEME } from "@template-landscaping/contexts/ThemeContext";
@@ -60,6 +62,8 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return ELECTRICAL_THEME;
     case "plumbing":
       return PLUMBING_THEME;
+    case "familyfirst":
+      return FAMILYFIRST_THEME;
     case "painting":
       return PAINTING_THEME;
     case "landscaping":
@@ -126,6 +130,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return ELECTRICAL_SITE_CONTENT as unknown as SiteContentState;
     case "plumbing":
       return PLUMBING_SITE_CONTENT as unknown as SiteContentState;
+    case "familyfirst":
+      return FAMILYFIRST_SITE_CONTENT as unknown as SiteContentState;
     case "painting":
       return PAINTING_SITE_CONTENT as unknown as SiteContentState;
     case "landscaping":

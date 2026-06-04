@@ -96,6 +96,10 @@ export const TEMPLATE_REGISTRY = [
     paths: { scaffoldDir: "template-source-plumbing", liveTemplateDir: "src/template-plumbing" },
   },
   {
+    id: "familyfirst",
+    paths: { scaffoldDir: "template-source-familyfirst", liveTemplateDir: "src/template-familyfirst" },
+  },
+  {
     id: "painting",
     paths: { scaffoldDir: "template-source-painting", liveTemplateDir: "src/template-painting" },
   },

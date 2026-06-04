@@ -17,6 +17,7 @@ import ridgepeakThumbUrl from "@/assets/admin/ridgepeak-thumb.svg?url";
 import roofixThumbUrl from "@/assets/admin/roofix-thumb.svg?url";
 import electricalThumbUrl from "@/assets/admin/electrical-thumb.svg?url";
 import plumbingThumbUrl from "@/assets/admin/plumbing-thumb.svg?url";
+import familyfirstThumbUrl from "@/assets/admin/familyfirst-thumb.svg?url";
 import paintingThumbUrl from "@/assets/admin/painting-thumb.svg?url";
 import landscapingThumbUrl from "@/assets/admin/landscaping-thumb.svg?url";
 import homebuilderThumbUrl from "@/assets/admin/homebuilder-thumb.svg?url";
@@ -36,6 +37,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   homebuilder: "homebuilder",
   remodeler: "remodeler",
   mrbuildernyc: "mrbuildernyc",
+  familyfirst: "familyfirst-plumber",
 };
 
 export interface TemplateOption {
@@ -338,6 +340,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-mrbuildernyc.html",
       scaffoldDir: "template-source-mrbuildernyc",
       liveTemplateDir: "src/template-mrbuildernyc",
+    },
+  },
+  {
+    id: "familyfirst",
+    name: "Family First Plumbing",
+    tagline: "Premium plumbing · charcoal + teal",
+    description:
+      "Premium family-oriented plumbing template inspired by shore NJ contractors. Navy gradient hero with the client's real logo, 9-service grid, boiler & hydronic positioning, trust badges, testimonials, service areas, emergency CTA, financing, homepage FAQ, and full lead forms. Distinct visual system from ClearCurrent Plumbing.",
+    thumbnail: familyfirstThumbUrl,
+    accent: "#21a99f",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.familyfirst,
+    available: true,
+    features: [
+      "Family First logo + navy/cream brand",
+      "9 plumbing services with detail pages",
+      "Boiler & hydronic specialist messaging",
+      "Homepage FAQ + trust sections",
+      "Call-or-text photo CTA pattern",
+      "Financing + SEO city landing pages",
+    ],
+    paths: {
+      previewHtml: "/preview-familyfirst.html",
+      scaffoldDir: "template-source-familyfirst",
+      liveTemplateDir: "src/template-familyfirst",
     },
   },
 ];

@@ -1,0 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 38 33% 97%;
+    --foreground: 208 45% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 208 45% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 208 45% 18%;
+
+    /* Family First logo: charcoal + teal */
+    --primary: 0 0% 22%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 175 67% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 180 15% 94%;
+    --muted-foreground: 0 0% 35%;
+
+    --accent: 175 67% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 180 12% 88%;
+    --input: 180 12% 88%;
+    --ring: 175 67% 40%;
+
+    --radius: 0.625rem;
+
+    --flow-blue: 0 0% 22%;
+    --flow-accent: 175 67% 40%;
+    --flow-warm: 175 67% 40%;
+    --flow-surface: 180 20% 97%;
+    --flow-soft: 180 15% 94%;
+    --flow-dark-panel: 0 0% 18%;
+    --flow-cream: 0 0% 99%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 22%;
+    --sidebar-primary: 0 0% 22%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 180 15% 94%;
+    --sidebar-accent-foreground: 0 0% 22%;
+    --sidebar-border: 180 12% 88%;
+    --sidebar-ring: 175 67% 40%;
+  }
+
+  .dark {
+    --background: 206 45% 12%;
+    --foreground: 36 30% 96%;
+    --card: 206 40% 14%;
+    --card-foreground: 36 30% 96%;
+    --popover: 206 40% 14%;
+    --popover-foreground: 36 30% 96%;
+    --primary: 36 30% 96%;
+    --primary-foreground: 206 63% 28%;
+    --secondary: 203 55% 48%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 206 30% 18%;
+    --muted-foreground: 36 15% 65%;
+    --accent: 28 52% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 36 30% 96%;
+    --border: 206 25% 22%;
+    --input: 206 25% 22%;
+    --ring: 203 55% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Libre Baskerville", Georgia, "Times New Roman", serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Libre Baskerville", Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-sans-brand {
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24 px-4 md:px-8;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .flow-clip-angle {
+    clip-path: polygon(0 0, 100% 0, 100% 94%, 0 100%);
+  }
+
+  .flow-shadow-soft {
+    box-shadow: 0 12px 40px -12px hsl(var(--primary) / 0.18);
+  }
+
+  .flow-shadow-card {
+    box-shadow:
+      0 1px 2px hsl(var(--primary) / 0.04),
+      0 16px 48px -12px hsl(var(--primary) / 0.14);
+  }
+
+  .flow-shadow-elevated {
+    box-shadow:
+      0 4px 6px -2px hsl(var(--primary) / 0.06),
+      0 24px 64px -16px hsl(var(--primary) / 0.2);
+  }
+
+  .ff-card {
+    @apply rounded-xl border border-border bg-card overflow-hidden transition-all duration-300;
+  }
+
+  .ff-card:hover {
+    @apply border-[hsl(var(--secondary))]/40 flow-shadow-card -translate-y-0.5;
+  }
+
+  .ff-gradient-hero,
+  .ff-page-hero {
+    background: linear-gradient(
+      165deg,
+      hsl(0 0% 100%) 0%,
+      hsl(175 40% 97%) 45%,
+      hsl(175 35% 94%) 100%
+    );
+  }
+
+  .ff-warm-cta {
+    @apply bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/90 text-white;
+  }
+
+  .badge-pill {
+    @apply inline-flex items-center rounded-full border border-[hsl(var(--secondary))]/30 bg-white/90 px-3 py-1.5 text-xs font-semibold text-[hsl(var(--primary))] font-sans-brand;
+  }
+}

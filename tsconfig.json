@@ -19,6 +19,30 @@
       ],
       "@template-roofix/*": [
         "./src/template-roofix/*"
+      ],
+      "@template-electrical/*": [
+        "./src/template-electrical/*"
+      ],
+      "@template-plumbing/*": [
+        "./src/template-plumbing/*"
+      ],
+      "@template-painting/*": [
+        "./src/template-painting/*"
+      ],
+      "@template-familyfirst/*": [
+        "./src/template-familyfirst/*"
+      ],
+      "@template-landscaping/*": [
+        "./src/template-landscaping/*"
+      ],
+      "@template-homebuilder/*": [
+        "./src/template-homebuilder/*"
+      ],
+      "@template-remodeler/*": [
+        "./src/template-remodeler/*"
+      ],
+      "@template-mrbuildernyc/*": [
+        "./src/template-mrbuildernyc/*"
       ]
     },
     "skipLibCheck": true,
