@@ -34,6 +34,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   landscaping: "landscaping",
   homebuilder: "homebuilder",
   remodeler: "remodeler",
+  mrbuildernyc: "mrbuildernyc",
 };
 
 export interface TemplateOption {
