@@ -111,6 +111,10 @@ export const TEMPLATE_REGISTRY = [
     id: "remodeler",
     paths: { scaffoldDir: "template-source-remodeler", liveTemplateDir: "src/template-remodeler" },
   },
+  {
+    id: "mrbuildernyc",
+    paths: { scaffoldDir: "template-source-mrbuildernyc", liveTemplateDir: "src/template-mrbuildernyc" },
+  },
 ];
 
 /**
@@ -369,6 +373,7 @@ async function patchSiteDataTs(tempProject, content) {
     HOME_STATS: content.homeStats,
     WHY_BENEFITS: content.whyBenefits,
     SERVICES: content.services,
+    SERVICE_DEEP_DIVES: content.serviceSections,
     PROJECTS: content.projects,
     TEAM: content.team,
     TESTIMONIALS: content.testimonials,
@@ -691,15 +696,10 @@ async function patchTemplateContexts(tempProject) {
 
   try {
     let siteSrc = await fs.readFile(sitePath, "utf8");
-    siteSrc = siteSrc
-      .replace(
-        /EXPORT_MARKER_KEY\s*=\s*"constructco-export-applied-at"/,
-        'EXPORT_MARKER_KEY = "constructco-site-export-applied-at"',
-      )
-      .replace(
-        /if\s*\(\s*generatedAt\s*&&\s*alreadyApplied\s*===\s*generatedAt\s*\)\s*return;?/,
-        "// applied guard removed during export so every page load re-hydrates the content",
-      );
+    siteSrc = siteSrc.replace(
+      /if\s*\(\s*generatedAt\s*&&\s*alreadyApplied\s*===\s*generatedAt\s*\)\s*return;?/g,
+      "// applied guard removed during export so every page load re-hydrates the content",
+    );
     await fs.writeFile(sitePath, siteSrc, "utf8");
   } catch (e) {
     console.warn("[export] Could not patch SiteContentContext:", e.message);
@@ -707,15 +707,10 @@ async function patchTemplateContexts(tempProject) {
 
   try {
     let themeSrc = await fs.readFile(themePath, "utf8");
-    themeSrc = themeSrc
-      .replace(
-        /EXPORT_MARKER_KEY\s*=\s*"constructco-export-applied-at"/,
-        'EXPORT_MARKER_KEY = "constructco-theme-export-applied-at"',
-      )
-      .replace(
-        /if\s*\(\s*generatedAt\s*&&\s*alreadyApplied\s*===\s*generatedAt\s*\)\s*return;?/,
-        "// applied guard removed during export so every page load re-hydrates the theme",
-      );
+    themeSrc = themeSrc.replace(
+      /if\s*\(\s*generatedAt\s*&&\s*alreadyApplied\s*===\s*generatedAt\s*\)\s*return;?/g,
+      "// applied guard removed during export so every page load re-hydrates the theme",
+    );
     await fs.writeFile(themePath, themeSrc, "utf8");
   } catch (e) {
     console.warn("[export] Could not patch ThemeContext:", e.message);

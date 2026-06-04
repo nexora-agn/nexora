@@ -27,6 +27,10 @@ export const OFFICE_HOURS = [
 export const MAP_EMBED_URL =
   "https://www.openstreetmap.org/export/embed.html?bbox=-74.05%2C40.68%2C-73.90%2C40.82&layer=mapnik&marker=40.7518,-73.9910";
 
+/** NYC signage — Unsplash kegWoCHJzGY (Nik Shuliahin). Shared by home + services heroes. */
+export const NYC_SIGNAGE_HERO_IMAGE =
+  "https://images.unsplash.com/photo-1511745235279-2f7276d5ba65?auto=format&fit=crop&w=1920&h=1080&q=85";
+
 export const HOME_HERO = {
   eyebrow: "NEW YORK CITY ROOFING & EXTERIOR",
   headlineBefore: "NYC's Trusted",
@@ -36,9 +40,7 @@ export const HOME_HERO = {
     "Professional roofing, repairs, replacements, and exterior solutions delivered with quality craftsmanship and reliable service — built for the five boroughs.",
   primaryCta: { label: "GET FREE ESTIMATE", to: "/contact" },
   secondaryCta: { label: "CALL NOW", to: "/contact" },
-  /** NYC rooftop / urban exterior — strong negative space for hero copy. */
-  image:
-    "https://images.unsplash.com/photo-1518736346281-cb78bb0dc1ff?auto=format&fit=crop&w=1920&h=1080&q=85",
+  image: NYC_SIGNAGE_HERO_IMAGE,
   featuredEyebrow: "BUILT FOR NEW YORK",
   featuredTitle: "Roofing & Exterior Construction",
   featuredMeta: "Residential & Commercial · Five Boroughs",

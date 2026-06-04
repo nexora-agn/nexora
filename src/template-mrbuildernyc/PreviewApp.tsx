@@ -21,6 +21,7 @@ import {
 } from "@template-mrbuildernyc/contexts/SiteContentContext";
 import { mergeSiteContentState } from "@/lib/drafts";
 import ScrollToTop from "@template-mrbuildernyc/components/ScrollToTop";
+import CustomizationPanel from "@template-mrbuildernyc/components/CustomizationPanel";
 import Index from "@template-mrbuildernyc/pages/Index";
 import NotFound from "@template-mrbuildernyc/pages/NotFound";
 import { supabase, isSupabaseConfigured, type Draft } from "@/lib/supabase";
@@ -171,15 +172,34 @@ const PreviewApp = () => {
     return <PreviewMessage title="Preview error" body={error} />;
   }
 
+  if (clientId) {
+    return (
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <SiteContentProvider value={content} onChange={setContent} external>
+            <ThemeProvider value={theme} onChange={setTheme} external>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <TemplateShell />
+              </TooltipProvider>
+            </ThemeProvider>
+          </SiteContentProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
+    );
+  }
+
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <SiteContentProvider value={content} onChange={setContent} external>
-          <ThemeProvider value={theme} onChange={setTheme} external>
+        <SiteContentProvider>
+          <ThemeProvider>
             <TooltipProvider>
               <Toaster />
               <Sonner />
               <TemplateShell />
+              <CustomizationPanel />
             </TooltipProvider>
           </ThemeProvider>
         </SiteContentProvider>

@@ -21,6 +21,7 @@ import paintingThumbUrl from "@/assets/admin/painting-thumb.svg?url";
 import landscapingThumbUrl from "@/assets/admin/landscaping-thumb.svg?url";
 import homebuilderThumbUrl from "@/assets/admin/homebuilder-thumb.svg?url";
 import remodelerThumbUrl from "@/assets/admin/remodeler-thumb.svg?url";
+import mrbuildernycThumbUrl from "@/assets/admin/mrbuildernyc-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -313,6 +314,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-remodeler.html",
       scaffoldDir: "template-source-remodeler",
       liveTemplateDir: "src/template-remodeler",
+    },
+  },
+  {
+    id: "mrbuildernyc",
+    name: "MrBuilderNYC",
+    tagline: "NYC Roofing & Exterior",
+    description:
+      "NYC-focused roofing and exterior construction template with trust bar, cinematic hero, services ribbon, signature projects, client stories, why-choose-us, and lead contact. Built for five-borough contractors emphasizing emergency service and borough coverage.",
+    thumbnail: mrbuildernycThumbUrl,
+    accent: "#f97316",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.mrbuildernyc,
+    available: true,
+    features: [
+      "Navy + orange NYC roofing brand",
+      "Trust bar + Google reviews strip",
+      "Services ribbon + capabilities",
+      "Signature projects + client stories",
+      "Borough service areas + FAQ",
+      "Editable nav + footer",
+    ],
+    paths: {
+      previewHtml: "/preview-mrbuildernyc.html",
+      scaffoldDir: "template-source-mrbuildernyc",
+      liveTemplateDir: "src/template-mrbuildernyc",
     },
   },
 ];

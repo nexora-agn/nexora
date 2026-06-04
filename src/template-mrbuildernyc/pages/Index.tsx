@@ -2,6 +2,9 @@ import { Helmet } from "react-helmet-async";
 import Layout from "@template-mrbuildernyc/components/layout/Layout";
 import HomeHero from "@template-mrbuildernyc/components/home/HomeHero";
 import ServicesRibbon from "@template-mrbuildernyc/components/home/ServicesRibbon";
+import CapabilitiesSection from "@template-mrbuildernyc/components/home/CapabilitiesSection";
+import StatsBanner from "@template-mrbuildernyc/components/home/StatsBanner";
+import ProcessSection from "@template-mrbuildernyc/components/home/ProcessSection";
 import SignatureProjectsSection from "@template-mrbuildernyc/components/home/SignatureProjectsSection";
 import ClientStoriesSection from "@template-mrbuildernyc/components/home/ClientStoriesSection";
 import WhyTeamSection from "@template-mrbuildernyc/components/home/WhyTeamSection";
@@ -36,13 +39,28 @@ const Index = () => {
           <ServicesRibbon />
         </Reveal>
       )}
-      {sectionVisibility["home.whyTeam"] && (
+      {sectionVisibility["home.capabilities"] && (
+        <Reveal delay={90}>
+          <CapabilitiesSection />
+        </Reveal>
+      )}
+      {sectionVisibility["home.stats"] && (
         <Reveal delay={110}>
+          <StatsBanner />
+        </Reveal>
+      )}
+      {sectionVisibility["home.process"] && (
+        <Reveal delay={130}>
+          <ProcessSection />
+        </Reveal>
+      )}
+      {sectionVisibility["home.whyTeam"] && (
+        <Reveal delay={150}>
           <WhyTeamSection />
         </Reveal>
       )}
       {sectionVisibility["home.clientStories"] && (
-        <Reveal delay={150}>
+        <Reveal delay={170}>
           <ClientStoriesSection />
         </Reveal>
       )}
@@ -52,7 +70,7 @@ const Index = () => {
         </Reveal>
       )}
       {sectionVisibility["home.leadContact"] && (
-        <Reveal delay={220}>
+        <Reveal delay={210}>
           <LeadContactSection />
         </Reveal>
       )}

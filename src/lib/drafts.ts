@@ -28,6 +28,11 @@ import { THEME_DEFAULTS as REMODELER_THEME } from "@template-remodeler/contexts/
 import { SITE_CONTENT_DEFAULTS as REMODELER_SITE_CONTENT } from "@template-remodeler/contexts/SiteContentContext";
 import { THEME_DEFAULTS as SUMMIT_THEME } from "@template-summit/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as SUMMIT_SITE_CONTENT } from "@template-summit/contexts/SiteContentContext";
+import {
+  THEME_DEFAULTS as MRBUILDERNYC_THEME,
+  migrateMrBuilderNycThemeConfig,
+} from "@template-mrbuildernyc/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as MRBUILDERNYC_SITE_CONTENT } from "@template-mrbuildernyc/contexts/SiteContentContext";
 import { canonicalTemplateId } from "@/lib/templates";
 import { withCanonicalRoofixHeroImage } from "@/lib/roofixHeroImage";
 
@@ -64,9 +69,46 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return REMODELER_THEME;
     case "summit":
       return SUMMIT_THEME;
+    case "mrbuildernyc":
+      return MRBUILDERNYC_THEME;
     default:
       return CONSTRUCTO_THEME;
   }
+}
+
+/** Homepage section toggles wired in `template-mrbuildernyc/pages/Index.tsx`. */
+export const MRBUILDERNYC_HOME_SECTION_KEYS = [
+  "home.hero",
+  "home.servicesRibbon",
+  "home.capabilities",
+  "home.stats",
+  "home.process",
+  "home.whyTeam",
+  "home.clientStories",
+  "home.signatureProjects",
+  "home.leadContact",
+] as const;
+
+export const MRBUILDERNYC_SECTION_VISIBILITY_LABELS: Record<string, string> = {
+  "home.hero": "Home — Hero",
+  "home.servicesRibbon": "Home — Services grid",
+  "home.capabilities": "Home — Capabilities",
+  "home.stats": "Home — Stats banner",
+  "home.process": "Home — Job flow (5 steps)",
+  "home.whyTeam": "Home — Why choose us",
+  "home.clientStories": "Home — Client stories",
+  "home.signatureProjects": "Home — Before & after",
+  "home.leadContact": "Home — Contact form",
+};
+
+export function draftDefaultsForClientTemplate(
+  templateId: string | null | undefined,
+): DraftState {
+  return {
+    theme: themeDefaultsForClientTemplate(templateId),
+    content: siteDefaultsForClientTemplate(templateId),
+    notes: "",
+  };
 }
 
 /**
@@ -93,6 +135,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return REMODELER_SITE_CONTENT as unknown as SiteContentState;
     case "summit":
       return SUMMIT_SITE_CONTENT as unknown as SiteContentState;
+    case "mrbuildernyc":
+      return MRBUILDERNYC_SITE_CONTENT as unknown as SiteContentState;
     default:
       return CONSTRUCTO_SITE_CONTENT;
   }
@@ -544,8 +588,12 @@ export async function getDraft(clientId: string): Promise<DraftState> {
       : mergedContent;
 
   let theme: ThemeConfig = { ...themeBase, ...((row?.theme as Partial<ThemeConfig>) ?? {}) };
-  if (canonicalTemplateId(clientRow?.template_id) === "roofix") {
+  const templateKey = canonicalTemplateId(clientRow?.template_id);
+  if (templateKey === "roofix") {
     theme = migrateRoofixThemeConfig(theme) as ThemeConfig;
+  }
+  if (templateKey === "mrbuildernyc") {
+    theme = migrateMrBuilderNycThemeConfig(theme) as ThemeConfig;
   }
 
   return {

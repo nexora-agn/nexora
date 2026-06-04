@@ -17,13 +17,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { DEFAULT_DRAFT_STATE, type DraftState } from "@/lib/drafts";
+import {
+  MRBUILDERNYC_HOME_SECTION_KEYS,
+  MRBUILDERNYC_SECTION_VISIBILITY_LABELS,
+  draftDefaultsForClientTemplate,
+  type DraftState,
+} from "@/lib/drafts";
+import { canonicalTemplateId, getTemplate } from "@/lib/templates";
 import { supabase } from "@/lib/supabase";
 
 interface EditorPanelProps {
   state: DraftState;
   onChange: (updater: (prev: DraftState) => DraftState) => void;
   clientId: string;
+  templateId?: string | null;
 }
 
 const UID = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
@@ -49,8 +56,15 @@ async function uploadImageToStorage(clientId: string, file: File): Promise<strin
   return data.publicUrl;
 }
 
-const EditorPanel = ({ state, onChange, clientId }: EditorPanelProps) => {
+const EditorPanel = ({ state, onChange, clientId, templateId }: EditorPanelProps) => {
   const { theme, content } = state;
+  const templateDefaults = draftDefaultsForClientTemplate(templateId);
+  const isMrBuilderNyc = canonicalTemplateId(templateId) === "mrbuildernyc";
+  const templateName = getTemplate(templateId).name;
+
+  const sectionVisibilityEntries = isMrBuilderNyc
+    ? MRBUILDERNYC_HOME_SECTION_KEYS.map(key => [key, content.sectionVisibility[key] ?? true] as const)
+    : (Object.entries(content.sectionVisibility) as [string, boolean][]);
 
   const setTheme = useCallback(
     (patch: Partial<DraftState["theme"]>) => {
@@ -152,8 +166,8 @@ const EditorPanel = ({ state, onChange, clientId }: EditorPanelProps) => {
           className="w-full"
           onClick={() =>
             setTheme({
-              primaryColor: DEFAULT_DRAFT_STATE.theme.primaryColor,
-              secondaryColor: DEFAULT_DRAFT_STATE.theme.secondaryColor,
+              primaryColor: templateDefaults.theme.primaryColor,
+              secondaryColor: templateDefaults.theme.secondaryColor,
               logoUrl: null,
               faviconUrl: null,
             })
@@ -1080,12 +1094,16 @@ const EditorPanel = ({ state, onChange, clientId }: EditorPanelProps) => {
           <AccordionItem value="visibility">
             <AccordionTrigger className="text-sm font-semibold">Section visibility</AccordionTrigger>
             <AccordionContent className="space-y-1.5">
-              {Object.entries(content.sectionVisibility).map(([key, visible]) => (
+              {sectionVisibilityEntries.map(([key, visible]) => (
                 <label
                   key={key}
                   className="flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-xs cursor-pointer hover:bg-muted/50"
                 >
-                  <span className="font-medium font-mono">{key}</span>
+                  <span className="font-medium">
+                    {isMrBuilderNyc
+                      ? (MRBUILDERNYC_SECTION_VISIBILITY_LABELS[key] ?? key)
+                      : key}
+                  </span>
                   <input
                     type="checkbox"
                     checked={visible}
@@ -1122,15 +1140,15 @@ const EditorPanel = ({ state, onChange, clientId }: EditorPanelProps) => {
               <AlertDialogDescription>
                 Every customization (logo, favicon, colors, company info, hero, sections,
                 services, projects, team, FAQ, nav, footer, everything) will be restored to
-                the original template defaults. This cannot be undone.
+                the original {templateName} template defaults. This cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                  onChange(() => DEFAULT_DRAFT_STATE);
-                  toast.success("Draft reset to template defaults");
+                  onChange(() => templateDefaults);
+                  toast.success(`Draft reset to ${templateName} defaults`);
                 }}
               >
                 Yes, reset everything

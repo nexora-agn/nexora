@@ -1,7 +1,11 @@
 import { useState, useCallback, useRef } from "react";
 import { Settings, X, Upload, RotateCcw, Plus, Trash2 } from "lucide-react";
-import { useTheme } from "@template-mrbuildernyc/contexts/ThemeContext";
+import { useTheme, type ThemeConfig } from "@template-mrbuildernyc/contexts/ThemeContext";
 import { useSiteContent } from "@template-mrbuildernyc/contexts/SiteContentContext";
+import {
+  MRBUILDERNYC_HOME_SECTION_KEYS,
+  MRBUILDERNYC_SECTION_VISIBILITY_LABELS,
+} from "@/lib/drafts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -19,17 +23,26 @@ const CustomizationPanel = () => {
   const [exporting, setExporting] = useState(false);
   const logoInputRef = useRef<HTMLInputElement | null>(null);
   const faviconInputRef = useRef<HTMLInputElement | null>(null);
+  const theme = useTheme();
   const {
     primaryColor,
     secondaryColor,
     logoUrl,
     faviconUrl,
+    serviceImages,
+    serviceSectionImages,
+    teamImages,
+    projectImages,
     setPrimaryColor,
     setSecondaryColor,
     setLogoUrl,
     setFaviconUrl,
+    setServiceImage,
+    setServiceSectionImage,
+    setTeamImage,
+    setProjectImage,
     resetTheme,
-  } = useTheme();
+  } = theme;
   const {
     services,
     serviceSections,
@@ -54,7 +67,16 @@ const CustomizationPanel = () => {
 
   const handleExportCode = useCallback(async () => {
     const payload = {
-      theme: { primaryColor, secondaryColor, logoUrl, faviconUrl },
+      theme: {
+        primaryColor,
+        secondaryColor,
+        logoUrl,
+        faviconUrl,
+        serviceImages,
+        serviceSectionImages,
+        teamImages,
+        projectImages,
+      } satisfies Partial<ThemeConfig>,
       content: { services, serviceSections, team, projects, sectionVisibility },
     };
     setExporting(true);
@@ -97,7 +119,7 @@ const CustomizationPanel = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "constructo-website-export.zip";
+      a.download = "mrbuildernyc-website-export.zip";
       a.click();
       URL.revokeObjectURL(url);
     } catch (error) {
@@ -106,7 +128,21 @@ const CustomizationPanel = () => {
     } finally {
       setExporting(false);
     }
-  }, [primaryColor, secondaryColor, logoUrl, faviconUrl, services, serviceSections, team, projects, sectionVisibility]);
+  }, [
+    primaryColor,
+    secondaryColor,
+    logoUrl,
+    faviconUrl,
+    serviceImages,
+    serviceSectionImages,
+    teamImages,
+    projectImages,
+    services,
+    serviceSections,
+    team,
+    projects,
+    sectionVisibility,
+  ]);
 
   const readAsDataUrl = useCallback((file: File, onLoaded: (src: string) => void) => {
     if (!file.type.startsWith("image/")) return;
@@ -289,7 +325,17 @@ const CustomizationPanel = () => {
                       <div key={item.id} className="rounded-lg border border-border p-3 space-y-2">
                         <Input value={item.title} onChange={e => updateService(item.id, { title: e.target.value })} />
                         <Input value={item.description} onChange={e => updateService(item.id, { description: e.target.value })} />
-                        <AssetPicker previewSrc={item.image} onSet={src => updateService(item.id, { image: src })} onRemove={() => updateService(item.id, { image: "" })} />
+                        <AssetPicker
+                          previewSrc={item.image}
+                          onSet={src => {
+                            updateService(item.id, { image: src });
+                            setServiceImage(item.id, src);
+                          }}
+                          onRemove={() => {
+                            updateService(item.id, { image: "" });
+                            setServiceImage(item.id, null);
+                          }}
+                        />
                         <button type="button" onClick={() => removeService(item.id)} className="text-xs text-destructive inline-flex items-center gap-1"><Trash2 className="h-3.5 w-3.5" /> Remove</button>
                       </div>
                     ))}
@@ -303,7 +349,17 @@ const CustomizationPanel = () => {
                       <div key={item.id} className="rounded-lg border border-border p-3 space-y-2">
                         <Input value={item.title} onChange={e => updateServiceSection(item.id, { title: e.target.value })} />
                         <Input value={item.subtitle} onChange={e => updateServiceSection(item.id, { subtitle: e.target.value })} />
-                        <AssetPicker previewSrc={item.image} onSet={src => updateServiceSection(item.id, { image: src })} onRemove={() => updateServiceSection(item.id, { image: "" })} />
+                        <AssetPicker
+                          previewSrc={item.image}
+                          onSet={src => {
+                            updateServiceSection(item.id, { image: src });
+                            setServiceSectionImage(item.id, src);
+                          }}
+                          onRemove={() => {
+                            updateServiceSection(item.id, { image: "" });
+                            setServiceSectionImage(item.id, null);
+                          }}
+                        />
                         <button type="button" onClick={() => removeServiceSection(item.id)} className="text-xs text-destructive inline-flex items-center gap-1"><Trash2 className="h-3.5 w-3.5" /> Remove</button>
                       </div>
                     ))}
@@ -318,7 +374,17 @@ const CustomizationPanel = () => {
                         <Input value={item.name} onChange={e => updateTeamMember(item.id, { name: e.target.value })} />
                         <Input value={item.role} onChange={e => updateTeamMember(item.id, { role: e.target.value })} />
                         <Input value={item.bio} onChange={e => updateTeamMember(item.id, { bio: e.target.value })} />
-                        <AssetPicker previewSrc={item.image} onSet={src => updateTeamMember(item.id, { image: src })} onRemove={() => updateTeamMember(item.id, { image: "" })} />
+                        <AssetPicker
+                          previewSrc={item.image}
+                          onSet={src => {
+                            updateTeamMember(item.id, { image: src });
+                            setTeamImage(item.id, src);
+                          }}
+                          onRemove={() => {
+                            updateTeamMember(item.id, { image: "" });
+                            setTeamImage(item.id, null);
+                          }}
+                        />
                         <button type="button" onClick={() => removeTeamMember(item.id)} className="text-xs text-destructive inline-flex items-center gap-1"><Trash2 className="h-3.5 w-3.5" /> Remove</button>
                       </div>
                     ))}
@@ -333,7 +399,17 @@ const CustomizationPanel = () => {
                         <Input value={item.title} onChange={e => updateProject(item.id, { title: e.target.value })} />
                         <Input value={item.location} onChange={e => updateProject(item.id, { location: e.target.value })} />
                         <Input value={item.description} onChange={e => updateProject(item.id, { description: e.target.value })} />
-                        <AssetPicker previewSrc={item.image} onSet={src => updateProject(item.id, { image: src })} onRemove={() => updateProject(item.id, { image: "" })} />
+                        <AssetPicker
+                          previewSrc={item.image}
+                          onSet={src => {
+                            updateProject(item.id, { image: src });
+                            setProjectImage(item.id, src);
+                          }}
+                          onRemove={() => {
+                            updateProject(item.id, { image: "" });
+                            setProjectImage(item.id, null);
+                          }}
+                        />
                         <button type="button" onClick={() => removeProject(item.id)} className="text-xs text-destructive inline-flex items-center gap-1"><Trash2 className="h-3.5 w-3.5" /> Remove</button>
                       </div>
                     ))}
@@ -342,16 +418,21 @@ const CustomizationPanel = () => {
 
                 {activeTab === "visibility" && (
                   <div className="space-y-2">
-                    {Object.entries(sectionVisibility).map(([key, visible]) => (
+                    {MRBUILDERNYC_HOME_SECTION_KEYS.map(key => {
+                      const visible = sectionVisibility[key] ?? true;
+                      return (
                       <label key={key} className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs">
-                        <span className="font-medium text-foreground">{key}</span>
+                        <span className="font-medium text-foreground">
+                          {MRBUILDERNYC_SECTION_VISIBILITY_LABELS[key] ?? key}
+                        </span>
                         <input
                           type="checkbox"
                           checked={visible}
                           onChange={e => setSectionVisibility(key, e.target.checked)}
                         />
                       </label>
-                    ))}
+                    );
+                    })}
                   </div>
                 )}
 

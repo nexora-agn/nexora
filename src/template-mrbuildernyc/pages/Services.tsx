@@ -232,23 +232,25 @@ const Services = () => {
 
       {/* 1 — Split hero + photography */}
       <section className="bg-background border-b border-border overflow-hidden">
-        <div className="grid lg:grid-cols-12 min-h-[320px]">
-          <div className="lg:col-span-7 px-4 md:px-8 py-14 md:py-20 lg:py-24 flex flex-col justify-center">
-            <p className="text-xs font-bold tracking-[0.28em] text-secondary mb-4">
-              FOUR LANES · ONE ROOFING TEAM
-            </p>
-            <h1 className="text-4xl md:text-5xl lg:text-[56px] font-black uppercase tracking-tight leading-[1.02] text-primary">
-              Roof systems built
-              <br />
-              <span className="text-secondary">for Texas weather.</span>
-            </h1>
-            <p className="mt-6 text-base md:text-lg text-foreground/80 max-w-xl leading-relaxed">
-              Pick the lane that matches your roof today. Residential steep-slope installs, low-slope
-              commercial, storm coordination, or laser-focused leak repairs — each crew runs with specialists
-              in that specialty.
-            </p>
+        <div className="relative lg:min-h-[320px]">
+          <div className="container-custom relative z-10 px-4 md:px-8">
+            <div className="flex flex-col justify-center py-14 md:py-20 lg:py-24 max-w-xl lg:pr-8">
+              <p className="text-xs font-bold tracking-[0.28em] text-secondary mb-4">
+                FOUR LANES · ONE ROOFING TEAM
+              </p>
+              <h1 className="text-4xl md:text-5xl lg:text-[56px] font-black uppercase tracking-tight leading-[1.02] text-primary">
+                Roof systems built
+                <br />
+                <span className="text-secondary">for Texas weather.</span>
+              </h1>
+              <p className="mt-6 text-base md:text-lg text-foreground/80 max-w-xl leading-relaxed">
+                Pick the lane that matches your roof today. Residential steep-slope installs, low-slope
+                commercial, storm coordination, or laser-focused leak repairs — each crew runs with specialists
+                in that specialty.
+              </p>
+            </div>
           </div>
-          <div className="relative lg:col-span-5 min-h-[280px] lg:min-h-0 border-t lg:border-t-0 lg:border-l border-border">
+          <div className="relative min-h-[280px] border-t border-border lg:absolute lg:inset-y-0 lg:left-1/2 lg:right-0 lg:min-h-0 lg:border-t-0 lg:border-l">
             <img
               src={SERVICES_HERO_IMAGE}
               alt=""

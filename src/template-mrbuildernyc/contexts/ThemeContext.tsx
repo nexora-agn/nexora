@@ -42,7 +42,8 @@ export const THEME_DEFAULTS: ThemeConfig = {
 const STORAGE_KEY = "mrbuildernyc-theme";
 const EXPORT_MARKER_KEY = "mrbuildernyc-export-applied-at";
 
-const LEGACY_SECONDARY_HEX = new Set<string>([]);
+/** Prior red accent — migrate stored themes back to construction orange. */
+const LEGACY_SECONDARY_HEX = new Set<string>(["#d94848", "#d81210"]);
 
 export function migrateMrBuilderNycThemeConfig(partial: Partial<ThemeConfig>): ThemeConfig {
   const merged: ThemeConfig = { ...THEME_DEFAULTS, ...partial };

@@ -157,6 +157,7 @@ const ClientEditor = () => {
                 state={draft.state}
                 onChange={draft.setState}
                 clientId={client.id}
+                templateId={client.template_id}
               />
             )}
           </div>
