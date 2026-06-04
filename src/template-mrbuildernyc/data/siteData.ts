@@ -3,11 +3,26 @@ export const COMPANY = {
   legalName: "MrBuilderNYC",
   tagline:
     "NYC's trusted roofing and exterior construction experts. Roof installs, repairs, replacements and full exterior renovations across the five boroughs.",
-  phone: "(212) 555-0184",
+  phone: "+1 (914) 906-5748",
   email: "info@mrbuildernyc.com",
   address: "350 5th Ave, New York, NY 10118",
   hours: "Mon - Sat: 7:00 AM - 7:00 PM · 24/7 Emergency Roofing",
 };
+
+/** Template placeholder numbers — replaced with `COMPANY.phone` when drafts/localStorage still have them. */
+const LEGACY_COMPANY_PHONE_DIGITS = new Set(["2125550184", "8175550198"]);
+
+export function phoneDigitsOnly(phone: string): string {
+  return phone.replace(/\D/g, "");
+}
+
+export function migrateMrBuilderNycCompanyPhone<T extends { phone?: string }>(company: T): T {
+  const digits = phoneDigitsOnly(company.phone ?? "");
+  if (!digits || LEGACY_COMPANY_PHONE_DIGITS.has(digits)) {
+    return { ...company, phone: COMPANY.phone };
+  }
+  return company;
+}
 
 export const SITE_TOP = {
   tagline: "NYC Roofing & Exterior Experts.",

@@ -29,6 +29,7 @@ import {
   LEAD_FORM,
   BLOG_TAGS,
   SERVICE_AREAS,
+  migrateMrBuilderNycCompanyPhone,
 } from "@template-mrbuildernyc/data/siteData";
 
 type Service = (typeof SERVICES)[number];
@@ -176,14 +177,18 @@ const EXCLUDED_SERVICE_IDS = new Set(["project-management"]);
 function sanitizeSiteContent(state: SiteContentState): SiteContentState {
   const pmSlug = "/services/project-management";
   const isPmTitle = (t: string) => /^project\s+management$/i.test(t.trim());
-  return {
+  const withPhone = {
     ...state,
-    services: state.services.filter(
+    company: migrateMrBuilderNycCompanyPhone(state.company),
+  };
+  return {
+    ...withPhone,
+    services: withPhone.services.filter(
       s => !EXCLUDED_SERVICE_IDS.has(s.id) && !isPmTitle(String(s.title)),
     ),
-    footerServiceLinks: state.footerServiceLinks.filter(l => l.to !== pmSlug && !isPmTitle(l.label)),
-    footerCompanyLinks: state.footerCompanyLinks.filter(l => l.to !== pmSlug && !isPmTitle(l.label)),
-    navLinks: state.navLinks.filter(l => l.path !== pmSlug && !isPmTitle(l.label)),
+    footerServiceLinks: withPhone.footerServiceLinks.filter(l => l.to !== pmSlug && !isPmTitle(l.label)),
+    footerCompanyLinks: withPhone.footerCompanyLinks.filter(l => l.to !== pmSlug && !isPmTitle(l.label)),
+    navLinks: withPhone.navLinks.filter(l => l.path !== pmSlug && !isPmTitle(l.label)),
   };
 }
 

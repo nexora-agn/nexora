@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { TemplateRouterShell } from "@/lib/templateShowcase/TemplateRouterShell";
@@ -19,10 +19,12 @@ import {
   type SiteContentState,
 } from "@template/contexts/SiteContentContext";
 import { mergeContent } from "@/lib/drafts";
+import { getClientIdFromPreviewUrl } from "@/lib/previewDraftBridge";
+import { useClientPreviewDraft } from "@/hooks/useClientPreviewDraft";
 import ScrollToTop from "@template/components/ScrollToTop";
 import Index from "@template/pages/Index";
 import NotFound from "@template/pages/NotFound";
-import { supabase, isSupabaseConfigured, type Draft } from "@/lib/supabase";
+import type { Draft } from "@/lib/supabase";
 
 const About = lazy(() => import("@template/pages/About"));
 const Services = lazy(() => import("@template/pages/Services"));
@@ -86,64 +88,18 @@ const PreviewMessage = ({ title, body }: { title: string; body: string }) => (
   </div>
 );
 
-const getClientIdFromUrl = (): string | null => {
-  if (typeof window === "undefined") return null;
-  return new URLSearchParams(window.location.search).get("c");
-};
-
 const PreviewApp = () => {
-  const clientId = useMemo(() => getClientIdFromUrl(), []);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const clientId = useMemo(() => getClientIdFromPreviewUrl(), []);
   const [theme, setTheme] = useState<ThemeConfig>(THEME_DEFAULTS);
   const [content, setContent] = useState<SiteContentState>(SITE_CONTENT_DEFAULTS);
 
-  useEffect(() => {
-    if (!clientId) {
-      setLoading(false);
-      return;
-    }
-    if (!isSupabaseConfigured) {
-      setError("Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
-      setLoading(false);
-      return;
-    }
+  const applyDraftPayload = useCallback((payload: Pick<Draft, "theme" | "content"> | null) => {
+    if (!payload) return;
+    setTheme({ ...THEME_DEFAULTS, ...(payload.theme as Partial<ThemeConfig>) });
+    setContent(mergeContent(payload.content as Partial<SiteContentState> | null));
+  }, []);
 
-    let active = true;
-    const applyDraft = (draft: Draft | null) => {
-      if (!active || !draft) return;
-      setTheme({ ...THEME_DEFAULTS, ...(draft.theme as Partial<ThemeConfig>) });
-      setContent(mergeContent(draft.content as Partial<SiteContentState> | null));
-    };
-
-    (async () => {
-      const { data, error: err } = await supabase
-        .from("drafts")
-        .select("*")
-        .eq("client_id", clientId)
-        .maybeSingle();
-      if (!active) return;
-      if (err) setError(err.message);
-      applyDraft(data as Draft | null);
-      setLoading(false);
-    })();
-
-    const channel = supabase
-      .channel(`draft-${clientId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "drafts", filter: `client_id=eq.${clientId}` },
-        payload => {
-          applyDraft((payload.new as Draft) ?? null);
-        },
-      )
-      .subscribe();
-
-    return () => {
-      active = false;
-      supabase.removeChannel(channel);
-    };
-  }, [clientId]);
+  const { loading, error } = useClientPreviewDraft(clientId, applyDraftPayload);
 
   if (!clientId) {
     return (

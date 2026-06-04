@@ -16,6 +16,7 @@ import AdminShell from "./AdminShell";
 import { useClientDraft } from "@/hooks/useClientDraft";
 import type { Client } from "@/lib/supabase";
 import { getClient } from "@/lib/clients";
+import { postDraftToPreview } from "@/lib/previewDraftBridge";
 import { getTemplate } from "@/lib/templates";
 import EditorPanel from "./EditorPanel";
 import { ExportButton } from "./ExportButton";
@@ -93,6 +94,15 @@ const ClientEditor = () => {
       iframeRef.current.src = iframeRef.current.src;
     }
   }, []);
+
+  const pushDraftToPreview = useCallback(() => {
+    if (!id || draft.loading) return;
+    postDraftToPreview(iframeRef.current?.contentWindow ?? null, id, draft.state);
+  }, [id, draft.loading, draft.state]);
+
+  useEffect(() => {
+    pushDraftToPreview();
+  }, [pushDraftToPreview]);
 
   const openPreviewTab = useCallback(() => {
     if (previewSrc) window.open(previewSrc, "_blank", "noopener");
@@ -207,6 +217,7 @@ const ClientEditor = () => {
                   ref={iframeRef}
                   title="Website preview"
                   src={previewSrc}
+                  onLoad={pushDraftToPreview}
                   className="w-full h-full min-h-[calc(100vh-7rem)] border-0"
                 />
               )}

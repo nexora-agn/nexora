@@ -33,6 +33,7 @@ import {
   migrateMrBuilderNycThemeConfig,
 } from "@template-mrbuildernyc/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as MRBUILDERNYC_SITE_CONTENT } from "@template-mrbuildernyc/contexts/SiteContentContext";
+import { migrateMrBuilderNycCompanyPhone } from "@template-mrbuildernyc/data/siteData";
 import { canonicalTemplateId } from "@/lib/templates";
 import { withCanonicalRoofixHeroImage } from "@/lib/roofixHeroImage";
 
@@ -582,13 +583,19 @@ export async function getDraft(clientId: string): Promise<DraftState> {
     base as unknown as Record<string, unknown>,
     row?.content as Partial<SiteContentState> | null | undefined,
   ) as SiteContentState;
-  const content =
-    canonicalTemplateId(clientRow?.template_id) === "roofix"
+  const templateKey = canonicalTemplateId(clientRow?.template_id);
+  let content =
+    templateKey === "roofix"
       ? withCanonicalRoofixHeroImage(mergedContent)
       : mergedContent;
+  if (templateKey === "mrbuildernyc") {
+    content = {
+      ...content,
+      company: migrateMrBuilderNycCompanyPhone(content.company),
+    };
+  }
 
   let theme: ThemeConfig = { ...themeBase, ...((row?.theme as Partial<ThemeConfig>) ?? {}) };
-  const templateKey = canonicalTemplateId(clientRow?.template_id);
   if (templateKey === "roofix") {
     theme = migrateRoofixThemeConfig(theme) as ThemeConfig;
   }

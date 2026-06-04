@@ -451,7 +451,7 @@ const Contact = () => {
                     <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider">
                       Phone
                     </Label>
-                    <Input id="phone" name="phone" placeholder="(817) 555-0198" />
+                    <Input id="phone" name="phone" placeholder="+1 (914) 906-5748" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider">
