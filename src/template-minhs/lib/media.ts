@@ -1,10 +1,72 @@
 import {
+  HOME_HERO,
   MINHS_IMAGES,
   PROJECTS,
   SERVICE_DEEP_DIVES,
   SERVICES,
   SERVICE_SECTION_IMAGES,
+  SITE_TOP,
 } from "@template-minhs/data/siteData";
+
+const STALE_HERO_EYEBROW = "BROOKLYN · EUROPEAN AUTO SPECIALISTS";
+
+function isStaleHeroEyebrow(value: unknown): boolean {
+  if (typeof value !== "string" || !value.trim()) return false;
+  const text = value.trim();
+  if (text.toUpperCase() === STALE_HERO_EYEBROW) return true;
+  return /brooklyn/i.test(text) && /european/i.test(text);
+}
+
+function migrateMinhsMarketingCopy<T extends Record<string, unknown>>(content: T): T {
+  const rawHero = content.homeHero;
+  if (!rawHero || typeof rawHero !== "object") return content;
+
+  const homeHero = { ...(rawHero as Record<string, unknown>) };
+  let heroChanged = false;
+
+  if (isStaleHeroEyebrow(homeHero.eyebrow)) {
+    homeHero.eyebrow = HOME_HERO.eyebrow;
+    heroChanged = true;
+  }
+  if (homeHero.headlineBefore === "Brooklyn's Premier") {
+    homeHero.headlineBefore = HOME_HERO.headlineBefore;
+    heroChanged = true;
+  }
+  if (homeHero.headlineHighlight === "European Auto Repair") {
+    homeHero.headlineHighlight = HOME_HERO.headlineHighlight;
+    heroChanged = true;
+  }
+  if (Array.isArray(homeHero.trustPills)) {
+    const pills = homeHero.trustPills.map(pill => {
+      if (!pill || typeof pill !== "object") return pill;
+      const row = pill as Record<string, unknown>;
+      if (typeof row.sub === "string" && /brooklyn/i.test(row.sub)) {
+        heroChanged = true;
+        return { ...row, sub: "Trusted Service" };
+      }
+      return pill;
+    });
+    if (heroChanged) homeHero.trustPills = pills;
+  }
+
+  const rawSiteTop = content.siteTop;
+  let siteTop = rawSiteTop;
+  if (rawSiteTop && typeof rawSiteTop === "object") {
+    const top = { ...(rawSiteTop as Record<string, unknown>) };
+    const line = top.line;
+    if (typeof line === "string" && /european/i.test(line)) {
+      top.line = SITE_TOP.line;
+      siteTop = top;
+    }
+  }
+
+  if (!heroChanged && siteTop === rawSiteTop) return content;
+  return {
+    ...content,
+    ...(heroChanged ? { homeHero } : {}),
+    ...(siteTop !== rawSiteTop ? { siteTop } : {}),
+  };
+}
 
 /** Unsplash photo slugs allowed for MINHS (automotive registry only). */
 const ALLOWED_UNSPLASH_IDS = new Set(
@@ -118,12 +180,12 @@ export function hydrateMinhsSiteContent<T extends Record<string, unknown>>(conte
     sectionImageById,
   );
 
-  return {
+  return migrateMinhsMarketingCopy({
     ...content,
     services,
     projects,
     serviceSections,
-  };
+  });
 }
 
 export function hydrateMinhsThemeConfig<T extends { serviceImages?: Record<string, string>; projectImages?: Record<string, string> }>(

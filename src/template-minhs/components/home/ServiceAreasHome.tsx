@@ -17,13 +17,13 @@ const ServiceAreasHome = () => {
               Service Areas
             </span>
             <h2 className="mt-3 font-display text-3xl sm:text-4xl font-bold uppercase text-[hsl(var(--primary))] leading-tight">
-              Local Electricians,
-              <span className="block text-[hsl(var(--secondary))]">On Call Near You</span>
+              Trusted Auto Repair,
+              <span className="block text-[hsl(var(--secondary))]">In Your Neighborhood</span>
             </h2>
             <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
               {SITE_TOP.locations
-                ? `Proudly serving ${SITE_TOP.locations} and surrounding communities with same-day availability for most calls.`
-                : "We dispatch licensed crews across the metro — from quick outlet fixes to full commercial fit-outs."}
+                ? `Proudly serving ${SITE_TOP.locations} and surrounding communities with convenient appointments and dealer-alternative service.`
+                : "We serve drivers across the metro with factory-trained technicians, transparent estimates, and full-service auto care."}
             </p>
             <Link
               to="/service-areas"

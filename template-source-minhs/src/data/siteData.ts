@@ -62,7 +62,7 @@ export const COMPANY = {
 };
 
 export const SITE_TOP = {
-  line: "#1 Dealer Alternative · European Vehicle Specialists",
+  line: "#1 Dealer Alternative · Full-Service Auto Care",
   badges: ["ASE Certified", "Family Owned", "5 Year Warranty"],
   ratingValue: "4.9",
   ratingCount: "500+",
@@ -80,9 +80,9 @@ export const MAP_EMBED_URL =
   "https://www.openstreetmap.org/export/embed.html?bbox=-74.02%2C40.66%2C-73.95%2C40.69&layer=mapnik&marker=40.6682,-73.9895";
 
 export const HOME_HERO = {
-  eyebrow: "BROOKLYN · EUROPEAN AUTO SPECIALISTS",
-  headlineBefore: "Brooklyn's Premier",
-  headlineHighlight: "European Auto Repair",
+  eyebrow: "#1 DEALER ALTERNATIVE · AUTO SPECIALISTS",
+  headlineBefore: "Your Trusted",
+  headlineHighlight: "Auto Repair",
   headlineAfter: "Shop",
   body:
     "Dealer-level expertise without dealer-level prices. Factory-trained technicians, transparent communication, and a 5 year / 50,000 mile nationwide warranty on qualifying work.",
@@ -91,7 +91,7 @@ export const HOME_HERO = {
   image: MINHS_IMAGES.heroLuxury,
   trustPills: [
     { label: "ASE Certified", sub: "Master Technicians", icon: "ShieldCheck" as const },
-    { label: "Dealer Alternative", sub: "#1 in Brooklyn", icon: "Award" as const },
+    { label: "Dealer Alternative", sub: "Trusted Service", icon: "Award" as const },
     { label: "5 Year Warranty", sub: "50,000 Mile Coverage", icon: "Tag" as const },
   ],
   ratingQuote:

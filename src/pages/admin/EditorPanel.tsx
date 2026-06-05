@@ -251,6 +251,7 @@ const EditorPanel = ({ state, onChange, clientId, templateId }: EditorPanelProps
           <AccordionItem value="hero">
             <AccordionTrigger className="text-sm font-semibold">Home hero</AccordionTrigger>
             <AccordionContent className="space-y-3">
+              <TextField label="Eyebrow" value={content.homeHero.eyebrow ?? ""} onChange={v => setHomeHero({ eyebrow: v })} />
               <TextField label="Headline (before highlight)" value={content.homeHero.headlineBefore} onChange={v => setHomeHero({ headlineBefore: v })} />
               <TextField label="Highlight word (gold)" value={content.homeHero.headlineHighlight} onChange={v => setHomeHero({ headlineHighlight: v })} />
               <TextField label="Headline (after highlight)" value={content.homeHero.headlineAfter} onChange={v => setHomeHero({ headlineAfter: v })} />
