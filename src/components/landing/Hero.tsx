@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -15,10 +16,53 @@ import {
   Rocket,
   Search,
 } from "lucide-react";
-import { COMPANY, HOME_HERO, HOME_STATS, NAV_LINKS, PROJECTS, SITE_TOP } from "@template/data/siteData";
-import { THEME_DEFAULTS } from "@template/contexts/ThemeContext";
+import {
+  COMPANY as CONSTRUCTION_COMPANY,
+  HOME_HERO as CONSTRUCTION_HOME_HERO,
+  HOME_STATS as CONSTRUCTION_HOME_STATS,
+  NAV_LINKS as CONSTRUCTION_NAV_LINKS,
+  PROJECTS as CONSTRUCTION_PROJECTS,
+  SITE_TOP as CONSTRUCTION_SITE_TOP,
+} from "@template/data/siteData";
+import { THEME_DEFAULTS as CONSTRUCTION_THEME } from "@template/contexts/ThemeContext";
+import {
+  COMPANY as PLUMBING_COMPANY,
+  HOME_HERO as PLUMBING_HOME_HERO,
+  HOME_STATS as PLUMBING_HOME_STATS,
+  NAV_LINKS as PLUMBING_NAV_LINKS,
+  PROJECTS as PLUMBING_PROJECTS,
+  SITE_TOP as PLUMBING_SITE_TOP,
+} from "@/template-plumbing/data/siteData";
+import { THEME_DEFAULTS as PLUMBING_THEME } from "@/template-plumbing/contexts/ThemeContext";
+import {
+  COMPANY as ELECTRICAL_COMPANY,
+  HOME_HERO as ELECTRICAL_HOME_HERO,
+  HOME_STATS as ELECTRICAL_HOME_STATS,
+  NAV_LINKS as ELECTRICAL_NAV_LINKS,
+  PROJECTS as ELECTRICAL_PROJECTS,
+  SITE_TOP as ELECTRICAL_SITE_TOP,
+} from "@/template-electrical/data/siteData";
+import { THEME_DEFAULTS as ELECTRICAL_THEME } from "@/template-electrical/contexts/ThemeContext";
+import {
+  COMPANY as AUTO_COMPANY,
+  HOME_HERO as AUTO_HOME_HERO,
+  HOME_STATS as AUTO_HOME_STATS,
+  NAV_LINKS as AUTO_NAV_LINKS,
+  PROJECTS as AUTO_PROJECTS,
+  SITE_TOP as AUTO_SITE_TOP,
+} from "@/template-minhs/data/siteData";
+import { THEME_DEFAULTS as AUTO_THEME } from "@/template-minhs/contexts/ThemeContext";
+import {
+  COMPANY as LANDSCAPING_COMPANY,
+  HOME_HERO as LANDSCAPING_HOME_HERO,
+  HOME_STATS as LANDSCAPING_HOME_STATS,
+  NAV_LINKS as LANDSCAPING_NAV_LINKS,
+  PROJECTS as LANDSCAPING_PROJECTS,
+  SITE_TOP as LANDSCAPING_SITE_TOP,
+} from "@/template-landscaping/data/siteData";
+import { THEME_DEFAULTS as LANDSCAPING_THEME } from "@/template-landscaping/contexts/ThemeContext";
 import HeroTrustStrip from "@/components/landing/TrustSection";
-import constructionBg from "@/assets/construction.png";
+import heroWireframesBg from "@/assets/hero-wireframes.png";
 
 const scrollToId = (id: string) => {
   const el = document.getElementById(id);
@@ -32,19 +76,122 @@ const HERO_EYEBROW = "WEBSITES FOR LOCAL BUSINESSES";
 const HERO_BODY =
   "Nexora builds high-converting websites for local businesses, and lets you preview the live site before you activate your subscription. Love it? We launch it and migrate everything seamlessly.";
 
-const GALLERY = PROJECTS.slice(0, 3);
-const HERO_LIVE_HEADLINE = [HOME_HERO.headlineBefore, HOME_HERO.headlineHighlight, HOME_HERO.headlineAfter].join(" ");
-const HERO_LIVE_PREAMBLE = (HOME_HERO.body || "").split(/(?<=[.])\s/)[0] || HOME_HERO.body;
-
 /** Construction hero for the marketing “desktop” preview (not the template default home photo). */
 const LANDING_DESKTOP_HERO_CONSTRUCTION =
   "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&h=1012&fit=crop&q=82";
 
+interface TemplatePreview {
+  industry: string;
+  company: { name: string; legalName?: string; tagline?: string; phone?: string };
+  siteTop: { line: string; locations: string };
+  navLinks: readonly { label: string; path: string }[];
+  colors: { primary: string; secondary: string };
+  heroImage: string;
+  headline: string;
+  preamble: string;
+  primaryCtaLabel: string;
+  secondaryCtaLabel: string;
+  stats: readonly { value: string; label: string }[];
+  gallery: readonly string[];
+}
+
+interface TemplatePreviewSource {
+  company: TemplatePreview["company"];
+  siteTop: TemplatePreview["siteTop"];
+  navLinks: TemplatePreview["navLinks"];
+  homeHero: {
+    headlineBefore: string;
+    headlineHighlight: string;
+    headlineAfter: string;
+    body: string;
+    primaryCta: { label: string };
+    secondaryCta: { label: string };
+    image: string;
+  };
+  stats: TemplatePreview["stats"];
+  projects: readonly { image: string }[];
+  theme: { primaryColor: string; secondaryColor: string };
+}
+
+const toTemplatePreview = (
+  industry: string,
+  source: TemplatePreviewSource,
+  heroImageOverride?: string,
+): TemplatePreview => ({
+  industry,
+  company: source.company,
+  siteTop: source.siteTop,
+  navLinks: source.navLinks.slice(0, 7),
+  colors: { primary: source.theme.primaryColor, secondary: source.theme.secondaryColor },
+  heroImage: heroImageOverride ?? source.homeHero.image,
+  headline: [source.homeHero.headlineBefore, source.homeHero.headlineHighlight, source.homeHero.headlineAfter].join(" "),
+  preamble: (source.homeHero.body || "").split(/(?<=[.])\s/)[0] || source.homeHero.body,
+  primaryCtaLabel: source.homeHero.primaryCta.label,
+  secondaryCtaLabel: source.homeHero.secondaryCta.label,
+  stats: source.stats,
+  gallery: source.projects.slice(0, 3).map(p => p.image),
+});
+
+/** Industry templates the hero live preview cycles through. */
+const TEMPLATE_PREVIEWS: TemplatePreview[] = [
+  toTemplatePreview(
+    "Construction",
+    {
+      company: CONSTRUCTION_COMPANY,
+      siteTop: CONSTRUCTION_SITE_TOP,
+      navLinks: CONSTRUCTION_NAV_LINKS,
+      homeHero: CONSTRUCTION_HOME_HERO,
+      stats: CONSTRUCTION_HOME_STATS,
+      projects: CONSTRUCTION_PROJECTS,
+      theme: CONSTRUCTION_THEME,
+    },
+    LANDING_DESKTOP_HERO_CONSTRUCTION,
+  ),
+  toTemplatePreview("Plumbing", {
+    company: PLUMBING_COMPANY,
+    siteTop: PLUMBING_SITE_TOP,
+    navLinks: PLUMBING_NAV_LINKS,
+    homeHero: PLUMBING_HOME_HERO,
+    stats: PLUMBING_HOME_STATS,
+    projects: PLUMBING_PROJECTS,
+    theme: PLUMBING_THEME,
+  }),
+  toTemplatePreview("Auto repair", {
+    company: AUTO_COMPANY,
+    siteTop: AUTO_SITE_TOP,
+    navLinks: AUTO_NAV_LINKS,
+    homeHero: AUTO_HOME_HERO,
+    stats: AUTO_HOME_STATS,
+    projects: AUTO_PROJECTS,
+    theme: AUTO_THEME,
+  }),
+  toTemplatePreview("Electrical", {
+    company: ELECTRICAL_COMPANY,
+    siteTop: ELECTRICAL_SITE_TOP,
+    navLinks: ELECTRICAL_NAV_LINKS,
+    homeHero: ELECTRICAL_HOME_HERO,
+    stats: ELECTRICAL_HOME_STATS,
+    projects: ELECTRICAL_PROJECTS,
+    theme: ELECTRICAL_THEME,
+  }),
+  toTemplatePreview("Landscaping", {
+    company: LANDSCAPING_COMPANY,
+    siteTop: LANDSCAPING_SITE_TOP,
+    navLinks: LANDSCAPING_NAV_LINKS,
+    homeHero: LANDSCAPING_HOME_HERO,
+    stats: LANDSCAPING_HOME_STATS,
+    projects: LANDSCAPING_PROJECTS,
+    theme: LANDSCAPING_THEME,
+  }),
+];
+
+const PREVIEW_ROTATE_MS = 6000;
+
 const HERO_BOTTOM_FEATURES = [
   { Icon: Clock, title: "Preview Before You Subscribe", line: "See your live website first." },
-  { Icon: Rocket, title: "Built for Construction", line: "Designed to win more projects." },
+  { Icon: Rocket, title: "Built for Your Industry", line: "Templates for every type of business." },
   { Icon: RefreshCw, title: "We Handle Everything", line: "Design, build, migrate, launch." },
-  { Icon: BarChart2, title: "Results That Matter", line: "More leads. More calls. More builds." },
+  { Icon: BarChart2, title: "Results That Matter", line: "More leads. More calls. More customers." },
 ] as const;
 
 const HERO_TRUST_POINTS = [
@@ -58,20 +205,41 @@ interface HeroProps {
 }
 
 const Hero = ({ onRequestDemo }: HeroProps) => {
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const preview = TEMPLATE_PREVIEWS[previewIndex];
+
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setPreviewIndex(i => (i + 1) % TEMPLATE_PREVIEWS.length),
+      PREVIEW_ROTATE_MS,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+
+  // Warm the cache so each rotation lands without image pop-in.
+  useEffect(() => {
+    TEMPLATE_PREVIEWS.forEach(p => {
+      [p.heroImage, ...p.gallery].forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    });
+  }, []);
+
   return (
     <section
       className="relative isolate box-border flex min-h-[100dvh] min-h-svh w-full flex-col overflow-x-hidden overflow-y-visible bg-transparent"
       aria-label="Home hero"
     >
-      {/* High-key construction photo: right side only, fades into page background (lg+ two-column layout) */}
+      {/* Faint website-wireframe sketch: right side only, fades into page background (lg+ two-column layout) */}
       <div
         className="pointer-events-none absolute inset-y-0 left-1/2 right-0 -z-10 hidden overflow-hidden lg:block"
         aria-hidden
       >
         <img
-          src={constructionBg}
+          src={heroWireframesBg}
           alt=""
-          className="h-full w-full object-cover object-[58%_42%] opacity-[0.42] mix-blend-multiply [filter:grayscale(0.15)_saturate(0.9)_contrast(1.02)]"
+          className="h-full w-full object-cover object-[78%_42%] opacity-90 mix-blend-multiply"
           loading="eager"
         />
         <div
@@ -183,7 +351,7 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
           className="relative mt-8 w-full min-w-0 max-w-lg justify-self-center sm:mt-10 lg:mt-0 lg:max-w-none lg:justify-self-end"
         >
           <div className="glass-panel relative overflow-hidden rounded-2xl shadow-lg shadow-neutral-900/5 sm:rounded-3xl">
-            <div className="flex items-stretch border-b border-neutral-200/60">
+            <div className="flex items-stretch justify-between border-b border-neutral-200/60">
               <div
                 className="flex min-w-0 items-center gap-1 bg-neutral-950 px-2 py-1 pl-1.5 text-[0.4rem] font-semibold uppercase leading-none tracking-[0.18em] text-white/95 sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-[0.45rem] sm:tracking-[0.2em]"
                 aria-hidden
@@ -191,13 +359,28 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
                 <span className="h-1 w-1 shrink-0 rounded-full bg-brand sm:h-1.5 sm:w-1.5" />
                 LIVE PREVIEW
               </div>
+              <motion.span
+                key={preview.industry}
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="flex items-center px-2 text-[0.4rem] font-semibold uppercase leading-none tracking-[0.18em] text-neutral-500 sm:px-2.5 sm:text-[0.45rem] sm:tracking-[0.2em]"
+                aria-hidden
+              >
+                {preview.industry} template
+              </motion.span>
             </div>
 
             <div className="border-t border-border/60 bg-white/95 px-1.5 pb-1.5 pt-0 sm:px-2.5 sm:pb-2.5 sm:pt-0">
               <div className="overflow-hidden rounded-b-2xl sm:rounded-b-[1.2rem]">
-                <TemplateSiteChrome
-                  constructionHeroSrc={LANDING_DESKTOP_HERO_CONSTRUCTION}
-                />
+                <motion.div
+                  key={preview.industry}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <TemplateSiteChrome preview={preview} />
+                </motion.div>
               </div>
             </div>
           </div>
@@ -273,11 +456,12 @@ const Hero = ({ onRequestDemo }: HeroProps) => {
  * Scaled copy of @template/components/layout/Header (admin / preview) —
  * top bar + main row with wordmark, nav (Services + chevron), Get quote.
  */
-function TemplateHeaderPreview() {
-  const { primaryColor, secondaryColor } = THEME_DEFAULTS;
-  const logoLetter = (COMPANY.name || "C").charAt(0).toUpperCase();
-  const [logoWordPrimary, ...logoWordRest] = (COMPANY.legalName || COMPANY.name || "").split(" ");
-  const logoWordSecondary = logoWordRest.join(" ") || COMPANY.tagline;
+function TemplateHeaderPreview({ preview }: { preview: TemplatePreview }) {
+  const { company, siteTop, navLinks } = preview;
+  const { primary: primaryColor, secondary: secondaryColor } = preview.colors;
+  const logoLetter = (company.name || "C").charAt(0).toUpperCase();
+  const [logoWordPrimary, ...logoWordRest] = (company.legalName || company.name || "").split(" ");
+  const logoWordSecondary = logoWordRest.join(" ") || company.tagline;
   const navPill = (active: boolean) =>
     active
       ? { color: secondaryColor, backgroundColor: `${secondaryColor}1a` }
@@ -291,9 +475,9 @@ function TemplateHeaderPreview() {
         style={{ backgroundColor: primaryColor }}
       >
         <div className="flex min-w-0 max-w-[58%] items-center gap-0.5 text-[0.16rem] font-medium leading-tight opacity-90 min-[400px]:text-[0.2rem] min-[480px]:text-[0.22rem] min-[520px]:text-[0.24rem] sm:max-w-[60%] sm:text-[0.26rem] md:max-w-[55%] md:gap-1.5 md:text-[0.3rem] md:opacity-100 lg:max-w-none lg:text-[0.36rem] xl:text-[0.4rem]">
-          <span className="shrink-0">{SITE_TOP.line}</span>
+          <span className="shrink-0">{siteTop.line}</span>
           <span className="shrink-0 opacity-40">|</span>
-          <span className="truncate">{SITE_TOP.locations}</span>
+          <span className="truncate">{siteTop.locations}</span>
         </div>
         <div className="flex max-w-[42%] shrink-0 items-center justify-end gap-0.5 text-[0.16rem] min-[400px]:gap-1 min-[400px]:text-[0.2rem] min-[480px]:text-[0.22rem] sm:gap-1.5 sm:text-[0.26rem] md:max-w-[45%] md:gap-2 md:text-[0.3rem] lg:max-w-none lg:gap-2.5 lg:text-[0.36rem] xl:text-[0.4rem]">
           <Search
@@ -303,7 +487,7 @@ function TemplateHeaderPreview() {
           <span className="hidden items-center gap-0.5 font-medium min-[420px]:flex md:gap-1">
             <Phone className="h-1 w-1 shrink-0 min-[400px]:h-1.5 min-[400px]:w-1.5 md:h-1.5 md:w-1.5 lg:h-2 lg:w-2" strokeWidth={2} />
             <span className="max-w-[2rem] truncate min-[500px]:max-w-[4.5rem] min-[500px]:whitespace-nowrap lg:max-w-[7rem]">
-              {COMPANY.phone}
+              {company.phone}
             </span>
           </span>
           <span className="whitespace-nowrap font-semibold md:tracking-tight">Request Estimate</span>
@@ -324,7 +508,7 @@ function TemplateHeaderPreview() {
             </span>
             <div className="min-w-0">
               <p className="truncate text-[0.2rem] font-extrabold leading-tight tracking-tight text-neutral-900 min-[480px]:text-[0.3rem] sm:text-[0.36rem] md:text-[0.38rem] lg:text-[0.44rem] xl:text-[0.5rem]">
-                {logoWordPrimary || COMPANY.name}
+                {logoWordPrimary || company.name}
               </p>
               <p className="truncate text-[0.16rem] font-semibold uppercase leading-tight text-neutral-500 min-[480px]:text-[0.2rem] min-[480px]:tracking-[0.08em] sm:text-[0.22rem] sm:tracking-[0.1em] md:text-[0.24rem] md:tracking-[0.1em] lg:text-[0.26rem] lg:tracking-[0.12em] xl:text-[0.28rem]">
                 {logoWordSecondary}
@@ -333,7 +517,7 @@ function TemplateHeaderPreview() {
           </div>
 
           <nav className="mx-auto flex w-full min-w-0 max-w-full items-center justify-center gap-0.5 self-center overflow-x-auto [&::-webkit-scrollbar]:hidden sm:gap-0 sm:px-0.5 md:gap-1 lg:gap-1.5 lg:px-1 xl:gap-2">
-            {NAV_LINKS.map((link) => {
+            {navLinks.map((link) => {
               if (link.path === "/services") {
                 return (
                   <span
@@ -383,17 +567,17 @@ function TemplateHeaderPreview() {
   );
 }
 
-/** Minified in-product template preview: same header layout as admin, construction hero */
-function TemplateSiteChrome({ constructionHeroSrc }: { constructionHeroSrc: string }) {
+/** Minified in-product template preview: same header layout as admin, rotating industry data */
+function TemplateSiteChrome({ preview }: { preview: TemplatePreview }) {
   return (
     <div className="pointer-events-none min-w-0 select-none text-left">
-      <TemplateHeaderPreview />
+      <TemplateHeaderPreview preview={preview} />
 
-      {/* Template hero: wide desktop band + construction photo */}
+      {/* Template hero: wide desktop band + industry photo */}
       <div className="relative min-h-0 w-full">
         <div className="relative aspect-[16/9] w-full min-h-0">
           <img
-            src={constructionHeroSrc}
+            src={preview.heroImage}
             alt=""
             className="absolute inset-0 h-full w-full object-cover object-center"
             loading="eager"
@@ -403,23 +587,29 @@ function TemplateSiteChrome({ constructionHeroSrc }: { constructionHeroSrc: stri
             className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/20"
           />
           <div className="absolute inset-0 flex flex-col justify-end p-2.5 sm:p-3.5">
-            <p className="text-[0.45rem] font-bold uppercase tracking-[0.16em] text-brand/90 sm:text-[0.5rem] sm:tracking-[0.18em]">
-              {COMPANY.name} · {SITE_TOP.line}
+            <p
+              className="text-[0.45rem] font-bold uppercase tracking-[0.16em] sm:text-[0.5rem] sm:tracking-[0.18em]"
+              style={{ color: preview.colors.secondary }}
+            >
+              {preview.company.name} · {preview.siteTop.line}
             </p>
             <h2
               className="mt-1.5 line-clamp-2 text-balance text-[0.7rem] font-extrabold leading-tight text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.45)] sm:mt-2 sm:line-clamp-3 sm:text-xs sm:leading-tight"
             >
-              {HERO_LIVE_HEADLINE}
+              {preview.headline}
             </h2>
             <p className="mt-1.5 line-clamp-2 max-w-md text-[0.5rem] leading-relaxed text-white/90 sm:mt-2 sm:line-clamp-3 sm:text-[0.55rem] sm:leading-relaxed">
-              {HERO_LIVE_PREAMBLE}
+              {preview.preamble}
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-2.5 sm:gap-2">
-              <span className="inline-flex items-center justify-center rounded-sm bg-brand px-2 py-0.5 text-[0.45rem] font-bold text-brand-foreground sm:px-2.5 sm:py-1 sm:text-[0.5rem]">
-                {HOME_HERO.primaryCta.label}
+              <span
+                className="inline-flex items-center justify-center rounded-sm px-2 py-0.5 text-[0.45rem] font-bold sm:px-2.5 sm:py-1 sm:text-[0.5rem]"
+                style={{ backgroundColor: preview.colors.secondary, color: preview.colors.primary }}
+              >
+                {preview.primaryCtaLabel}
               </span>
               <span className="inline-flex items-center justify-center rounded-sm border border-white/45 bg-white/10 px-2 py-0.5 text-[0.45rem] font-semibold text-white sm:px-2.5 sm:py-1 sm:text-[0.5rem]">
-                {HOME_HERO.secondaryCta.label}
+                {preview.secondaryCtaLabel}
               </span>
             </div>
           </div>
@@ -428,7 +618,7 @@ function TemplateSiteChrome({ constructionHeroSrc }: { constructionHeroSrc: stri
 
       {/* Stats row — from template homeStats */}
       <div className="grid grid-cols-2 border-t border-black/5 bg-neutral-900 px-1 py-1.5 sm:grid-cols-4 sm:px-1.5 sm:py-2">
-        {HOME_STATS.slice(0, 4).map((s, i) => (
+        {preview.stats.slice(0, 4).map((s, i) => (
           <div
             key={s.label}
             className={`px-0.5 text-center ${i > 0 ? "sm:border-l sm:border-white/10" : ""}`}
@@ -445,10 +635,10 @@ function TemplateSiteChrome({ constructionHeroSrc }: { constructionHeroSrc: stri
 
       {/* Project strip — from template projects list */}
       <div className="grid grid-cols-3 gap-0.5 border-t border-neutral-100 bg-white p-0.5 sm:gap-1 sm:p-1">
-        {GALLERY.map((p) => (
-          <div key={p.id} className="relative aspect-[4/3] overflow-hidden">
+        {preview.gallery.map((src) => (
+          <div key={src} className="relative aspect-[4/3] overflow-hidden">
             <img
-              src={p.image}
+              src={src}
               alt=""
               className="h-full w-full object-cover"
               loading="lazy"
