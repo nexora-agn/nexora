@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 99%;
+    --foreground: 220 15% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 12%;
+
+    --primary: 0 0% 8%;
+    --primary-foreground: 40 33% 99%;
+
+    --secondary: 38 45% 52%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 40 14% 95%;
+    --muted-foreground: 220 8% 42%;
+
+    --accent: 38 45% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 12% 90%;
+    --input: 40 12% 90%;
+    --ring: 38 45% 52%;
+
+    --radius: 0px;
+
+    --re-charcoal: 0 0% 8%;
+    --re-stone: 220 8% 42%;
+    --re-warm-white: 40 33% 99%;
+    --re-champagne: 38 45% 52%;
+    --re-champagne-light: 38 40% 94%;
+    --re-gold: 42 55% 48%;
+
+    --sidebar-background: 40 33% 99%;
+    --sidebar-foreground: 220 15% 12%;
+    --sidebar-primary: 0 0% 8%;
+    --sidebar-primary-foreground: 40 33% 99%;
+    --sidebar-accent: 40 14% 95%;
+    --sidebar-accent-foreground: 220 15% 12%;
+    --sidebar-border: 40 12% 90%;
+    --sidebar-ring: 38 45% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    letter-spacing: 0.01em;
+  }
+  .font-sans-brand {
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .container-custom {
+    @apply max-w-[1320px] mx-auto w-full;
+  }
+  .container-inset {
+    @apply px-4 sm:px-6 lg:px-10;
+  }
+  .luxury-section {
+    @apply py-20 lg:py-28;
+  }
+  .luxury-eyebrow {
+    @apply text-[11px] font-sans-brand font-medium uppercase tracking-[0.28em] text-[hsl(var(--secondary))];
+  }
+  .luxury-heading {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.1] text-[hsl(var(--primary))];
+  }
+  .luxury-subheading {
+    @apply font-display text-2xl md:text-3xl font-medium text-[hsl(var(--primary))];
+  }
+  .btn-luxury-primary {
+    @apply inline-flex items-center justify-center h-12 px-8 bg-[hsl(var(--primary))] text-white font-sans-brand text-xs font-medium uppercase tracking-[0.18em] transition-all duration-300 hover:bg-[hsl(var(--secondary))] hover:text-white;
+  }
+  .btn-luxury-outline {
+    @apply inline-flex items-center justify-center h-12 px-8 border border-[hsl(var(--primary))] text-[hsl(var(--primary))] font-sans-brand text-xs font-medium uppercase tracking-[0.18em] transition-all duration-300 hover:bg-[hsl(var(--primary))] hover:text-white;
+  }
+  /* High-contrast CTAs on photo / dark overlays */
+  .btn-luxury-hero-primary {
+    @apply inline-flex items-center justify-center h-12 px-8 min-w-[200px] bg-white text-[hsl(var(--primary))] font-sans-brand text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-300 hover:bg-[hsl(var(--secondary))] hover:text-white shadow-[0_4px_24px_rgba(0,0,0,0.35)];
+  }
+  .btn-luxury-hero-secondary {
+    @apply inline-flex items-center justify-center h-12 px-8 min-w-[200px] border-2 border-white bg-black/45 text-white backdrop-blur-sm font-sans-brand text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-300 hover:bg-white hover:text-[hsl(var(--primary))] shadow-[0_4px_24px_rgba(0,0,0,0.35)];
+  }
+  .card-luxury {
+    @apply bg-white border border-border transition-all duration-500 hover:shadow-[0_24px_64px_-16px_rgba(0,0,0,0.12)];
+  }
+  .image-zoom {
+    @apply overflow-hidden;
+  }
+  .image-zoom img {
+    @apply transition-transform duration-700 ease-out;
+  }
+  .image-zoom:hover img {
+    @apply scale-105;
+  }
+}
+
+.page-transition-enter {
+  animation: pageFadeIn 0.45s ease-out;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scrollIndicator {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.4; }
+}
+
+.scroll-indicator {
+  animation: scrollIndicator 2s ease-in-out infinite;
+}
+
+.re-header-transparent {
+  @apply bg-transparent border-transparent;
+}
+.re-header-solid {
+  @apply bg-white/95 backdrop-blur-md border-border shadow-sm;
+}

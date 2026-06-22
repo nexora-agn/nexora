@@ -65,8 +65,8 @@ const EditorPanel = ({ state, onChange, clientId, templateId }: EditorPanelProps
   const templateName = getTemplate(templateId).name;
 
   const sectionVisibilityEntries = isMrBuilderNyc
-    ? MRBUILDERNYC_HOME_SECTION_KEYS.map(key => [key, content.sectionVisibility[key] ?? true] as const)
-    : (Object.entries(content.sectionVisibility) as [string, boolean][]);
+    ? MRBUILDERNYC_HOME_SECTION_KEYS.map(key => [key, content.sectionVisibility?.[key] ?? true] as const)
+    : (Object.entries(content.sectionVisibility ?? {}) as [string, boolean][]);
 
   const setTheme = useCallback(
     (patch: Partial<DraftState["theme"]>) => {
@@ -503,22 +503,22 @@ const EditorPanel = ({ state, onChange, clientId, templateId }: EditorPanelProps
               {/* Lead form */}
               <CollapseBlock label="Lead contact form (home)">
                 <TextField label="Title" value={content.leadForm.title} onChange={v => setLeadForm({ title: v })} />
-                <TextAreaField label="Description" rows={2} value={content.leadForm.description} onChange={v => setLeadForm({ description: v })} />
+                <TextAreaField label="Description" rows={2} value={content.leadForm.description ?? ""} onChange={v => setLeadForm({ description: v })} />
                 <Label className="text-xs font-medium">Bullets</Label>
-                {content.leadForm.bullets.map((b, i) => (
+                {(content.leadForm.bullets ?? []).map((b, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <Input
                       value={b}
                       onChange={e =>
                         setLeadForm({
-                          bullets: content.leadForm.bullets.map((x, idx) => (idx === i ? e.target.value : x)),
+                          bullets: (content.leadForm.bullets ?? []).map((x, idx) => (idx === i ? e.target.value : x)),
                         })
                       }
                     />
                     <button
                       type="button"
                       className="text-xs text-destructive"
-                      onClick={() => setLeadForm({ bullets: content.leadForm.bullets.filter((_, idx) => idx !== i) })}
+                      onClick={() => setLeadForm({ bullets: (content.leadForm.bullets ?? []).filter((_, idx) => idx !== i) })}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -528,7 +528,7 @@ const EditorPanel = ({ state, onChange, clientId, templateId }: EditorPanelProps
                   variant="outline"
                   size="sm"
                   className="w-full"
-                  onClick={() => setLeadForm({ bullets: [...content.leadForm.bullets, "New benefit"] })}
+                  onClick={() => setLeadForm({ bullets: [...(content.leadForm.bullets ?? []), "New benefit"] })}
                 >
                   <Plus className="h-3.5 w-3.5 mr-1" /> Add bullet
                 </Button>

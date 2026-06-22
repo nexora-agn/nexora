@@ -24,6 +24,7 @@ import homebuilderThumbUrl from "@/assets/admin/homebuilder-thumb.svg?url";
 import remodelerThumbUrl from "@/assets/admin/remodeler-thumb.svg?url";
 import mrbuildernycThumbUrl from "@/assets/admin/mrbuildernyc-thumb.svg?url";
 import minhsThumbUrl from "@/assets/admin/minhs-thumb.svg?url";
+import luxuryRealEstateThumbUrl from "@/assets/admin/luxury-real-estate-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -40,6 +41,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   mrbuildernyc: "mrbuildernyc",
   familyfirst: "familyfirst-plumber",
   minhs: "automotive",
+  "luxury-real-estate": "luxury-real-estate",
 };
 
 export interface TemplateOption {
@@ -390,6 +392,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-minhs.html",
       scaffoldDir: "template-source-minhs",
       liveTemplateDir: "src/template-minhs",
+    },
+  },
+  {
+    id: "luxury-real-estate",
+    name: "Nexora Estate",
+    tagline: "Luxury real estate · champagne + charcoal",
+    description:
+      "Premium luxury real estate template inspired by Sotheby's, Christie's, and Compass. Full-screen hero, advanced property search, featured listings with favorites and compare, neighborhood guides, new developments, agent profiles, property detail with mortgage calculator, blog, and white-glove contact flows.",
+    thumbnail: luxuryRealEstateThumbUrl,
+    accent: "#c9a962",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID["luxury-real-estate"],
+    available: true,
+    features: [
+      "Cormorant Garamond + Inter luxury typography",
+      "Advanced property search with buy/rent filters",
+      "Listings with grid/list/map views + compare",
+      "Property detail: gallery, mortgage, agent sidebar",
+      "New developments + neighborhood guides",
+      "Agent profiles + blog + FAQ accordion",
+    ],
+    paths: {
+      previewHtml: "/preview-luxury-real-estate.html",
+      scaffoldDir: "template-source-luxury-real-estate",
+      liveTemplateDir: "src/template-luxury-real-estate",
     },
   },
 ];

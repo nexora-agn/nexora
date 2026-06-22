@@ -123,6 +123,10 @@ export const TEMPLATE_REGISTRY = [
     id: "minhs",
     paths: { scaffoldDir: "template-source-minhs", liveTemplateDir: "src/template-minhs" },
   },
+  {
+    id: "luxury-real-estate",
+    paths: { scaffoldDir: "template-source-luxury-real-estate", liveTemplateDir: "src/template-luxury-real-estate" },
+  },
 ];
 
 /**
