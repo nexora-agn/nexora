@@ -19,6 +19,7 @@ const LOADERS: Record<string, () => Promise<{ default: TemplateShowcaseModule }>
   minhs: () => import("@template-minhs/showcase"),
   "luxury-real-estate": () => import("@template-luxury-real-estate/showcase"),
   restaurant: () => import("@template-restaurant/showcase"),
+  "truck-repair": () => import("@template-truck-repair/showcase"),
 };
 
 export async function loadTemplateShowcase(slug: string): Promise<TemplateShowcaseModule | null> {

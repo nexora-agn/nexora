@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 60 5% 96%;
+    --foreground: 24 10% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 10%;
+    --primary: 220 35% 14%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 24 95% 46%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 24 6% 90%;
+    --muted-foreground: 24 5% 40%;
+    --accent: 24 95% 46%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 24 6% 85%;
+    --input: 24 6% 85%;
+    --ring: 24 95% 46%;
+    --radius: 2px;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground antialiased; font-family: "Inter", system-ui, sans-serif; }
+}
+
+@layer utilities {
+  .font-display { font-family: "Oswald", system-ui, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+  .font-sans-brand { font-family: "Inter", system-ui, sans-serif; }
+  .container-custom { @apply max-w-[1280px] mx-auto w-full; }
+  .container-inset { @apply px-4 sm:px-6 lg:px-8; }
+  .industrial-section { @apply py-16 lg:py-24; }
+  .industrial-eyebrow { @apply text-[11px] font-sans-brand font-semibold uppercase tracking-[0.2em] text-[hsl(var(--secondary))]; }
+  .industrial-heading { @apply font-display text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight text-[hsl(var(--primary))]; }
+  .btn-industrial-primary { @apply inline-flex items-center justify-center h-12 px-8 bg-[hsl(var(--primary))] text-white font-sans-brand text-xs font-semibold uppercase tracking-[0.16em] transition-colors hover:bg-[hsl(var(--secondary))]; }
+  .btn-industrial-outline { @apply inline-flex items-center justify-center h-12 px-8 border-2 border-[hsl(var(--primary))] text-[hsl(var(--primary))] font-sans-brand text-xs font-semibold uppercase tracking-[0.16em] transition-colors hover:bg-[hsl(var(--primary))] hover:text-white; }
+  .btn-industrial-hero-primary { @apply inline-flex items-center justify-center h-12 px-8 min-w-[200px] bg-[hsl(var(--secondary))] text-white font-sans-brand text-xs font-bold uppercase tracking-[0.16em] transition-colors hover:brightness-110; }
+  .btn-industrial-hero-secondary { @apply inline-flex items-center justify-center h-12 px-8 min-w-[200px] border-2 border-white bg-black/40 text-white font-sans-brand text-xs font-bold uppercase tracking-[0.16em] backdrop-blur-sm hover:bg-white hover:text-[hsl(var(--primary))]; }
+  .card-industrial { @apply bg-white border border-border transition-shadow hover:shadow-md; }
+}
+
+.page-transition-enter { animation: pageFadeIn 0.35s ease-out; }
+@keyframes pageFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.truck-header-transparent { @apply bg-transparent border-transparent; }
+.truck-header-solid { @apply bg-[hsl(var(--primary))]/95 backdrop-blur-md border-b border-white/10 shadow-md text-white; }

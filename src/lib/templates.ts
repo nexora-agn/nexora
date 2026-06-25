@@ -26,6 +26,7 @@ import mrbuildernycThumbUrl from "@/assets/admin/mrbuildernyc-thumb.svg?url";
 import minhsThumbUrl from "@/assets/admin/minhs-thumb.svg?url";
 import luxuryRealEstateThumbUrl from "@/assets/admin/luxury-real-estate-thumb.svg?url";
 import restaurantThumbUrl from "@/assets/admin/restaurant-thumb.svg?url";
+import truckRepairThumbUrl from "@/assets/admin/truck-repair-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -44,6 +45,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   minhs: "automotive",
   "luxury-real-estate": "luxury-real-estate",
   restaurant: "restaurant",
+  "truck-repair": "truck-repair",
 };
 
 export interface TemplateOption {
@@ -442,6 +444,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-restaurant.html",
       scaffoldDir: "template-source-restaurant",
       liveTemplateDir: "src/template-restaurant",
+    },
+  },
+  {
+    id: "truck-repair",
+    name: "Nexora Heavy Duty",
+    tagline: "Truck repair & fleet service · navy + safety orange",
+    description:
+      "Industrial heavy-duty truck repair template for semi-truck shops, fleet maintenance companies, and diesel specialists. 24/7 emergency breakdown forms with GPS, fleet maintenance programs, service request system, fleet admin portal, workshop gallery, and B2B-focused conversion flows.",
+    thumbnail: truckRepairThumbUrl,
+    accent: "#e85d04",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID["truck-repair"],
+    available: true,
+    features: [
+      "Oswald + Inter industrial typography",
+      "24/7 emergency breakdown with GPS capture",
+      "Service request system with ETA & tickets",
+      "Fleet maintenance programs & admin portal",
+      "12 heavy-duty service categories",
+      "Sticky Request Service + emergency call button",
+    ],
+    paths: {
+      previewHtml: "/preview-truck-repair.html",
+      scaffoldDir: "template-source-truck-repair",
+      liveTemplateDir: "src/template-truck-repair",
     },
   },
 ];
