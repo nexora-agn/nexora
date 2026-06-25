@@ -127,6 +127,10 @@ export const TEMPLATE_REGISTRY = [
     id: "luxury-real-estate",
     paths: { scaffoldDir: "template-source-luxury-real-estate", liveTemplateDir: "src/template-luxury-real-estate" },
   },
+  {
+    id: "restaurant",
+    paths: { scaffoldDir: "template-source-restaurant", liveTemplateDir: "src/template-restaurant" },
+  },
 ];
 
 /**

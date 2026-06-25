@@ -25,6 +25,7 @@ import remodelerThumbUrl from "@/assets/admin/remodeler-thumb.svg?url";
 import mrbuildernycThumbUrl from "@/assets/admin/mrbuildernyc-thumb.svg?url";
 import minhsThumbUrl from "@/assets/admin/minhs-thumb.svg?url";
 import luxuryRealEstateThumbUrl from "@/assets/admin/luxury-real-estate-thumb.svg?url";
+import restaurantThumbUrl from "@/assets/admin/restaurant-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -42,6 +43,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   familyfirst: "familyfirst-plumber",
   minhs: "automotive",
   "luxury-real-estate": "luxury-real-estate",
+  restaurant: "restaurant",
 };
 
 export interface TemplateOption {
@@ -416,6 +418,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-luxury-real-estate.html",
       scaffoldDir: "template-source-luxury-real-estate",
       liveTemplateDir: "src/template-luxury-real-estate",
+    },
+  },
+  {
+    id: "restaurant",
+    name: "Nexora Restaurant",
+    tagline: "Premium fine dining · charcoal + champagne",
+    description:
+      "Michelin-inspired premium restaurant template with cinematic hero, editorial menu, signature dishes showcase, executive chef story, complete reservation system with availability checking, private events, gift cards, luxury gallery, blog, and high-converting booking flows.",
+    thumbnail: restaurantThumbUrl,
+    accent: "#c9a962",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.restaurant,
+    available: true,
+    features: [
+      "Playfair Display + Inter luxury typography",
+      "Full reservation system with modify & cancel",
+      "15 menu categories with 30+ demo dishes",
+      "Signature dishes, chef story & experience cards",
+      "Private events, gift cards & masonry gallery",
+      "Sticky nav, mega menu & mobile reserve button",
+    ],
+    paths: {
+      previewHtml: "/preview-restaurant.html",
+      scaffoldDir: "template-source-restaurant",
+      liveTemplateDir: "src/template-restaurant",
     },
   },
 ];

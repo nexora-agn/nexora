@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" fill="none">
+  <rect width="320" height="200" fill="#141414"/>
+  <rect x="0" y="140" width="320" height="60" fill="#1a1a1a"/>
+  <circle cx="160" cy="70" r="28" stroke="#c9a962" stroke-width="2" fill="none"/>
+  <path d="M148 70h24M150 62v16M160 58v20M170 62v16" stroke="#c9a962" stroke-width="2" stroke-linecap="round"/>
+  <text x="160" y="175" text-anchor="middle" fill="#c9a962" font-family="Georgia, serif" font-size="14" letter-spacing="4">NEXORA</text>
+  <text x="160" y="192" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="8" letter-spacing="2">RESTAURANT</text>
+</svg>

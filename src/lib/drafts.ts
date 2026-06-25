@@ -39,6 +39,8 @@ import { THEME_DEFAULTS as MINHS_THEME } from "@template-minhs/contexts/ThemeCon
 import { SITE_CONTENT_DEFAULTS as MINHS_SITE_CONTENT } from "@template-minhs/contexts/SiteContentContext";
 import { THEME_DEFAULTS as LUXURY_RE_THEME } from "@template-luxury-real-estate/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as LUXURY_RE_SITE_CONTENT } from "@template-luxury-real-estate/contexts/SiteContentContext";
+import { THEME_DEFAULTS as RESTAURANT_THEME } from "@template-restaurant/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as RESTAURANT_SITE_CONTENT } from "@template-restaurant/contexts/SiteContentContext";
 import { hydrateMinhsSiteContent, hydrateMinhsThemeConfig } from "@template-minhs/lib/media";
 import { migrateMrBuilderNycCompanyPhone } from "@template-mrbuildernyc/data/siteData";
 import { canonicalTemplateId } from "@/lib/templates";
@@ -86,6 +88,8 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return MINHS_THEME;
     case "luxury-real-estate":
       return LUXURY_RE_THEME;
+    case "restaurant":
+      return RESTAURANT_THEME;
     default:
       return CONSTRUCTO_THEME;
   }
@@ -158,6 +162,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return MINHS_SITE_CONTENT as unknown as SiteContentState;
     case "luxury-real-estate":
       return LUXURY_RE_SITE_CONTENT as unknown as SiteContentState;
+    case "restaurant":
+      return RESTAURANT_SITE_CONTENT as unknown as SiteContentState;
     default:
       return CONSTRUCTO_SITE_CONTENT;
   }
