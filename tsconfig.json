@@ -43,6 +43,9 @@
       ],
       "@template-mrbuildernyc/*": [
         "./src/template-mrbuildernyc/*"
+      ],
+      "@template-barbershop/*": [
+        "./src/template-barbershop/*"
       ]
     },
     "skipLibCheck": true,

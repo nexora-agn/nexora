@@ -27,6 +27,7 @@ import minhsThumbUrl from "@/assets/admin/minhs-thumb.svg?url";
 import luxuryRealEstateThumbUrl from "@/assets/admin/luxury-real-estate-thumb.svg?url";
 import restaurantThumbUrl from "@/assets/admin/restaurant-thumb.svg?url";
 import truckRepairThumbUrl from "@/assets/admin/truck-repair-thumb.svg?url";
+import barbershopThumbUrl from "@/assets/admin/barbershop-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -46,6 +47,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   "luxury-real-estate": "luxury-real-estate",
   restaurant: "restaurant",
   "truck-repair": "truck-repair",
+  barbershop: "barbershop",
 };
 
 export interface TemplateOption {
@@ -468,6 +470,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-truck-repair.html",
       scaffoldDir: "template-source-truck-repair",
       liveTemplateDir: "src/template-truck-repair",
+    },
+  },
+  {
+    id: "barbershop",
+    name: "Forge Barber Co.",
+    tagline: "Premium barbershop · matte black + gold",
+    description:
+      "Industrial-luxury barbershop template for barbershops, grooming studios, and salons. Full-screen hero, multi-step online booking with live availability, barber profiles, service menu with pricing, grooming packages, loyalty program, gift cards, luxury gallery with lightbox, and reschedule/cancel booking management.",
+    thumbnail: barbershopThumbUrl,
+    accent: "#b8873c",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.barbershop,
+    available: true,
+    features: [
+      "Oswald + Bebas Neue + Inter industrial-luxury typography",
+      "3-step online booking with live availability + reschedule/cancel",
+      "Barber profiles with specialties, ratings & social links",
+      "Service menu, grooming packages & pricing table",
+      "Loyalty program, gift cards & shop gallery with lightbox",
+      "Sticky nav, mega menu & mobile sticky booking button",
+    ],
+    paths: {
+      previewHtml: "/preview-barbershop.html",
+      scaffoldDir: "template-source-barbershop",
+      liveTemplateDir: "src/template-barbershop",
     },
   },
 ];

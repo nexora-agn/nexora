@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" fill="none">
+  <rect width="320" height="200" fill="#111113"/>
+  <rect x="0" y="140" width="320" height="60" fill="#0a0a0b"/>
+  <circle cx="132" cy="82" r="7" stroke="#b8873c" stroke-width="2.5" fill="none"/>
+  <circle cx="132" cy="58" r="7" stroke="#b8873c" stroke-width="2.5" fill="none"/>
+  <path d="M137 76L184 52M137 64L184 88" stroke="#b8873c" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="160" y="175" text-anchor="middle" fill="#b8873c" font-family="Georgia, serif" font-size="14" letter-spacing="4">FORGE</text>
+  <text x="160" y="192" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="8" letter-spacing="2">BARBER CO.</text>
+</svg>
