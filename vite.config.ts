@@ -54,6 +54,13 @@ export default defineConfig(({ mode }) => {
   ],
   build: {
     rollupOptions: {
+      /**
+       * Rollup defaults to up to 1000 concurrent file reads, which exhausts
+       * the file-descriptor limit on constrained build hosts (shared hosting
+       * containers commonly cap `ulimit -n` at 256–1024) and makes Tailwind's
+       * content scan die with EMFILE across our 16 template preview entries.
+       */
+      maxParallelFileOps: 16,
       input: {
         main: path.resolve(__dirname, "index.html"),
         preview: path.resolve(__dirname, "preview.html"),
