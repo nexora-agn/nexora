@@ -269,6 +269,6 @@ export const websiteProgramFaqs: { question: string; answer: string }[] = [
   {
     question: "What about AI Assistant limits?",
     answer:
-      "Starter includes up to fifty assistant messages/month. Growth bumps to five thousand—with infrastructure suited to inbound volume.",
+      "Starter and Growth both include the AI assistant. Message allowances are listed on our AI assistant page — not on the pricing cards.",
   },
 ];

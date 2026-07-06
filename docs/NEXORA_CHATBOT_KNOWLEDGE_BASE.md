@@ -213,12 +213,12 @@ Buttons: “Book a Demo”; “Preview Your Site” (scrolls to `#live-preview`)
 
 - **Tagline:** “A trustworthy company site and lead flow. Up fast, not a year-long build.”  
 - **CTA label on card:** “Book a demo” (button still goes to start flow with plan).  
-- **Includes:** Web & mobile responsive; Essential structure & key sections; Lead capture & forms; Hosting & SSL; AI Assistant — up to 50 messages/month; Monthly updates (scoped).
+- **Includes:** Web & mobile responsive; Essential structure & key sections; Lead capture & forms; Hosting & SSL; AI Assistant; Monthly updates (scoped).
 
 ### Growth — $399/month
 
 - **Tagline:** “Your services, prices, and office systems stay matched to the website.”  
-- **Includes:** Web & mobile responsive; Unlimited pages; Catalog & pricing sync; AI Assistant — 5,000 messages/month; SEO & Google Ads setup; AI Infrastructure.
+- **Includes:** Web & mobile responsive; Unlimited pages; Catalog & pricing sync; AI Assistant; SEO & Google Ads setup; AI Infrastructure.
 
 ### Custom — Custom pricing
 
@@ -226,10 +226,11 @@ Buttons: “Book a Demo”; “Preview Your Site” (scrolls to `#live-preview`)
 - **Includes:** Web & mobile responsive; App Store & Google Play when scope needs native apps; Admin dashboard & workflows; Dedicated scoping, integrations & handoff.  
 - **CTA:** “Talk to us” / start flow uses “Start a project”.
 
-### AI limits (also in Website Program FAQ)
+### AI limits (on /ai page — not on Starter/Growth pricing cards)
 
 - Starter: up to **50** assistant messages/month.  
-- Growth: up to **5,000** messages/month with infrastructure suited to inbound volume.
+- Growth: up to **5,000** messages/month with infrastructure suited to inbound volume.  
+- Direct prospects asking about limits to **/ai** for the full breakdown.
 
 ---
 
@@ -434,7 +435,7 @@ Optional: **Start another request**.
 - Ownership → Approved creative/content per contract; hosted plans = licensed use while active; details in paperwork.  
 - Copy updates → Client with training or Nexora under scoped upkeep; larger structural changes = scope change.  
 - Timeline → Depends on approvals, integrations, content; proposal gives deterministic schedule.  
-- AI limits → Same 50 vs 5,000 messages note as pricing.
+- AI limits → Direct to **/ai** (Starter 50/mo, Growth 5,000/mo — not listed on pricing cards).
 
 **Closing:** Reply within one business day; walk previews, timelines, proposals, or upgrades.
 

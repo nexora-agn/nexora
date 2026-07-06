@@ -158,7 +158,19 @@ export const aiLive = {
   note: "This assistant is live on this page. Open the chat in the corner and ask it anything.",
 };
 
-// ── Closing ─────────────────────────────────────────────────────────────────────
+// ── Plan limits (shown on /ai only — not on Starter/Growth pricing cards) ─────
+export const aiPlanLimits = {
+  title: "Included with your subscription",
+  intro:
+    "Starter and Growth both include the AI assistant on your website. Message allowances depend on your plan:",
+  plans: [
+    { name: "Starter", limit: "Up to 50 assistant messages per month" },
+    { name: "Growth", limit: "5,000 assistant messages per month" },
+    { name: "Enterprise", limit: "Custom volume — contact sales" },
+  ],
+  note: "One message is a single reply from the assistant to a visitor. Need more volume? Upgrade or talk to us about Enterprise.",
+};
+
 export const aiClosing = {
   title: "Want this working on your website?",
   subtitle:

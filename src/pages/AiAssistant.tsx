@@ -16,6 +16,7 @@ import {
   aiHowItWorks,
   aiLive,
   aiMoreFeatures,
+  aiPlanLimits,
 } from "@/data/nexoraAi";
 
 const fadeUp = {
@@ -223,6 +224,32 @@ const AiAssistant = () => {
                 <AiLiveDemo />
               </motion.div>
             </div>
+          </section>
+
+          {/* ── Plan limits (Starter / Growth — not on pricing cards) ─────── */}
+          <section className="mx-auto max-w-6xl px-6 py-14 lg:py-20">
+            <motion.div {...fadeUp} className="rounded-[1.75rem] border border-neutral-200 bg-neutral-50 p-8 md:p-12">
+              <h2 className="text-2xl font-bold tracking-tight text-neutral-950 md:text-3xl">
+                {aiPlanLimits.title}
+              </h2>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-neutral-600">
+                {aiPlanLimits.intro}
+              </p>
+              <ul className="mt-8 grid gap-4 sm:grid-cols-3">
+                {aiPlanLimits.plans.map((plan) => (
+                  <li
+                    key={plan.name}
+                    className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm"
+                  >
+                    <p className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
+                      {plan.name}
+                    </p>
+                    <p className="mt-2 text-base font-semibold text-neutral-950">{plan.limit}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-sm text-neutral-500">{aiPlanLimits.note}</p>
+            </motion.div>
           </section>
 
           {/* ── Closing CTA ──────────────────────────────────────────────── */}
