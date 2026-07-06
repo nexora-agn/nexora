@@ -14,7 +14,7 @@ import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmai
 import type { MarketingPlanId } from "@/lib/pricingPlans";
 import type { PackageOnboardingPayload, ProjectRequestType } from "@/lib/supabase";
 import { PlanCardBody, PlanPopularBadge } from "@/components/landing/PlanCardBody";
-import { MARKETING_PLANS, PLAN_IDS } from "@/lib/pricingPlans";
+import { MARKETING_PLANS, PLAN_IDS, PLAN_TRIAL_LINKS } from "@/lib/pricingPlans";
 import { toast } from "sonner";
 
 type Step = 1 | 2 | 3 | 4;
@@ -526,36 +526,45 @@ const ProjectOnboardingWizard = () => {
                 const active = selectedPlan === plan.id;
                 const inverted = plan.highlight;
                 return (
-                  <button
-                    key={plan.id}
-                    type="button"
-                    onClick={() => selectPackageAndAdvance(plan.id)}
-                    className={cn(
-                      "relative flex h-full min-h-0 w-full min-w-0 flex-col rounded-2xl border p-6 text-left shadow-sm transition-all sm:p-8",
-                      inverted
-                        ? "border-neutral-950 bg-neutral-950 text-white"
-                        : "border-neutral-200 bg-white hover:border-neutral-300",
-                      active
-                        ? "z-[1] ring-2 ring-brand/90 ring-offset-2 ring-offset-background"
-                        : "hover:shadow-sm",
-                    )}
-                  >
-                    {plan.highlight ? <PlanPopularBadge darkBg /> : null}
-                    <PlanCardBody plan={plan} inverted={inverted} evenTaglineBlock />
-                    <div className="mt-auto flex min-h-[2.75rem] w-full shrink-0 flex-col justify-end pt-6">
-                      <span
-                        className={cn(
-                          "flex min-h-[1.25rem] items-center gap-2 text-sm font-semibold",
-                          inverted ? "text-brand" : "text-foreground",
-                          !active && "invisible",
-                        )}
-                        aria-hidden={!active}
-                      >
-                        <Check className="h-4 w-4 shrink-0" strokeWidth={2.5} aria-hidden />
-                        Selected
-                      </span>
-                    </div>
-                  </button>
+                  <div key={plan.id} className="flex h-full min-w-0 flex-col gap-3">
+                    <button
+                      type="button"
+                      onClick={() => selectPackageAndAdvance(plan.id)}
+                      className={cn(
+                        "relative flex min-h-0 w-full min-w-0 flex-1 flex-col rounded-2xl border p-6 text-left shadow-sm transition-all sm:p-8",
+                        inverted
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white hover:border-neutral-300",
+                        active
+                          ? "z-[1] ring-2 ring-brand/90 ring-offset-2 ring-offset-background"
+                          : "hover:shadow-sm",
+                      )}
+                    >
+                      {plan.highlight ? <PlanPopularBadge darkBg /> : null}
+                      <PlanCardBody plan={plan} inverted={inverted} evenTaglineBlock />
+                      <div className="mt-auto flex min-h-[2.75rem] w-full shrink-0 flex-col justify-end pt-6">
+                        <span
+                          className={cn(
+                            "flex min-h-[1.25rem] items-center gap-2 text-sm font-semibold",
+                            inverted ? "text-brand" : "text-foreground",
+                            !active && "invisible",
+                          )}
+                          aria-hidden={!active}
+                        >
+                          <Check className="h-4 w-4 shrink-0" strokeWidth={2.5} aria-hidden />
+                          Selected
+                        </span>
+                      </div>
+                    </button>
+                    <a
+                      href={PLAN_TRIAL_LINKS[plan.id]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="self-center text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      Start 7-day free trial
+                    </a>
+                  </div>
                 );
               })}
             </div>
