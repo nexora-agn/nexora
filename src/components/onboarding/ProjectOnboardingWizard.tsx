@@ -366,11 +366,6 @@ const ProjectOnboardingWizard = () => {
         setEmailing(false);
         return;
       }
-      // Only reached for Enterprise / contact-sales (no checkout URL)
-      if (result.mode === "contact") {
-        window.location.href = "/payment/complete";
-        return;
-      }
       // For "redirect" mode the browser has already navigated to Stripe —
       // setSubmitting(false) is intentionally omitted so the button stays
       // in loading state while the redirect happens.
@@ -972,16 +967,14 @@ const ProjectOnboardingWizard = () => {
                     {submitting ? "Opening checkout…" : "Submit & continue to payment"}
                   </Button>
 
-                  {selectedPlan !== "custom" ? (
-                    <button
-                      type="button"
-                      onClick={() => void runSubmit("email")}
-                      disabled={submitting || emailing}
-                      className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {emailing ? "Sending link…" : "Or email me a secure payment link"}
-                    </button>
-                  ) : null}
+                  <button
+                    type="button"
+                    onClick={() => void runSubmit("email")}
+                    disabled={submitting || emailing}
+                    className="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {emailing ? "Sending link…" : "Or email me a secure payment link"}
+                  </button>
                 </div>
               </>
             )}

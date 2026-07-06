@@ -27,11 +27,6 @@ export async function handlePublicStartProjectStripeRedirect(body, env, requestO
     return { ok: false, status: 400, error: "Unsupported submission for this checkout." };
   }
 
-  // Enterprise / custom plan — no payment, just save & notify
-  if (payload?.selected_plan === "custom") {
-    return handleCustomPlanEnquiry({ requestType, payload, env });
-  }
-
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = resolveSupabaseEnv(env);
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     return { ok: false, status: 500, error: "Server is not configured (Supabase service role)." };
@@ -121,36 +116,4 @@ export async function handlePublicStartProjectStripeRedirect(body, env, requestO
     order_id: orderId,
     session_id: redirect.session_id,
   };
-}
-
-/**
- * Enterprise / custom plan — save enquiry and notify, no payment link.
- */
-async function handleCustomPlanEnquiry({ requestType, payload, env }) {
-  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = resolveSupabaseEnv(env);
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    return { ok: false, status: 500, error: "Server is not configured (Supabase service role)." };
-  }
-
-  const adminSb = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false },
-  });
-
-  const { data: row, error: insErr } = await adminSb
-    .from("project_requests")
-    .insert({ request_type: requestType, status: "new", payload })
-    .select("id")
-    .single();
-
-  if (insErr || !row?.id) {
-    return { ok: false, status: 500, error: insErr?.message || "Could not save your request." };
-  }
-
-  try {
-    await handleSendFormEmails({ formType: "start_project", requestType, payload }, env);
-  } catch (e) {
-    console.warn("[start-project-stripe] Custom-plan emails error:", e);
-  }
-
-  return { ok: true, status: 200, checkout_url: null, order_id: String(row.id), session_id: null };
 }

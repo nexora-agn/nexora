@@ -209,22 +209,22 @@ Buttons: “Book a Demo”; “Preview Your Site” (scrolls to `#live-preview`)
 
 **Growth** is labeled **“Most popular”** on cards.
 
-### Starter — $199/month
+### Starter — $99/month
 
 - **Tagline:** “A trustworthy company site and lead flow. Up fast, not a year-long build.”  
 - **CTA label on card:** “Book a demo” (button still goes to start flow with plan).  
 - **Includes:** Web & mobile responsive; Essential structure & key sections; Lead capture & forms; Hosting & SSL; AI Assistant; Monthly updates (scoped).
 
-### Growth — $399/month
+### Growth — $199/month
 
 - **Tagline:** “Your services, prices, and office systems stay matched to the website.”  
 - **Includes:** Web & mobile responsive; Unlimited pages; Catalog & pricing sync; AI Assistant; SEO & Google Ads setup; AI Infrastructure.
 
-### Custom — Custom pricing
+### Enterprise — $399/month
 
 - **Tagline:** “Site, mobile app, or custom software for your job. We scope it to what you actually run.”  
 - **Includes:** Web & mobile responsive; App Store & Google Play when scope needs native apps; Admin dashboard & workflows; Dedicated scoping, integrations & handoff.  
-- **CTA:** “Talk to us” / start flow uses “Start a project”.
+- **CTA:** “Subscribe” / start flow uses “Start a project”.
 
 ### AI limits (on /ai page — not on Starter/Growth pricing cards)
 
@@ -426,7 +426,7 @@ Optional: **Start another request**.
 4. Final polish — Content, QA, redirects, instrumentation, a11y, training if needed.  
 5. Launch day — Go-live with observability; Growth adds optimisation/integrations.
 
-**Plans table:** Aligns with **Starter ($199/mo)**, **Growth ($399/mo)**, **Custom** — same feature bullets as marketing plans; note custom scopes quoted when exceeding standard packaging.
+**Plans table:** Aligns with **Starter ($99/mo)**, **Growth ($199/mo)**, **Enterprise ($399/mo)** — same feature bullets as marketing plans.
 
 **Comparison table theme:** Nexora consolidates strategy, engineering, integrations, hosting, SSL, revisions, analytics, clear ownership vs fragmented freelancers/hosts/ad-hoc SEO.
 

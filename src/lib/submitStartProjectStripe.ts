@@ -5,8 +5,7 @@
  * The server returns:
  *   { ok: true, checkout_url: string | null, order_id: string, session_id: string | null }
  *
- * checkout_url is null only for the "custom" / Enterprise plan (contact-sales
- * flow), in which case we redirect to /payment/complete directly.
+ * checkout_url is null only when the server uses email delivery (no redirect).
  */
 
 function startProjectStripeEndpoint(): string {
@@ -21,10 +20,9 @@ export type StartProjectStripeResult = {
   session_id: string | null;
   /**
    * "redirect"    — browser navigated away to Stripe Checkout.
-   * "contact"     — Enterprise / custom enquiry saved (no payment).
    * "email_link"  — a secure payment link was emailed to the client (no redirect).
    */
-  mode: "redirect" | "contact" | "email_link";
+  mode: "redirect" | "email_link";
 };
 
 /**
@@ -69,9 +67,8 @@ export async function submitStartProjectAndRedirectToStripe(input: {
     return { order_id: data.order_id ?? "", session_id: data.session_id ?? null, mode: "email_link" };
   }
 
-  // Enterprise / custom plan — no checkout URL, just confirmed
   if (!data.checkout_url) {
-    return { order_id: data.order_id ?? "", session_id: null, mode: "contact" };
+    throw new Error("Checkout URL missing from server response.");
   }
 
   // Redirect to Stripe Checkout (browser navigates away)

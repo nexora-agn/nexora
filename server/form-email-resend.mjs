@@ -507,7 +507,7 @@ function boolLabel(v) {
 function planLabel(id) {
   if (id === "starter") return "Starter";
   if (id === "growth") return "Growth";
-  if (id === "custom") return "Custom";
+  if (id === "custom") return "Enterprise";
   return String(id || "—");
 }
 

@@ -31,8 +31,7 @@ const sections = [
         <p>
           {COMPANY_LEGAL.brand} sells recurring software subscriptions for hosted business websites
           and related digital features to customers in the United States. Our primary products are
-          the Starter and Growth plans sold through our website checkout. Enterprise plans are
-          custom-quoted software subscriptions sold under a written quote.
+          the Starter, Growth, and Enterprise plans sold through our website checkout.
         </p>
         <ul className="mt-3 list-disc space-y-1.5 pl-5">
           <li>Hosted business websites with preview-before-subscribe onboarding.</li>

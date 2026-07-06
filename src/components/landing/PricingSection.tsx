@@ -28,7 +28,7 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Pricing</p>
             <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Pick your lane</h2>
             <p className="mx-auto mt-3 max-w-lg text-base font-medium text-neutral-600 md:text-lg">
-              Monthly subscriptions from $199. Preview your staged website, then subscribe when you're ready.
+              Monthly subscriptions from $99. Preview your staged website, then subscribe when you're ready.
             </p>
           </motion.div>
         ) : (
@@ -65,7 +65,7 @@ const PricingSection = ({ embedded = true }: PricingSectionProps) => {
                   }`}
                 >
                   <Link to={`/start?plan=${encodeURIComponent(plan.id)}`}>
-                    {plan.id === "custom" ? "Contact sales" : "Subscribe"}
+                    {plan.cta}
                   </Link>
                 </Button>
               </motion.div>

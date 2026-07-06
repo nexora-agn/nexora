@@ -3,8 +3,9 @@
  *
  * Env:
  * - STRIPE_SECRET_KEY        — sk_live_… or sk_test_…
- * - STRIPE_PRICE_ID_STARTER  — recurring price for Starter plan ($199/mo)
- * - STRIPE_PRICE_ID_GROWTH   — recurring price for Growth plan ($399/mo)
+ * - STRIPE_PRICE_ID_STARTER    — recurring price for Starter plan ($99/mo)
+ * - STRIPE_PRICE_ID_GROWTH     — recurring price for Growth plan ($199/mo)
+ * - STRIPE_PRICE_ID_ENTERPRISE — recurring price for Enterprise plan ($399/mo)
  * - NEXORA_PUBLIC_URL        — canonical site origin (https://nexora-agn.com)
  */
 import Stripe from "stripe";
@@ -21,10 +22,11 @@ export function getStripeConfig(env) {
   const secretKey = normalizeEnv(env.STRIPE_SECRET_KEY);
   const priceStarter = normalizeEnv(env.STRIPE_PRICE_ID_STARTER);
   const priceGrowth = normalizeEnv(env.STRIPE_PRICE_ID_GROWTH);
+  const priceEnterprise = normalizeEnv(env.STRIPE_PRICE_ID_ENTERPRISE);
   // Configured canonical origin (set NEXORA_PUBLIC_URL in production). Empty in
   // local dev so we can fall back to the request origin instead.
   const configuredOrigin = normalizeEnv(env.NEXORA_PUBLIC_URL || env.VITE_PUBLIC_SITE_URL || "");
-  return { secretKey, priceStarter, priceGrowth, configuredOrigin };
+  return { secretKey, priceStarter, priceGrowth, priceEnterprise, configuredOrigin };
 }
 
 /** Only http(s) origins are accepted as a redirect base. */
@@ -48,13 +50,13 @@ export function resolveSiteOrigin(env, requestOrigin) {
 
 /**
  * Resolve the Stripe Price ID for a given plan slug.
- * Returns null for the "custom" / Enterprise plan (no checkout).
  */
 export function resolveStripePriceId(planId, env) {
-  const { priceStarter, priceGrowth } = getStripeConfig(env);
+  const { priceStarter, priceGrowth, priceEnterprise } = getStripeConfig(env);
   if (planId === "starter") return priceStarter || null;
   if (planId === "growth") return priceGrowth || null;
-  return null; // custom / enterprise — contact sales
+  if (planId === "custom") return priceEnterprise || null;
+  return null;
 }
 
 /**
@@ -81,7 +83,7 @@ export async function buildStripeCheckoutUrl(env, opts) {
     return {
       ok: false,
       status: 400,
-      error: `No Stripe price configured for plan "${opts.planId}". Set STRIPE_PRICE_ID_STARTER / STRIPE_PRICE_ID_GROWTH.`,
+      error: `No Stripe price configured for plan "${opts.planId}". Set STRIPE_PRICE_ID_STARTER / STRIPE_PRICE_ID_GROWTH / STRIPE_PRICE_ID_ENTERPRISE.`,
     };
   }
 
