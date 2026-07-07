@@ -28,7 +28,6 @@ Nexora is a website studio that emphasizes **preview before commitment**: they b
 |--------|--------|
 | **Email** | info@nexora-agn.com |
 | **Phone** | +1 (888) 535-9177 |
-| **Instagram** | [@nexora.agn](https://www.instagram.com/nexora.agn?igsh=MXE4OXR5cm95ejEzNw%3D%3D) |
 | **Registered office** | Listed on the Contact page once `addressLines` are configured in code; until then the display may be empty aside from legal name and CR. |
 
 **Response-time promise (Contact page):** “We reply within one business day.”
@@ -329,7 +328,7 @@ Optional: **Start another request**.
 
 - **Title:** Contact  
 - **Description:** “Questions or demos. We reply within one business day.”  
-- **Direct lines:** Email info@nexora-agn.com; Phone +1 (888) 535-9177; Instagram @nexora.agn; Registered office block (legal name + CR).  
+- **Direct lines:** Email info@nexora-agn.com; Phone +1 (888) 535-9177; Registered office block (legal name + CR).  
 - **Form:** Full name (required), work email (required), subject (optional), message (required). Success: “Message received — Thank you for reaching out. A member of our team will follow up shortly.”
 
 ---

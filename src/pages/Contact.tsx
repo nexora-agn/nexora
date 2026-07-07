@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CheckCircle2, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { CheckCircle2, Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,6 @@ import { Textarea } from "@/components/ui/textarea";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL, COMPANY_OFFICES } from "@/lib/companyLegal";
-import { SOCIAL_LINKS } from "@/lib/socialLinks";
 import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
 
 const Contact = () => {
@@ -89,22 +88,6 @@ const Contact = () => {
                       className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       +1 (888) 535-9177
-                    </a>
-                  </div>
-                </li>
-                <li className="flex gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background text-foreground">
-                    <Instagram className="h-4 w-4" aria-hidden />
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Instagram</p>
-                    <a
-                      href={SOCIAL_LINKS.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-0.5 block text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      @nexora.agn
                     </a>
                   </div>
                 </li>
