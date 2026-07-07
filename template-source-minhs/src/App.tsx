@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SiteContentProvider } from "@/contexts/SiteContentContext";
 import CustomizationPanel from "@/components/CustomizationPanel";
 import ScrollToTop from "@/components/ScrollToTop";
+import ChirpsEmbed from "@/components/ChirpsEmbed";
 import ChatbotWidget from "@/components/Chatbot/ChatbotWidget";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -72,6 +73,7 @@ const AppShell = () => (
       <AnimatedRoutes />
     </Suspense>
     <CustomizationPanel />
+    <ChirpsEmbed />
     {SHOW_TEMPLATE_CHATBOT ? <ChatbotWidget /> : null}
   </BrowserRouter>
 );

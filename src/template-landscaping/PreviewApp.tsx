@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { TemplateRouterShell } from "@/lib/templateShowcase/TemplateRouterShell";
 import { TemplateShowcaseRoot } from "@/lib/templateShowcase/TemplateShowcaseRoot";
-import { TemplateChirpsEmbed } from "@/lib/templateShowcase/TemplateChirpsEmbed";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,13 +21,9 @@ import { mergeSiteContentState } from "@/lib/drafts";
 import { getClientIdFromPreviewUrl } from "@/lib/previewDraftBridge";
 import { useClientPreviewDraft } from "@/hooks/useClientPreviewDraft";
 import ScrollToTop from "@template-landscaping/components/ScrollToTop";
-import ChatbotWidget from "@template-landscaping/components/Chatbot/ChatbotWidget";
 import Index from "@template-landscaping/pages/Index";
 import NotFound from "@template-landscaping/pages/NotFound";
 import type { Draft } from "@/lib/supabase";
-
-/** Flip to true when you want the floating template chatbot back (widget code stays in-repo). */
-const SHOW_TEMPLATE_CHATBOT = false;
 
 const About = lazy(() => import("@template-landscaping/pages/About"));
 const Services = lazy(() => import("@template-landscaping/pages/Services"));
@@ -83,17 +78,12 @@ const AnimatedRoutes = () => {
   );
 };
 
-/** Chirps slug for VerdeField Landscaping — preview + /templates/landscaping showcase. */
-const LANDSCAPING_CHIRPS_SLUG = "landscaping";
-
-const TemplateShell = ({ basename, chirpsSlug }: { basename?: string; chirpsSlug?: string }) => (
+const TemplateShell = ({ basename }: { basename?: string }) => (
   <TemplateRouterShell basename={basename}>
     <ScrollToTop />
     <Suspense fallback={<RouteLoading />}>
       <AnimatedRoutes />
     </Suspense>
-    {SHOW_TEMPLATE_CHATBOT ? <ChatbotWidget /> : null}
-    <TemplateChirpsEmbed chirpsSlug={chirpsSlug ?? LANDSCAPING_CHIRPS_SLUG} />
   </TemplateRouterShell>
 );
 
@@ -166,7 +156,7 @@ export function TemplateShowcase({ chirpsSlug }: { chirpsSlug: string }) {
     <TemplateShowcaseRoot>
       <SiteContentProvider value={SITE_CONTENT_DEFAULTS} external>
         <ThemeProvider value={THEME_DEFAULTS} external>
-          <TemplateShell basename={basename} chirpsSlug={chirpsSlug} />
+          <TemplateShell basename={basename} />
         </ThemeProvider>
       </SiteContentProvider>
     </TemplateShowcaseRoot>

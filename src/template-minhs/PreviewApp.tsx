@@ -80,6 +80,9 @@ const AnimatedRoutes = () => {
   );
 };
 
+/** Chirps slug for MINHS Automotive — preview + /templates/automotive showcase. */
+const MINHS_CHIRPS_SLUG = "automotive";
+
 const TemplateShell = ({ basename, chirpsSlug }: { basename?: string; chirpsSlug?: string }) => (
   <TemplateRouterShell basename={basename}>
     <ScrollToTop />
@@ -87,7 +90,7 @@ const TemplateShell = ({ basename, chirpsSlug }: { basename?: string; chirpsSlug
       <AnimatedRoutes />
     </Suspense>
     {SHOW_TEMPLATE_CHATBOT ? <ChatbotWidget /> : null}
-    {chirpsSlug ? <TemplateChirpsEmbed chirpsSlug={chirpsSlug} /> : null}
+    <TemplateChirpsEmbed chirpsSlug={chirpsSlug ?? MINHS_CHIRPS_SLUG} />
   </TemplateRouterShell>
 );
 
