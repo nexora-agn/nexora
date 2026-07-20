@@ -28,6 +28,7 @@ import luxuryRealEstateThumbUrl from "@/assets/admin/luxury-real-estate-thumb.sv
 import restaurantThumbUrl from "@/assets/admin/restaurant-thumb.svg?url";
 import truckRepairThumbUrl from "@/assets/admin/truck-repair-thumb.svg?url";
 import barbershopThumbUrl from "@/assets/admin/barbershop-thumb.svg?url";
+import dealershipThumbUrl from "@/assets/admin/dealership-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -48,6 +49,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   restaurant: "restaurant",
   "truck-repair": "truck-repair",
   barbershop: "barbershop",
+  dealership: "dealership",
 };
 
 export interface TemplateOption {
@@ -494,6 +496,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-barbershop.html",
       scaffoldDir: "template-source-barbershop",
       liveTemplateDir: "src/template-barbershop",
+    },
+  },
+  {
+    id: "dealership",
+    name: "Nexora Motors",
+    tagline: "Automotive dealership · charcoal + blue",
+    description:
+      "Premium automotive dealership template with digital showroom, inventory filters, compare up to three vehicles, test drive and trade-in flows, payment calculator, CPO benefits, special offers, service & parts leads, digital retail steps, and dealer admin portal.",
+    thumbnail: dealershipThumbUrl,
+    accent: "#2563eb",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID.dealership,
+    available: true,
+    features: [
+      "New, used & CPO inventory grids",
+      "Compare vehicles & digital retail flow",
+      "Test drive, trade-in & finance leads",
+      "Payment calculator & special offers",
+      "Service booking & dealer admin tabs",
+      "Charcoal primary with blue accents",
+    ],
+    paths: {
+      previewHtml: "/preview-dealership.html",
+      scaffoldDir: "template-source-dealership",
+      liveTemplateDir: "src/template-dealership",
     },
   },
 ];

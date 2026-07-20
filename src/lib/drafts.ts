@@ -45,6 +45,8 @@ import { THEME_DEFAULTS as TRUCK_REPAIR_THEME } from "@template-truck-repair/con
 import { SITE_CONTENT_DEFAULTS as TRUCK_REPAIR_SITE_CONTENT } from "@template-truck-repair/contexts/SiteContentContext";
 import { THEME_DEFAULTS as BARBERSHOP_THEME } from "@template-barbershop/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as BARBERSHOP_SITE_CONTENT } from "@template-barbershop/contexts/SiteContentContext";
+import { THEME_DEFAULTS as DEALERSHIP_THEME } from "@template-dealership/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as DEALERSHIP_SITE_CONTENT } from "@template-dealership/contexts/SiteContentContext";
 import { hydrateMinhsSiteContent, hydrateMinhsThemeConfig } from "@template-minhs/lib/media";
 import { migrateMrBuilderNycCompanyPhone } from "@template-mrbuildernyc/data/siteData";
 import { canonicalTemplateId } from "@/lib/templates";
@@ -98,6 +100,8 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return TRUCK_REPAIR_THEME;
     case "barbershop":
       return BARBERSHOP_THEME;
+    case "dealership":
+      return DEALERSHIP_THEME;
     default:
       return CONSTRUCTO_THEME;
   }
@@ -176,6 +180,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return TRUCK_REPAIR_SITE_CONTENT as unknown as SiteContentState;
     case "barbershop":
       return BARBERSHOP_SITE_CONTENT as unknown as SiteContentState;
+    case "dealership":
+      return DEALERSHIP_SITE_CONTENT as unknown as SiteContentState;
     default:
       return CONSTRUCTO_SITE_CONTENT;
   }

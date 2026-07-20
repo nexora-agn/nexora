@@ -1,0 +1,209 @@
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { TemplateRouterShell } from "@/lib/templateShowcase/TemplateRouterShell";
+import { TemplateShowcaseRoot } from "@/lib/templateShowcase/TemplateShowcaseRoot";
+import { TemplateChirpsEmbed } from "@/lib/templateShowcase/TemplateChirpsEmbed";
+import { HelmetProvider } from "react-helmet-async";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  ThemeProvider,
+  THEME_DEFAULTS,
+  type ThemeConfig,
+} from "@template-dealership/contexts/ThemeContext";
+import {
+  SiteContentProvider,
+  SITE_CONTENT_DEFAULTS,
+  type SiteContentState,
+} from "@template-dealership/contexts/SiteContentContext";
+import { mergeSiteContentState } from "@/lib/drafts";
+import { getClientIdFromPreviewUrl } from "@/lib/previewDraftBridge";
+import { useClientPreviewDraft } from "@/hooks/useClientPreviewDraft";
+import ScrollToTop from "@template-dealership/components/ScrollToTop";
+import Index from "@template-dealership/pages/Index";
+import NotFound from "@template-dealership/pages/NotFound";
+import type { Draft } from "@/lib/supabase";
+
+const SHOW_TEMPLATE_CHATBOT = false;
+
+const About = lazy(() => import("@template-dealership/pages/About"));
+const Services = lazy(() => import("@template-dealership/pages/Services"));
+const ServiceDetail = lazy(() => import("@template-dealership/pages/ServiceDetail"));
+const Listings = lazy(() => import("@template-dealership/pages/Listings"));
+const PropertyDetail = lazy(() => import("@template-dealership/pages/PropertyDetail"));
+const Developments = lazy(() => import("@template-dealership/pages/Developments"));
+const Blog = lazy(() => import("@template-dealership/pages/Blog"));
+const BlogPost = lazy(() => import("@template-dealership/pages/BlogPost"));
+const Team = lazy(() => import("@template-dealership/pages/Team"));
+const AgentProfile = lazy(() => import("@template-dealership/pages/AgentProfile"));
+const Contact = lazy(() => import("@template-dealership/pages/Contact"));
+const FAQ = lazy(() => import("@template-dealership/pages/FAQ"));
+const Reviews = lazy(() => import("@template-dealership/pages/Reviews"));
+const ServiceAreas = lazy(() => import("@template-dealership/pages/ServiceAreas"));
+const CityLanding = lazy(() => import("@template-dealership/pages/CityLanding"));
+const Compare = lazy(() => import("@template-dealership/pages/Compare"));
+const TestDrive = lazy(() => import("@template-dealership/pages/TestDrive"));
+const TestDriveConfirmation = lazy(() => import("@template-dealership/pages/TestDriveConfirmation"));
+const ValueYourTrade = lazy(() => import("@template-dealership/pages/ValueYourTrade"));
+const Finance = lazy(() => import("@template-dealership/pages/Finance"));
+const NewVehicles = lazy(() => import("@template-dealership/pages/NewVehicles"));
+const UsedVehicles = lazy(() => import("@template-dealership/pages/UsedVehicles"));
+const CertifiedPreOwned = lazy(() => import("@template-dealership/pages/CertifiedPreOwned"));
+const Offers = lazy(() => import("@template-dealership/pages/Offers"));
+const ServiceParts = lazy(() => import("@template-dealership/pages/ServiceParts"));
+const DigitalRetail = lazy(() => import("@template-dealership/pages/DigitalRetail"));
+const DealerAdmin = lazy(() => import("@template-dealership/pages/DealerAdmin"));
+const Inventory = lazy(() => import("@template-dealership/pages/Inventory"));
+
+const queryClient = new QueryClient();
+
+const RouteLoading = () => (
+  <div className="flex items-center justify-center min-h-[45vh]">
+    <div className="h-9 w-9 border-4 border-primary/30 border-t-foreground/40 rounded-full animate-spin" />
+  </div>
+);
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  const routeKey = `${location.pathname}${location.search}`;
+
+  return (
+    <div key={routeKey} className="page-transition-enter">
+      <Routes location={location}>
+        <Route path="/" element={<Index />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/services/:id" element={<ServiceDetail />} />
+        <Route path="/listings" element={<Listings />} />
+        <Route path="/listings/:id" element={<PropertyDetail />} />
+        <Route path="/inventory" element={<Inventory />} />
+        <Route path="/inventory/:id" element={<PropertyDetail />} />
+        <Route path="/projects" element={<Listings />} />
+        <Route path="/projects/:id" element={<PropertyDetail />} />
+        <Route path="/compare" element={<Compare />} />
+        <Route path="/test-drive" element={<TestDrive />} />
+        <Route path="/test-drive/confirmation" element={<TestDriveConfirmation />} />
+        <Route path="/value-your-trade" element={<ValueYourTrade />} />
+        <Route path="/finance" element={<Finance />} />
+        <Route path="/new-vehicles" element={<NewVehicles />} />
+        <Route path="/used-vehicles" element={<UsedVehicles />} />
+        <Route path="/certified-pre-owned" element={<CertifiedPreOwned />} />
+        <Route path="/offers" element={<Offers />} />
+        <Route path="/service-parts" element={<ServiceParts />} />
+        <Route path="/digital-retail" element={<DigitalRetail />} />
+        <Route path="/dealer-admin" element={<DealerAdmin />} />
+        <Route path="/developments" element={<Developments />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogPost />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/agents/:id" element={<AgentProfile />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/reviews" element={<Reviews />} />
+        <Route path="/service-areas" element={<ServiceAreas />} />
+        <Route path="/areas/:slug" element={<CityLanding />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
+  );
+};
+
+const TemplateShell = ({ basename, chirpsSlug }: { basename?: string; chirpsSlug?: string }) => (
+  <TemplateRouterShell basename={basename}>
+    <ScrollToTop />
+    <Suspense fallback={<RouteLoading />}>
+      <AnimatedRoutes />
+    </Suspense>
+    {SHOW_TEMPLATE_CHATBOT ? null : null}
+    {chirpsSlug ? <TemplateChirpsEmbed chirpsSlug={chirpsSlug} /> : null}
+  </TemplateRouterShell>
+);
+
+const PreviewMessage = ({ title, body }: { title: string; body: string }) => (
+  <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-8">
+    <div className="max-w-md text-center space-y-3">
+      <h1 className="text-2xl font-bold">{title}</h1>
+      <p className="text-muted-foreground">{body}</p>
+    </div>
+  </div>
+);
+
+const PreviewApp = () => {
+  const clientId = useMemo(() => getClientIdFromPreviewUrl(), []);
+  const [theme, setTheme] = useState<ThemeConfig>(THEME_DEFAULTS);
+  const [content, setContent] = useState<SiteContentState>(SITE_CONTENT_DEFAULTS);
+
+  const applyDraftPayload = useCallback((payload: Pick<Draft, "theme" | "content"> | null) => {
+    if (!payload) return;
+    setTheme({ ...THEME_DEFAULTS, ...(payload.theme as Partial<ThemeConfig>) });
+    setContent(
+      mergeSiteContentState(
+        SITE_CONTENT_DEFAULTS as unknown as Record<string, unknown>,
+        payload.content as Partial<Record<string, unknown>> | null,
+      ) as SiteContentState,
+    );
+  }, []);
+
+  const { loading, error } = useClientPreviewDraft(clientId, applyDraftPayload);
+
+  if (!clientId) {
+    return (
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <SiteContentProvider value={SITE_CONTENT_DEFAULTS} onChange={setContent} external>
+            <ThemeProvider value={THEME_DEFAULTS} onChange={setTheme} external>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <TemplateShell />
+              </TooltipProvider>
+            </ThemeProvider>
+          </SiteContentProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
+    );
+  }
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-[120] bg-background flex items-center justify-center">
+        <div className="h-9 w-9 border-4 border-primary/30 border-t-foreground/40 rounded-full animate-spin" />
+      </div>
+    );
+  }
+  if (error) {
+    return <PreviewMessage title="Preview error" body={error} />;
+  }
+
+  return (
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <SiteContentProvider value={content} onChange={setContent} external>
+          <ThemeProvider value={theme} onChange={setTheme} external>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <TemplateShell />
+            </TooltipProvider>
+          </ThemeProvider>
+        </SiteContentProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  );
+};
+
+export function TemplateShowcase({ chirpsSlug }: { chirpsSlug: string }) {
+  const basename = `/templates/${chirpsSlug}`;
+  return (
+    <TemplateShowcaseRoot>
+      <SiteContentProvider value={SITE_CONTENT_DEFAULTS} external>
+        <ThemeProvider value={THEME_DEFAULTS} external>
+          <TemplateShell basename={basename} chirpsSlug={chirpsSlug} />
+        </ThemeProvider>
+      </SiteContentProvider>
+    </TemplateShowcaseRoot>
+  );
+}
+
+export default PreviewApp;
