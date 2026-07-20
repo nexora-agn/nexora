@@ -212,24 +212,25 @@ Buttons: “Book a Demo”; “Preview Your Site” (scrolls to `#live-preview`)
 
 - **Tagline:** “A trustworthy company site and lead flow. Up fast, not a year-long build.”  
 - **CTA label on card:** “Book a demo” (button still goes to start flow with plan).  
-- **Includes:** Web & mobile responsive; Essential structure & key sections; Lead capture & forms; Hosting & SSL; AI Assistant; Monthly updates (scoped).
+- **Includes:** Web & mobile responsive; Essential structure & key sections; Lead capture & forms; Hosting & SSL; AI Chatbot with 500 messages; Monthly updates (scoped).
 
 ### Growth — $199/month
 
 - **Tagline:** “Your services, prices, and office systems stay matched to the website.”  
-- **Includes:** Web & mobile responsive; Unlimited pages; Catalog & pricing sync; AI Assistant; SEO & Google Ads setup; AI Infrastructure.
+- **Includes:** Web & mobile responsive; Unlimited pages; Catalog & pricing sync; AI Chatbot with 5,000 messages; SEO & Google Ads setup; AI Infrastructure.
 
 ### Enterprise — $399/month
 
 - **Tagline:** “Site, mobile app, or custom software for your job. We scope it to what you actually run.”  
-- **Includes:** Web & mobile responsive; App Store & Google Play when scope needs native apps; Admin dashboard & workflows; Dedicated scoping, integrations & handoff.  
+- **Includes:** Everything in Growth; AI Chatbot with Unlimited messages; Multi-site or multi-brand rollouts; Advanced integrations & workflows; Dedicated account onboarding.  
 - **CTA:** “Subscribe” / start flow uses “Start a project”.
 
-### AI limits (on /ai page — not on Starter/Growth pricing cards)
+### AI chatbot message limits
 
-- Starter: up to **50** assistant messages/month.  
-- Growth: up to **5,000** messages/month with infrastructure suited to inbound volume.  
-- Direct prospects asking about limits to **/ai** for the full breakdown.
+- **Starter ($99/mo):** AI Chatbot with **500** messages per month.  
+- **Growth ($199/mo):** AI Chatbot with **5,000** messages per month.  
+- **Enterprise ($399/mo):** AI Chatbot with **Unlimited** messages.  
+- Full breakdown also on **/ai**.
 
 ---
 
@@ -434,7 +435,7 @@ Optional: **Start another request**.
 - Ownership → Approved creative/content per contract; hosted plans = licensed use while active; details in paperwork.  
 - Copy updates → Client with training or Nexora under scoped upkeep; larger structural changes = scope change.  
 - Timeline → Depends on approvals, integrations, content; proposal gives deterministic schedule.  
-- AI limits → Direct to **/ai** (Starter 50/mo, Growth 5,000/mo — not listed on pricing cards).
+- AI limits → **Starter 500/mo**, **Growth 5,000/mo**, **Enterprise unlimited** (also on pricing cards and **/ai**).
 
 **Closing:** Reply within one business day; walk previews, timelines, proposals, or upgrades.
 

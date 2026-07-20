@@ -269,6 +269,6 @@ export const websiteProgramFaqs: { question: string; answer: string }[] = [
   {
     question: "What about AI Assistant limits?",
     answer:
-      "Starter and Growth both include the AI assistant. Message allowances are listed on our AI assistant page — not on the pricing cards.",
+      "Starter includes an AI Chatbot with 500 messages per month; Growth includes 5,000; Enterprise includes unlimited. Details are on our pricing and AI assistant pages.",
   },
 ];
