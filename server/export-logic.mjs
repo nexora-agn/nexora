@@ -143,6 +143,10 @@ export const TEMPLATE_REGISTRY = [
     id: "dealership",
     paths: { scaffoldDir: "template-source-dealership", liveTemplateDir: "src/template-dealership" },
   },
+  {
+    id: "mobile-store",
+    paths: { scaffoldDir: "template-source-mobile-store", liveTemplateDir: "src/template-mobile-store" },
+  },
 ];
 
 /**

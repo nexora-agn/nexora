@@ -29,6 +29,7 @@ import restaurantThumbUrl from "@/assets/admin/restaurant-thumb.svg?url";
 import truckRepairThumbUrl from "@/assets/admin/truck-repair-thumb.svg?url";
 import barbershopThumbUrl from "@/assets/admin/barbershop-thumb.svg?url";
 import dealershipThumbUrl from "@/assets/admin/dealership-thumb.svg?url";
+import mobileStoreThumbUrl from "@/assets/admin/mobile-store-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -50,6 +51,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   "truck-repair": "truck-repair",
   barbershop: "barbershop",
   dealership: "dealership",
+  "mobile-store": "mobile-store",
 };
 
 export interface TemplateOption {
@@ -520,6 +522,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-dealership.html",
       scaffoldDir: "template-source-dealership",
       liveTemplateDir: "src/template-dealership",
+    },
+  },
+  {
+    id: "mobile-store",
+    name: "Nexora Mobile",
+    tagline: "Premium phone retail · clean white + blue",
+    description:
+      "Premium mobile phone retail template with product shop grids, side-by-side compare, cart and checkout flows, device trade-in valuation, repair service booking, store locator, and carrier-friendly merchandising. Built for flagship phone stores and multi-location retailers.",
+    thumbnail: mobileStoreThumbUrl,
+    accent: "#0071e3",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID["mobile-store"],
+    available: true,
+    features: [
+      "Shop phones, plans & accessories",
+      "Compare devices side by side",
+      "Cart + streamlined checkout",
+      "Trade-in valuation flow",
+      "Repairs & protection plans",
+      "Store locator & hours",
+    ],
+    paths: {
+      previewHtml: "/preview-mobile-store.html",
+      scaffoldDir: "template-source-mobile-store",
+      liveTemplateDir: "src/template-mobile-store",
     },
   },
 ];
