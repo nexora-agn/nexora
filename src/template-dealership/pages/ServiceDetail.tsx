@@ -25,7 +25,7 @@ const ServiceDetail = () => {
     );
   }
 
-  const inclusions = section?.inclusions || ["Dedicated advisor", "Market analysis", "Private viewings", "Negotiation support"];
+  const inclusions = section?.inclusions || ["Dedicated sales specialist", "Transparent pricing", "Test drive scheduling", "Finance & trade-in support"];
 
   return (
     <Layout>
@@ -37,11 +37,11 @@ const ServiceDetail = () => {
       <section className="relative dealer-header-offset pb-12 sm:pb-16 lg:pb-20 bg-[hsl(var(--primary))] text-white">
         <div className="container-custom container-inset grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           <div>
-            <p className="luxury-eyebrow text-[hsl(var(--secondary))] mb-4">Luxury Advisory</p>
+            <p className="luxury-eyebrow text-[hsl(var(--secondary))] mb-4">Dealership Services</p>
             <h1 className="font-display text-4xl md:text-5xl font-medium mb-6">{service.title}</h1>
             <p className="text-white/75 text-lg font-light leading-relaxed mb-8">{service.description}</p>
             <Button asChild className="rounded-none bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--secondary))]/90 uppercase text-xs tracking-wider h-12 px-8">
-              <Link to="/contact">Schedule Consultation <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link to="/contact">Schedule a Visit <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
           <div className="image-zoom aspect-[4/3]">

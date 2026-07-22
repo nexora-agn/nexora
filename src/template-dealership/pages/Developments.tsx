@@ -13,14 +13,14 @@ const Developments = () => {
   return (
     <Layout>
       <Helmet>
-        <title>New Developments | {COMPANY.name}</title>
-        <meta name="description" content="Explore pre-construction and new-build luxury developments." />
+        <title>New Arrivals | {COMPANY.name}</title>
+        <meta name="description" content="Explore incoming inventory, EV arrivals, and limited-time vehicle showcases at Nexora Motors." />
       </Helmet>
 
       <section className="bg-[hsl(var(--primary))] text-white dealer-header-offset pb-10 sm:pb-12 lg:pb-14">
         <div className="container-custom container-inset">
-          <p className="luxury-eyebrow text-[hsl(var(--secondary))] mb-3">Pre-Construction</p>
-          <h1 className="font-display text-4xl md:text-5xl font-medium">New Developments</h1>
+          <p className="luxury-eyebrow text-[hsl(var(--secondary))] mb-3">Incoming Inventory</p>
+          <h1 className="font-display text-4xl md:text-5xl font-medium">New Arrivals</h1>
         </div>
       </section>
 
@@ -36,7 +36,7 @@ const Developments = () => {
               <p className="text-muted-foreground mb-6">{dev.location}</p>
               <div className="mb-6">
                 <div className="flex justify-between text-sm mb-2">
-                  <span>Construction Progress</span>
+                  <span>Arrival Progress</span>
                   <span>{dev.progress}%</span>
                 </div>
                 <Progress value={dev.progress} className="h-1.5" />

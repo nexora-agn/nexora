@@ -18,7 +18,7 @@ const ServicesShowcase = () => {
               Our Services
             </p>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-[hsl(var(--primary))] uppercase">
-              Design-Build Services
+              Dealership Services
             </h2>
           </div>
           <Link

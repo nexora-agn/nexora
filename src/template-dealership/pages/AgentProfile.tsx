@@ -17,8 +17,8 @@ const AgentProfile = () => {
     return (
       <Layout>
         <div className="py-32 text-center">
-          <h1 className="font-display text-2xl">Agent not found</h1>
-          <Link to="/team" className="text-[hsl(var(--secondary))] mt-4 inline-block">View All Agents</Link>
+          <h1 className="font-display text-2xl">Specialist not found</h1>
+          <Link to="/team" className="text-[hsl(var(--secondary))] mt-4 inline-block">View All Specialists</Link>
         </div>
       </Layout>
     );
@@ -47,7 +47,7 @@ const AgentProfile = () => {
             />
           </div>
           <div className="lg:col-span-2">
-            <p className="luxury-eyebrow mb-2">Luxury Advisor</p>
+            <p className="luxury-eyebrow mb-2">Sales Specialist</p>
             <h1 className="font-display text-4xl md:text-5xl mb-2">{agent.name}</h1>
             <p className="text-[hsl(var(--secondary))] uppercase tracking-wider text-sm mb-6">{agent.role}</p>
             {a.experience && <p className="text-sm text-muted-foreground mb-4">Experience: {a.experience}</p>}
@@ -83,7 +83,7 @@ const AgentProfile = () => {
 
       {listings.length > 0 && (
         <section className="container-custom container-inset py-16">
-          <h2 className="luxury-subheading mb-8">Active Listings</h2>
+          <h2 className="luxury-subheading mb-8">Vehicles in Stock</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {listings.map(l => <PropertyCard key={l.id} listing={l} />)}
           </div>

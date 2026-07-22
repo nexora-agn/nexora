@@ -1,15 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { ArrowRight, Home, Droplets, Phone, Flame } from "lucide-react";
+import { ArrowRight, Home, Car, Phone } from "lucide-react";
 import Layout from "@template-dealership/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@template-dealership/contexts/SiteContentContext";
 
 const QUICK_LINKS: Array<{ label: string; to: string; description: string }> = [
-  { label: "Services", to: "/services", description: "Custom homes, additions, ADUs, and whole-home remodeling." },
-  { label: "Portfolio", to: "/projects", description: "Recent design-build projects across Central New Jersey." },
-  { label: "Contact", to: "/contact", description: "Free design-build consultations and scheduling." },
+  { label: "Inventory", to: "/inventory", description: "Browse new, used, and certified vehicles in stock." },
+  { label: "Services", to: "/services", description: "Sales, financing, trade-in, parts, and factory service." },
+  { label: "Contact", to: "/contact", description: "Schedule a visit, test drive, or talk with finance." },
 ];
 
 const NotFound = () => {
@@ -27,7 +27,7 @@ const NotFound = () => {
         <meta name="robots" content="noindex, nofollow" />
         <meta
           name="description"
-          content={`This page could not be found. Return to ${COMPANY.name} for custom home builders in Central New Jersey.`}
+          content={`This page could not be found. Return to ${COMPANY.name} for new, used, and certified vehicles in Austin and Central Texas.`}
         />
       </Helmet>
 
@@ -56,8 +56,8 @@ const NotFound = () => {
                 This page isn&apos;t here.
               </h1>
               <p className="text-base md:text-lg text-white/75 leading-relaxed max-w-xl mb-8">
-                The link may be outdated or mistyped. Head back to our homepage or call us — we&apos;re available
-                Free estimate for painting emergencies.
+                The link may be outdated or mistyped. Head back to our homepage, browse inventory, or call us —
+                we&apos;re happy to help you find the right vehicle.
               </p>
 
               {location.pathname && location.pathname !== "/" ? (
@@ -85,9 +85,9 @@ const NotFound = () => {
                   variant="outline"
                   className="rounded-sm font-semibold px-8 border-white/30 text-white bg-transparent hover:bg-white/10 hover:text-white"
                 >
-                  <Link to="/services/contact" aria-label="Emergency custom home builder">
-                    <Flame className="h-4 w-4 mr-2" />
-                    Emergency Service
+                  <Link to="/inventory" aria-label="Browse vehicle inventory">
+                    <Car className="h-4 w-4 mr-2" />
+                    Browse Inventory
                   </Link>
                 </Button>
               </div>
@@ -103,7 +103,7 @@ const NotFound = () => {
               </span>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[hsl(var(--secondary))] text-white shadow-lg">
-                  <Droplets className="h-9 w-9" strokeWidth={1.75} />
+                  <Car className="h-9 w-9" strokeWidth={1.75} />
                 </div>
               </div>
             </div>

@@ -17,7 +17,7 @@ const CityLanding = () => {
 
   if (!city) return <NotFound />;
 
-  const heroImage = HOME_BUILDER_IMAGES[city.imageKey] ?? HOME_BUILDER_IMAGES.customHome;
+  const heroImage = HOME_BUILDER_IMAGES[city.imageKey] ?? HOME_BUILDER_IMAGES.showroom;
   const featuredServices = SERVICES.filter(s =>
     city.services.some(label => s.title.toLowerCase().includes(label.split(" ")[0].toLowerCase())),
   ).slice(0, 6);
@@ -47,7 +47,7 @@ const CityLanding = () => {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-[hsl(var(--primary))] rounded-sm font-sans-brand">
                 <Link to="/contact">
-                  Free Consultation
+                  Schedule a Visit
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -62,7 +62,7 @@ const CityLanding = () => {
           <div className="relative rounded-sm overflow-hidden border border-border aspect-[4/3]">
             <img
               src={heroImage}
-              alt={`Custom home builder in ${city.name}`}
+              alt={`Nexora Motors vehicles near ${city.name}`}
               className="h-full w-full object-cover"
             />
           </div>
@@ -91,7 +91,7 @@ const CityLanding = () => {
       <section className="section-padding bg-[hsl(var(--hb-cream))]">
         <div className="container-custom">
           <h2 className="font-display text-2xl md:text-3xl font-bold text-[hsl(var(--primary))] text-center">
-            Design-Build Services in {city.name}
+            Dealership Services in {city.name}
           </h2>
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {servicesToShow.map(s => (

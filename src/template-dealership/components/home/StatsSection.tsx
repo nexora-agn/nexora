@@ -45,10 +45,10 @@ const StatsSection = () => {
   }, []);
 
   const stats = [
-    { value: 1200, label: "Properties Sold", suffix: "+" },
-    { value: 450, label: "Active Listings", suffix: "+" },
-    { value: 3200, label: "Happy Clients", suffix: "+" },
-    { value: 30, label: "Years Experience", suffix: "+" },
+    { value: 120, label: "Vehicles in Stock", suffix: "+" },
+    { value: 2400, label: "Happy Drivers", suffix: "+" },
+    { value: 4, label: "Central Texas Locations", suffix: "" },
+    { value: 25, label: "Years Experience", suffix: "+" },
   ];
 
   return (

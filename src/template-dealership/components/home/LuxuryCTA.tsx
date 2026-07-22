@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { CTA_SECTION } from "@template-dealership/data/siteData";
+import { CTA_SECTION, LUXURY_IMAGES } from "@template-dealership/data/siteData";
 
 const LuxuryCTA = () => (
   <section className="relative py-28 lg:py-36 overflow-hidden">
     <div
       className="absolute inset-0 bg-cover bg-center"
-      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=85)" }}
+      style={{ backgroundImage: `url(${LUXURY_IMAGES.hero})` }}
     />
     <div className="absolute inset-0 bg-[hsl(var(--primary))]/85" />
     <div className="relative container-custom container-inset text-center text-white">

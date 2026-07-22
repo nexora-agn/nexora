@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, CreditCard, Flame, ArrowRight } from "lucide-react";
+import { Phone, CreditCard, Calendar, ArrowRight } from "lucide-react";
 import { useSiteContent } from "@template-dealership/contexts/SiteContentContext";
 
 const EmergencyFinancingBand = () => {
@@ -22,14 +22,14 @@ const EmergencyFinancingBand = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                 <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm bg-[hsl(var(--primary))] text-[hsl(var(--secondary))]">
-                  <Flame className="h-7 w-7" />
+                  <Calendar className="h-7 w-7" />
                 </span>
                 <div>
                   <h3 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-wide">
-                    {SITE_TOP.line || "Free estimate Emergency Service"}
+                    {SITE_TOP.line || "Schedule a test drive today"}
                   </h3>
                   <p className="mt-1 text-sm sm:text-base opacity-80 max-w-md">
-                    Burst pipe? Sewer backup? Our licensed painters dispatch fast — day or night.
+                    Same-day test drives when slots are available — book online or call our sales team.
                   </p>
                   <a
                     href={phoneHref}
@@ -52,11 +52,10 @@ const EmergencyFinancingBand = () => {
                     Flexible Financing
                   </h3>
                   <p className="mt-1 text-sm sm:text-base opacity-80 max-w-md md:ml-auto">
-                    Spread water heater replacements, boiler work, and major installs over manageable
-                    monthly payments. Ask about promo options.
+                    Spread new, used, and certified purchases over manageable monthly payments. Ask about current APR offers.
                   </p>
                   <Link
-                    to="/contact"
+                    to="/finance"
                     className="mt-3 inline-flex items-center gap-2 text-sm font-display font-bold uppercase tracking-wider hover:opacity-80 transition-opacity"
                   >
                     Explore Payment Options

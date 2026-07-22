@@ -7,11 +7,11 @@ const NewDevelopmentsSection = () => (
     <div className="container-custom container-inset">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
-          <p className="luxury-eyebrow text-[hsl(var(--secondary))] mb-3">Pre-Construction</p>
-          <h2 className="font-display text-4xl md:text-5xl font-medium text-white">New Developments</h2>
+          <p className="luxury-eyebrow text-[hsl(var(--secondary))] mb-3">Incoming Inventory</p>
+          <h2 className="font-display text-4xl md:text-5xl font-medium text-white">New Arrivals</h2>
         </div>
         <Link to="/developments" className="text-sm font-medium uppercase tracking-wider text-[hsl(var(--secondary))] hover:underline">
-          View All Projects →
+          View All Arrivals →
         </Link>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

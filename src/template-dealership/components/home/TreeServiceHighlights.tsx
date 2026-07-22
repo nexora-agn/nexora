@@ -5,11 +5,11 @@ import { useTheme } from "@template-dealership/contexts/ThemeContext";
 import { HOME_BUILDER_IMAGES } from "@template-dealership/data/siteData";
 import { Button } from "@/components/ui/button";
 
-const TREE_SERVICES = [
-  { id: "tree-removal", title: "Tree Removal", image: HOME_BUILDER_IMAGES.treeRemoval },
-  { id: "tree-trimming", title: "Trimming & Pruning", image: HOME_BUILDER_IMAGES.treeTrimming },
-  { id: "stump-grinding", title: "Stump Grinding", image: HOME_BUILDER_IMAGES.stumpGrinding },
-  { id: "emergency-tree-service", title: "24/7 Emergency", image: HOME_BUILDER_IMAGES.emergencyTree },
+const HIGHLIGHT_SERVICES = [
+  { id: "new-vehicles", title: "New Vehicles", image: HOME_BUILDER_IMAGES.showroom },
+  { id: "cpo", title: "Certified Pre-Owned", image: HOME_BUILDER_IMAGES.keys },
+  { id: "service", title: "Factory Service", image: HOME_BUILDER_IMAGES.crewWorking },
+  { id: "ev", title: "Electric Vehicles", image: HOME_BUILDER_IMAGES.evCharge },
 ] as const;
 
 const TreeServiceHighlights = () => {
@@ -24,13 +24,13 @@ const TreeServiceHighlights = () => {
           <div className="max-w-xl">
             <p className="verde-editorial-rule mb-4" />
             <p className="text-[11px] font-sans-brand font-bold tracking-[0.24em] uppercase text-[hsl(var(--secondary))] mb-3">
-              Certified Tree Care
+              Dealership Highlights
             </p>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] leading-tight">
-              ISA Arborists On Every Hazardous Job
+              Specialists for Every Step of Ownership
             </h2>
             <p className="mt-4 text-[hsl(var(--primary-foreground)/0.85)] font-sans-brand leading-relaxed">
-              From precision pruning to storm-damage removals — rigging, permits, and spotless haul-away included.
+              From new inventory and CPO confidence to EV guidance and factory-trained service — transparent pricing included.
             </p>
           </div>
           <Button
@@ -40,13 +40,13 @@ const TreeServiceHighlights = () => {
           >
             <a href={phoneHref}>
               <Phone className="h-4 w-4 mr-2" />
-              Emergency Line
+              Call Sales
             </a>
           </Button>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-          {TREE_SERVICES.map((item, index) => {
+          {HIGHLIGHT_SERVICES.map((item, index) => {
             const img = resolveServiceImage(item.id, item.image);
             return (
               <Link

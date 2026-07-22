@@ -1,13 +1,13 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { Award, ShieldCheck, Home as HomeIcon, Tag } from "lucide-react";
+import { Award, ShieldCheck, Car, Tag, MapPin } from "lucide-react";
 import Layout from "@template-dealership/components/layout/Layout";
 import LuxuryCTA from "@template-dealership/components/home/LuxuryCTA";
 import AgentsSection from "@template-dealership/components/home/AgentsSection";
 import { useSiteContent } from "@template-dealership/contexts/SiteContentContext";
 import { ABOUT_HERO_BADGES, ABOUT_TIMELINE, AWARDS, LUXURY_IMAGES } from "@template-dealership/data/siteData";
 
-const badgeIconMap = { HomeIcon, ShieldCheck, Award, Tag, Home: HomeIcon } as const;
+const badgeIconMap = { Car, ShieldCheck, Award, Tag, MapPin } as const;
 
 const About = () => {
   const { company: COMPANY, coreValues, certifications, aboutStats } = useSiteContent();
@@ -49,10 +49,10 @@ const About = () => {
             <p className="luxury-eyebrow mb-4">Mission & Vision</p>
             <h2 className="luxury-subheading mb-6">A Standard of Excellence</h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Nexora Estate was founded on a simple belief: luxury real estate deserves the same editorial quality and white-glove service as the world&apos;s finest brands.
+              Nexora Motors was founded on a simple belief: buying a vehicle should feel as clear and modern as shopping for anything else you care about — transparent pricing, honest advice, and zero pressure.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              Today, our advisors serve discerning clients across premier markets — combining local expertise with an international network spanning twelve countries.
+              Today, our sales and service teams help Central Texas drivers across Austin, Round Rock, Cedar Park, and San Marcos — from first browse to factory-trained service for years to come.
             </p>
           </div>
         </div>

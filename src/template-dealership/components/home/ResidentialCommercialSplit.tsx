@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Building2, Home } from "lucide-react";
+import { ArrowRight, Car, Wrench } from "lucide-react";
 import { useSiteContent } from "@template-dealership/contexts/SiteContentContext";
 import { useTheme } from "@template-dealership/contexts/ThemeContext";
 import { HOME_BUILDER_IMAGES } from "@template-dealership/data/siteData";
@@ -8,41 +8,41 @@ const ResidentialCommercialSplit = () => {
   const { services } = useSiteContent();
   const { resolveServiceImage } = useTheme();
 
-  const residentialSvc =
-    services.find(s => s.id === "residential-landscaping") ?? services.find(s => s.id === "landscaping-design");
-  const commercialSvc = services.find(s => s.id === "commercial-landscaping");
+  const salesSvc =
+    services.find(s => s.id === "new-vehicles") ?? services.find(s => s.id === "used-vehicles");
+  const serviceSvc = services.find(s => s.id === "service");
 
-  const residentialImg = residentialSvc
-    ? resolveServiceImage(residentialSvc.id, residentialSvc.image || HOME_BUILDER_IMAGES.residentialSplit)
-    : HOME_BUILDER_IMAGES.residentialSplit;
-  const commercialImg = commercialSvc
-    ? resolveServiceImage(commercialSvc.id, commercialSvc.image || HOME_BUILDER_IMAGES.commercialSplit)
-    : HOME_BUILDER_IMAGES.commercialSplit;
+  const salesImg = salesSvc
+    ? resolveServiceImage(salesSvc.id, salesSvc.image || HOME_BUILDER_IMAGES.showroom)
+    : HOME_BUILDER_IMAGES.showroom;
+  const serviceImg = serviceSvc
+    ? resolveServiceImage(serviceSvc.id, serviceSvc.image || HOME_BUILDER_IMAGES.crewWorking)
+    : HOME_BUILDER_IMAGES.crewWorking;
 
   const panels = [
     {
-      id: "residential",
-      icon: Home,
-      eyebrow: "Residential",
-      title: residentialSvc?.title || "Residential Landscaping",
+      id: "sales",
+      icon: Car,
+      eyebrow: "Sales",
+      title: salesSvc?.title || "New & Used Vehicles",
       body:
-        residentialSvc?.description ||
-        "Backyard retreats, front-yard curb appeal, and full-property design-build for North Jersey homes.",
-      image: residentialImg,
-      to: residentialSvc ? `/services/${residentialSvc.id}` : "/services/residential-landscaping",
-      cta: "Residential Services",
+        salesSvc?.description ||
+        "Browse new, used, and certified inventory with transparent pricing across our Central Texas locations.",
+      image: salesImg,
+      to: salesSvc ? `/services/${salesSvc.id}` : "/inventory",
+      cta: "Shop Inventory",
     },
     {
-      id: "commercial",
-      icon: Building2,
-      eyebrow: "Commercial",
-      title: commercialSvc?.title || "Commercial Grounds",
+      id: "service",
+      icon: Wrench,
+      eyebrow: "Service",
+      title: serviceSvc?.title || "Factory Service",
       body:
-        commercialSvc?.description ||
-        "HOA entrances, retail campuses, and office grounds maintained to a professional standard year-round.",
-      image: commercialImg,
-      to: commercialSvc ? `/services/${commercialSvc.id}` : "/services/commercial-landscaping",
-      cta: "Commercial Services",
+        serviceSvc?.description ||
+        "Factory-trained technicians, OEM parts, and service specials that keep you on the road.",
+      image: serviceImg,
+      to: serviceSvc ? `/services/${serviceSvc.id}` : "/services/service",
+      cta: "Schedule Service",
     },
   ] as const;
 

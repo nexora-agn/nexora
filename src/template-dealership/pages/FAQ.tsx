@@ -27,17 +27,17 @@ const FAQ = () => {
         <title>FAQ | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`Answers about ${COMPANY.name} custom home builders, emergency dispatch, pricing, permits, and warranties across Central NJ.`}
+          content={`Answers about ${COMPANY.name} inventory, test drives, financing, trade-ins, and service across Austin and Central Texas.`}
         />
       </Helmet>
 
       <HarborPageHero
         eyebrow="FAQ"
         breadcrumb={[{ label: "Home", to: "/" }, { label: "FAQ" }]}
-        title="Custom Home Questions Answered"
-        body="Everything you need to know about our design-build team, emergency service, drains, water heaters, and code-compliant work across Central New Jersey."
+        title="Dealership Questions Answered"
+        body="Everything you need to know about shopping new, used, and certified vehicles — financing, trade-ins, service, and visiting our Central Texas locations."
         image={HOME_BUILDER_IMAGES.crewWorking}
-        imageAlt="architectural plans"
+        imageAlt="Nexora Motors showroom and service"
       />
 
       {sectionVisibility["faq.main"] ? (
@@ -86,7 +86,7 @@ const FAQ = () => {
               Still have questions?
             </h2>
             <p className="text-slate-600 mb-8 leading-relaxed">
-              Can&apos;t find what you need? Call our design-build team or request a free estimate — we&apos;re happy to help.
+              Can&apos;t find what you need? Call our sales team or schedule a visit — we&apos;re happy to help.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button
@@ -102,7 +102,7 @@ const FAQ = () => {
                 size="lg"
                 className="rounded-sm px-8 font-display font-bold uppercase bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] hover:bg-[hsl(var(--secondary))]/90"
               >
-                <Link to="/contact">Request Estimate</Link>
+                <Link to="/contact">Contact Us</Link>
               </Button>
             </div>
           </div>

@@ -21,13 +21,13 @@ const ServiceAreasHome = () => {
               Where We Work
             </p>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-[hsl(var(--primary))] uppercase leading-tight">
-              Central New Jersey
+              Austin &amp; Central Texas
             </h2>
             <div className="hb-rule my-5" />
             <p className="text-muted-foreground font-sans-brand leading-relaxed">
               {SITE_TOP.locations
-                ? `We build across ${SITE_TOP.locations}. Contact us to confirm we serve your municipality.`
-                : "Luxury design-build homes across Central New Jersey."}
+                ? `We serve drivers across ${SITE_TOP.locations}. Contact us to confirm inventory and appointments at your nearest store.`
+                : "Premium automotive retail across Austin and Central Texas."}
             </p>
             <Link
               to="/service-areas"

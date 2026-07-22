@@ -11,13 +11,13 @@ const ProcessSection = () => {
       <div className="container-custom container-inset">
         <div className="text-center max-w-2xl mx-auto mb-14">
           <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-[hsl(var(--secondary))] mb-3">
-            Our Design-Build Process
+            Our Buying Process
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-bold uppercase">
-            From Consultation to Keys
+            From Browse to Delivery
           </h2>
           <p className="mt-4 text-[hsl(var(--primary-foreground)/0.8)] font-sans-brand leading-relaxed">
-            A second-generation firm refined for Central New Jersey custom homes — tailored to your lot, architect, and budget.
+            A clear path for Central Texas drivers — tailored to how you want to shop, finance, and take delivery.
           </p>
         </div>
 

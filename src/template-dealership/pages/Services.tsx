@@ -15,7 +15,7 @@ const Services = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Design-Build Custom Home Services | {COMPANY.name}</title>
+        <title>Dealership Services | {COMPANY.name}</title>
         <meta name="description" content={servicesPageIntro} />
       </Helmet>
 
@@ -28,10 +28,10 @@ const Services = () => {
         />
         <div className="relative container-custom container-inset py-16 lg:py-20 text-[hsl(var(--primary-foreground))]">
           <p className="text-[11px] font-sans-brand font-bold tracking-[0.24em] uppercase text-[hsl(var(--secondary))] mb-3">
-            Design-Build Services
+            Dealership Services
           </p>
           <h1 className="font-display text-4xl sm:text-5xl max-w-3xl leading-tight mb-4">
-            Design-Build Custom Home Services
+            Sales, Finance &amp; Service
           </h1>
           <p className="max-w-2xl text-[hsl(var(--primary-foreground)/0.88)] font-sans-brand leading-relaxed">
             {servicesPageIntro}
@@ -82,7 +82,7 @@ const Services = () => {
       <section className="py-14 bg-[hsl(var(--flow-sage))]/50 border-y border-border">
         <div className="container-custom container-inset">
           <h2 className="font-display text-2xl sm:text-3xl text-[hsl(var(--primary))] text-center mb-10">
-            Common Property Concerns We Solve
+            Common Ownership Needs We Solve
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {commercialFitoutCards.map(card => {

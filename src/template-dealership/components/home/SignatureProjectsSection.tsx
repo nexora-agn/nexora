@@ -16,20 +16,20 @@ const SignatureProjectsSection = () => {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-[hsl(var(--secondary))] mb-2">
-              Portfolio
+              Showcase
             </p>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-[hsl(var(--primary))] uppercase">
-              See Our Custom Homes
+              Featured Vehicles
             </h2>
             <p className="mt-3 text-muted-foreground font-sans-brand max-w-lg">
-              Hunterdon, Somerset, Mercer, and surrounding counties — custom homes, additions, and remodels.
+              Austin, Round Rock, Cedar Park, and San Marcos — new, used, and certified inventory worth a closer look.
             </p>
           </div>
           <Link
             to="/projects"
             className="inline-flex items-center gap-2 h-11 px-6 border-2 border-[hsl(var(--primary))] font-display text-xs font-semibold uppercase tracking-widest text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))] transition-colors shrink-0"
           >
-            Visit Portfolio
+            View Showcase
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

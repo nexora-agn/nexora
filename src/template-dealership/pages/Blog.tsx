@@ -66,7 +66,7 @@ const Blog = () => {
     }, { replace: true });
   }, [rawPage, listPage, setSearchParams]);
 
-  const titleBase = `Design-Build Blog | ${COMPANY.name}`;
+  const titleBase = `Motors Blog | ${COMPANY.name}`;
   const docTitle = listPage > 1 ? `${titleBase} | Page ${listPage}` : titleBase;
 
   return (
@@ -75,17 +75,17 @@ const Blog = () => {
         <title>{docTitle}</title>
         <meta
           name="description"
-          content={`home building, safety guides, and Central NJ homeowner advice from the ${COMPANY.name} design-build team.`}
+          content={`Buying guides, EV tips, financing advice, and service notes from the ${COMPANY.name} team in Austin and Central Texas.`}
         />
       </Helmet>
 
       <HarborPageHero
-        eyebrow="Design-Build Blog"
+        eyebrow="Motors Blog"
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Blog" }]}
-        title="Power Tips & Field Notes"
-        body="Honest painting advice from licensed design-build team — drains, water heaters, surge protection, and safety tips for Central New Jersey homeowners."
+        title="Guides for Central Texas Drivers"
+        body="Practical advice on EVs, certified pre-owned, trade-ins, financing, and keeping your vehicle on the road — from the Nexora Motors team."
         image={HOME_BUILDER_IMAGES.blogHero}
-        imageAlt="painting blog"
+        imageAlt="Automotive blog and buying guides"
       />
 
       {sectionVisibility["blog.main"] ? (
@@ -196,12 +196,12 @@ const Blog = () => {
                 </div>
 
                 <div className="rounded-lg bg-[hsl(var(--primary))] p-6 text-white">
-                  <h3 className="font-display font-bold text-lg mb-2">Need an painter?</h3>
+                  <h3 className="font-display font-bold text-lg mb-2">Ready to shop?</h3>
                   <p className="text-sm text-white/85 mb-5 leading-relaxed">
-                    Free estimates from licensed design-build team. Same-day service across Central NJ.
+                    Browse inventory, book a test drive, or talk with a specialist across our Central Texas locations.
                   </p>
                   <Button asChild className="w-full rounded-sm font-display font-bold uppercase bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] hover:bg-[hsl(var(--secondary))]/90">
-                    <Link to="/contact">Request Estimate</Link>
+                    <Link to="/contact">Contact Sales</Link>
                   </Button>
                 </div>
 

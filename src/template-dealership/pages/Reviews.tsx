@@ -18,18 +18,18 @@ const Reviews = () => {
         <title>Reviews | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`See what Central NJ homeowners and businesses say about ${COMPANY.name} — design-build team, quality work, and honest pricing.`}
+          content={`See what Central Texas drivers say about ${COMPANY.name} — transparent pricing, test drives, financing, and factory-trained service.`}
         />
       </Helmet>
 
       <HarborPageHero
         eyebrow="Customer Reviews"
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Reviews" }]}
-        title="Trusted Across Central NJ"
+        title="Trusted Across Central Texas"
         eyebrowAfter={`${siteTop.ratingValue} Stars · ${siteTop.ratingCount} ${siteTop.ratingLabel}`}
-        body="Real feedback from Central New Jersey homeowners and business owners who chose HarborStone Design-Build for drains, water heaters, emergency repairs, and commercial painting work."
+        body="Real feedback from Austin-area drivers who shopped new, used, and certified vehicles — and returned for finance, trade-in, and service at Nexora Motors."
         image={HOME_BUILDER_IMAGES.reviewsHero}
-        imageAlt="Painter at work"
+        imageAlt="Happy customer at Nexora Motors"
       />
 
       <section className="section-padding-inset bg-[hsl(var(--primary))] text-white border-y border-[hsl(var(--secondary))]/20">
@@ -119,7 +119,7 @@ const Reviews = () => {
           <div>
             <h2 className="font-display text-2xl font-bold uppercase tracking-wide">Ready to join our happy customers?</h2>
             <p className="text-white/75 mt-2 text-sm max-w-lg">
-              Master painters, upfront pricing, and quality work across the Dallas metro.
+              Transparent pricing, same-day test drives, and factory-trained service across Austin and Central Texas.
             </p>
           </div>
           <Button
@@ -127,7 +127,7 @@ const Reviews = () => {
             className="bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] hover:bg-[hsl(var(--secondary))]/90 font-display font-bold uppercase tracking-wide shrink-0"
           >
             <Link to="/contact">
-              Get a Free Estimate
+              Schedule a Visit
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
@@ -135,9 +135,9 @@ const Reviews = () => {
       </section>
 
       <CTASection
-        title="Experience the HarborStone difference"
-        subtitle="Free estimates and 24/7 emergency tree dispatch from licensed crews across North Jersey."
-        primaryLabel="REQUEST ESTIMATE"
+        title="Experience the Nexora Motors difference"
+        subtitle="Browse inventory, book a test drive, or talk with finance — we respond quickly across our Central Texas locations."
+        primaryLabel="CONTACT SALES"
         secondaryLabel="BOOK A CALL"
       />
     </Layout>

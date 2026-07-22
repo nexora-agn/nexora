@@ -26,18 +26,18 @@ const ServiceAreas = () => {
         <title>Where We Work | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`${COMPANY.name} builds luxury custom homes across Hunterdon, Somerset, Mercer, Middlesex, Morris, Union counties in NJ and select Bucks County, PA communities.`}
+          content={`${COMPANY.name} serves Austin, Round Rock, Cedar Park, San Marcos, and surrounding Central Texas communities with new, used, and certified vehicles.`}
         />
       </Helmet>
 
       <HarborPageHero
         eyebrow="Where We Work"
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Service Areas" }]}
-        title="Central New Jersey & Bucks County, PA"
-        eyebrowAfter="Hunterdon · Somerset · Mercer · Middlesex · Morris · Union"
-        body="HarborStone Design-Build serves luxury residential clients across Central New Jersey. Contact us to confirm we build in your municipality."
-        image={HOME_BUILDER_IMAGES.customHome}
-        imageAlt="Custom home in Central New Jersey"
+        title="Austin & Central Texas"
+        eyebrowAfter="Austin Main · Round Rock · Cedar Park · San Marcos"
+        body="Nexora Motors serves drivers across Greater Austin and Central Texas. Contact us to confirm inventory and appointment availability at your nearest location."
+        image={HOME_BUILDER_IMAGES.showroom}
+        imageAlt="Nexora Motors showroom in Austin"
         dark={false}
       />
 
@@ -45,11 +45,11 @@ const ServiceAreas = () => {
         <div className="container-custom container-inset">
           <div className="max-w-2xl mb-10">
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[hsl(var(--primary))] mb-3">
-              Counties & Towns
+              Locations & Communities
             </h2>
             <p className="text-muted-foreground leading-relaxed font-sans-brand">
-              Select a county to explore communities we frequently serve. Many projects span multiple towns —
-              we will confirm feasibility during your consultation.
+              Select a location to explore communities we frequently serve. Inventory is shared across stores —
+              we will confirm availability when you schedule a visit or test drive.
             </p>
           </div>
           <Accordion type="multiple" className="w-full max-w-3xl space-y-2 mb-12">
@@ -86,7 +86,7 @@ const ServiceAreas = () => {
                 <MapPin className="h-5 w-5 text-[hsl(var(--secondary))] shrink-0 mt-0.5" />
                 <span>
                   <span className="block font-display font-bold text-[hsl(var(--primary))] group-hover:text-[hsl(var(--secondary))]">
-                    {city.name}, {city.state ?? "NJ"}
+                    {city.name}, {city.state ?? "TX"}
                   </span>
                   <span className="text-sm text-muted-foreground font-sans-brand">{city.county}</span>
                 </span>
@@ -111,11 +111,11 @@ const ServiceAreas = () => {
         <div className="container-custom container-inset grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           <div className="lg:col-span-5 space-y-6">
             <h2 className="font-display text-2xl font-bold text-[hsl(var(--primary))]">
-              Flemington, NJ — Home Base
+              Austin, TX — Flagship Showroom
             </h2>
             <p className="text-muted-foreground leading-relaxed font-sans-brand">
-              Second-generation design-build firm serving Central New Jersey since 1999. Our team coordinates
-              architects, engineers, and trade partners under one accountable contract.
+              Serving Central Texas drivers since 1998. Our sales, finance, and factory-trained service teams
+              help you browse inventory, book test drives, and stay on the road after delivery.
             </p>
             <ul className="space-y-4 text-sm font-sans-brand">
               <li className="flex items-start gap-3">
@@ -137,14 +137,14 @@ const ServiceAreas = () => {
               className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 font-sans-brand font-semibold rounded-sm"
             >
               <Link to="/contact">
-                Schedule Consultation
+                Schedule a Visit
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
           <div className="lg:col-span-7 rounded-sm overflow-hidden min-h-[360px] ring-1 ring-border">
             <iframe
-              title="HarborStone Design-Build service area map"
+              title="Nexora Motors service area map"
               src={mapEmbedUrl}
               className="w-full h-full min-h-[360px]"
               loading="lazy"
@@ -154,9 +154,9 @@ const ServiceAreas = () => {
       </section>
 
       <CTASection
-        title="Building in Central New Jersey?"
-        subtitle="Complimentary consultations for custom homes, additions, and remodeling — we respond within one business day."
-        primaryLabel="REQUEST CONSULTATION"
+        title="Shopping in Central Texas?"
+        subtitle="Browse inventory, book a test drive, or talk with finance — we respond within one business day."
+        primaryLabel="CONTACT SALES"
         secondaryLabel="BOOK A CALL"
       />
     </Layout>

@@ -28,7 +28,7 @@ const Financing = () => {
         eyebrowAfter={content.subtitle}
         body={content.body}
         image={content.image || HOME_BUILDER_IMAGES.financing}
-        imageAlt="Homeowner reviewing painting financing options"
+        imageAlt="Customer reviewing vehicle financing options"
       />
 
       <section className="section-padding bg-white">
@@ -36,12 +36,12 @@ const Financing = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <Reveal>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-[hsl(var(--primary))]">
-                Make Essential Repairs Affordable
+                Make Payments Clear and Flexible
               </h2>
               <p className="mt-4 text-muted-foreground leading-relaxed font-sans-brand">
-                Water heaters, boilers, and major installations shouldn&apos;t wait because of budget
-                concerns. Our financing partners offer flexible plans for qualified homeowners and
-                businesses across Central New Jersey.
+                New, used, and certified vehicles shouldn&apos;t wait because of budget questions.
+                Our finance partners offer competitive rates and flexible plans for qualified buyers
+                across Austin and Central Texas.
               </p>
               <ul className="mt-8 space-y-4">
                 {content.benefits.map(item => (

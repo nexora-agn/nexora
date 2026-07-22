@@ -15,7 +15,7 @@ const Team = () => {
         <title>Our Team | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`Meet the design-build team and specialists behind ${COMPANY.name} — licensed, local, and committed to quality work across Central NJ.`}
+          content={`Meet the sales and service specialists behind ${COMPANY.name} — product experts for new, used, CPO, finance, and performance vehicles across Central Texas.`}
         />
       </Helmet>
 
@@ -87,8 +87,8 @@ const Team = () => {
 
       {sectionVisibility["team.cta"] ? (
         <CTASection
-          title="Work with our HarborStone crew"
-          subtitle="Licensed landscaping, ISA-certified arborists, and design-build teams across North Jersey."
+          title="Work with our Nexora Motors team"
+          subtitle="Sales, finance, and factory-trained service specialists across Austin, Round Rock, Cedar Park, and San Marcos."
         />
       ) : null}
     </Layout>

@@ -14,20 +14,20 @@ const Process = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Design-Build Process | {COMPANY.name}</title>
+        <title>Buying Process | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`${COMPANY.name} design-build process — consultation, design, permits, construction, and walkthrough for custom homes in Central New Jersey.`}
+          content={`${COMPANY.name} buying process — browse inventory, compare, test drive, finance, and take delivery in Austin and Central Texas.`}
         />
       </Helmet>
 
       <HarborPageHero
-        eyebrow="Design-Build"
+        eyebrow="How It Works"
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Process" }]}
-        title="Our Design-Build Process"
-        body="As a second-generation firm, we've refined a proven path from first conversation to keys in your hand — tailored to your lot, architect, and budget."
+        title="Our Buying Process"
+        body="From first search to keys in hand — a clear path for new, used, and certified vehicles with transparent pricing and digital retail tools."
         image={HOME_BUILDER_IMAGES.processHero}
-        imageAlt="Architectural plans and custom home design"
+        imageAlt="Customer browsing vehicles at Nexora Motors"
         dark
       />
 
@@ -35,11 +35,11 @@ const Process = () => {
         <div className="container-custom container-inset">
           <div className="max-w-2xl mb-12">
             <h2 className="font-display text-3xl font-bold text-[hsl(var(--primary))]">
-              From Concept to Completion
+              From Browse to Delivery
             </h2>
             <p className="mt-4 text-muted-foreground font-sans-brand leading-relaxed">
-              Whether you are starting from scratch, already own land, or are working with an architect, HarborStone
-              meets you where you are — with one accountable team and transparent communication at every milestone.
+              Whether you start online, already know the model you want, or need help comparing options, Nexora Motors
+              meets you where you are — with clear pricing, same-day test drives, and finance support at every step.
             </p>
           </div>
           <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -68,9 +68,9 @@ const Process = () => {
       </section>
 
       <CTASection
-        title="Ready to start your custom home?"
-        subtitle="Schedule a complimentary consultation — we'll outline scope, timeline, and next steps."
-        primaryLabel="REQUEST CONSULTATION"
+        title="Ready to find your next vehicle?"
+        subtitle="Schedule a visit or test drive — we'll outline inventory matches, payments, and next steps."
+        primaryLabel="CONTACT SALES"
         secondaryLabel="BOOK A CALL"
       />
     </Layout>

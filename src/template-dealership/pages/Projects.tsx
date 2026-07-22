@@ -63,7 +63,7 @@ const Projects = () => {
         <title>Projects | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`Custom home and design-build portfolio by ${COMPANY.name} — homes, additions, and remodels across Central New Jersey.`}
+          content={`Featured vehicles and recent deliveries from ${COMPANY.name} — new, used, and certified inventory across Austin and Central Texas.`}
         />
       </Helmet>
 
@@ -80,13 +80,13 @@ const Projects = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-10 items-end">
           <div className="lg:col-span-7">
             <p className="text-[hsl(var(--secondary))] text-xs font-display font-bold uppercase tracking-[0.22em] mb-3">
-              Project Gallery · {projects.length} Jobs
+              Featured Vehicles · {projects.length} In Spotlight
             </p>
             <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-wide leading-tight">
-              Custom Home Portfolio
+              Vehicle Showcase
             </h1>
             <p className="mt-4 text-white/80 max-w-xl leading-relaxed font-sans-brand">
-              Custom homes, additions, ADUs, and whole-home remodeling across Hunterdon, Somerset, Mercer, and surrounding counties.
+              New, used, and certified vehicles across Austin, Round Rock, Cedar Park, and San Marcos.
             </p>
           </div>
           <div className="lg:col-span-5 grid grid-cols-2 gap-3">
@@ -180,8 +180,8 @@ const Projects = () => {
       </section>
 
       <CTASection
-        title="Ready to transform your outdoor space?"
-        subtitle="Free property walkthroughs from licensed custom home design-build care crews across North Jersey."
+        title="Ready to find your next vehicle?"
+        subtitle="Browse inventory, book a test drive, or talk with a specialist across our Central Texas locations."
       />
     </Layout>
   );

@@ -113,8 +113,8 @@ const ProjectDetail = () => {
       </section>
 
       <CTASection
-        title="Want a similar transformation?"
-        subtitle="Free property walkthroughs from licensed custom home design-build care crews across North Jersey."
+        title="Interested in a similar vehicle?"
+        subtitle="Browse inventory or book a test drive — our specialists help with pricing, finance, and trade-in across Central Texas."
       />
     </Layout>
   );

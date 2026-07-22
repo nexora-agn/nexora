@@ -7,11 +7,11 @@ const FeaturedNeighborhoods = () => (
     <div className="container-custom container-inset">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
-          <p className="luxury-eyebrow mb-3">Premier Markets</p>
-          <h2 className="luxury-heading">Featured Neighborhoods</h2>
+          <p className="luxury-eyebrow mb-3">Our Locations</p>
+          <h2 className="luxury-heading">Central Texas Stores</h2>
         </div>
         <Link to="/service-areas" className="text-sm font-medium uppercase tracking-wider text-[hsl(var(--secondary))] hover:underline">
-          All Neighborhoods →
+          All Locations →
         </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -27,8 +27,8 @@ const FeaturedNeighborhoods = () => (
               <h3 className="font-display text-3xl mb-2 group-hover:text-[hsl(var(--secondary))] transition-colors">{n.name}</h3>
               <p className="text-sm text-white/70 mb-4 line-clamp-2">{n.description}</p>
               <div className="flex gap-6 text-xs uppercase tracking-wider mb-4">
-                <span>{n.propertyCount} Properties</span>
-                <span>Avg {n.avgPrice}</span>
+                <span>{n.propertyCount} Vehicles</span>
+                <span>From {n.avgPrice}</span>
               </div>
               <span className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-[hsl(var(--secondary))]">
                 Explore <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />

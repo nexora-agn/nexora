@@ -5,7 +5,7 @@ import {
   ArrowUpRight,
   ClipboardCheck,
   Phone,
-  HardHat,
+  Car,
   Users,
   ShieldCheck,
   Coffee,
@@ -15,7 +15,6 @@ import {
   Mail,
   Award,
   CalendarRange,
-  Paintbrush,
 } from "lucide-react";
 import Layout from "@template-dealership/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -26,17 +25,17 @@ const STEPS = [
   {
     icon: Mail,
     label: "Apply",
-    body: "Email a short note about your experience. Resume optional — we care more about your craft.",
+    body: "Email a short note about your experience. Resume optional — we care more about how you help customers.",
   },
   {
     icon: Phone,
     label: "Phone screen",
-    body: "Twenty minutes with operations or a lead painter. Two-way conversation, not an interrogation.",
+    body: "Twenty minutes with hiring managers or a department lead. Two-way conversation, not an interrogation.",
   },
   {
-    icon: HardHat,
-    label: "Ride-along",
-    body: "Half a day on an active job with the crew you'd join. Safety gear provided.",
+    icon: Car,
+    label: "Shadow day",
+    body: "Half a day on the floor or in the shop with the team you'd join. Learn the tools and the culture.",
   },
   {
     icon: ClipboardCheck,
@@ -45,7 +44,7 @@ const STEPS = [
   },
 ];
 
-type BenefitTabId = "field" | "specialist" | "apprentice";
+type BenefitTabId = "sales" | "service" | "apprentice";
 
 interface BenefitTab {
   id: BenefitTabId;
@@ -56,41 +55,41 @@ interface BenefitTab {
 
 const BENEFIT_TABS: BenefitTab[] = [
   {
-    id: "field",
-    label: "Field painters",
-    who: "Journeyman, commercial, service techs",
+    id: "sales",
+    label: "Sales team",
+    who: "Product specialists, finance, BDC",
     perks: [
       {
         icon: Wrench,
-        title: "Tool stipend",
-        body: "Annual stipend for the tools you actually use — replaced when they break on the job.",
+        title: "Product training",
+        body: "Paid manufacturer and EV product training so you can advise with confidence.",
       },
       {
         icon: ShieldCheck,
         title: "Health, dental, vision",
-        body: "Same plan as the office team. No two-tier benefits for field crews.",
+        body: "Same plan as service and office teams. No two-tier benefits.",
       },
       {
-        icon: HardHat,
-        title: "OSHA-30 paid",
-        body: "Paid hours during certification. Renewal cycles on the company.",
+        icon: Car,
+        title: "Demo & inventory access",
+        body: "Know the cars you sell — structured demo drives and inventory walkthroughs.",
       },
       {
         icon: Users,
-        title: "Steady crew pairings",
-        body: "Crews stay together on jobs — not split mid-project to chase another dispatch.",
+        title: "Team selling culture",
+        body: "Shared goals and transparent deals — not cutthroat floor politics.",
       },
     ],
   },
   {
-    id: "specialist",
-    label: "Specialists",
-    who: "EV, smart home, commercial leads",
+    id: "service",
+    label: "Service & parts",
+    who: "Technicians, advisors, parts",
     perks: [
       {
         icon: Wrench,
-        title: "Manufacturer training",
-        body: "Generac, ChargePoint, Lutron, and NEC update courses paid and scheduled.",
+        title: "Factory certifications",
+        body: "OEM training courses paid and scheduled for the brands we service.",
       },
       {
         icon: ShieldCheck,
@@ -100,12 +99,12 @@ const BENEFIT_TABS: BenefitTab[] = [
       {
         icon: GraduationCap,
         title: "Continuing education",
-        body: "Up to $4,000/year for licensure, CE credits, or master painter prep.",
+        body: "Up to $4,000/year for ASE, manufacturer credentials, or EV high-voltage training.",
       },
       {
         icon: Award,
         title: "Quality bonus pool",
-        body: "Crews with zero callbacks and clean inspections split a published bonus pool.",
+        body: "Techs with clean CSI and low comebacks share a published bonus pool.",
       },
     ],
   },
@@ -117,12 +116,12 @@ const BENEFIT_TABS: BenefitTab[] = [
       {
         icon: GraduationCap,
         title: "Mentor pairing",
-        body: "Paired with a master painter for a documented two-year safety + install curriculum.",
+        body: "Paired with a senior technician for a documented two-year safety + repair curriculum.",
       },
       {
         icon: CalendarRange,
         title: "Predictable hours",
-        body: "Day-shift schedule, weekends free unless emergency dispatch requires coverage.",
+        body: "Day-shift schedule with clear overtime policies when volume requires coverage.",
       },
       {
         icon: ShieldCheck,
@@ -132,7 +131,7 @@ const BENEFIT_TABS: BenefitTab[] = [
       {
         icon: Award,
         title: "Promotion ladder",
-        body: "Written milestones to journeyman with reviews every six months.",
+        body: "Written milestones to journeyman tech with reviews every six months.",
       },
     ],
   },
@@ -149,55 +148,55 @@ interface JobOpening {
 
 const OPENINGS: JobOpening[] = [
   {
-    id: "journeyman-residential",
-    role: "Journeyman Painter — Residential",
-    type: "Full-time / field",
-    location: "Central NJ dispatch",
-    level: "3–7 yrs",
+    id: "sales-consultant",
+    role: "Sales Consultant — New Vehicles",
+    type: "Full-time / floor",
+    location: "Austin Main",
+    level: "2–5 yrs",
     summary:
-      "Panel upgrades, rewires, water heaters, and service calls — NEC-compliant work with clean job sites and labeled panels.",
+      "Help buyers match the right new model, explain incentives clearly, and guide digital retail steps from browse to delivery.",
   },
   {
     id: "ev-specialist",
-    role: "EV & Smart Home Specialist",
-    type: "Full-time / field",
-    location: "North Texas",
-    level: "4+ yrs",
+    role: "EV Product Specialist",
+    type: "Full-time / floor",
+    location: "Cedar Park EV Center",
+    level: "3+ yrs",
     summary:
-      "Level 2 charger installs, load calculations, Lutron and smart panel wiring — manufacturer certifications a plus.",
+      "Own EV conversations — charging, range, incentives, and model comparisons for Central Texas drivers.",
   },
   {
-    id: "commercial-painter",
-    role: "Commercial Painter",
-    type: "Full-time / field",
-    location: "Central NJ commercial routes",
-    level: "5+ yrs",
+    id: "service-advisor",
+    role: "Service Advisor",
+    type: "Full-time / shop",
+    location: "Austin Main · Round Rock",
+    level: "3–7 yrs",
     summary:
-      "Tenant improvements, three-phase distribution, and after-hours scheduling — coordinate with GCs, document as-builts.",
+      "Write honest estimates, set expectations, and keep CSI high for maintenance and repair customers.",
   },
   {
     id: "service-tech",
-    role: "Service & Repair Technician",
-    type: "Full-time / field",
-    location: "Dispatch, Central NJ",
+    role: "Factory-Trained Technician",
+    type: "Full-time / shop",
+    location: "All locations",
     level: "3–5 yrs",
     summary:
-      "Tripping breakers, dead outlets, emergency calls — stocked truck, master-level diagnostics, honest estimates.",
+      "Diagnostics, maintenance, and warranty work with OEM parts — ASE or manufacturer certs preferred.",
   },
   {
-    id: "apprentice-painter",
-    role: "Apprentice Painter",
+    id: "apprentice-tech",
+    role: "Service Apprentice",
     type: "Apprentice",
-    location: "Field, Central NJ",
+    location: "Central Texas shops",
     level: "Entry / trade school",
     summary:
-      "Two-year mentored program: conduit bending, panel etiquette, lockout/tagout, and Texas licensure prep.",
+      "Two-year mentored program: safety, maintenance basics, and pathway to journeyman technician.",
   },
 ];
 
 const Careers = () => {
   const { company: COMPANY } = useSiteContent();
-  const [tab, setTab] = useState<BenefitTabId>("field");
+  const [tab, setTab] = useState<BenefitTabId>("sales");
   const cleanPhone = (COMPANY.phone || "").replace(/[^\d+]/g, "");
   const activeTab = BENEFIT_TABS.find(t => t.id === tab) ?? BENEFIT_TABS[0];
 
@@ -207,7 +206,7 @@ const Careers = () => {
         <title>Careers | {COMPANY.name}</title>
         <meta
           name="description"
-          content={`Join ${COMPANY.name}: journeyman painters, water heater specialists, commercial painters, and apprentices across Central NJ.`}
+          content={`Join ${COMPANY.name}: sales consultants, EV specialists, service advisors, and technicians across Austin and Central Texas.`}
         />
       </Helmet>
 
@@ -215,15 +214,15 @@ const Careers = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24 grid lg:grid-cols-12 gap-10 items-end">
           <div className="lg:col-span-7">
             <p className="text-xs font-display font-bold tracking-[0.28em] text-[hsl(var(--secondary))] mb-4">
-              HIRING MASTER CRAFTSMEN
+              HIRING AUTOMOTIVE PROS
             </p>
             <h1 className="font-display text-4xl md:text-5xl lg:text-[56px] font-bold uppercase tracking-wide leading-[1.02]">
-              We hire painters
+              We hire people
               <br />
-              <span className="text-[hsl(var(--secondary))]">like family.</span>
+              <span className="text-[hsl(var(--secondary))]">who love cars.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base md:text-lg text-white/85 leading-relaxed">
-              Long tenure, written offers, and published pay bands for every role. We&apos;d rather find one painter we&apos;ll keep than fill a slot every six months.
+              Long tenure, written offers, and published pay bands for every role. We&apos;d rather find one teammate we&apos;ll keep than fill a slot every six months.
             </p>
           </div>
           <div className="lg:col-span-5 grid grid-cols-2 gap-3">
@@ -232,7 +231,7 @@ const Careers = () => {
                 88%
               </span>
               <p className="mt-2 text-[10px] font-display font-bold tracking-widest uppercase text-white/75">
-                Field staff returning year-on-year
+                Team members returning year-on-year
               </p>
             </div>
             <div className="rounded-lg bg-white/5 ring-1 ring-white/10 p-5">
@@ -345,15 +344,15 @@ const Careers = () => {
               The numbers we work to keep.
             </h2>
             <p className="mt-5 text-base md:text-lg text-white/85 leading-relaxed max-w-md">
-              Every HarborStone Design-Build job site runs under proper safety protocols and code-compliant painting. Every employee has stop-work authority. We publish these metrics because insurers and GCs ask for them.
+              Every Nexora Motors shop runs under proper safety protocols and OEM service standards. Every employee has stop-work authority. We publish these metrics because customers and insurers ask for them.
             </p>
           </div>
           <div className="lg:col-span-7 grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { v: "0.68", l: "EMR · industry avg 1.0" },
+              { v: "4.9", l: "Dealer CSI score" },
               { v: "0", l: "Lost-time incidents (24 mo)" },
-              { v: "100%", l: "Field on OSHA-30" },
-              { v: "Daily", l: "Toolbox talks logged" },
+              { v: "100%", l: "Techs on safety training" },
+              { v: "Daily", l: "Shop briefings logged" },
             ].map(s => (
               <div key={s.l} className="rounded-lg bg-white/5 ring-1 ring-white/10 p-5 backdrop-blur-sm">
                 <div className="font-display text-3xl md:text-4xl font-bold text-[hsl(var(--secondary))] leading-none tabular-nums">
@@ -427,7 +426,7 @@ const Careers = () => {
               Don&apos;t see your role?
             </p>
             <h2 className="font-display text-2xl md:text-3xl font-bold uppercase tracking-wide leading-tight">
-              Send us a paragraph about what you&apos;d build with us.
+              Send us a paragraph about how you&apos;d help drivers with us.
             </h2>
           </div>
           <div className="lg:col-span-5 flex flex-wrap lg:justify-end gap-3">

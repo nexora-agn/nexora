@@ -9,6 +9,7 @@ import { DEMO_INVENTORY } from "./inventory";
 const u = (id: string, w = 600, h = 400) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=85`;
 
+/** Verified Unsplash IDs — cars, showrooms, lots, service, and EV only */
 export const LUXURY_IMAGES = {
   hero: u("1692406069831-0bb7ea297645", 1920, 1080),
   heroAlt: u("1618642624018-a370cbf3cd80", 1920, 1080),
@@ -16,20 +17,20 @@ export const LUXURY_IMAGES = {
   lot: u("1574023240744-64c47c8c0676", 1200, 900),
   keys: u("1653565217811-85b41bcd1edb", 1200, 900),
   evCharge: u("1593941707874-ef25b8b4a92b", 1200, 900),
-  villa: u("1771366260867-7e07094579d7", 1200, 900),
-  penthouse: u("1502672260266-1c1ef2d93688", 1200, 900),
-  apartment: u("1545324418-cc1a3fa10c00", 1200, 900),
-  waterfront: u("1512917774080-9991f1c4c750", 1200, 900),
-  interior: u("1600210491892-03d54c0aaf87", 1200, 900),
-  kitchen: u("1697609996790-f00fe4568e1d", 1200, 900),
-  pool: u("1600585154340-be6161a56a0c", 1200, 900),
-  skyline: u("1486406146926-c627a92ad1ab", 1200, 900),
-  neighborhood: u("1612296350607-076d142d15cd", 1200, 900),
-  development: u("1486325212027-8081e485255e", 1200, 900),
-  office: u("1497366216548-37526070297c", 1200, 900),
-  contact: u("1560518883-ce09059eeffa", 1400, 900),
-  about: u("1600607687939-ce8a6c25118c", 1400, 900),
-  blog: u("1560448204-e02f11c3d0e2", 1400, 900),
+  villa: u("1492144534655-ae79c964c9d7", 1200, 900),
+  penthouse: u("1552519507-da3b142c6e3d", 1200, 900),
+  apartment: u("1503376780353-7e6692767b70", 1200, 900),
+  waterfront: u("1549317661-bd32c8ce0db2", 1200, 900),
+  interior: u("1606664515524-ed2f786a0bd6", 1200, 900),
+  kitchen: u("1617814076367-b759c7d7e738", 1200, 900),
+  pool: u("1486496572940-2bb2341fdbdf", 1200, 900),
+  skyline: u("1560958089-b8a1929cea89", 1200, 900),
+  neighborhood: u("1583121274602-3e2820c69888", 1200, 900),
+  development: u("1605559424843-9e4c228bf1c2", 1200, 900),
+  office: u("1549924231-f129b911e442", 1200, 900),
+  contact: u("1692406069831-0bb7ea297645", 1400, 900),
+  about: u("1574023240744-64c47c8c0676", 1400, 900),
+  blog: u("1618642624018-a370cbf3cd80", 1400, 900),
   agentA: u("1560250097-0b93528c311a", 600, 800),
   agentB: u("1573496359142-b8d87734a5a2", 600, 800),
   agentC: u("1580489944761-15a19d654956", 600, 800),
@@ -37,29 +38,28 @@ export const LUXURY_IMAGES = {
   clientA: u("1544005313-94ddf0286df2", 120, 120),
   clientB: u("1519345182560-3f2917c472ef", 120, 120),
   clientC: u("1612349317150-e413f6a5b16d", 120, 120),
-  gallery1: u("1600566753190-17f0baa2a6c3", 800, 600),
-  gallery2: u("1600607687644-c7171b42498f", 800, 600),
-  gallery3: u("1779333090247-eafeccd1d049", 800, 600),
-  gallery4: u("1631679706909-1844bbd07221", 800, 600),
-  floorPlan: u("1503387762-592deb58ef4e", 1200, 900),
-  /* Page hero aliases (verified HTTP 200) */
-  heroHome: u("1600596542815-ffad4c1539a9", 1600, 1200),
-  heroPortfolio: u("1779333090247-eafeccd1d049", 1920, 1080),
-  luxuryExterior: u("1545324418-cc1a3fa10c00", 1200, 900),
-  customHome: u("1771366260867-7e07094579d7", 1200, 900),
-  homeAddition: u("1779226347538-ca1a725ae550", 1200, 900),
-  wholeHomeRemodel: u("1600210491892-03d54c0aaf87", 1200, 900),
-  aduGarage: u("1560518883-ce09059eeffa", 1200, 900),
-  interiorLiving: u("1631679706909-1844bbd07221", 1200, 900),
-  contactHero: u("1600596542815-ffad4c1539a9", 1400, 900),
-  aboutHero: u("1600607687939-ce8a6c25118c", 1400, 900),
-  reviewsHero: u("1631679706909-1844bbd07221", 1400, 900),
-  processHero: u("1503387762-592deb58ef4e", 1400, 900),
-  blogHero: u("1454165804606-c3d57bc86b40", 1400, 900),
-  crewWorking: u("1497366216548-37526070297c", 1200, 900),
-  financing: u("1486406146926-c627a92ad1ab", 1200, 800),
-  architecturalPlans: u("1454165804606-c3d57bc86b40", 1200, 900),
-  leadMagnet: u("1454165804606-c3d57bc86b40", 1200, 900),
+  gallery1: u("1492144534655-ae79c964c9d7", 800, 600),
+  gallery2: u("1552519507-da3b142c6e3d", 800, 600),
+  gallery3: u("1503376780353-7e6692767b70", 800, 600),
+  gallery4: u("1593941707874-ef25b8b4a92b", 800, 600),
+  floorPlan: u("1563720223185-11003d516935", 1200, 900),
+  heroHome: u("1692406069831-0bb7ea297645", 1600, 1200),
+  heroPortfolio: u("1574023240744-64c47c8c0676", 1920, 1080),
+  luxuryExterior: u("1503376780353-7e6692767b70", 1200, 900),
+  customHome: u("1494976388531-d1058494cdd8", 1200, 900),
+  homeAddition: u("1517524008697-84bbe3c3fd98", 1200, 900),
+  wholeHomeRemodel: u("1606664515524-ed2f786a0bd6", 1200, 900),
+  aduGarage: u("1558618666-fcd25c85cd64", 1200, 900),
+  interiorLiving: u("1617814076367-b759c7d7e738", 1200, 900),
+  contactHero: u("1692406069831-0bb7ea297645", 1400, 900),
+  aboutHero: u("1574023240744-64c47c8c0676", 1400, 900),
+  reviewsHero: u("1653565217811-85b41bcd1edb", 1400, 900),
+  processHero: u("1609521263047-f8f205293f24", 1400, 900),
+  blogHero: u("1618642624018-a370cbf3cd80", 1400, 900),
+  crewWorking: u("1617469767053-d3b523a0b982", 1200, 900),
+  financing: u("1563720223185-11003d516935", 1200, 800),
+  architecturalPlans: u("1549924231-f129b911e442", 1200, 900),
+  leadMagnet: u("1593941707874-ef25b8b4a92b", 1200, 900),
 } as const;
 
 export const COMPANY = {
@@ -92,7 +92,7 @@ export const OFFICE_HOURS = [
 ];
 
 export const MAP_EMBED_URL =
-  "https://www.openstreetmap.org/export/embed.html?bbox=-74.02%2C40.74%2C-73.95%2C40.78&layer=mapnik&marker=40.7614,-73.9776";
+  "https://www.openstreetmap.org/export/embed.html?bbox=-97.80%2C30.22%2C-97.72%2C30.30&layer=mapnik&marker=30.2672,-97.7431";
 
 export const HOME_HERO = {
   eyebrow: "PREMIUM AUTOMOTIVE RETAIL",
@@ -139,9 +139,9 @@ export const NEIGHBORHOODS = [
 ];
 
 export const NEW_DEVELOPMENTS = [
-  { id: "park-avenue-residences", title: "Park Avenue Residences", location: "Upper East Side, NY", image: LUXURY_IMAGES.development, status: "Under Construction", progress: 72, unitsTotal: 48, unitsAvailable: 12, priceFrom: "$3.2M", completion: "Q4 2026" },
-  { id: "hudson-yards-tower", title: "Hudson Yards Tower", location: "West Side, NY", image: LUXURY_IMAGES.skyline, status: "Pre-Sales", progress: 35, unitsTotal: 120, unitsAvailable: 86, priceFrom: "$2.8M", completion: "Q2 2027" },
-  { id: "palm-beach-shores", title: "Palm Beach Shores", location: "Palm Beach, FL", image: LUXURY_IMAGES.waterfront, status: "Now Selling", progress: 90, unitsTotal: 24, unitsAvailable: 4, priceFrom: "$5.5M", completion: "Q1 2026" },
+  { id: "ev-arrival", title: "2026 EV Arrivals", location: "Cedar Park EV Center", image: LUXURY_IMAGES.evCharge, status: "Now Arriving", progress: 85, unitsTotal: 40, unitsAvailable: 18, priceFrom: "$42k", completion: "In stock now" },
+  { id: "truck-lineup", title: "Work Truck Lineup", location: "Austin Main · Round Rock", image: LUXURY_IMAGES.customHome, status: "Expanded Stock", progress: 70, unitsTotal: 32, unitsAvailable: 14, priceFrom: "$38k", completion: "Ready to drive" },
+  { id: "cpo-event", title: "CPO Showcase Event", location: "All locations", image: LUXURY_IMAGES.keys, status: "Limited Time", progress: 55, unitsTotal: 60, unitsAvailable: 28, priceFrom: "$22k", completion: "Through Aug 2026" },
 ];
 
 export const SHOWCASE_ITEMS = [
@@ -167,11 +167,11 @@ export const CAPABILITIES = PROPERTY_CATEGORIES.slice(0, 4).map(c => ({
 }));
 
 export const PROCESS_STEPS = [
-  { id: "discover", label: "Discover", description: "Share your vision, lifestyle, and investment criteria with a dedicated advisor." },
-  { id: "curate", label: "Curate", description: "Receive a personalized portfolio of on-market and off-market properties." },
-  { id: "view", label: "Private Viewings", description: "Experience residences through exclusive, unhurried showings." },
-  { id: "negotiate", label: "Negotiate", description: "Expert representation backed by deep market intelligence." },
-  { id: "close", label: "Close & Beyond", description: "White-glove closing support and post-sale concierge services." },
+  { id: "browse", label: "Browse", description: "Search new, used, and certified inventory online or with a sales specialist." },
+  { id: "compare", label: "Compare", description: "Side-by-side specs, payment estimates, and trade-in credit for your current vehicle." },
+  { id: "drive", label: "Test Drive", description: "Book online and drive the same day when slots are available." },
+  { id: "finance", label: "Finance & Trade", description: "Apply for financing, lease options, and lock in your trade-in value." },
+  { id: "deliver", label: "Deliver & Service", description: "Pickup or delivery, then factory-trained service that keeps you on the road." },
 ];
 
 export const HOME_STATS = [
@@ -262,37 +262,37 @@ export const TEAM = [
 ];
 
 export const TESTIMONIALS = [
-  { name: "Catherine M.", role: "Park Avenue Buyer", quote: "Sophia understood exactly what we were looking for — the penthouse she found wasn't even on the market yet. Flawless execution from first viewing to closing.", avatar: LUXURY_IMAGES.clientA, rating: 5 },
-  { name: "David & Rachel K.", role: "Hamptons Sellers", quote: "Marcus positioned our estate beautifully. We received multiple offers above asking within two weeks.", avatar: LUXURY_IMAGES.clientB, rating: 5 },
-  { name: "Thomas L.", role: "International Investor", quote: "The team's market intelligence and discretion made our portfolio acquisition seamless across three states.", avatar: LUXURY_IMAGES.clientC, rating: 5 },
-  { name: "Isabella R.", role: "Tribeca Buyer", quote: "From virtual tours abroad to in-person closings, Elena managed every detail of our relocation.", avatar: LUXURY_IMAGES.clientA, rating: 5 },
-  { name: "Michael P.", role: "Greenwich Seller", quote: "Editorial photography and targeted marketing attracted the right buyer — not just any buyer.", avatar: LUXURY_IMAGES.clientB, rating: 5 },
-  { name: "Anna S.", role: "Miami Beach Buyer", quote: "A truly premium experience. Nexora Estate sets the standard for luxury real estate advisory.", avatar: LUXURY_IMAGES.clientC, rating: 5 },
+  { name: "Jordan T.", role: "New SUV buyer", quote: "Transparent pricing and a same-day test drive. We left with a family SUV and fair trade-in credit — no pressure, just clear numbers.", avatar: LUXURY_IMAGES.clientA, rating: 5 },
+  { name: "Maria & Luis R.", role: "CPO purchasers", quote: "Priya walked us through certified pre-owned warranty coverage. The inspection report matched everything she described.", avatar: LUXURY_IMAGES.clientB, rating: 5 },
+  { name: "Chen W.", role: "EV buyer", quote: "Cedar Park EV specialists explained charging and incentives clearly. Delivery was on time and the paperwork was painless.", avatar: LUXURY_IMAGES.clientC, rating: 5 },
+  { name: "Aisha K.", role: "Service customer", quote: "Factory-trained techs fixed our issue the same day with OEM parts. Honest updates the whole time.", avatar: LUXURY_IMAGES.clientA, rating: 5 },
+  { name: "Devon P.", role: "Fleet manager", quote: "Ordered three work trucks for our crew — financing and delivery were coordinated across Round Rock without headaches.", avatar: LUXURY_IMAGES.clientB, rating: 5 },
+  { name: "Elena S.", role: "Digital retail buyer", quote: "Built the deal online, finished in store in under an hour. Best car-buying experience we've had in Texas.", avatar: LUXURY_IMAGES.clientC, rating: 5 },
 ];
 
 export const BLOG_POSTS = [
-  { id: "luxury-market-2025", title: "Luxury Market Outlook 2025", excerpt: "Key trends shaping premier residential markets.", date: "June 10, 2025", author: "James Harrington", category: "Market Insights", image: LUXURY_IMAGES.skyline, content: "Analysis of inventory, pricing, and buyer sentiment across top-tier markets.", readTime: "6 min" },
-  { id: "penthouse-buying-guide", title: "The Complete Penthouse Buying Guide", excerpt: "What to know before purchasing at altitude.", date: "May 22, 2025", author: "Sophia Chen", category: "Buying", image: LUXURY_IMAGES.penthouse, content: "HOA structures, terrace rights, and engineering considerations.", readTime: "8 min" },
-  { id: "hamptons-summer", title: "Hamptons Summer: Where to Invest", excerpt: "Neighborhoods gaining momentum this season.", date: "May 5, 2025", author: "Marcus Williams", category: "Neighborhoods", image: LUXURY_IMAGES.waterfront, content: "From Southampton to Montauk — a market-by-market guide.", readTime: "5 min" },
-  { id: "staging-secrets", title: "Staging Secrets for Luxury Sellers", excerpt: "How presentation drives premium offers.", date: "April 18, 2025", author: "Elena Voss", category: "Selling", image: LUXURY_IMAGES.interior, content: "Professional staging strategies that consistently deliver results.", readTime: "4 min" },
-  { id: "international-buyers", title: "Guide for International Buyers", excerpt: "Navigating US luxury real estate from abroad.", date: "March 30, 2025", author: "Sophia Chen", category: "Buying", image: LUXURY_IMAGES.office, content: "Financing, visas, and tax considerations for foreign nationals.", readTime: "7 min" },
-  { id: "new-dev-trends", title: "New Development Trends", excerpt: "Amenities buyers demand in 2025.", date: "March 12, 2025", author: "James Harrington", category: "Developments", image: LUXURY_IMAGES.development, content: "Wellness, sustainability, and privacy in new luxury towers.", readTime: "5 min" },
+  { id: "ev-guide-2026", title: "2026 EV Buyer's Guide for Texas Drivers", excerpt: "Incentives, charging, and range tips for Central Texas.", date: "June 10, 2026", author: "Alex Martinez", category: "Electric Vehicles", image: LUXURY_IMAGES.evCharge, content: "Compare popular EVs, home charging options, and current Texas incentives.", readTime: "6 min" },
+  { id: "cpo-explained", title: "Certified Pre-Owned Explained", excerpt: "What CPO warranty and inspection really cover.", date: "May 22, 2026", author: "Priya Shah", category: "Buying Guides", image: LUXURY_IMAGES.keys, content: "Multipoint inspections, remaining factory coverage, and how CPO differs from standard used.", readTime: "5 min" },
+  { id: "trade-in-tips", title: "How to Maximize Your Trade-In Value", excerpt: "Prep tips that improve your appraisal.", date: "May 5, 2026", author: "Marcus Williams", category: "Trade-In", image: LUXURY_IMAGES.lot, content: "Service records, condition, and timing that help you get a stronger offer.", readTime: "4 min" },
+  { id: "payment-basics", title: "Lease vs Loan: Choosing the Right Payment", excerpt: "Monthly payment math made clear.", date: "April 18, 2026", author: "Sophia Chen", category: "Financing", image: LUXURY_IMAGES.financing, content: "When leasing wins, when buying wins, and how trade-ins change the deal.", readTime: "7 min" },
+  { id: "service-intervals", title: "Service Intervals That Keep You On the Road", excerpt: "Oil, brakes, tires, and seasonal checks.", date: "March 30, 2026", author: "Alex Martinez", category: "Service", image: LUXURY_IMAGES.crewWorking, content: "Recommended maintenance windows for new and pre-owned vehicles.", readTime: "5 min" },
+  { id: "truck-buying", title: "Choosing the Right Work Truck", excerpt: "Payload, towing, and cab configurations.", date: "March 12, 2026", author: "Marcus Williams", category: "Trucks", image: LUXURY_IMAGES.customHome, content: "Match truck specs to job-site needs without overbuying.", readTime: "6 min" },
 ];
 
 export const STATS = [
-  { value: 1200, label: "Properties Sold", suffix: "+" },
-  { value: 450, label: "Active Listings", suffix: "+" },
-  { value: 3200, label: "Happy Clients", suffix: "+" },
-  { value: 30, label: "Years Experience", suffix: "+" },
+  { value: 18500, label: "Vehicles Sold", suffix: "+" },
+  { value: 120, label: "In Stock Now", suffix: "+" },
+  { value: 2400, label: "Happy Drivers", suffix: "+" },
+  { value: 25, label: "Years in Texas", suffix: "+" },
 ];
 
 export const FAQ_ITEMS = [
-  { question: "How do I schedule a private viewing?", answer: "Contact your advisor or use our inquiry form. We arrange exclusive, unhurried showings at your convenience." },
-  { question: "Do you work with international buyers?", answer: "Yes — our team supports clients in twelve countries with virtual tours, legal coordination, and relocation services." },
-  { question: "What areas do you serve?", answer: "Manhattan, Brooklyn, Hamptons, Greenwich, Palm Beach, Miami, Aspen, and select international markets." },
-  { question: "How are listings priced?", answer: "We provide comprehensive market analysis using comparable sales, active inventory, and proprietary data." },
-  { question: "Can you help me sell my property?", answer: "Our selling program includes editorial photography, targeted marketing, and strategic negotiation." },
-  { question: "Do you offer property management?", answer: "Full-service management for investment and second homes, including maintenance and tenant placement." },
+  { question: "How do I schedule a test drive?", answer: "Book online or call any location. Same-day slots are often available for vehicles in stock." },
+  { question: "Do you offer financing and leasing?", answer: "Yes — we work with multiple lenders for competitive rates on new, used, and certified vehicles. Apply online or in store." },
+  { question: "What areas do you serve?", answer: "Four Central Texas locations: Austin Main, Round Rock, Cedar Park, and San Marcos — with shared inventory search." },
+  { question: "How is pricing shown online?", answer: "Every vehicle lists dealer price, available incentives, and an estimated monthly payment you can adjust." },
+  { question: "Can I get a trade-in value before I visit?", answer: "Yes — submit your VIN and condition online for a fast estimate, then confirm with an appraisal at the store." },
+  { question: "What does certified pre-owned include?", answer: "A multipoint inspection, remaining or extended warranty coverage, and transparent vehicle history." },
 ];
 
 export const SHOP_MEGA_LINKS = [
@@ -386,11 +386,11 @@ export const OFFERS = [
 ];
 
 export const ABOUT_STATS = [
-  { value: "30+", label: "Years of Excellence" },
-  { value: "1,200+", label: "Properties Sold" },
-  { value: "12", label: "Countries" },
-  { value: "4.9", label: "Client Rating" },
-  { value: "50+", label: "Expert Advisors" },
+  { value: "25+", label: "Years in Texas" },
+  { value: "18,500+", label: "Vehicles Sold" },
+  { value: "4", label: "Locations" },
+  { value: "4.9", label: "Dealer Rating" },
+  { value: "40+", label: "Sales & Service Pros" },
 ];
 
 export const CORE_VALUES = WHY_BENEFITS.slice(0, 6).map((b, i) => ({
@@ -401,11 +401,11 @@ export const CORE_VALUES = WHY_BENEFITS.slice(0, 6).map((b, i) => ({
 }));
 
 export const CERTIFICATIONS = [
-  { id: "luxury", label: "Luxury Portfolio", sub: "Premier market specialist" },
-  { id: "international", label: "International Network", sub: "12-country reach" },
-  { id: "equal", label: "Equal Housing", sub: "Fair housing commitment" },
-  { id: "reviews", label: "4.9 Client Rating", sub: "320+ verified reviews" },
-  { id: "awards", label: "Industry Awards", sub: "Top brokerage recognition" },
+  { id: "dealer", label: "Licensed TX Dealer", sub: "Dealer License #DA-482910" },
+  { id: "cpo", label: "CPO Certified", sub: "Factory-backed warranties" },
+  { id: "service", label: "Factory Service", sub: "OEM parts & trained techs" },
+  { id: "reviews", label: "4.9 Dealer Rating", sub: "2,400+ Google reviews" },
+  { id: "awards", label: "Industry Awards", sub: "Texas Auto Dealers Association" },
 ];
 
 export const PROCESS_STEPS_ABOUT = PROCESS_STEPS.map((s, i) => ({ ...s, num: String(i + 1).padStart(2, "0") }));
@@ -413,8 +413,8 @@ export const PROCESS_STEPS_ABOUT = PROCESS_STEPS.map((s, i) => ({ ...s, num: Str
 export const FAQ_TABS = [
   { id: "general", label: "GENERAL" },
   { id: "buying", label: "BUYING" },
-  { id: "selling", label: "SELLING" },
-  { id: "renting", label: "RENTING" },
+  { id: "finance", label: "FINANCE" },
+  { id: "service", label: "SERVICE" },
 ] as const;
 
 export type FaqTabId = (typeof FAQ_TABS)[number]["id"];
@@ -422,24 +422,24 @@ export type FaqTabId = (typeof FAQ_TABS)[number]["id"];
 export const FAQ_BY_CATEGORY: Record<FaqTabId, { question: string; answer: string }[]> = {
   general: FAQ_ITEMS.slice(0, 3).map(({ question, answer }) => ({ question, answer })),
   buying: [
-    { question: "What is the buying process?", answer: "Discovery, curated search, private viewings, offer strategy, due diligence, and closing." },
-    { question: "Do you offer off-market listings?", answer: "Yes — our network provides access to properties before public marketing." },
-    { question: "Can I get a mortgage through you?", answer: "We partner with premier lenders and provide mortgage calculator tools on listing pages." },
+    { question: "What is the buying process?", answer: "Browse inventory, compare options, test drive, finance or pay cash, complete paperwork, and take delivery or schedule pickup." },
+    { question: "Can I buy online?", answer: "Yes — use digital retail to build your deal, apply for financing, and finish in store or with delivery." },
+    { question: "Do you sell certified pre-owned?", answer: "Yes — CPO vehicles include multipoint inspection and warranty coverage as listed on each vehicle page." },
   ],
-  selling: [
-    { question: "How do you market luxury properties?", answer: "Editorial photography, targeted digital campaigns, and private broker networks." },
-    { question: "What is your commission structure?", answer: "Discussed transparently during your initial consultation." },
-    { question: "How long does it take to sell?", answer: "Varies by market — we provide data-driven timeline estimates." },
+  finance: [
+    { question: "How do payments work?", answer: "Use our calculator on any vehicle page, then apply online or with a finance specialist for personalized rates." },
+    { question: "Can I lease?", answer: "Lease options are available on select new models — ask about current incentives and mileage limits." },
+    { question: "Does my trade-in affect financing?", answer: "Yes — trade equity can reduce your amount financed or monthly payment once the appraisal is confirmed." },
   ],
-  renting: [
-    { question: "What rental terms do you offer?", answer: "Short-term, annual, and corporate leases across our luxury portfolio." },
-    { question: "Are rentals furnished?", answer: "Many are — we specify furnishing status on each listing." },
-    { question: "Do you handle tenant screening?", answer: "Full screening and lease administration for landlord clients." },
+  service: [
+    { question: "Do you service all makes?", answer: "We specialize in the brands we sell and also service many other makes — call for availability." },
+    { question: "How do I book service?", answer: "Schedule online via Service & Parts or call your preferred location for same-week appointments." },
+    { question: "Do you use OEM parts?", answer: "Yes — factory-trained technicians use OEM or equivalent parts as appropriate for the job." },
   ],
 };
 
 export const SERVICES_PAGE_INTRO =
-  "Comprehensive real estate advisory — buying, selling, renting, and investment consulting for discerning clients.";
+  "New and used vehicles, certified pre-owned, financing, trade-ins, and factory service — everything under one roof across Central Texas.";
 
 export const COMMERCIAL_FITOUT_CARDS = WHY_BENEFITS.slice(0, 4).map((b, i) => ({
   id: `why-${i}`,
@@ -458,12 +458,12 @@ export const SERVICE_DEEP_DIVES: {
   inclusions: string[];
 }[] = SERVICES.map(s => ({
   id: s.id,
-  category: "LUXURY REAL ESTATE",
+  category: "AUTOMOTIVE RETAIL",
   title: s.title,
   subtitle: s.description,
-  body: [s.description, `Our ${s.title.toLowerCase()} team delivers white-glove service tailored to your goals.`] as [string, string],
+  body: [s.description, `Our ${s.title.toLowerCase()} team helps you buy, finance, and stay on the road with confidence.`] as [string, string],
   image: s.image,
-  inclusions: ["Dedicated advisor", "Market analysis", "Private viewings", "Negotiation support", "Closing coordination"],
+  inclusions: ["Transparent pricing", "Expert guidance", "Test drives available", "Finance & trade support", "After-sale service"],
 }));
 
 export const LEAD_FORM = {
@@ -480,7 +480,7 @@ export const LEAD_FORM = {
   ],
 };
 
-export const BLOG_TAGS = ["Market Insights", "Buying", "Selling", "Neighborhoods", "Developments", "Lifestyle"];
+export const BLOG_TAGS = ["Electric Vehicles", "Buying Guides", "Trade-In", "Financing", "Service", "Trucks"];
 
 export const BLOG_LIST_PAGE_SIZE = 6;
 
@@ -573,12 +573,12 @@ export const INSPECTION_TYPES = SERVICES.slice(0, 4).map(s => ({
 }));
 
 export const INSPECTION_CHECKLIST = [
-  "Market analysis",
-  "Property valuation",
-  "Neighborhood assessment",
-  "Investment potential",
-  "Legal review coordination",
-  "Closing timeline",
+  "VIN & title verification",
+  "Mechanical multipoint inspection",
+  "Brake, tire & fluid check",
+  "Electrical & safety systems",
+  "Interior & exterior condition",
+  "Road test & final QA",
 ];
 
 export const HERO_PROMO_BANNERS = [

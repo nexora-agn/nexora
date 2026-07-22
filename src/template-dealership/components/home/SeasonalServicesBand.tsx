@@ -3,11 +3,11 @@ import { useSiteContent } from "@template-dealership/contexts/SiteContentContext
 import { getServiceIcon } from "@template-dealership/lib/serviceIcons";
 
 const SEASONAL_IDS = [
-  "seasonal-cleanup",
-  "mulching",
-  "snow-removal",
-  "irrigation-systems",
-  "hedge-trimming",
+  "new-vehicles",
+  "used-vehicles",
+  "cpo",
+  "finance",
+  "service",
 ] as const;
 
 const SeasonalServicesBand = () => {
@@ -20,10 +20,10 @@ const SeasonalServicesBand = () => {
       <div className="container-custom container-inset">
         <div className="text-center max-w-2xl mx-auto mb-10">
           <p className="text-[11px] font-sans-brand font-bold tracking-[0.24em] uppercase text-[hsl(var(--flow-moss))] mb-2">
-            Year-Round Care
+            Shop by Category
           </p>
           <h2 className="font-display text-2xl sm:text-3xl text-[hsl(var(--primary))]">
-            Seasonal Services That Keep Properties Sharp
+            Vehicle Categories Across Our Inventory
           </h2>
         </div>
 

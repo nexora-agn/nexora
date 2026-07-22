@@ -14,9 +14,9 @@ interface CTASectionProps {
 }
 
 const CTASection = ({
-  title = "Ready to build your dream home?",
-  subtitle = "Tell us about your lot, timeline, and vision — we'll respond with clear design-build next steps.",
-  primaryLabel = "REQUEST CONSULTATION",
+  title = "Ready to find your next vehicle?",
+  subtitle = "Tell us what you're shopping for — we'll respond with inventory matches, payment options, and next steps.",
+  primaryLabel = "CONTACT SALES",
   secondaryLabel = "BOOK A CALL",
   primaryTo = "/contact",
   secondaryTo,

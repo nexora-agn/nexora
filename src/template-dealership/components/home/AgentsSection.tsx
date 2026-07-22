@@ -11,8 +11,8 @@ const AgentsSection = () => {
     <section className="luxury-section bg-white">
       <div className="container-custom container-inset">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <p className="luxury-eyebrow mb-3">Expert Advisors</p>
-          <h2 className="luxury-heading">Meet Our Agents</h2>
+          <p className="luxury-eyebrow mb-3">Sales Team</p>
+          <h2 className="luxury-heading">Meet Our Specialists</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {team.map(agent => (

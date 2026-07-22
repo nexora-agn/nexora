@@ -12,12 +12,12 @@ const WhyTeamSection = () => {
         <div className="max-w-2xl mx-auto text-center mb-16 md:mb-20">
           <p className="flex items-center justify-center gap-4 text-[11px] font-sans-brand font-semibold tracking-[0.24em] uppercase text-[hsl(var(--secondary))] mb-4">
             <span className="paint-editorial-rule" aria-hidden />
-            Why Homeowners Choose Us
+            Why Drivers Choose Us
             <span className="paint-editorial-rule" aria-hidden />
           </p>
           <h2 className="font-display text-4xl md:text-[3.25rem] text-foreground leading-tight">
-            Painting Is an Art —
-            <span className="block italic text-[hsl(var(--secondary))]">Prep Is the Science</span>
+            Buying Should Feel Clear —
+            <span className="block italic text-[hsl(var(--secondary))]">Service Keeps You Moving</span>
           </h2>
         </div>
 
@@ -25,7 +25,7 @@ const WhyTeamSection = () => {
           <div className="relative min-h-[360px] md:min-h-full">
             <img
               src={HOME_BUILDER_IMAGES.crewWorking}
-              alt="Professional painter at work"
+              alt="Factory-trained technician at Nexora Motors"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/20 md:to-background/0" />

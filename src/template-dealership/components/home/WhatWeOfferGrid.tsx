@@ -11,10 +11,10 @@ const WhatWeOfferGrid = () => {
       <div className="container-custom container-inset">
         <div className="text-center mb-12">
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-[hsl(var(--primary))]">
-            Design-Build Services
+            Dealership Services
           </h2>
           <p className="mt-3 text-muted-foreground font-sans-brand max-w-xl mx-auto">
-            Custom homes, additions, ADUs, and whole-home remodeling — one accountable team from concept to completion.
+            New, used, certified, financing, trade-in, and factory service — one team from first browse to ownership.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">

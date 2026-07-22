@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { LEAD_MAGNET, HOME_BUILDER_IMAGES } from "@template-dealership/data/siteData";
 import { Button } from "@/components/ui/button";
 
-/** GTG-style lead magnet — single prominent split section, not 3 dark promo tiles */
+/** Lead magnet — single prominent split section */
 const HeroPromoBanners = () => (
   <section className="border-y border-border bg-[hsl(var(--hb-bronze-light))]/50">
     <div className="grid lg:grid-cols-2">
@@ -17,10 +17,10 @@ const HeroPromoBanners = () => (
         <div className="hb-rule my-6" />
         <p className="text-muted-foreground font-sans-brand leading-relaxed mb-8">{LEAD_MAGNET.subtitle}</p>
         <ul className="space-y-2 mb-8 text-sm font-sans-brand text-[hsl(var(--primary))]">
-          <li>• Setting a realistic budget & key cost factors</li>
-          <li>• Exploring financing options</li>
-          <li>• Selecting the right builder</li>
-          <li>• Navigating timelines & finding land</li>
+          <li>• Texas EV incentives and tax credit basics</li>
+          <li>• Home and public charging options</li>
+          <li>• Comparing range, payload, and trim levels</li>
+          <li>• Lease vs. loan for electric vehicles</li>
         </ul>
         <Button
           asChild
@@ -36,7 +36,7 @@ const HeroPromoBanners = () => (
       <div className="relative min-h-[280px] lg:min-h-full order-1 lg:order-2">
         <img
           src={LEAD_MAGNET.image}
-          alt="Custom home planning guide"
+          alt="EV buyer's guide for Texas drivers"
           className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
@@ -44,7 +44,7 @@ const HeroPromoBanners = () => (
 
     <div className="grid md:grid-cols-2 border-t border-border">
       <Link
-        to="/projects"
+        to="/inventory"
         className="group flex items-center gap-6 p-8 md:p-10 bg-white border-b md:border-b-0 md:border-r border-border hover:bg-[hsl(var(--hb-linen))] transition-colors"
       >
         <img
@@ -54,10 +54,10 @@ const HeroPromoBanners = () => (
         />
         <span>
           <span className="block font-display text-lg font-bold text-[hsl(var(--primary))] uppercase">
-            View Our Portfolio
+            View Inventory
           </span>
           <span className="block text-sm text-muted-foreground font-sans-brand mt-1">
-            Custom homes across Central NJ
+            New, used &amp; CPO across Central Texas
           </span>
         </span>
         <ArrowRight className="h-5 w-5 text-[hsl(var(--secondary))] ml-auto shrink-0 group-hover:translate-x-1 transition-transform" />
@@ -67,7 +67,7 @@ const HeroPromoBanners = () => (
         className="group flex items-center gap-6 p-8 md:p-10 bg-white hover:bg-[hsl(var(--hb-linen))] transition-colors"
       >
         <img
-          src={HOME_BUILDER_IMAGES.heroProcess}
+          src={HOME_BUILDER_IMAGES.processHero}
           alt=""
           className="h-20 w-28 object-cover shrink-0 hidden sm:block"
         />
@@ -76,7 +76,7 @@ const HeroPromoBanners = () => (
             Our Process
           </span>
           <span className="block text-sm text-muted-foreground font-sans-brand mt-1">
-            Design-build from concept to completion
+            Browse, drive, finance, and deliver
           </span>
         </span>
         <ArrowRight className="h-5 w-5 text-[hsl(var(--secondary))] ml-auto shrink-0 group-hover:translate-x-1 transition-transform" />
