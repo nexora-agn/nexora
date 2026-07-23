@@ -49,6 +49,8 @@ import { THEME_DEFAULTS as DEALERSHIP_THEME } from "@template-dealership/context
 import { SITE_CONTENT_DEFAULTS as DEALERSHIP_SITE_CONTENT } from "@template-dealership/contexts/SiteContentContext";
 import { THEME_DEFAULTS as MOBILE_STORE_THEME } from "@template-mobile-store/contexts/ThemeContext";
 import { SITE_CONTENT_DEFAULTS as MOBILE_STORE_SITE_CONTENT } from "@template-mobile-store/contexts/SiteContentContext";
+import { THEME_DEFAULTS as TIRE_SHOP_THEME } from "@template-tire-shop/contexts/ThemeContext";
+import { SITE_CONTENT_DEFAULTS as TIRE_SHOP_SITE_CONTENT } from "@template-tire-shop/contexts/SiteContentContext";
 import { hydrateMinhsSiteContent, hydrateMinhsThemeConfig } from "@template-minhs/lib/media";
 import { migrateMrBuilderNycCompanyPhone } from "@template-mrbuildernyc/data/siteData";
 import { canonicalTemplateId } from "@/lib/templates";
@@ -106,6 +108,8 @@ function themeDefaultsForClientTemplate(templateId: string | null | undefined): 
       return DEALERSHIP_THEME;
     case "mobile-store":
       return MOBILE_STORE_THEME;
+    case "tire-shop":
+      return TIRE_SHOP_THEME;
     default:
       return CONSTRUCTO_THEME;
   }
@@ -188,6 +192,8 @@ export function siteDefaultsForClientTemplate(templateId: string | null | undefi
       return DEALERSHIP_SITE_CONTENT as unknown as SiteContentState;
     case "mobile-store":
       return MOBILE_STORE_SITE_CONTENT as unknown as SiteContentState;
+    case "tire-shop":
+      return TIRE_SHOP_SITE_CONTENT as unknown as SiteContentState;
     default:
       return CONSTRUCTO_SITE_CONTENT;
   }

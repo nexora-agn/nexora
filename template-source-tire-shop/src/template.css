@@ -1,0 +1,234 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Asphalt black primary · safety yellow secondary · steel gray */
+    --background: 240 5% 96%;
+    --foreground: 0 0% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 4%;
+
+    --primary: 0 0% 4%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 48 91% 53%;
+    --secondary-foreground: 0 0% 4%;
+
+    --muted: 240 5% 90%;
+    --muted-foreground: 240 4% 40%;
+
+    --accent: 48 91% 53%;
+    --accent-foreground: 0 0% 4%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 5% 84%;
+    --input: 240 5% 84%;
+    --ring: 48 91% 53%;
+
+    --radius: 0px;
+
+    --tire-asphalt: 0 0% 4%;
+    --tire-yellow: 48 91% 53%;
+    --tire-steel: 220 6% 46%;
+    --tire-steel-light: 240 5% 90%;
+    --tire-white: 0 0% 100%;
+
+    --re-charcoal: 0 0% 4%;
+    --re-stone: 220 6% 46%;
+    --re-warm-white: 240 5% 96%;
+    --re-champagne: 48 91% 53%;
+    --re-champagne-light: 48 80% 92%;
+    --re-gold: 48 91% 53%;
+
+    --sidebar-background: 240 5% 96%;
+    --sidebar-foreground: 0 0% 4%;
+    --sidebar-primary: 0 0% 4%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 5% 90%;
+    --sidebar-accent-foreground: 0 0% 4%;
+    --sidebar-border: 240 5% 84%;
+    --sidebar-ring: 48 91% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter Tight", system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    letter-spacing: -0.03em;
+  }
+  .font-sans-brand {
+    font-family: "Inter Tight", system-ui, sans-serif;
+  }
+
+  .container-custom {
+    @apply max-w-[1320px] mx-auto w-full;
+  }
+  .container-inset {
+    @apply px-4 sm:px-6 lg:px-10;
+  }
+  /** Clears fixed dealer header (main bar + optional top bar on lg). */
+  .dealer-header-offset {
+    @apply pt-[5.25rem] sm:pt-[5.5rem] lg:pt-[7.25rem];
+  }
+  .section-padding {
+    @apply py-10 sm:py-12 lg:py-16;
+  }
+  .section-padding-inset {
+    @apply section-padding container-custom container-inset;
+  }
+
+  .tire-section {
+    @apply py-16 lg:py-24;
+  }
+  .luxury-section {
+    @apply tire-section;
+  }
+
+  .tire-eyebrow,
+  .dealer-eyebrow,
+  .luxury-eyebrow,
+  .tech-eyebrow {
+    @apply text-[11px] font-sans-brand font-semibold uppercase tracking-[0.28em] text-[hsl(var(--secondary))];
+  }
+
+  .tire-heading,
+  .luxury-heading {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-tight text-[hsl(var(--primary))];
+  }
+
+  .tire-subheading,
+  .luxury-subheading {
+    @apply font-display text-2xl md:text-3xl font-medium text-[hsl(var(--primary))];
+  }
+
+  .btn-luxury-primary {
+    @apply inline-flex items-center justify-center h-12 px-8 bg-[hsl(var(--primary))] text-white font-sans-brand text-xs font-semibold uppercase tracking-[0.16em] transition-all duration-300 hover:bg-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))];
+  }
+  .btn-luxury-outline {
+    @apply inline-flex items-center justify-center h-12 px-8 border-2 border-[hsl(var(--primary))] text-[hsl(var(--primary))] font-sans-brand text-xs font-semibold uppercase tracking-[0.16em] transition-all duration-300 hover:bg-[hsl(var(--primary))] hover:text-white;
+  }
+  .btn-luxury-hero-primary {
+    @apply inline-flex items-center justify-center h-12 px-8 min-w-[200px] bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] font-sans-brand text-xs font-semibold uppercase tracking-[0.16em] transition-all duration-300 hover:brightness-110 shadow-[0_4px_24px_rgba(0,0,0,0.35)];
+  }
+  .btn-luxury-hero-secondary {
+    @apply inline-flex items-center justify-center h-12 px-8 min-w-[200px] border-2 border-white/70 bg-black/40 text-white backdrop-blur-sm font-sans-brand text-xs font-semibold uppercase tracking-[0.16em] transition-all duration-300 hover:bg-white hover:text-[hsl(var(--primary))] shadow-[0_4px_24px_rgba(0,0,0,0.35)];
+  }
+
+  .card-luxury {
+    @apply bg-white border border-border transition-all duration-300 hover:border-[hsl(var(--secondary))] hover:shadow-[0_16px_40px_-20px_rgba(0,0,0,0.2)];
+  }
+
+  .image-zoom {
+    @apply overflow-hidden;
+  }
+  .image-zoom img {
+    @apply transition-transform duration-700 ease-out;
+  }
+  .image-zoom:hover img {
+    @apply scale-105;
+  }
+
+  /* Yellow dashed road-stripe separator */
+  .road-stripe {
+    height: 4px;
+    width: 100%;
+    background-image: repeating-linear-gradient(
+      90deg,
+      hsl(var(--secondary)) 0 28px,
+      transparent 28px 44px
+    );
+    background-color: hsl(var(--primary));
+  }
+
+  /* Subtle tire tread pattern (CSS only) */
+  .tread-bg {
+    background-color: hsl(var(--primary));
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 10px,
+        rgba(255, 255, 255, 0.035) 10px,
+        rgba(255, 255, 255, 0.035) 14px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 18px,
+        rgba(255, 255, 255, 0.02) 18px,
+        rgba(255, 255, 255, 0.02) 20px
+      );
+  }
+
+  /* Spec-sheet performance rating bar */
+  .spec-bar {
+    @apply relative h-1.5 w-full overflow-hidden bg-[hsl(var(--muted))];
+  }
+  .spec-bar > span {
+    @apply absolute inset-y-0 left-0 bg-[hsl(var(--secondary))];
+  }
+
+  /* Industrial tire-finder panel shell */
+  .tire-finder-shell {
+    @apply relative bg-[hsl(var(--primary))] text-white border-2 border-[hsl(var(--secondary))] shadow-[8px_8px_0_0_hsl(var(--secondary))];
+  }
+
+  /* Diagonal clip for heroes / accent bars */
+  .clip-diagonal {
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+  }
+  .clip-diagonal-bar {
+    clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+  }
+}
+
+.page-transition-enter {
+  animation: pageFadeIn 0.45s ease-out;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scrollIndicator {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.4; }
+}
+
+.scroll-indicator {
+  animation: scrollIndicator 2s ease-in-out infinite;
+}
+
+.re-header-transparent {
+  @apply bg-transparent border-transparent;
+}
+.re-header-solid {
+  @apply bg-white/95 backdrop-blur-md border-border shadow-sm;
+}

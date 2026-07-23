@@ -30,6 +30,7 @@ import truckRepairThumbUrl from "@/assets/admin/truck-repair-thumb.svg?url";
 import barbershopThumbUrl from "@/assets/admin/barbershop-thumb.svg?url";
 import dealershipThumbUrl from "@/assets/admin/dealership-thumb.svg?url";
 import mobileStoreThumbUrl from "@/assets/admin/mobile-store-thumb.svg?url";
+import tireShopThumbUrl from "@/assets/admin/tire-shop-thumb.svg?url";
 
 /** Public URL slug per template id — used for /templates/{slug} and Chirps. */
 export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
@@ -52,6 +53,7 @@ export const CHIRPS_TEMPLATE_SLUG_BY_ID: Record<string, string> = {
   barbershop: "barbershop",
   dealership: "dealership",
   "mobile-store": "mobile-store",
+  "tire-shop": "tire-shop",
 };
 
 export interface TemplateOption {
@@ -546,6 +548,30 @@ export const TEMPLATES: TemplateOption[] = [
       previewHtml: "/preview-mobile-store.html",
       scaffoldDir: "template-source-mobile-store",
       liveTemplateDir: "src/template-mobile-store",
+    },
+  },
+  {
+    id: "tire-shop",
+    name: "Nexora Tires",
+    tagline: "Tire search · fitment · install booking",
+    description:
+      "Technical tire retail and service template with vehicle/size tire finder, fitment checks, product compare, installation booking, seasonal storage, fleet pricing, roadside assistance, and store locator. Built for tire shops, wheel stores, and commercial tire centers.",
+    thumbnail: tireShopThumbUrl,
+    accent: "#F5C518",
+    chirpsSlug: CHIRPS_TEMPLATE_SLUG_BY_ID["tire-shop"],
+    available: true,
+    features: [
+      "Find tires by vehicle or size",
+      "Fitment verification",
+      "Compare & package pricing",
+      "Install & service booking",
+      "Seasonal storage & fleet",
+      "Roadside assistance flow",
+    ],
+    paths: {
+      previewHtml: "/preview-tire-shop.html",
+      scaffoldDir: "template-source-tire-shop",
+      liveTemplateDir: "src/template-tire-shop",
     },
   },
 ];

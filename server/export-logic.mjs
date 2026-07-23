@@ -147,6 +147,10 @@ export const TEMPLATE_REGISTRY = [
     id: "mobile-store",
     paths: { scaffoldDir: "template-source-mobile-store", liveTemplateDir: "src/template-mobile-store" },
   },
+  {
+    id: "tire-shop",
+    paths: { scaffoldDir: "template-source-tire-shop", liveTemplateDir: "src/template-tire-shop" },
+  },
 ];
 
 /**

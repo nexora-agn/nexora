@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" fill="none">
+  <rect width="320" height="200" fill="#0a0a0a"/>
+  <rect x="0" y="0" width="320" height="6" fill="#F5C518"/>
+  <circle cx="88" cy="108" r="52" fill="#141414" stroke="#2a2a2a" stroke-width="8"/>
+  <circle cx="88" cy="108" r="28" fill="#0a0a0a" stroke="#F5C518" stroke-width="2"/>
+  <circle cx="88" cy="108" r="8" fill="#F5C518"/>
+  <path d="M160 52h140v18H160z" fill="#F5C518"/>
+  <path d="M160 82h110v10H160z" fill="#3a3a3a"/>
+  <path d="M160 102h96v10H160z" fill="#3a3a3a"/>
+  <path d="M160 122h78v10H160z" fill="#3a3a3a"/>
+  <rect x="160" y="148" width="88" height="28" fill="#F5C518"/>
+  <text x="204" y="167" text-anchor="middle" fill="#0a0a0a" font-family="system-ui,sans-serif" font-size="10" font-weight="800" letter-spacing="1">FIND TIRES</text>
+  <text x="160" y="22" text-anchor="middle" fill="#F5C518" font-family="system-ui,sans-serif" font-size="10" font-weight="800" letter-spacing="2">TIRE TECH</text>
+  <text x="160" y="192" text-anchor="middle" fill="#ffffff" font-family="system-ui,sans-serif" font-size="13" font-weight="700">NEXORA TIRES</text>
+</svg>
