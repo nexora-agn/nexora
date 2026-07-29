@@ -96,17 +96,20 @@ export async function handlePublicStartProjectStripeRedirect(body, env, requestO
   }
 
   // ── Redirect delivery (default) ──────────────────────────────────────────
-  // Fire confirmation emails (non-blocking) and return the URL for redirect.
+  // Notify the team only. The client is being sent to Stripe and has NOT paid
+  // yet — telling them "we received your project" here would also reach everyone
+  // who abandons checkout. Their confirmation is sent by the Stripe webhook once
+  // payment (or the trial) is actually confirmed.
   try {
     const emailResult = await handleSendFormEmails(
-      { formType: "start_project", requestType, payload },
+      { formType: "start_project", requestType, payload, skipClientEmail: true },
       env,
     );
     if (!emailResult.ok) {
-      console.warn("[start-project-stripe] Confirmation emails failed:", emailResult.error);
+      console.warn("[start-project-stripe] Team notification failed:", emailResult.error);
     }
   } catch (e) {
-    console.warn("[start-project-stripe] Confirmation emails error:", e);
+    console.warn("[start-project-stripe] Team notification error:", e);
   }
 
   return {

@@ -32,3 +32,6 @@ tmp/
 *.sln
 *.sw?
 .mcp.json
+
+# Local email template previews (scripts/preview-subscription-email.mjs)
+.email-preview/

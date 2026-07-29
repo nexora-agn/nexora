@@ -300,7 +300,12 @@ function isValidEmail(v) {
  * @param {string} [logoSrc] — same `cid:` / URL as header (`nexora-logo.png`), or "" to use text "Nexora"
  * @param {string} [siteOrigin] — for logo link
  */
-function emailFooterRows(logoSrc, siteOrigin) {
+/**
+ * @param {string} [disclaimer] — override the default "you submitted a form"
+ *   line. Billing email must not claim to be form follow-up: the reader needs
+ *   to recognise it as a receipt for a subscription they just started.
+ */
+function emailFooterRows(logoSrc, siteOrigin, disclaimer) {
   const home = (siteOrigin || DEFAULT_SITE_ORIGIN).replace(/\/$/, "");
   const nameLine = logoSrc
     ? `<div style="margin:0 0 10px 0;">
@@ -319,7 +324,10 @@ function emailFooterRows(logoSrc, siteOrigin) {
   </tr>
   <tr>
     <td style="padding:0 16px 24px 16px;text-align:left;direction:ltr;">
-      <p style="margin:0;font-size:10px;line-height:1.4;color:#94a3b8;max-width:520px;text-align:left;">This message was sent because you submitted a form on our site. If you did not expect it, you can ignore this email.</p>
+      <p style="margin:0;font-size:10px;line-height:1.4;color:#94a3b8;max-width:520px;text-align:left;">${escapeHtml(
+        disclaimer ||
+          "This message was sent because you submitted a form on our site. If you did not expect it, you can ignore this email.",
+      )}</p>
     </td>
   </tr>`;
 }
@@ -372,7 +380,7 @@ function emailDocument({ preheader, title, blocks, siteOrigin, logoImgSrc }) {
 }
 
 /** Client confirmation letters — custom logo banner, prose body */
-function clientLetterHtml({ preheader, innerHtml, siteOrigin, headline, logoImgSrc }) {
+function clientLetterHtml({ preheader, innerHtml, siteOrigin, headline, logoImgSrc, footerDisclaimer }) {
   const pre = preheader
     ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</div>`
     : `<div style="display:none;max-height:0;overflow:hidden;">${escapeHtml("Nexora")}</div>`;
@@ -404,7 +412,7 @@ function clientLetterHtml({ preheader, innerHtml, siteOrigin, headline, logoImgS
               <div style="font-size:15px;line-height:1.65;color:#334155;">${innerHtml}</div>
             </td>
           </tr>
-          ${emailFooterRows(logoImgSrc, siteOrigin)}
+          ${emailFooterRows(logoImgSrc, siteOrigin, footerDisclaimer)}
         </table>
       </td>
     </tr>
@@ -684,6 +692,297 @@ function buildStartProjectClient({ requestType, payload }, ctx, paymentLink) {
   });
 }
 
+// --- subscription lifecycle (Stripe webhook driven) -------------------------
+
+/**
+ * Exactly how the charge appears on the customer's card statement. Showing this
+ * up-front is the single biggest reducer of "I don't recognise this charge"
+ * disputes, so every subscription email repeats it.
+ */
+const STATEMENT_DESCRIPTOR = "NEXORA AGENCY 029 LLC";
+
+/** Billing mail is not form follow-up — say why it was really sent. */
+const BILLING_DISCLAIMER =
+  "You're receiving this because you started a subscription with Nexora. It confirms your plan and billing dates — please keep it for your records.";
+
+/** Bordered key/value receipt box — the "real product" cue in billing email. */
+function receiptBox(rows) {
+  const body = rows
+    .filter(r => r && r.value)
+    .map(
+      (r, i) => `
+      <tr>
+        <td style="padding:${i === 0 ? "0" : "10px"} 0 10px 0;font-size:13px;color:#64748b;${
+          i === 0 ? "" : "border-top:1px solid #f1f5f9;"
+        }">${escapeHtml(r.label)}</td>
+        <td align="right" style="padding:${i === 0 ? "0" : "10px"} 0 10px 0;font-size:13px;font-weight:600;color:#0f172a;${
+          i === 0 ? "" : "border-top:1px solid #f1f5f9;"
+        }">${escapeHtml(r.value)}</td>
+      </tr>`,
+    )
+    .join("");
+
+  return `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 20px 0;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;">
+      <tr>
+        <td style="padding:16px 18px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${body}</table>
+        </td>
+      </tr>
+    </table>`;
+}
+
+/** Primary CTA button matching the brand's dark button style. */
+function ctaButton(href, label) {
+  if (!href) return "";
+  return `
+    <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 20px 0;">
+      <tr>
+        <td style="border-radius:8px;background:#0a0a0a;">
+          <a href="${escapeHtml(href)}" style="display:inline-block;padding:13px 30px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">${escapeHtml(label)}</a>
+        </td>
+      </tr>
+    </table>`;
+}
+
+/** Numbered "what happens next" list — sets expectations so nobody feels dropped. */
+function nextStepsList(steps) {
+  const items = steps
+    .map(
+      (s, i) => `
+      <tr>
+        <td width="26" valign="top" style="padding:0 0 10px 0;">
+          <span style="display:inline-block;width:20px;height:20px;border-radius:10px;background:#0a0a0a;color:#ffffff;font-size:11px;font-weight:700;text-align:center;line-height:20px;">${i + 1}</span>
+        </td>
+        <td valign="top" style="padding:1px 0 10px 0;font-size:14px;line-height:1.55;color:#334155;">${s}</td>
+      </tr>`,
+    )
+    .join("");
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 18px 0;">${items}</table>`;
+}
+
+function greetingFromEmail(email) {
+  return escapeHtml(String(email || "").split("@")[0] || "there");
+}
+
+const SUPPORT_LINE = `<p style="margin:0 0 14px 0;">Questions, or need to change anything? Just reply to this email or reach <a href="mailto:info@nexora-agn.com" style="color:#0f172a;font-weight:500;">info@nexora-agn.com</a> — a real person answers.</p>`;
+const SIGNOFF = `<p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>`;
+
+/**
+ * Customer-facing subscription lifecycle email.
+ *
+ * @param {{
+ *   kind: "trial_started" | "purchase_confirmed" | "trial_ending" | "payment_failed",
+ *   email: string, planName: string, amountLabel: string, intervalLabel: string,
+ *   firstChargeLabel?: string, trialDays?: number, manageUrl?: string,
+ * }} d
+ */
+function buildSubscriptionClient(d, ctx) {
+  const hi = greetingFromEmail(d.email);
+  const manage = d.manageUrl || `${ctx.siteOrigin}/contact`;
+
+  if (d.kind === "trial_started") {
+    return {
+      subject: `Your ${d.trialDays}-day free trial has started — Nexora`,
+      html: clientLetterHtml({
+        preheader: `${d.planName} trial active. You won't be charged until ${d.firstChargeLabel}.`,
+        headline: "You're in — your free trial is active",
+        innerHtml: `
+    <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${hi}</strong>,</p>
+    <p style="margin:0 0 18px 0;">Your <strong>${escapeHtml(d.planName)}</strong> trial is live. <strong>You have not been charged</strong> — your card is on file, and nothing happens until the trial ends.</p>
+    ${receiptBox([
+      { label: "Plan", value: d.planName },
+      { label: "Today's charge", value: "$0.00" },
+      { label: "Free trial", value: `${d.trialDays} days` },
+      { label: "First charge", value: `${d.amountLabel} on ${d.firstChargeLabel}` },
+      { label: "Then", value: `${d.amountLabel} / ${d.intervalLabel}` },
+      { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
+    ])}
+    <p style="margin:0 0 10px 0;font-weight:600;color:#0f172a;">What happens next</p>
+    ${nextStepsList([
+      "We start building your site right away — no waiting for the trial to end.",
+      "You'll hear from us within one business day to confirm your brand details.",
+      `You'll get a reminder before your first payment on <strong>${escapeHtml(d.firstChargeLabel)}</strong>.`,
+    ])}
+    <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">Changed your mind? Cancel any time before ${escapeHtml(d.firstChargeLabel)} and you won't be charged a cent — just reply to this email and we'll take care of it.</p>
+    ${SUPPORT_LINE}
+    ${SIGNOFF}`,
+        siteOrigin: ctx.siteOrigin,
+        logoImgSrc: ctx.logoImgSrc,
+        footerDisclaimer: BILLING_DISCLAIMER,
+      }),
+    };
+  }
+
+  if (d.kind === "purchase_confirmed") {
+    return {
+      subject: `Payment confirmed — your ${d.planName} plan is active`,
+      html: clientLetterHtml({
+        preheader: `${d.amountLabel} received. Your ${d.planName} subscription is active.`,
+        headline: "Payment received — you're all set",
+        innerHtml: `
+    <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${hi}</strong>,</p>
+    <p style="margin:0 0 18px 0;">Thank you — your payment went through and your <strong>${escapeHtml(d.planName)}</strong> subscription is active.</p>
+    ${receiptBox([
+      { label: "Plan", value: d.planName },
+      { label: "Amount paid", value: d.amountLabel },
+      { label: "Billing", value: `${d.amountLabel} / ${d.intervalLabel}` },
+      { label: "Next charge", value: d.firstChargeLabel },
+      { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
+    ])}
+    <p style="margin:0 0 10px 0;font-weight:600;color:#0f172a;">What happens next</p>
+    ${nextStepsList([
+      "Our team begins production on your site immediately.",
+      "You'll hear from us within one business day to confirm your brand details.",
+      "You'll get a receipt by email each month, and you can cancel any time.",
+    ])}
+    ${SUPPORT_LINE}
+    ${SIGNOFF}`,
+        siteOrigin: ctx.siteOrigin,
+        logoImgSrc: ctx.logoImgSrc,
+        footerDisclaimer: BILLING_DISCLAIMER,
+      }),
+    };
+  }
+
+  if (d.kind === "trial_ending") {
+    return {
+      subject: `Your trial ends soon — first payment ${d.firstChargeLabel}`,
+      html: clientLetterHtml({
+        preheader: `${d.amountLabel} will be charged on ${d.firstChargeLabel}.`,
+        headline: "Your free trial ends soon",
+        innerHtml: `
+    <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${hi}</strong>,</p>
+    <p style="margin:0 0 18px 0;">A quick heads-up so nothing catches you by surprise: your <strong>${escapeHtml(d.planName)}</strong> free trial is ending, and your first payment is coming up.</p>
+    ${receiptBox([
+      { label: "Plan", value: d.planName },
+      { label: "Amount", value: d.amountLabel },
+      { label: "Charge date", value: d.firstChargeLabel },
+      { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
+    ])}
+    <p style="margin:0 0 14px 0;">No action needed if you'd like to continue — the payment runs automatically and your site work carries on.</p>
+    <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">If you'd rather not continue, reply before ${escapeHtml(d.firstChargeLabel)} and we'll cancel it, no questions asked.</p>
+    ${SUPPORT_LINE}
+    ${SIGNOFF}`,
+        siteOrigin: ctx.siteOrigin,
+        logoImgSrc: ctx.logoImgSrc,
+        footerDisclaimer: BILLING_DISCLAIMER,
+      }),
+    };
+  }
+
+  // payment_failed
+  return {
+    subject: "Action needed — we couldn't process your payment",
+    html: clientLetterHtml({
+      preheader: `Your ${d.planName} payment of ${d.amountLabel} didn't go through.`,
+      headline: "We couldn't process your payment",
+      innerHtml: `
+    <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${hi}</strong>,</p>
+    <p style="margin:0 0 18px 0;">Your payment for the <strong>${escapeHtml(d.planName)}</strong> plan didn't go through. This is usually an expired card or a bank hold — it's normally quick to fix.</p>
+    ${receiptBox([
+      { label: "Plan", value: d.planName },
+      { label: "Amount due", value: d.amountLabel },
+    ])}
+    ${ctaButton(d.manageUrl, "Update payment method")}
+    <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">We'll retry automatically over the next few days. Your site stays online in the meantime — but please update your card so nothing gets interrupted.</p>
+    ${SUPPORT_LINE}
+    ${SIGNOFF}`,
+      siteOrigin: ctx.siteOrigin,
+      logoImgSrc: ctx.logoImgSrc,
+      footerDisclaimer: BILLING_DISCLAIMER,
+    }),
+  };
+}
+
+/** Team-facing counterpart so the office sees every billing event. */
+function buildSubscriptionInternal(d, ctx) {
+  const titles = {
+    trial_started: "Trial started",
+    purchase_confirmed: "New paid subscription",
+    trial_ending: "Trial ending soon",
+    payment_failed: "Payment FAILED",
+  };
+  const blocks = [
+    { label: "Event", htmlValue: escapeHtml(titles[d.kind]) },
+    { label: "Customer", htmlValue: leadEmailInInternalHtml(d.email) },
+    { label: "Plan", htmlValue: escapeHtml(d.planName) },
+    { label: "Amount", htmlValue: escapeHtml(`${d.amountLabel} / ${d.intervalLabel}`) },
+    d.firstChargeLabel
+      ? { label: d.kind === "purchase_confirmed" ? "Next charge" : "First charge", htmlValue: escapeHtml(d.firstChargeLabel) }
+      : null,
+    d.subscriptionId ? { label: "Subscription", htmlValue: escapeHtml(d.subscriptionId) } : null,
+    d.orderId ? { label: "Order ID", htmlValue: escapeHtml(d.orderId) } : { label: "Order ID", htmlValue: "— (direct payment link, no wizard data)" },
+  ].filter(Boolean);
+
+  return emailDocument({
+    preheader: `${titles[d.kind]} — ${d.email}`,
+    title: titles[d.kind],
+    blocks,
+    siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
+  });
+}
+
+/**
+ * Send the customer + team emails for a subscription lifecycle event.
+ * Called from the Stripe webhook, which is the one place every purchase path
+ * (payment link, wizard checkout, manual invoice) reliably passes through.
+ *
+ * @param {Parameters<typeof buildSubscriptionClient>[0]} details
+ * @param {Record<string, string>} env
+ * @returns {Promise<{ ok: true } | { ok: false, error: string }>}
+ */
+export async function handleSendSubscriptionEmails(details, env) {
+  const apiKey = env.RESEND_API_KEY;
+  if (!apiKey) return { ok: false, error: "RESEND_API_KEY is not set on the server" };
+  if (!isValidEmail(details?.email)) return { ok: false, error: "Missing or invalid customer email" };
+
+  const fromRaw = normalizeResendFrom(
+    env.RESEND_FROM_EMAIL || env.VITE_RESEND_FROM_EMAIL || env.RESEND_FROM || env.VITE_RESEND_FROM || DEFAULT_RESEND_FROM,
+  );
+  const internalFrom = normalizeResendFrom(
+    env.RESEND_FROM_INTERNAL || env.NEXORA_TRANSACTIONAL_FROM || env.VITE_NEXORA_TRANSACTIONAL_FROM || DEFAULT_INTERNAL_RESEND_FROM,
+  );
+  const notifyTo = resolveNotifyTo(env, "start_project");
+  const siteOrigin = getPublicSiteOrigin(env);
+  const { logoImgSrc, attachments } = await resolveEmailImages(env);
+  const ctx = { logoImgSrc, siteOrigin };
+
+  const client = buildSubscriptionClient(details, ctx);
+  const internalHtml = buildSubscriptionInternal(details, ctx);
+  const resend = new Resend(apiKey);
+
+  const [internalResult, clientResult] = await Promise.all([
+    resend.emails.send({
+      from: internalFrom,
+      ...(attachments ? { attachments } : {}),
+      to: [notifyTo],
+      subject: `[Nexora] ${details.kind === "payment_failed" ? "⚠ " : ""}${details.planName}: ${details.email}`,
+      html: internalHtml,
+      replyTo: details.email,
+    }),
+    resend.emails.send({
+      from: fromRaw,
+      ...(attachments ? { attachments } : {}),
+      to: [details.email],
+      subject: client.subject,
+      html: client.html,
+    }),
+  ]);
+
+  // The customer email is the one that matters here — a failed team notification
+  // should not make the webhook retry and double-send to the customer.
+  if (clientResult.error) {
+    console.error("[subscription-email] Client email error:", clientResult.error);
+    return { ok: false, error: clientResult.error.message || "Failed to send confirmation email" };
+  }
+  if (internalResult.error) {
+    console.error("[subscription-email] Internal notification error:", internalResult.error);
+  }
+  return { ok: true };
+}
+
 function parseContact(body) {
   if (!isNonEmptyString(body.name)) return { error: "Missing name" };
   if (!isValidEmail(body.email)) return { error: "Invalid email" };
@@ -859,6 +1158,11 @@ export async function handleSendFormEmails(body, env) {
     ...(emailAttachments ? { attachments: emailAttachments } : {}),
   };
 
+  // `skipClientEmail` sends the team notification only. Used when the customer
+  // has not committed yet (heading to Stripe Checkout) — their confirmation is
+  // sent from the Stripe webhook once payment or the trial is confirmed.
+  const skipClientEmail = body?.skipClientEmail === true;
+
   const [internalResult, clientResult] = await Promise.all([
     resend.emails.send({
       from: internalFrom,
@@ -868,12 +1172,14 @@ export async function handleSendFormEmails(body, env) {
       html: internalHtml,
       replyTo,
     }),
-    resend.emails.send({
-      ...clientSendOpts,
-      to: [clientTo],
-      subject: clientSubject,
-      html: clientHtml,
-    }),
+    skipClientEmail
+      ? Promise.resolve({ error: null })
+      : resend.emails.send({
+          ...clientSendOpts,
+          to: [clientTo],
+          subject: clientSubject,
+          html: clientHtml,
+        }),
   ]);
 
   if (internalResult.error) {

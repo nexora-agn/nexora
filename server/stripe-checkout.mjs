@@ -59,6 +59,23 @@ export function resolveStripePriceId(planId, env) {
   return null;
 }
 
+/** Human-readable plan names, keyed by internal plan slug. */
+const PLAN_NAMES = { starter: "Starter", growth: "Growth", custom: "Enterprise" };
+
+/**
+ * Reverse of `resolveStripePriceId`: map a Stripe Price ID back to our plan.
+ * Used by the webhook, which only ever sees price IDs — including for the
+ * standalone trial Payment Links that never touch the wizard.
+ *
+ * @returns {{ planId: string, planName: string }}
+ */
+export function resolvePlanFromPriceId(priceId, env) {
+  const { priceStarter, priceGrowth, priceEnterprise } = getStripeConfig(env);
+  const map = { [priceStarter]: "starter", [priceGrowth]: "growth", [priceEnterprise]: "custom" };
+  const planId = priceId ? map[priceId] : undefined;
+  return { planId: planId ?? "", planName: planId ? PLAN_NAMES[planId] : "Subscription" };
+}
+
 /**
  * Create a Stripe Checkout Session for a subscription plan.
  *
