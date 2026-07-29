@@ -149,3 +149,10 @@ Hostinger's shared hosting can serve the static `dist/` output but cannot run No
 npm test
 npm run test:watch
 ```
+
+## Further docs
+
+| Doc | Covers |
+| --- | --- |
+| [docs/STRIPE_BILLING.md](docs/STRIPE_BILLING.md) | Subscriptions, 7-day trials, the Stripe webhook, customer billing emails, and how to test them locally without a card |
+| [docs/CHIRPS_TEMPLATE_SETUP.md](docs/CHIRPS_TEMPLATE_SETUP.md) | Per-template chatbot assistants |
