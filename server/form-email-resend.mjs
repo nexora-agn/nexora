@@ -546,7 +546,9 @@ function buildStartProjectInternal({ requestType, payload }, ctx) {
           { label: "Auto-extract", htmlValue: "Logo, brand colours, and copy will be pulled from the URL above." },
         ]
       : [
-          { label: "Logo file", htmlValue: escapeHtml(payload.logo_file_name || "—") },
+          ...(payload.logo_file_name
+            ? [{ label: "Logo file", htmlValue: escapeHtml(payload.logo_file_name) }]
+            : []),
           { label: "Brand colors", htmlValue: escapeHtmlBreaks(payload.brand_colors || "—") },
           { label: "Preferred domain", htmlValue: escapeHtmlBreaks(payload.preferred_domain || "—") },
           { label: "Content / site copy", htmlValue: escapeHtmlBreaks(payload.content_text || "—") },
@@ -1059,16 +1061,10 @@ export function parseStartProject(body) {
     if (!isValidEmail(p.contact_email)) return { error: "Invalid contact_email" };
 
     // Field requirements diverge by flow (matches ProjectOnboardingWizard):
-    //   • new_website → logo + brand colours + (optional) content / preferred domain
+    //   • new_website → brand colours + (optional) content / preferred domain
     //   • migrate     → only current_website is required; logo/colours/copy
     //                   are extracted from the live site post-submit.
     if (body.requestType === "new_website") {
-      if (!isNonEmptyString(p.logo_file_name) || !isNonEmptyString(p.logo_mime_type)) {
-        return { error: "Invalid payload" };
-      }
-      if (typeof p.logo_base64 !== "string" || p.logo_base64.length < 32) {
-        return { error: "Invalid payload" };
-      }
       if (!isNonEmptyString(p.brand_colors)) return { error: "Invalid payload" };
     } else {
       if (!isNonEmptyString(p.current_website)) return { error: "Invalid payload" };

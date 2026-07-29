@@ -155,7 +155,6 @@ function formatPayloadLines(req: ProjectRequest): { label: string; value: string
       );
     } else {
       lines.push(
-        { label: "Logo", value: logoNote },
         { label: "Brand colors", value: pkg.brand_colors.trim() || "N/A" },
         {
           label: "Preferred domain",
@@ -163,6 +162,9 @@ function formatPayloadLines(req: ProjectRequest): { label: string; value: string
         },
         { label: "Content / site copy", value: pkg.content_text.trim() || "Client requested content help" },
       );
+      if (pkg.logo_file_name) {
+        lines.push({ label: "Logo", value: logoNote });
+      }
     }
 
     lines.push(

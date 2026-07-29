@@ -140,12 +140,13 @@ export type MigrateRequestPayload = {
   payment_preference: "card" | "paypal" | "stripe" | "paddle" | "paysera";
 };
 
-/** Public “start project” flow — no ERP / AI questionnaires; logo + palette + essentials.
+/** Public “start project” flow — no ERP / AI questionnaires; palette + essentials.
  *
  * Field requirements vary by `request_type`:
- *  - `new_website`: logo + brand colours + content + (optional) preferred domain.
- *    `current_website` and `domain_hosting_info` are intentionally empty — domain
- *    & hosting are handled internally after kickoff.
+ *  - `new_website`: brand colours + content + (optional) preferred domain.
+ *    Logo fields are empty — collected later in production. `current_website`
+ *    and `domain_hosting_info` are intentionally empty — domain & hosting are
+ *    handled internally after kickoff.
  *  - `migrate`: only `current_website` is required. Logo / colours / copy are
  *    extracted from the live URL post-submit, so those fields are empty strings.
  */

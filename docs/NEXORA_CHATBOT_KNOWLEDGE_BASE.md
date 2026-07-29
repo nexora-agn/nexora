@@ -249,7 +249,7 @@ Other fields include work email validation, company, phone, whether they have a 
 
 ## 7. Start a project (`/start`)
 
-**Intro (page header):** “Pick a package, upload your logo and brand details, then choose how you’d like to pay. We’ll send a secure payment link right after you submit.”
+**Intro (page header):** “Choose a plan, share your brand colours and kickoff details, and complete secure checkout. No payment links or manual invoicing for Starter and Growth.”
 
 **Progress labels:** Project type → Package → Brand & content → Payment.
 
@@ -274,7 +274,7 @@ Shows selected type and package summary.
 **Migrate — section title:** “Migration kickoff”  
 **Note:** “Just paste the URL of your existing site — we’ll extract your logo, brand colours, and copy from there. Domain & hosting are already in place, nothing else needed.”
 
-Collects business email, logo upload, brand colors (for new sites), preferred domain / current site URL as applicable, primary content instructions, optional notes. Button: **Continue to payment**.
+Collects business email, brand colors (for new sites), preferred domain / current site URL as applicable, primary content instructions, optional notes. No logo upload on this form. Button: **Continue to payment**.
 
 ### Step 4 — Payment
 

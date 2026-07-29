@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Check, Globe, Palette, Sparkles, Upload } from "lucide-react";
+import { ArrowLeft, Check, Globe, Palette, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { applyHexColor, extractLogoColors, isValidHex } from "@/lib/extractLogoBrandColors";
-import { PACKAGE_LOGO_MAX_BYTES, PACKAGE_ONBOARD_LIMITS } from "@/lib/projectOnboardingConstants";
+import { applyHexColor, isValidHex } from "@/lib/extractLogoBrandColors";
+import { PACKAGE_ONBOARD_LIMITS } from "@/lib/projectOnboardingConstants";
 import { submitStartProjectAndRedirectToStripe } from "@/lib/submitStartProjectStripe";
 import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmail";
 import type { MarketingPlanId } from "@/lib/pricingPlans";
@@ -61,34 +61,6 @@ function FieldError({ message }: { message?: string }) {
   );
 }
 
-function fileToBase64Payload(file: File): Promise<{ fileName: string; mimeType: string; base64: string } | { error: string }> {
-  return new Promise(resolve => {
-    if (!file.type.startsWith("image/")) {
-      resolve({ error: "Please upload an image file (PNG, JPG, SVG, WebP)." });
-      return;
-    }
-    if (file.size > PACKAGE_LOGO_MAX_BYTES) {
-      resolve({
-        error: `Logo must be ${Math.round(PACKAGE_LOGO_MAX_BYTES / 1e6)}MB or smaller.`,
-      });
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const r = reader.result;
-      if (typeof r !== "string") {
-        resolve({ error: "Could not read file." });
-        return;
-      }
-      const comma = r.indexOf(",");
-      const rawB64 = comma >= 0 ? r.slice(comma + 1) : r;
-      resolve({ fileName: file.name, mimeType: file.type || "application/octet-stream", base64: rawB64 });
-    };
-    reader.onerror = () => resolve({ error: "Could not read file." });
-    reader.readAsDataURL(file);
-  });
-}
-
 const ProjectOnboardingWizard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [step, setStep] = useState<Step>(1);
@@ -110,10 +82,6 @@ const ProjectOnboardingWizard = () => {
   const [contentHelpRequested, setContentHelpRequested] = useState(false);
   const [preferredDomain, setPreferredDomain] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
-
-  const [logoPayload, setLogoPayload] = useState<{ fileName: string; mimeType: string; base64: string } | null>(null);
-  const [logoFileLabel, setLogoFileLabel] = useState("");
-  const [logoBusy, setLogoBusy] = useState(false);
 
   useEffect(() => {
     const raw = searchParams.get("plan");
@@ -165,8 +133,6 @@ const ProjectOnboardingWizard = () => {
     setContentHelpRequested(false);
     setPreferredDomain("");
     setAdditionalNotes("");
-    setLogoPayload(null);
-    setLogoFileLabel("");
     setFieldErrors({});
     setSelectedPlan(null);
     setRequestType(null);
@@ -187,13 +153,12 @@ const ProjectOnboardingWizard = () => {
 
   // ---- Per-flow validation -------------------------------------------------
   // The two project types share email + notes, but otherwise diverge:
-  //   • new_website  → logo, palette, content, optional preferred domain
+  //   • new_website  → palette, content, optional preferred domain
   //   • migrate      → current website URL (the only thing we really need)
   // `getActiveDetailKeys()` is the source of truth for what step 3 validates,
   // and it’s mirrored by the JSX below so both stay in sync.
   type DetailKey =
     | "pk-email"
-    | "pk-logo"
     | "pk-palette"
     | "pk-site"
     | "pk-content"
@@ -205,7 +170,7 @@ const ProjectOnboardingWizard = () => {
       return ["pk-email", "pk-site", "pk-notes"];
     }
     // Default to new_website (also covers null while step 3 isn't yet visible).
-    return ["pk-email", "pk-logo", "pk-palette", "pk-content", "pk-preferred-domain", "pk-notes"];
+    return ["pk-email", "pk-palette", "pk-content", "pk-preferred-domain", "pk-notes"];
   };
 
   const isValidUrlish = (raw: string): boolean => {
@@ -231,9 +196,6 @@ const ProjectOnboardingWizard = () => {
     switch (key) {
       case "pk-email":
         return getWorkEmailError(workEmail) ?? undefined;
-      case "pk-logo":
-        if (!logoPayload) return "Upload your logo (PNG or JPG recommended).";
-        return;
       case "pk-palette":
         if (!isValidHex(primaryHex.trim()) || !isValidHex(secondaryHex.trim())) {
           return "Use two valid 6-digit hex colours (#0a0a0a)—same rules as on the homepage customisation panel.";
@@ -320,17 +282,12 @@ const ProjectOnboardingWizard = () => {
       toast.error("Pick a package first.");
       return;
     }
-    // Logo is only required for the new-website flow — migrations let us
-    // extract the logo from the live site after submission.
-    if (requestType === "new_website" && !logoPayload) {
-      toast.error("Upload your logo before continuing.");
-      return;
-    }
     const isMigration = requestType === "migrate";
 
     // For migrations, the URL is the source of truth; brand assets and copy
     // are auto-extracted post-submit, so we send empty strings (the email +
-    // admin views render a dash in that case).
+    // admin views render a dash in that case). Logo fields stay empty for both
+    // flows — brand assets are collected later in production.
     const contentForPayload = isMigration
       ? ""
       : contentHelpRequested && !contentText.trim()
@@ -340,9 +297,9 @@ const ProjectOnboardingWizard = () => {
     const payload: PackageOnboardingPayload = {
       onboarding_version: 2,
       contact_email: workEmail.trim().toLowerCase(),
-      logo_file_name: logoPayload?.fileName ?? "",
-      logo_mime_type: logoPayload?.mimeType ?? "",
-      logo_base64: logoPayload?.base64 ?? "",
+      logo_file_name: "",
+      logo_mime_type: "",
+      logo_base64: "",
       brand_colors: isMigration ? "" : buildBrandColorsPayload(),
       current_website: isMigration ? currentWebsite.trim() : "",
       domain_hosting_info: "",
@@ -387,40 +344,6 @@ const ProjectOnboardingWizard = () => {
   };
 
   const planMeta = selectedPlan ? MARKETING_PLANS.find(p => p.id === selectedPlan) : null;
-
-  const onLogoPick = async (files: FileList | null) => {
-    const f = files?.[0];
-    if (!f) return;
-    setLogoBusy(true);
-    clearError("pk-logo");
-    const got = await fileToBase64Payload(f);
-    setLogoBusy(false);
-    if ("error" in got) {
-      setLogoPayload(null);
-      setLogoFileLabel("");
-      setMergedFieldError("pk-logo", got.error);
-      return;
-    }
-    setLogoPayload(got);
-    setLogoFileLabel(f.name);
-    clearError("pk-logo");
-
-    const blobUrl = URL.createObjectURL(f);
-    try {
-      const sampled = await extractLogoColors(blobUrl);
-      if (sampled) {
-        setPrimaryColor(sampled.primary);
-        setPrimaryHex(sampled.primary);
-        setSecondaryColor(sampled.secondary);
-        setSecondaryHex(sampled.secondary);
-        clearError("pk-palette");
-      }
-    } catch {
-      /* optional sampling */
-    } finally {
-      URL.revokeObjectURL(blobUrl);
-    }
-  };
 
   const detailBlur = (key: DetailKey) => setMergedFieldError(key, getDetailError(key));
 
@@ -519,7 +442,7 @@ const ProjectOnboardingWizard = () => {
               Back
             </Button>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Choose your package—we’ll upload your logo, capture your palette, and gather domain and copy next.
+              Choose your package—we’ll capture your palette, domain preference, and copy next.
             </p>
             <div className="grid w-full min-w-0 grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
               {MARKETING_PLANS.map(plan => {
@@ -660,29 +583,6 @@ const ProjectOnboardingWizard = () => {
                 </div>
               ) : (
                 <>
-                  <div className="space-y-2">
-                    <Label className="gap-2">
-                      <Upload className="inline h-4 w-4" aria-hidden />
-                      Logo upload
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Raster or vector image. Max {Math.round(PACKAGE_LOGO_MAX_BYTES / 1e6)}MB.
-                    </p>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      disabled={logoBusy}
-                      className={cn(fieldErrors["pk-logo"] && "border-destructive")}
-                      onChange={e => void onLogoPick(e.target.files)}
-                    />
-                    {logoFileLabel ? (
-                      <p className="text-xs text-muted-foreground">
-                        Attached: <span className="font-medium text-foreground">{logoFileLabel}</span>
-                      </p>
-                    ) : null}
-                    <FieldError message={fieldErrors["pk-logo"]} />
-                  </div>
-
                   <fieldset
                     className={cn(
                       "space-y-0 rounded-xl border bg-muted/15 p-4",
@@ -694,7 +594,7 @@ const ProjectOnboardingWizard = () => {
                       Brand colours
                     </legend>
                     <p className="mb-3 px-1 text-xs text-muted-foreground">
-                      Tweak by hand or after logo upload (6-digit hex).
+                      Pick two brand colours (6-digit hex).
                     </p>
                     <div className="grid gap-3 sm:grid-cols-2 sm:items-stretch">
                       <label className="flex min-h-0 flex-col rounded-xl border border-border/60 bg-background/60 p-3">
