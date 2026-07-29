@@ -84,6 +84,9 @@ export async function handleStripeWebhook({ rawBody, signatureHeader, env }) {
   if (event.type === "customer.subscription.trial_will_end") {
     return handleTrialWillEnd(event.data.object, env, stripe);
   }
+  if (event.type === "invoice.paid") {
+    return handleInvoicePaid(event.data.object, env, stripe);
+  }
   if (event.type === "invoice.payment_failed") {
     return handleInvoicePaymentFailed(event.data.object, env, stripe);
   }
@@ -216,9 +219,15 @@ async function handleCheckoutSessionCompleted(session, env, stripe) {
     console.warn("[stripe-webhook] checkout.session.completed has no customer email.");
   }
 
+  // ── From here on we return 200 even when the database write fails ────────
+  // The customer email above has already gone out and is NOT idempotent. A
+  // non-2xx makes Stripe retry the whole event, which would email them a second
+  // time. A missing row is recoverable — the payment is still in Stripe and the
+  // error is logged — so a duplicate billing email is the worse outcome.
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = resolveSupabaseEnv(env);
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    return { ok: false, status: 500, error: "Supabase not configured." };
+    console.error("[stripe-webhook] Supabase not configured — payment NOT recorded for session", session.id);
+    return { ok: true, status: 200, received: true };
   }
 
   const adminSb = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
@@ -250,8 +259,9 @@ async function handleCheckoutSessionCompleted(session, env, stripe) {
       },
     });
     if (insErr) {
+      // 200 on purpose: the confirmation email already went out (see above).
       console.error("[stripe-webhook] Could not record payment-link signup:", insErr.message);
-      return { ok: false, status: 500, error: insErr.message };
+      return { ok: true, status: 200, received: true };
     }
     console.log(`[stripe-webhook] recorded payment-link signup for ${email} (${session.id})`);
     return { ok: true, status: 200, received: true };
@@ -267,7 +277,7 @@ async function handleCheckoutSessionCompleted(session, env, stripe) {
 
   if (loadErr) {
     console.error("[stripe-webhook] DB load failed:", loadErr.message);
-    return { ok: false, status: 500, error: loadErr.message };
+    return { ok: true, status: 200, received: true };
   }
   if (!row) {
     console.warn("[stripe-webhook] Unknown project_request:", orderId);
@@ -314,7 +324,7 @@ async function handleCheckoutSessionCompleted(session, env, stripe) {
 
   if (upErr) {
     console.error("[stripe-webhook] DB update failed:", upErr.message);
-    return { ok: false, status: 500, error: upErr.message };
+    return { ok: true, status: 200, received: true };
   }
 
   console.log(
@@ -349,6 +359,50 @@ async function handleTrialWillEnd(subscription, env, stripe) {
     },
     env,
     "trial_will_end",
+  );
+  return { ok: true, status: 200, received: true };
+}
+
+/**
+ * Receipt for money actually taken: the first charge when a trial converts, and
+ * every monthly renewal after. Stripe's own receipt email is off by default and
+ * generic even when on, so we always send our own.
+ *
+ * @param {Stripe.Invoice} invoice
+ */
+async function handleInvoicePaid(invoice, env, stripe) {
+  // The $0 invoice Stripe raises to open a trial isn't a payment.
+  if (!invoice.amount_paid) return { ok: true, status: 200, received: true };
+
+  // `subscription_create` is the checkout itself — checkout.session.completed
+  // already emailed "payment confirmed". Sending here too would double up.
+  if (invoice.billing_reason === "subscription_create") {
+    return { ok: true, status: 200, received: true };
+  }
+
+  const email = invoice.customer_email || (await resolveCustomerEmail(invoice.customer, stripe));
+  if (!email) {
+    console.warn("[stripe-webhook] invoice.paid: no customer email.");
+    return { ok: true, status: 200, received: true };
+  }
+
+  const line = invoice.lines?.data?.[0];
+  const { planName } = resolvePlanFromPriceId(line?.price?.id, env);
+
+  await sendSafely(
+    {
+      kind: "payment_receipt",
+      email,
+      planName,
+      amountLabel: formatAmount(invoice.amount_paid, invoice.currency),
+      intervalLabel: line?.price?.recurring?.interval || "month",
+      paidOnLabel: formatDate(invoice.status_transitions?.paid_at || invoice.created),
+      firstChargeLabel: formatDate(line?.period?.end),
+      manageUrl: invoice.hosted_invoice_url || null,
+      subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
+    },
+    env,
+    "invoice.paid",
   );
   return { ok: true, status: 200, received: true };
 }

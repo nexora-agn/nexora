@@ -699,7 +699,10 @@ function buildStartProjectClient({ requestType, payload }, ctx, paymentLink) {
  * up-front is the single biggest reducer of "I don't recognise this charge"
  * disputes, so every subscription email repeats it.
  */
-const STATEMENT_DESCRIPTOR = "NEXORA AGENCY 029 LLC";
+// Must match the Stripe account's statement_descriptor EXACTLY (verified via
+// the Stripe API, not the legal entity name) — quoting anything else here would
+// cause the "I don't recognise this charge" dispute it exists to prevent.
+const STATEMENT_DESCRIPTOR = "NEXORA AGENCY";
 
 /** Billing mail is not form follow-up — say why it was really sent. */
 const BILLING_DISCLAIMER =
@@ -845,6 +848,33 @@ function buildSubscriptionClient(d, ctx) {
     };
   }
 
+  if (d.kind === "payment_receipt") {
+    return {
+      subject: `Receipt — ${d.amountLabel} for your ${d.planName} plan`,
+      html: clientLetterHtml({
+        preheader: `${d.amountLabel} received for ${d.planName}. Next charge ${d.firstChargeLabel}.`,
+        headline: "Payment received — thank you",
+        innerHtml: `
+    <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${hi}</strong>,</p>
+    <p style="margin:0 0 18px 0;">We've received your payment for the <strong>${escapeHtml(d.planName)}</strong> plan. Your subscription is active and your site stays live — nothing for you to do.</p>
+    ${receiptBox([
+      { label: "Plan", value: d.planName },
+      { label: "Amount paid", value: d.amountLabel },
+      { label: "Paid on", value: d.paidOnLabel },
+      { label: "Next charge", value: d.firstChargeLabel },
+      { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
+    ])}
+    ${d.manageUrl ? ctaButton(d.manageUrl, "View or download invoice") : ""}
+    <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">You'll get a receipt like this each month. Cancel any time — just reply and we'll handle it.</p>
+    ${SUPPORT_LINE}
+    ${SIGNOFF}`,
+        siteOrigin: ctx.siteOrigin,
+        logoImgSrc: ctx.logoImgSrc,
+        footerDisclaimer: BILLING_DISCLAIMER,
+      }),
+    };
+  }
+
   if (d.kind === "trial_ending") {
     return {
       subject: `Your trial ends soon — first payment ${d.firstChargeLabel}`,
@@ -900,6 +930,7 @@ function buildSubscriptionInternal(d, ctx) {
   const titles = {
     trial_started: "Trial started",
     purchase_confirmed: "New paid subscription",
+    payment_receipt: "Recurring payment received",
     trial_ending: "Trial ending soon",
     payment_failed: "Payment FAILED",
   };

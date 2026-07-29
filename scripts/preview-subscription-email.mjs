@@ -9,7 +9,7 @@
  *   node --env-file=.env scripts/preview-subscription-email.mjs --send you@example.com
  *   node --env-file=.env scripts/preview-subscription-email.mjs --send you@example.com --only trial_started
  *
- * Kinds: trial_started | purchase_confirmed | trial_ending | payment_failed
+ * Kinds: trial_started | purchase_confirmed | payment_receipt | trial_ending | payment_failed
  */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -40,6 +40,16 @@ const SAMPLES = {
     amountLabel: "$199.00",
     intervalLabel: "month",
     firstChargeLabel: "August 29, 2026",
+    subscriptionId: "sub_preview",
+  },
+  payment_receipt: {
+    kind: "payment_receipt",
+    planName: "Starter",
+    amountLabel: "$99.00",
+    intervalLabel: "month",
+    paidOnLabel: "August 5, 2026",
+    firstChargeLabel: "September 5, 2026",
+    manageUrl: "https://invoice.stripe.com/i/example",
     subscriptionId: "sub_preview",
   },
   trial_ending: {
