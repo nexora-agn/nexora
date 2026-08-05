@@ -12,6 +12,6 @@
  *   marketing: "your-marketing-assistant-uuid",
  *   plumbing: "your-plumber-template-assistant-uuid",
  *   electrical: "your-electrician-template-assistant-uuid",
- *   minhs: "58461717-0fbb-44cf-a1fd-78d085c66480",  // MINHS Automotive (default wired in chirpsConfig)
+ *   minhs: "38540f97-067c-465c-8511-6c15a0e2659b",  // MINHS Automotive (default wired in chirpsConfig)
  * };
  */

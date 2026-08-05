@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 /** MINHS Automotive — Chirps assistant (https://chirps.cc). */
-const CHIRPS_ASSISTANT_ID = "58461717-0fbb-44cf-a1fd-78d085c66480";
+const CHIRPS_ASSISTANT_ID = "38540f97-067c-465c-8511-6c15a0e2659b";
 const CHIRPS_SCRIPT_ID = "chirps-embed-script";
 const CHIRPS_SCRIPT_SRC = "https://chirps.cc/embed.js";
 
