@@ -26,9 +26,13 @@ const SiteLayout = ({ children }: SiteLayoutProps) => {
       </div>
 
       <div className="relative flex min-h-screen flex-col">
-        <Navbar onRequestDemo={() => setDemoOpen(true)} />
-        <main className="flex-1 pt-16">{children}</main>
-        <Footer />
+        <div className="print:hidden">
+          <Navbar onRequestDemo={() => setDemoOpen(true)} />
+        </div>
+        <main className="flex-1 pt-16 print:pt-0">{children}</main>
+        <div className="print:hidden">
+          <Footer />
+        </div>
         <RequestDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
       </div>
     </div>

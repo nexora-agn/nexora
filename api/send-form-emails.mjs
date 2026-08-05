@@ -1,4 +1,4 @@
-// POST /api/send-form-emails — Resend: internal + client emails for contact, demo, start project.
+// POST /api/send-form-emails — Resend: internal + client emails for contact, demo, client checklist, start project.
 import { handleSendFormEmails } from "../server/form-email-resend.mjs";
 
 export const config = {

@@ -100,11 +100,11 @@ function resolveAdminEmail(env) {
  * Where to send the **internal** notification. Contact can use `RESEND_CONTACT_EMAIL` (else admin), like
  * `RESEND_CONTACT_EMAIL || RESEND_ADMIN_EMAIL` in other codebases.
  * @param {Record<string, string | undefined>} env
- * @param {"contact" | "demo" | "start_project"} formType
+ * @param {"contact" | "demo" | "client_checklist" | "start_project"} formType
  */
 function resolveNotifyTo(env, formType) {
   const admin = resolveAdminEmail(env);
-  if (formType === "contact") {
+  if (formType === "contact" || formType === "client_checklist") {
     const c = env.RESEND_CONTACT_EMAIL || env.VITE_RESEND_CONTACT_EMAIL;
     const t = String(c ?? "")
       .trim()
@@ -496,6 +496,71 @@ function buildDemoClient({ name, email }, ctx) {
     innerHtml: `
     <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${escapeHtml(name)}</strong>,</p>
     <p style="margin:0 0 14px 0;">Thanks for your interest in Nexora. We received your <strong>demo request</strong> and will be in touch within <strong>24 hours</strong> to find a time that works for you.</p>
+    <p style="margin:0 0 14px 0;">We sent this confirmation to <strong>${escapeHtml(email)}</strong>.</p>
+    <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
+  `,
+    siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
+  });
+}
+
+// --- client checklist ---
+
+function optionalBlock(label, value) {
+  const t = typeof value === "string" ? value.trim() : "";
+  if (!t) return null;
+  return { label, htmlValue: escapeHtmlBreaks(t) };
+}
+
+function buildClientChecklistInternal(data, ctx) {
+  const blocks = [
+    { label: "Name", htmlValue: escapeHtml(data.name) },
+    { label: "Email", htmlValue: leadEmailInInternalHtml(data.email) },
+    { label: "Business", htmlValue: escapeHtml(data.company) },
+    optionalBlock("Phone", data.phone),
+    optionalBlock("Address", data.address),
+    optionalBlock("Services", data.services),
+    optionalBlock("Hours", data.hours),
+    optionalBlock("Service areas", data.serviceAreas),
+    optionalBlock("Branding", data.branding),
+    optionalBlock("Social links", data.socialLinks),
+    optionalBlock("Reviews", data.reviews),
+    optionalBlock("Offers", data.offers),
+    optionalBlock("Team bios", data.teamBios),
+    optionalBlock("FAQ", data.faq),
+    optionalBlock("Inspiration sites", data.inspiration),
+    optionalBlock("Domain / hosting", data.domainNotes),
+    optionalBlock("Photo album link", data.photoAlbumLink),
+    optionalBlock("Additional notes", data.additionalNotes),
+    data.logo
+      ? { label: "Logo file", htmlValue: escapeHtml(data.logo.fileName) }
+      : null,
+    data.photos?.length
+      ? {
+          label: "Photo files",
+          htmlValue: escapeHtml(data.photos.map((p) => p.fileName).join(", ")),
+        }
+      : null,
+  ].filter(Boolean);
+  return emailDocument({
+    preheader: `Client checklist from ${data.company}`,
+    title: "New client checklist submission",
+    blocks,
+    siteOrigin: ctx.siteOrigin,
+    logoImgSrc: ctx.logoImgSrc,
+  });
+}
+
+function buildClientChecklistClient({ name, email }, ctx) {
+  const checklistUrl = `${(ctx.siteOrigin || DEFAULT_SITE_ORIGIN).replace(/\/$/, "")}/client-checklist`;
+  return clientLetterHtml({
+    preheader: `We received your checklist details, ${name}`,
+    headline: "Details received",
+    innerHtml: `
+    <p style="margin:0 0 14px 0;">Hi <strong style="color:#0f172a;">${escapeHtml(name)}</strong>,</p>
+    <p style="margin:0 0 14px 0;">Thanks for sharing what you have ready. We’ll use it to personalize your website preview.</p>
+    <p style="margin:0 0 14px 0;">You can still send logos, photos, or more notes anytime — reply to this email or write to <a href="mailto:info@nexora-agn.com" style="color:#0f172a;font-weight:500;">info@nexora-agn.com</a>. Shared album links (Drive, Dropbox, Google Photos) work great.</p>
+    <p style="margin:0 0 14px 0;">Need a refresher on what helps most? <a href="${escapeHtml(checklistUrl)}" style="color:#0f172a;font-weight:500;">Review the client checklist</a>.</p>
     <p style="margin:0 0 14px 0;">We sent this confirmation to <strong>${escapeHtml(email)}</strong>.</p>
     <p style="margin:0;color:#64748b;font-size:14px;">— The Nexora team</p>
   `,
@@ -1049,6 +1114,126 @@ function parseDemo(body) {
   };
 }
 
+const CHECKLIST_ALLOWED_MIME = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/svg+xml",
+  "image/gif",
+]);
+const CHECKLIST_LOGO_MAX = 1.5 * 1024 * 1024;
+const CHECKLIST_PHOTO_MAX = 1 * 1024 * 1024;
+const CHECKLIST_PHOTO_COUNT = 8;
+/** Rough decoded-byte cap so JSON body stays under typical serverless limits. */
+const CHECKLIST_TOTAL_FILE_MAX = 3.5 * 1024 * 1024;
+
+/**
+ * @param {unknown} raw
+ * @param {number} maxBytes
+ * @returns {{ fileName: string, mimeType: string, base64: string } | null | { error: string }}
+ */
+function parseChecklistFile(raw, maxBytes) {
+  if (raw == null) return null;
+  if (typeof raw !== "object") return { error: "Invalid file payload" };
+  const fileName = String(raw.fileName ?? "").trim().slice(0, 120);
+  const mimeType = String(raw.mimeType ?? "").trim().toLowerCase();
+  const base64 = String(raw.base64 ?? "").replace(/\s/g, "");
+  if (!fileName || !base64) return { error: "Invalid file payload" };
+  if (!CHECKLIST_ALLOWED_MIME.has(mimeType)) return { error: `Unsupported file type: ${fileName}` };
+  const approxBytes = Math.floor((base64.length * 3) / 4);
+  if (approxBytes > maxBytes) return { error: `File too large: ${fileName}` };
+  return { fileName, mimeType, base64 };
+}
+
+function parseClientChecklist(body) {
+  if (!isNonEmptyString(body.name)) return { error: "Missing name" };
+  if (!isValidEmail(body.email)) return { error: "Invalid email" };
+  if (!isNonEmptyString(body.company)) return { error: "Missing company" };
+
+  const opt = (key) =>
+    body[key] && String(body[key]).trim() ? String(body[key]).trim() : "";
+
+  const logoParsed = parseChecklistFile(body.logo, CHECKLIST_LOGO_MAX);
+  if (logoParsed && "error" in logoParsed) return { error: logoParsed.error };
+
+  /** @type {{ fileName: string, mimeType: string, base64: string }[]} */
+  const photos = [];
+  if (Array.isArray(body.photos)) {
+    if (body.photos.length > CHECKLIST_PHOTO_COUNT) {
+      return { error: `Too many photos (max ${CHECKLIST_PHOTO_COUNT})` };
+    }
+    for (const item of body.photos) {
+      const p = parseChecklistFile(item, CHECKLIST_PHOTO_MAX);
+      if (p && "error" in p) return { error: p.error };
+      if (p) photos.push(p);
+    }
+  }
+
+  let totalBytes = 0;
+  if (logoParsed) totalBytes += Math.floor((logoParsed.base64.length * 3) / 4);
+  for (const p of photos) totalBytes += Math.floor((p.base64.length * 3) / 4);
+  if (totalBytes > CHECKLIST_TOTAL_FILE_MAX) {
+    return { error: "Total upload size is too large. Use fewer photos or an album link." };
+  }
+
+  const data = {
+    name: body.name.trim(),
+    email: body.email.trim().toLowerCase(),
+    company: body.company.trim(),
+    phone: opt("phone"),
+    address: opt("address"),
+    services: opt("services"),
+    hours: opt("hours"),
+    serviceAreas: opt("serviceAreas"),
+    branding: opt("branding"),
+    socialLinks: opt("socialLinks"),
+    reviews: opt("reviews"),
+    offers: opt("offers"),
+    teamBios: opt("teamBios"),
+    faq: opt("faq"),
+    inspiration: opt("inspiration"),
+    domainNotes: opt("domainNotes"),
+    photoAlbumLink: opt("photoAlbumLink"),
+    additionalNotes: opt("additionalNotes"),
+    logo: logoParsed || null,
+    photos,
+  };
+
+  const hasContent =
+    data.phone ||
+    data.address ||
+    data.services ||
+    data.hours ||
+    data.serviceAreas ||
+    data.branding ||
+    data.socialLinks ||
+    data.reviews ||
+    data.offers ||
+    data.teamBios ||
+    data.faq ||
+    data.inspiration ||
+    data.domainNotes ||
+    data.photoAlbumLink ||
+    data.additionalNotes ||
+    data.logo ||
+    data.photos.length > 0;
+
+  if (!hasContent) return { error: "Add at least one checklist detail or file" };
+
+  return { data };
+}
+
+/**
+ * @param {{ fileName: string, mimeType: string, base64: string }[]} files
+ */
+function checklistFilesToResendAttachments(files) {
+  return files.map((f) => ({
+    filename: f.fileName,
+    content: f.base64,
+    contentType: f.mimeType,
+  }));
+}
+
 export function parseStartProject(body) {
   if (body.requestType !== "new_website" && body.requestType !== "migrate") {
     return { error: "Invalid requestType" };
@@ -1090,7 +1275,12 @@ export function parseStartProject(body) {
  */
 export async function handleSendFormEmails(body, env) {
   const formType = body?.formType;
-  if (formType !== "contact" && formType !== "demo" && formType !== "start_project") {
+  if (
+    formType !== "contact" &&
+    formType !== "demo" &&
+    formType !== "client_checklist" &&
+    formType !== "start_project"
+  ) {
     return { ok: false, error: "Invalid or missing formType" };
   }
 
@@ -1124,6 +1314,8 @@ export async function handleSendFormEmails(body, env) {
   let clientSubject;
   let clientTo;
   let replyTo;
+  /** Extra file attachments for the team notification only (e.g. checklist uploads). */
+  let internalUserAttachments = [];
 
   if (formType === "contact") {
     const parsed = parseContact(body);
@@ -1145,6 +1337,20 @@ export async function handleSendFormEmails(body, env) {
     clientHtml = buildDemoClient(d, emailCtx);
     internalSubject = `[Nexora] Demo request: ${d.name}`;
     clientSubject = "Demo request received — Nexora";
+  } else if (formType === "client_checklist") {
+    const parsed = parseClientChecklist(body);
+    if (parsed.error) return { ok: false, error: parsed.error };
+    const d = parsed.data;
+    clientTo = d.email;
+    replyTo = d.email;
+    internalHtml = buildClientChecklistInternal(d, emailCtx);
+    clientHtml = buildClientChecklistClient(d, emailCtx);
+    internalSubject = `[Nexora] Client checklist: ${d.company}`;
+    clientSubject = "We received your checklist details — Nexora";
+    const uploadFiles = [...(d.logo ? [d.logo] : []), ...d.photos];
+    if (uploadFiles.length) {
+      internalUserAttachments = checklistFilesToResendAttachments(uploadFiles);
+    }
   } else {
     const parsed = parseStartProject(body);
     if (parsed.error) return { ok: false, error: parsed.error };
@@ -1190,10 +1396,12 @@ export async function handleSendFormEmails(body, env) {
   // sent from the Stripe webhook once payment or the trial is confirmed.
   const skipClientEmail = body?.skipClientEmail === true;
 
+  const internalAttachments = [...(emailAttachments || []), ...internalUserAttachments];
+
   const [internalResult, clientResult] = await Promise.all([
     resend.emails.send({
       from: internalFrom,
-      ...(emailAttachments ? { attachments: emailAttachments } : {}),
+      ...(internalAttachments.length ? { attachments: internalAttachments } : {}),
       to: [notifyTo],
       subject: internalSubject,
       html: internalHtml,

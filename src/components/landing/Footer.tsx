@@ -65,6 +65,14 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/client-checklist"
+                  className="text-sm text-neutral-300 transition-colors hover:text-white"
+                >
+                  Client checklist
+                </Link>
+              </li>
             </ul>
           </div>
 

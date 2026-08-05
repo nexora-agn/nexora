@@ -19,13 +19,47 @@ export type NexoraDemoEmailBody = {
   marketingOptIn?: boolean;
 };
 
+export type NexoraChecklistFile = {
+  fileName: string;
+  mimeType: string;
+  base64: string;
+};
+
+export type NexoraClientChecklistEmailBody = {
+  formType: "client_checklist";
+  name: string;
+  email: string;
+  company: string;
+  phone?: string;
+  address?: string;
+  services?: string;
+  hours?: string;
+  serviceAreas?: string;
+  branding?: string;
+  socialLinks?: string;
+  reviews?: string;
+  offers?: string;
+  teamBios?: string;
+  faq?: string;
+  inspiration?: string;
+  domainNotes?: string;
+  photoAlbumLink?: string;
+  additionalNotes?: string;
+  logo?: NexoraChecklistFile;
+  photos?: NexoraChecklistFile[];
+};
+
 export type NexoraStartProjectEmailBody = {
   formType: "start_project";
   requestType: ProjectRequestType;
   payload: ProjectRequestPayload;
 };
 
-export type NexoraFormEmailBody = NexoraContactEmailBody | NexoraDemoEmailBody | NexoraStartProjectEmailBody;
+export type NexoraFormEmailBody =
+  | NexoraContactEmailBody
+  | NexoraDemoEmailBody
+  | NexoraClientChecklistEmailBody
+  | NexoraStartProjectEmailBody;
 
 function formApiBaseUrl(): string | undefined {
   if (typeof window !== "undefined") {
