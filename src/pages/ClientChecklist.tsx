@@ -20,6 +20,8 @@ import {
   type ChecklistFilePayload,
 } from "@/lib/checklistFiles";
 import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
+import PageSeo from "@/components/seo/PageSeo";
+import { NOINDEX_FOLLOW_ROBOTS } from "@/lib/seo/site";
 
 const MAILTO_HREF =
   "mailto:info@nexora-agn.com?subject=" +
@@ -218,6 +220,12 @@ const ClientChecklist = () => {
 
   return (
     <SiteLayout>
+      <PageSeo
+        title="Client checklist | Nexora"
+        description="Send Nexora your logo, photos, and service details so we can stage your website preview."
+        path="/client-checklist"
+        robots={NOINDEX_FOLLOW_ROBOTS}
+      />
       <div className="print:hidden">
         <PageHeader
           breadcrumb={[

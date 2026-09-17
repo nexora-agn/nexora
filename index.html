@@ -4,13 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nexora | We build your website, you preview it, then you decide.</title>
-    <meta name="description" content="Nexora builds branded, responsive websites with a clear process. Preview your brand, launch on your timeline.">
-    <meta
-      name="keywords"
-      content="website studio, business website, responsive website, custom branded website, web design"
-    />
+    <meta name="description" content="Nexora builds hosted websites for local businesses. Preview your live site, then subscribe from $99 a month. Hosting, updates, and an AI assistant included.">
     <meta name="author" content="Nexora" />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="verify-paysera" content="b7fc808b7f34788d9664bccd34a35803" />
     <meta name="theme-color" content="#0A0A0A" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,87 +17,96 @@
     />
     <link rel="canonical" href="__OG_SITE_BASE__/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:site_name" content="Nexora" />
     <meta property="og:locale" content="en_US" />
-    
-    
     <meta property="og:type" content="website" />
     <meta property="og:url" content="__OG_SITE_BASE__/" />
-    <!-- Social / messaging previews: file is public/og-image.png, served as /og-image.png -->
-    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/6blcvDAcfrMwfVSGp1I5CYxNCp52/social-images/social-1777383942601-og-image-nexora.webp">
+    <meta property="og:image" content="__OG_SITE_BASE__/og-image.png" />
     <meta property="og:image:secure_url" content="__OG_SITE_BASE__/og-image.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1734" />
     <meta property="og:image:height" content="907" />
     <meta property="og:image:alt" content="Nexora: we build your website, you preview it, then you decide." />
+    <meta property="og:title" content="Nexora | We build your website, you preview it, then you decide.">
+    <meta property="og:description" content="Nexora builds hosted websites for local businesses. Preview your live site, then subscribe from $99 a month.">
 
     <meta name="twitter:card" content="summary_large_image" />
-    
-    
-    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/6blcvDAcfrMwfVSGp1I5CYxNCp52/social-images/social-1777383942601-og-image-nexora.webp">
+    <meta name="twitter:title" content="Nexora | We build your website, you preview it, then you decide.">
+    <meta name="twitter:description" content="Nexora builds hosted websites for local businesses. Preview your live site, then subscribe from $99 a month.">
+    <meta name="twitter:image" content="__OG_SITE_BASE__/og-image.png">
     <meta name="twitter:image:alt" content="Nexora: we build your website, you preview it, then you decide." />
 
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Nexora",
-        "url": "__OG_SITE_BASE__/",
-        "description": "Nexora delivers custom-branded, responsive websites with a structured production process.",
-        "logo": "__OG_SITE_BASE__/nexora-logo.png",
-        "sameAs": []
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Nexora",
-        "url": "__OG_SITE_BASE__/",
-        "potentialAction": {
-          "@type": "ContactAction",
-          "target": "__OG_SITE_BASE__/contact"
-        }
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "__OG_SITE_BASE__/#organization",
+            "name": "Nexora",
+            "legalName": "NEXORA AGENCY 029 LLC",
+            "url": "__OG_SITE_BASE__/",
+            "description": "Nexora builds hosted websites for local businesses. Customers preview a staged live site, then subscribe.",
+            "logo": { "@type": "ImageObject", "url": "__OG_SITE_BASE__/nexora-logo.png" },
+            "email": "info@nexora-agn.com",
+            "telephone": "+18885359177",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "30 N Gould St, Ste R",
+              "addressLocality": "Sheridan",
+              "addressRegion": "WY",
+              "postalCode": "82801",
+              "addressCountry": "US"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "__OG_SITE_BASE__/#website",
+            "name": "Nexora",
+            "url": "__OG_SITE_BASE__/",
+            "publisher": { "@id": "__OG_SITE_BASE__/#organization" },
+            "inLanguage": "en-US"
+          }
+        ]
       }
     </script>
     <script>
       (function () {
         var o = typeof location !== "undefined" && location.protocol && location.protocol !== "file:" ? location.origin : "";
         if (!o) return;
+        var path = location.pathname || "/";
+        if (path.length > 1 && path.charAt(path.length - 1) === "/") path = path.slice(0, -1);
+        var pageUrl = o + (path === "" ? "/" : path);
+        var homeUrl = o + "/";
         function a(sel, attr, v) {
           var e = document.querySelector(sel);
           if (e) e.setAttribute(attr, v);
         }
-        a('link[rel="canonical"]', "href", o + "/");
-        a('meta[property="og:url"]', "content", o + "/");
+        a('link[rel="canonical"]', "href", pageUrl);
+        a('meta[property="og:url"]', "content", pageUrl);
         a('meta[property="og:image"]', "content", o + "/og-image.png");
         a('meta[property="og:image:secure_url"]', "content", o + "/og-image.png");
         a('meta[name="twitter:image"]', "content", o + "/og-image.png");
         document.querySelectorAll('script[type="application/ld+json"]').forEach(function (s) {
           try {
+            s.textContent = s.textContent.split("__OG_SITE_BASE__").join(o);
             var j = JSON.parse(s.textContent);
-            if (j["@type"] === "Organization") {
-              j.url = o + "/";
-              j.logo = o + "/nexora-logo.png";
+            if (j["@graph"]) {
+              j["@graph"].forEach(function (node) {
+                if (node["@id"]) node["@id"] = node["@id"].replace(homeUrl + "#", o + "/#");
+                if (node.url === homeUrl || node.url === o + "/") node.url = homeUrl;
+                if (node.logo && node.logo.url) node.logo.url = o + "/nexora-logo.png";
+                if (node.publisher && node.publisher["@id"]) node.publisher["@id"] = o + "/#organization";
+              });
+              s.textContent = JSON.stringify(j);
             }
-            if (j["@type"] === "WebSite") {
-              j.url = o + "/";
-              if (j.potentialAction && j.potentialAction.target) {
-                j.potentialAction.target = o + "/contact";
-              }
-            }
-            s.textContent = JSON.stringify(j);
           } catch (e) {}
         });
       })();
     </script>
-    <meta property="og:title" content="Nexora | We build your website, you preview it, then you decide.">
-  <meta name="twitter:title" content="Nexora | We build your website, you preview it, then you decide.">
-  <meta property="og:description" content="Nexora builds branded, responsive websites with a clear process. Preview your brand, launch on your timeline.">
-  <meta name="twitter:description" content="Nexora builds branded, responsive websites with a clear process. Preview your brand, launch on your timeline.">
 </head>
 
   <body>

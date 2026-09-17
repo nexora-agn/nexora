@@ -12,6 +12,8 @@ import {
   whyPillars,
   whyStatStrip,
 } from "@/data/whyChooseNexora";
+import PageSeo from "@/components/seo/PageSeo";
+import { NOINDEX_ROBOTS } from "@/lib/seo/site";
 
 const DECK_TITLE = "Client outcomes & portfolio overview";
 const CONTACT_EMAIL = "info@nexora-agn.com";
@@ -50,6 +52,12 @@ const SalesDeck = () => {
 
   return (
     <div className="nexora-collateral-print min-h-screen bg-[#f4f4f5] text-neutral-950 print:min-h-0 print:h-auto print:bg-white print:text-black">
+      <PageSeo
+        title="Sales collateral | Nexora"
+        description="Internal Nexora sales collateral. Not indexed."
+        path="/sales-deck"
+        robots={NOINDEX_ROBOTS}
+      />
       {/* Screen-only toolbar */}
       <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 shadow-sm backdrop-blur print:hidden">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-6">

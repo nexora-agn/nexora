@@ -5,6 +5,16 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import RequestDemoModal from "@/components/landing/RequestDemoModal";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import {
+  breadcrumbSchema,
+  graph,
+  organizationSchema,
+  serviceSchema,
+  webPageSchema,
+  websiteSchema,
+} from "@/lib/seo/schema";
 import { ChannelsCard, ConversationCard } from "@/components/ai/AiMockCards";
 import AiLiveDemo from "@/components/ai/AiLiveDemo";
 import {
@@ -31,18 +41,6 @@ const AiAssistant = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const prevTitle = document.title;
-    document.title = "AI assistant for your business | Nexora";
-    const meta = document.querySelector('meta[name="description"]');
-    const prevDesc = meta?.getAttribute("content") ?? null;
-    meta?.setAttribute(
-      "content",
-      "A smart assistant on your website that answers customers 24/7, books jobs into your calendar, and sends every lead straight to your phone.",
-    );
-    return () => {
-      document.title = prevTitle;
-      if (meta && prevDesc !== null) meta.setAttribute("content", prevDesc);
-    };
   }, []);
 
   const openDemo = () => setDemoOpen(true);
@@ -51,6 +49,32 @@ const AiAssistant = () => {
     <div className="relative min-h-screen bg-background">
       <div className="relative flex min-h-screen flex-col">
         <Navbar onRequestDemo={openDemo} />
+        <PageSeo
+          title="AI Website Chatbot for Local Businesses | Nexora"
+          description="An AI assistant on your Nexora website that answers customers, captures name and phone, and can help book jobs — including after hours. Included with every plan."
+          path="/ai"
+          robots={INDEX_ROBOTS}
+          jsonLd={graph([
+            organizationSchema(),
+            websiteSchema(),
+            webPageSchema({
+              path: "/ai",
+              title: "Nexora AI assistant",
+              description: "On-site AI assistant for leads and booking.",
+            }),
+            serviceSchema({
+              name: "Website AI assistant",
+              description:
+                "An on-site assistant trained on your services, hours, and area that captures leads and can help book jobs.",
+              path: "/ai",
+            }),
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Services", path: "/services" },
+              { name: "AI assistant", path: "/ai" },
+            ]),
+          ])}
+        />
         <main className="flex-1 pt-16">
           {/* ── Hero ─────────────────────────────────────────────────────── */}
           <section className="relative overflow-hidden">

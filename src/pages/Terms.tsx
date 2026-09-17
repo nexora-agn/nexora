@@ -3,6 +3,9 @@ import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from "@/lib/seo/schema";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -241,6 +244,25 @@ const sections = [
 const Terms = () => {
   return (
     <SiteLayout>
+      <PageSeo
+        title="Terms of Service | Nexora"
+        description="Terms that apply when you use Nexora’s website and subscribe to hosted website services from NEXORA AGENCY 029 LLC."
+        path="/terms"
+        robots={INDEX_ROBOTS}
+        jsonLd={graph([
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: "/terms",
+            title: "Terms of service",
+            description: "Nexora terms of service.",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Terms of service", path: "/terms" },
+          ]),
+        ])}
+      />
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Terms of service" }]}
         title="Terms of service"

@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase";
+import PageSeo from "@/components/seo/PageSeo";
+import { NOINDEX_ROBOTS } from "@/lib/seo/site";
 
 const AdminLogin = () => {
   const { session, signIn, loading } = useAuth();
@@ -40,6 +42,12 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <PageSeo
+        title="Admin login | Nexora"
+        description="Sign in to the Nexora sales workspace."
+        path="/admin/login"
+        robots={NOINDEX_ROBOTS}
+      />
       <div className="w-full max-w-sm bg-card border rounded-xl shadow-sm p-6 space-y-6">
         <div className="space-y-1 text-center">
           <Link to="/" className="inline-block font-bold text-xl tracking-tight">

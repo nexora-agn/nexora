@@ -1,15 +1,18 @@
-import { useEffect } from "react";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import ProjectOnboardingWizard from "@/components/onboarding/ProjectOnboardingWizard";
+import PageSeo from "@/components/seo/PageSeo";
+import { NOINDEX_FOLLOW_ROBOTS } from "@/lib/seo/site";
 
 const StartProject = () => {
-  useEffect(() => {
-    document.title = "Start your project | Nexora";
-  }, []);
-
   return (
     <SiteLayout>
+      <PageSeo
+        title="Start your project | Nexora"
+        description="Choose a Nexora plan, share your brand details, and complete secure checkout for a hosted website subscription."
+        path="/start"
+        robots={NOINDEX_FOLLOW_ROBOTS}
+      />
       <PageHeader
         compact
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Start your project" }]}

@@ -18,6 +18,8 @@ export const COMPANY_LEGAL = {
   governingLaw: "State of Wyoming, United States",
   /** Primary public contact email (on the company domain). */
   contactEmail: "info@nexora-agn.com",
+  phoneDisplay: "+1 (888) 535-9177",
+  phoneTel: "+18885359177",
 } as const;
 
 /** Office locations shown across the site (footer, contact page, policies). */

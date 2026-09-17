@@ -1,6 +1,9 @@
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from "@/lib/seo/schema";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -11,6 +14,25 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
 const ShippingPolicy = () => {
   return (
     <SiteLayout>
+      <PageSeo
+        title="Service Delivery Policy | Nexora"
+        description="How Nexora delivers digital website subscriptions: staging, launch, hosting, and what “delivery” means for an online service."
+        path="/shipping-policy"
+        robots={INDEX_ROBOTS}
+        jsonLd={graph([
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: "/shipping-policy",
+            title: "Service delivery",
+            description: "How Nexora delivers digital subscriptions.",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Service delivery", path: "/shipping-policy" },
+          ]),
+        ])}
+      />
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Service delivery" }]}
         title="Service delivery"

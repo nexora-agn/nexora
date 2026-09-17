@@ -8,10 +8,10 @@
     "start": "node server.js",
     "dev": "vite",
     "dev:api": "node --env-file=.env.local server/export-api.mjs",
-    "build": "(ulimit -n 1048576 2>/dev/null || ulimit -n 65536 2>/dev/null || ulimit -n 16384 2>/dev/null || true); node scripts/build.mjs",
+    "build": "(ulimit -n 1048576 2>/dev/null || ulimit -n 65536 2>/dev/null || ulimit -n 16384 2>/dev/null || true); node scripts/generate-sitemap.mjs && node scripts/build.mjs",
     "build:dev": "(ulimit -n 1048576 2>/dev/null || ulimit -n 65536 2>/dev/null || ulimit -n 16384 2>/dev/null || true); node scripts/build.mjs --dev",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "sitemap": "node scripts/generate-sitemap.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

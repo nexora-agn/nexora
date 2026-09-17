@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { NEXORA_LOGO_SRC } from "@/lib/brandAssets";
 
-/** Order follows homepage scroll: How it works → Nexora AI → Our work → Why Nexora → Pricing */
-const sectionLinks = [
-  { id: "how-it-works", label: "How it works" },
-  { id: "ai", label: "Nexora AI" },
-  { id: "projects", label: "Our work" },
-  { id: "why-choose-us", label: "Why Nexora" },
-  { id: "pricing", label: "Pricing" },
+const navLinks = [
+  { to: "/services", label: "Services" },
+  { to: "/ai", label: "Nexora AI" },
+  { to: "/work", label: "Our work" },
+  { to: "/industries", label: "Industries" },
+  { to: "/pricing", label: "Pricing" },
+  { to: "/blog", label: "Blog" },
+  { to: "/contact", label: "Contact" },
+  { to: "/start", label: "Start your project" },
 ] as const;
 
 interface NavbarProps {
@@ -20,70 +22,27 @@ interface NavbarProps {
 const Navbar = ({ onRequestDemo }: NavbarProps) => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
 
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 96;
-    window.scrollTo({ top, behavior: "smooth" });
+  const linkClass = (to: string) => {
+    const active = location.pathname === to || (to !== "/" && location.pathname.startsWith(`${to}/`));
+    return `text-sm transition-colors hover:text-neutral-950 ${active ? "text-neutral-950 font-semibold" : "text-neutral-600"}`;
   };
-
-  const handleSectionClick =
-    (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      setOpen(false);
-      // AI has its own dedicated page — always route there.
-      if (id === "ai") {
-        navigate("/ai");
-        return;
-      }
-      if (id === "pricing" && location.pathname !== "/") {
-        navigate("/pricing");
-        return;
-      }
-      if (location.pathname !== "/") {
-        navigate("/", { state: { scrollTo: id } });
-        return;
-      }
-      scrollToSection(id);
-    };
 
   const NavLinks = ({ className }: { className?: string }) => (
     <>
-      {sectionLinks.map(({ id, label }) => (
-        <a
-          key={id}
-          href="/"
-          onClick={handleSectionClick(id)}
-          className={className}
-        >
+      {navLinks.map(({ to, label }) => (
+        <Link key={to} to={to} onClick={() => setOpen(false)} className={className ?? linkClass(to)}>
           {label}
-        </a>
+        </Link>
       ))}
-      <Link to="/blog" onClick={() => setOpen(false)} className={className}>
-        Blog
-      </Link>
-      <Link to="/contact" onClick={() => setOpen(false)} className={className}>
-        Contact
-      </Link>
-      <Link to="/start" onClick={() => setOpen(false)} className={className}>
-        Start your project
-      </Link>
     </>
   );
-
-  const linkClass = "text-sm text-neutral-600 transition-colors hover:text-neutral-950";
 
   return (
     <nav className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-4">
       <div className="mx-auto w-full max-w-6xl rounded-2xl border border-neutral-200/80 bg-white/80 shadow-[0_18px_40px_-28px_rgba(10,10,10,0.2)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
         <div className="flex h-16 w-full items-center justify-between px-5 md:px-6">
-          <Link
-            to="/"
-            className="flex shrink-0 items-center"
-            onClick={() => setOpen(false)}
-          >
+          <Link to="/" className="flex shrink-0 items-center" onClick={() => setOpen(false)}>
             <img
               src={NEXORA_LOGO_SRC}
               alt="Nexora"
@@ -94,8 +53,8 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
             />
           </Link>
 
-          <div className="hidden items-center gap-7 lg:flex">
-            <NavLinks className={linkClass} />
+          <div className="hidden items-center gap-5 xl:flex">
+            <NavLinks />
             <Button
               size="sm"
               className="rounded-xl border-0 bg-brand px-6 font-semibold text-brand-foreground shadow-sm hover:bg-brand-muted"
@@ -107,7 +66,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
 
           <button
             type="button"
-            className="rounded-xl border border-transparent p-2 text-neutral-950 transition-colors hover:bg-neutral-100 lg:hidden"
+            className="rounded-xl border border-transparent p-2 text-neutral-950 transition-colors hover:bg-neutral-100 xl:hidden"
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen(!open)}
@@ -117,7 +76,7 @@ const Navbar = ({ onRequestDemo }: NavbarProps) => {
         </div>
 
         {open ? (
-          <div className="mx-3 mb-3 flex flex-col gap-1 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg lg:hidden">
+          <div className="mx-3 mb-3 flex flex-col gap-1 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg xl:hidden">
             <NavLinks className="rounded-lg px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-950" />
             <Button
               size="sm"

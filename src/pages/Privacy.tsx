@@ -3,6 +3,9 @@ import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from "@/lib/seo/schema";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -190,6 +193,25 @@ const sections = [
 const Privacy = () => {
   return (
     <SiteLayout>
+      <PageSeo
+        title="Privacy Notice | Nexora"
+        description="How NEXORA AGENCY 029 LLC collects, uses, and protects personal information when you use Nexora websites and subscriptions."
+        path="/privacy"
+        robots={INDEX_ROBOTS}
+        jsonLd={graph([
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: "/privacy",
+            title: "Privacy notice",
+            description: "Nexora privacy notice.",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Privacy notice", path: "/privacy" },
+          ]),
+        ])}
+      />
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Privacy notice" }]}
         title="Privacy notice"

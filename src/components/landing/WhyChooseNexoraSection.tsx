@@ -115,12 +115,11 @@ const WhyChooseNexoraSection = ({ onRequestDemo }: WhyChooseNexoraSectionProps) 
                   id="why-choose-client-results-heading"
                   className="mt-3 text-2xl font-bold tracking-tight text-slate-950 md:text-3xl"
                 >
-                  Real Results. Real Clients.
+                  Live sites, in their own words.
                 </h3>
                 <p className="mt-3 text-base leading-relaxed text-slate-600">
-                  Every card matches a live site in{" "}
-                  <span className="font-semibold text-slate-800">Work</span>: rankings, enquiries, and booked jobs after
-                  launch (plus ongoing SEO hygiene).
+                  Every card matches a live site on our work page. Percentage lifts on the cards are
+                  illustrative, not audited campaign results.
                 </p>
               </div>
               <div className="flex shrink-0 items-center justify-center gap-2 md:justify-end md:pb-0.5">

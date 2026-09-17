@@ -11,6 +11,10 @@ import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL, COMPANY_OFFICES } from "@/lib/companyLegal";
 import { sendNexoraFormEmail } from "@/lib/sendFormEmails";
+import { trackEvent } from "@/components/analytics/Ga4";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from "@/lib/seo/schema";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -38,6 +42,7 @@ const Contact = () => {
         message,
       });
       setSubmitted(true);
+      trackEvent("generate_lead", { method: "contact_form" });
       form.reset();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send your message.");
@@ -48,6 +53,25 @@ const Contact = () => {
 
   return (
     <SiteLayout>
+      <PageSeo
+        title="Contact Nexora | Email, Phone, and Offices"
+        description="Contact Nexora for billing, account, or project questions. Email info@nexora-agn.com or call +1 (888) 535-9177. Start a website project online anytime."
+        path="/contact"
+        robots={INDEX_ROBOTS}
+        jsonLd={graph([
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: "/contact",
+            title: "Contact Nexora",
+            description: "Email, phone, and office details for Nexora.",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Contact", path: "/contact" },
+          ]),
+        ])}
+      />
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Contact" }]}
         title="Contact"

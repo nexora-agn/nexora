@@ -17,10 +17,10 @@ import {
 } from "lucide-react";
 import { customerProjects, type CustomerProject } from "@/data/customerProjects";
 
-export const WHY_HEADLINE = "We Don't Just Promise Results. We Deliver Them.";
+export const WHY_HEADLINE = "A website you can preview, then actually run.";
 
 export const WHY_SUB =
-  "We help businesses rank higher, generate more leads, and book more appointments through proven SEO strategies that drive real, measurable growth.";
+  "Nexora builds hosted sites for local businesses: clear services, a visible phone number, and an assistant that can catch leads after hours. You click through a staged site before you subscribe.";
 
 export interface WhyPillar {
   icon: LucideIcon;
@@ -31,38 +31,38 @@ export interface WhyPillar {
 export const whyPillars: WhyPillar[] = [
   {
     icon: TrendingUp,
-    title: "Proven SEO Strategies",
+    title: "Built to get inquiries",
     description:
-      "Data-driven SEO strategies that improve rankings and drive high-intent traffic.",
+      "Service pages, a visible phone number, and forms placed where people actually decide to call.",
   },
   {
     icon: Target,
-    title: "More Leads, More Clients",
-    description: "We help you attract more qualified leads that turn into paying customers.",
+    title: "Your trade, not a generic theme",
+    description: "Roofing, electrical, plumbing, construction, and auto start from industry templates.",
   },
   {
     icon: Calendar,
-    title: "More Appointments",
+    title: "After-hours capture",
     description:
-      "Increase calls, bookings, and appointments with targeted organic visibility.",
+      "An AI assistant on the site can take name, phone, and job type when your office is closed.",
   },
   {
     icon: Trophy,
-    title: "Results You Can Measure",
+    title: "You see it before you pay",
     description:
-      "Transparent reporting and clear numbers that show consistent growth.",
+      "A staged live preview — desktop and mobile — so you are not buying a pitch deck.",
   },
   {
     icon: UsersRound,
-    title: "Industry-Specific Expertise",
+    title: "We handle the launch",
     description:
-      "We understand your space and know what it takes to outrank competitors in your market.",
+      "Design, build, migrate if needed, hosting, and SSL. You are not the project manager.",
   },
   {
     icon: ShieldCheck,
-    title: "Long-Term Growth",
+    title: "A subscription you can keep",
     description:
-      "Sustainable SEO that builds authority and keeps you competitive over time.",
+      "Monthly updates are scoped on the plan. Starter and Growth check out online.",
   },
 ];
 
@@ -75,24 +75,23 @@ export interface WhyStatStrip {
 export const whyStatStrip: WhyStatStrip[] = [
   {
     icon: LineChart,
-    headline: "150+ Businesses Helped",
-    subline: "Across industries aiming for visibility and predictable inbound interest.",
+    headline: "Live sites you can open",
+    subline: "Portfolio launches on the work page — real URLs, not mockups.",
   },
   {
     icon: Star,
-    headline: "3.2× More Leads (avg.)",
-    subline: "Typical uplift in inbound inquiries after foundational SEO fixes.",
+    headline: "Preview before you pay",
+    subline: "Click through a staged website, then subscribe if you want it live.",
   },
   {
     icon: CalendarCheck,
-    headline: "2.7× More Calls & Bookings",
-    subline: "More scheduled conversations from structured pages and clearer CTAs.",
+    headline: "Plans from $99/month",
+    subline: "Starter, Growth, and Enterprise are published. No mystery quote.",
   },
   {
     icon: BarChart2,
-    headline: "200%+ Traffic Lift (benchmark)",
-    subline:
-      "Directional uplift in organic sessions within a six-month optimisation window.",
+    headline: "Trade-specific starting points",
+    subline: "Industry templates for roofing, electrical, plumbing, construction, and auto.",
   },
 ];
 

@@ -12,6 +12,15 @@ import PricingSection from "@/components/landing/PricingSection";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
 import RequestDemoModal from "@/components/landing/RequestDemoModal";
+import PageSeo from "@/components/seo/PageSeo";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, INDEX_ROBOTS } from "@/lib/seo/site";
+import {
+  graph,
+  organizationSchema,
+  serviceSchema,
+  webPageSchema,
+  websiteSchema,
+} from "@/lib/seo/schema";
 
 const Index = () => {
   const [demoOpen, setDemoOpen] = useState(false);
@@ -51,6 +60,27 @@ const Index = () => {
       </div>
 
       <div className="relative">
+        <PageSeo
+          title={DEFAULT_TITLE}
+          description={DEFAULT_DESCRIPTION}
+          path="/"
+          robots={INDEX_ROBOTS}
+          jsonLd={graph([
+            organizationSchema(),
+            websiteSchema(),
+            webPageSchema({
+              path: "/",
+              title: DEFAULT_TITLE,
+              description: DEFAULT_DESCRIPTION,
+            }),
+            serviceSchema({
+              name: "Hosted business websites",
+              description: DEFAULT_DESCRIPTION,
+              path: "/",
+              includeOffers: true,
+            }),
+          ])}
+        />
         <Navbar onRequestDemo={() => setDemoOpen(true)} />
         <Hero onRequestDemo={() => setDemoOpen(true)} />
         <StepsSection />

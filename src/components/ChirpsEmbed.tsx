@@ -56,7 +56,14 @@ const ChirpsEmbed = ({ assistantId: assistantIdProp }: ChirpsEmbedProps) => {
       script.id = CHIRPS_SCRIPT_ID;
       script.src = CHIRPS_SCRIPT_SRC;
       script.async = true;
-      document.body.appendChild(script);
+      script.defer = true;
+      const load = () => document.body.appendChild(script);
+      const ric = window.requestIdleCallback;
+      if (typeof ric === "function") {
+        ric(load, { timeout: 3500 });
+      } else {
+        window.setTimeout(load, 2200);
+      }
     }
 
     return () => {

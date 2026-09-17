@@ -19,6 +19,8 @@ import {
   websiteProgramProcessSteps,
   websiteProgramWhySection,
 } from "@/data/nexoraWebsiteProgram";
+import PageSeo from "@/components/seo/PageSeo";
+import { NOINDEX_ROBOTS } from "@/lib/seo/site";
 
 const TAB_TITLE_AFTER_PRINT = "Website program | Nexora";
 
@@ -148,6 +150,12 @@ export default function WebsiteProgram() {
 
   return (
     <div className="nexora-collateral-print flex min-h-screen flex-col bg-[#f4f4f5] text-neutral-950 print:block print:min-h-0 print:h-auto print:bg-white print:text-black">
+      <PageSeo
+        title="Website program | Nexora"
+        description="Internal Nexora website program PDF. Not indexed."
+        path="/website-program"
+        robots={NOINDEX_ROBOTS}
+      />
       <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 shadow-sm backdrop-blur print:hidden">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-6">
           <Link

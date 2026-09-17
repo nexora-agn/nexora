@@ -5,6 +5,16 @@ import Footer from "@/components/landing/Footer";
 import RequestDemoModal from "@/components/landing/RequestDemoModal";
 import { getMarketingPostBySlug, marketingBlogPosts } from "@/data/marketingBlog";
 import NotFound from "@/pages/NotFound";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import {
+  blogPostingSchema,
+  breadcrumbSchema,
+  graph,
+  organizationSchema,
+  webPageSchema,
+  websiteSchema,
+} from "@/lib/seo/schema";
 
 const BlogArticle = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -20,6 +30,37 @@ const BlogArticle = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar onRequestDemo={() => setDemoOpen(true)} />
+      <PageSeo
+        title={post.metaTitle}
+        description={post.metaDescription}
+        path={`/blog/${post.slug}`}
+        robots={INDEX_ROBOTS}
+        ogType="article"
+        image={post.coverImage}
+        imageAlt={post.coverImageAlt}
+        publishedTime={post.date}
+        jsonLd={graph([
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: `/blog/${post.slug}`,
+            title: post.title,
+            description: post.metaDescription,
+          }),
+          blogPostingSchema({
+            title: post.title,
+            description: post.metaDescription,
+            path: `/blog/${post.slug}`,
+            datePublished: post.date,
+            image: post.coverImage,
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post.slug}` },
+          ]),
+        ])}
+      />
       <article className="pb-20 pt-28 md:pt-32">
         <div className="mx-auto max-w-3xl px-6">
           <Link
@@ -63,6 +104,19 @@ const BlogArticle = () => {
               </p>
             ))}
           </div>
+
+          {post.relatedTo ? (
+            <p className="mt-10 rounded-2xl border border-neutral-200 bg-neutral-50 px-5 py-4 text-sm leading-relaxed text-neutral-700">
+              Next step:{" "}
+              <Link to={post.relatedTo.to} className="font-semibold text-neutral-950 underline-offset-4 hover:underline">
+                {post.relatedTo.label}
+              </Link>
+              {" · "}
+              <Link to="/start" className="font-semibold text-neutral-950 underline-offset-4 hover:underline">
+                Start your project
+              </Link>
+            </p>
+          ) : null}
 
           {others.length > 0 ? (
             <div className="mt-16 border-t border-neutral-200 pt-12">

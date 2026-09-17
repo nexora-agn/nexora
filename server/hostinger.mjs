@@ -22,6 +22,7 @@ import {
   buildSiteZip,
   resolveTemplatePaths,
 } from "./export-logic.mjs";
+import { isKnownSpaPath, xRobotsTagForPath } from "../scripts/seo-routes.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,6 +86,11 @@ function getMime(filePath) {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+function robotsHeaders(urlPath) {
+  const tag = xRobotsTagForPath(urlPath);
+  return tag ? { "X-Robots-Tag": tag } : {};
+}
+
 function sendJson(res, code, payload) {
   const body = JSON.stringify(payload);
   res.writeHead(code, {
@@ -192,6 +198,7 @@ async function serveStatic(res, urlPath) {
       "Content-Type": mime,
       "Content-Length": data.length,
       "Cache-Control": isHtml ? "no-cache" : "public, max-age=31536000, immutable",
+      ...(isHtml ? robotsHeaders(clean) : {}),
     });
     res.end(data);
   } catch {
@@ -202,6 +209,7 @@ async function serveStatic(res, urlPath) {
         res.writeHead(200, {
           "Content-Type": "text/html; charset=utf-8",
           "Cache-Control": "no-cache",
+          "X-Robots-Tag": "noindex, follow",
         });
         res.end(index);
         return;
@@ -209,12 +217,15 @@ async function serveStatic(res, urlPath) {
         /* fall through to main SPA */
       }
     }
-    // Main marketing SPA fallback
+    // Main marketing SPA fallback. Known routes 200; unknown URLs 404 with the app shell
+    // so Google does not treat missing pages as soft 404s (Search Central: return a 404).
     try {
       const index = await fs.readFile(path.join(distDir, "index.html"));
-      res.writeHead(200, {
+      const status = isKnownSpaPath(clean) ? 200 : 404;
+      res.writeHead(status, {
         "Content-Type": "text/html; charset=utf-8",
         "Cache-Control": "no-cache",
+        ...robotsHeaders(clean),
       });
       res.end(index);
     } catch {

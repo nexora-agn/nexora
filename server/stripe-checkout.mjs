@@ -110,7 +110,7 @@ export async function buildStripeCheckoutUrl(env, opts) {
   const params = {
     mode: "subscription",
     line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${siteOrigin}/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${siteOrigin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteOrigin}/payment/cancelled`,
     metadata: { order_id: opts.orderId },
   };

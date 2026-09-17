@@ -4,6 +4,9 @@ import Footer from "@/components/landing/Footer";
 import RequestDemoModal from "@/components/landing/RequestDemoModal";
 import { useState } from "react";
 import { marketingBlogPosts } from "@/data/marketingBlog";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from "@/lib/seo/schema";
 
 const Blog = () => {
   const [demoOpen, setDemoOpen] = useState(false);
@@ -11,6 +14,25 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar onRequestDemo={() => setDemoOpen(true)} />
+      <PageSeo
+        title="Blog | Website and Lead-Generation Notes | Nexora"
+        description="Practical writing on hosted websites, preview-before-subscribe, and how local service sites capture leads. From the Nexora team."
+        path="/blog"
+        robots={INDEX_ROBOTS}
+        jsonLd={graph([
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: "/blog",
+            title: "Nexora blog",
+            description: "Notes on websites and lead generation for local businesses.",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+          ]),
+        ])}
+      />
       <main className="mx-auto max-w-3xl px-6 pb-20 pt-28 md:pt-32">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Blog</p>
         <h1 className="mt-3 text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">Insights</h1>

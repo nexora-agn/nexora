@@ -1,18 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://webready.studio/sitemap.xml
-User-agent: Googlebot
-Allow: /
+# Do not use robots.txt to hide pages. Payment, admin, and template demos
+# send noindex via HTML and X-Robots-Tag. CSS, JS, and images stay crawlable
+# so Google can render the site. See Google Search Central robots.txt docs.
 
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
-Allow: /
+Sitemap: https://nexora-agn.com/sitemap.xml

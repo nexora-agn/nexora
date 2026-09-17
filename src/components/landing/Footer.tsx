@@ -22,7 +22,7 @@ const Footer = () => {
       />
 
       <div className="relative mx-auto w-full max-w-6xl px-6 py-14 md:py-16">
-        <div className="grid gap-12 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:gap-16 lg:grid-cols-[1.2fr_1fr_auto] lg:items-start">
+        <div className="grid gap-12 md:grid-cols-2 md:gap-16 lg:grid-cols-[1.1fr_0.8fr_0.9fr_auto] lg:items-start">
           <div className="max-w-sm">
             <Link
               to="/"
@@ -40,6 +40,33 @@ const Footer = () => {
             <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-400">
               We sell hosted website software subscriptions. Starter and Growth plans are available through self-serve checkout.
             </p>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Explore</p>
+            <ul className="mt-4 space-y-2.5">
+              {[
+                { to: "/services", label: "Services" },
+                { to: "/services/websites", label: "Websites" },
+                { to: "/ai", label: "AI assistant" },
+                { to: "/industries", label: "Industries" },
+                { to: "/work", label: "Our work" },
+                { to: "/examples", label: "Examples" },
+                { to: "/pricing", label: "Pricing" },
+                { to: "/blog", label: "Blog" },
+                { to: "/about", label: "About" },
+                { to: "/start", label: "Start your project" },
+              ].map(item => (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    className="text-sm text-neutral-300 transition-colors hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div>

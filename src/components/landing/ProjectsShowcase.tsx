@@ -29,12 +29,14 @@ const ProjectsShowcase = () => {
                 <p className="mt-3 text-base font-medium text-neutral-600">
                   Live sites you can click through, not mockups.
                 </p>
-                <Link
-                  to="/start"
-                  className="mt-4 inline-block text-sm font-semibold text-neutral-950 underline-offset-4 hover:underline"
-                >
-                  Start your project
-                </Link>
+                <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
+                  <Link to="/work" className="text-neutral-950 underline-offset-4 hover:underline">
+                    View all work
+                  </Link>
+                  <Link to="/start" className="text-neutral-950 underline-offset-4 hover:underline">
+                    Start your project
+                  </Link>
+                </div>
               </div>
               <div className="flex shrink-0 items-center justify-end gap-2 md:pb-0.5">
                 <CarouselPrevious

@@ -2,6 +2,9 @@ import PolicyPageFooter from "@/components/legal/PolicyPageFooter";
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import { COMPANY_LEGAL } from "@/lib/companyLegal";
+import PageSeo from "@/components/seo/PageSeo";
+import { INDEX_ROBOTS } from "@/lib/seo/site";
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from "@/lib/seo/schema";
 
 const effectiveDate = new Date().toLocaleDateString("en-US", {
   month: "long",
@@ -15,6 +18,25 @@ const REFUND_REQUEST_WINDOW_DAYS = 14;
 const RefundPolicy = () => {
   return (
     <SiteLayout>
+      <PageSeo
+        title="Refund Policy | Nexora"
+        description="Nexora’s refund policy for hosted website subscriptions sold by NEXORA AGENCY 029 LLC, including the request window and how to contact us."
+        path="/refund-policy"
+        robots={INDEX_ROBOTS}
+        jsonLd={graph([
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: "/refund-policy",
+            title: "Refund policy",
+            description: "Nexora refund policy.",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Refund policy", path: "/refund-policy" },
+          ]),
+        ])}
+      />
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Refund policy" }]}
         title="Refund policy"
