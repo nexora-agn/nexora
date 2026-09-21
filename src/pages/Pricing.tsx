@@ -1,10 +1,13 @@
 import SiteLayout from "@/components/layout/SiteLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import PricingSection from "@/components/landing/PricingSection";
+import PageFaq from "@/components/marketing/PageFaq";
 import PageSeo from "@/components/seo/PageSeo";
+import { pricingFaqs } from "@/data/marketingFaqs";
 import { INDEX_ROBOTS } from "@/lib/seo/site";
 import {
   breadcrumbSchema,
+  faqPageSchema,
   graph,
   organizationSchema,
   serviceSchema,
@@ -34,6 +37,7 @@ const Pricing = () => {
             path: "/pricing",
             includeOffers: true,
           }),
+          faqPageSchema(pricingFaqs, { path: "/pricing" }),
           breadcrumbSchema([
             { name: "Home", path: "/" },
             { name: "Pricing", path: "/pricing" },
@@ -46,6 +50,9 @@ const Pricing = () => {
         description="Monthly subscriptions from $99. Preview your staged website, then subscribe when you're ready."
       />
       <PricingSection embedded={false} />
+      <div className="mx-auto w-full max-w-6xl px-6 pb-16 md:pb-24">
+        <PageFaq items={pricingFaqs} />
+      </div>
     </SiteLayout>
   );
 };

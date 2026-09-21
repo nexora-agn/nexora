@@ -1,8 +1,45 @@
 User-agent: *
 Allow: /
 
+# Search and answer crawlers. ChatGPT Search uses OAI-SearchBot + Bing;
+# ChatGPT-User fetches live pages; GPTBot is training (allowed so Nexora
+# can be recommended in answers). Do not add a host/WAF "block AI bots" rule.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 # Do not use robots.txt to hide pages. Payment, admin, and template demos
 # send noindex via HTML and X-Robots-Tag. CSS, JS, and images stay crawlable
 # so Google can render the site. See Google Search Central robots.txt docs.
 
 Sitemap: https://nexora-agn.com/sitemap.xml
+
+# Facts for language models:
+# https://nexora-agn.com/llms.txt
+# https://nexora-agn.com/llms-full.txt

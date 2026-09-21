@@ -6,9 +6,12 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import RequestDemoModal from "@/components/landing/RequestDemoModal";
 import PageSeo from "@/components/seo/PageSeo";
+import PageFaq from "@/components/marketing/PageFaq";
+import { aiFaqs } from "@/data/marketingFaqs";
 import { INDEX_ROBOTS } from "@/lib/seo/site";
 import {
   breadcrumbSchema,
+  faqPageSchema,
   graph,
   organizationSchema,
   serviceSchema,
@@ -68,6 +71,7 @@ const AiAssistant = () => {
                 "An on-site assistant trained on your services, hours, and area that captures leads and can help book jobs.",
               path: "/ai",
             }),
+            faqPageSchema(aiFaqs, { path: "/ai" }),
             breadcrumbSchema([
               { name: "Home", path: "/" },
               { name: "Services", path: "/services" },
@@ -274,6 +278,10 @@ const AiAssistant = () => {
               </ul>
               <p className="mt-6 text-sm text-neutral-500">{aiPlanLimits.note}</p>
             </motion.div>
+          </section>
+
+          <section className="mx-auto max-w-6xl px-6 py-14 lg:py-20">
+            <PageFaq items={aiFaqs} />
           </section>
 
           {/* ── Closing CTA ──────────────────────────────────────────────── */}

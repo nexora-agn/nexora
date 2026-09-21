@@ -192,12 +192,14 @@ async function serveStatic(res, urlPath) {
     if (stat.isDirectory()) filePath = path.join(filePath, "index.html");
     const data = await fs.readFile(filePath);
     const mime = getMime(filePath);
-    // Long cache for hashed assets, short for HTML
+    // Long cache for hashed assets, short for HTML and crawl docs (robots, sitemap, llms.txt)
     const isHtml = mime.startsWith("text/html");
+    const ext = path.extname(filePath).toLowerCase();
+    const isCrawlDoc = ext === ".txt" || ext === ".xml";
     res.writeHead(200, {
       "Content-Type": mime,
       "Content-Length": data.length,
-      "Cache-Control": isHtml ? "no-cache" : "public, max-age=31536000, immutable",
+      "Cache-Control": isHtml || isCrawlDoc ? "no-cache" : "public, max-age=31536000, immutable",
       ...(isHtml ? robotsHeaders(clean) : {}),
     });
     res.end(data);

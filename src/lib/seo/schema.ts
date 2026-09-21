@@ -125,6 +125,32 @@ export function serviceSchema(opts: {
   return schema;
 }
 
+export function faqPageSchema(
+  items: Array<{ question: string; answer: string }>,
+  opts?: { path?: string; origin?: string },
+): JsonLd | null {
+  if (items.length === 0) return null;
+  const origin = opts?.origin ?? CANONICAL_ORIGIN;
+  const schema: JsonLd = {
+    "@type": "FAQPage",
+    mainEntity: items.map(item => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+  if (opts?.path) {
+    const url = canonicalUrl(opts.path, origin);
+    schema["@id"] = `${url}#faq`;
+    schema.url = url;
+    schema.isPartOf = { "@id": WEBSITE_ID };
+  }
+  return schema;
+}
+
 export function blogPostingSchema(opts: {
   title: string;
   description: string;
