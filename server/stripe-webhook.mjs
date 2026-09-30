@@ -10,6 +10,9 @@
  * - checkout.session.completed          → mark paid, email "trial started" / "payment confirmed"
  * - customer.subscription.trial_will_end → email "your trial ends soon"
  * - invoice.payment_failed              → email "update your card"
+ * - customer.subscription.updated       → team notice when a cancellation is scheduled or undone,
+ *                                         or when cancellation feedback arrives after the fact
+ * - customer.subscription.deleted       → team notice when a subscription ends
  *
  * The webhook is deliberately the ONLY place customer billing email is sent:
  * every purchase path (wizard checkout, standalone trial Payment Link, a manual
@@ -20,7 +23,7 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { resolveSupabaseEnv } from "./payment-staff.mjs";
 import { resolvePlanFromPriceId } from "./stripe-checkout.mjs";
-import { handleSendSubscriptionEmails } from "./form-email-resend.mjs";
+import { handleSendSubscriptionEmails, handleSendCancellationNotice } from "./form-email-resend.mjs";
 
 function normalizeEnv(raw) {
   let s = String(raw ?? "").trim();
@@ -89,6 +92,12 @@ export async function handleStripeWebhook({ rawBody, signatureHeader, env }) {
   }
   if (event.type === "invoice.payment_failed") {
     return handleInvoicePaymentFailed(event.data.object, env, stripe);
+  }
+  if (event.type === "customer.subscription.updated") {
+    return handleSubscriptionUpdated(event.data.object, event.data.previous_attributes, env, stripe);
+  }
+  if (event.type === "customer.subscription.deleted") {
+    return handleSubscriptionDeleted(event.data.object, env, stripe);
   }
 
   // Ignore all other events
@@ -451,6 +460,89 @@ async function handleInvoicePaymentFailed(invoice, env, stripe) {
     "invoice.payment_failed",
   );
   return { ok: true, status: 200, received: true };
+}
+
+/**
+ * Portal "cancel at end of period" doesn't end the subscription — it sets
+ * cancel_at_period_end / cancel_at and Stripe fires `updated`. Tell the team the
+ * moment that flips (either way), not weeks later when it finally ends.
+ *
+ * @param {Stripe.Subscription} subscription
+ * @param {Partial<Stripe.Subscription> | undefined} previous
+ */
+async function handleSubscriptionUpdated(subscription, previous, env, stripe) {
+  const prev = previous ?? {};
+
+  // The portal records the customer's reason in a separate update that lands
+  // after the subscription has already ended — forward it on its own.
+  const details = subscription.cancellation_details ?? {};
+  if (prev.cancellation_details && (details.feedback || details.comment)) {
+    await notifyCancellation(subscription, "cancel_feedback", "", env, stripe);
+    return { ok: true, status: 200, received: true };
+  }
+
+  if (!("cancel_at_period_end" in prev) && !("cancel_at" in prev)) {
+    return { ok: true, status: 200, received: true };
+  }
+
+  const pick = key => (key in prev ? prev[key] : subscription[key]);
+  const isScheduled = Boolean(subscription.cancel_at_period_end || subscription.cancel_at);
+  const wasScheduled = Boolean(pick("cancel_at_period_end") || pick("cancel_at"));
+  if (isScheduled === wasScheduled) return { ok: true, status: 200, received: true };
+
+  const periodEnd = subscription.items?.data?.[0]?.current_period_end ?? subscription.current_period_end;
+  await notifyCancellation(
+    subscription,
+    isScheduled ? "cancel_scheduled" : "cancel_reverted",
+    formatDate(isScheduled ? subscription.cancel_at || periodEnd : periodEnd),
+    env,
+    stripe,
+  );
+  return { ok: true, status: 200, received: true };
+}
+
+/**
+ * The subscription is over: immediate cancel from the portal, the end of a
+ * scheduled cancellation, or Stripe giving up after failed payments.
+ *
+ * @param {Stripe.Subscription} subscription
+ */
+async function handleSubscriptionDeleted(subscription, env, stripe) {
+  await notifyCancellation(
+    subscription,
+    "canceled",
+    formatDate(subscription.ended_at || subscription.canceled_at),
+    env,
+    stripe,
+  );
+  return { ok: true, status: 200, received: true };
+}
+
+async function notifyCancellation(subscription, kind, endsLabel, env, stripe) {
+  const info = describeSubscription(subscription, env);
+  const details = subscription.cancellation_details ?? {};
+  try {
+    const res = await handleSendCancellationNotice(
+      {
+        kind,
+        email: await resolveCustomerEmail(subscription.customer, stripe),
+        planName: info.planName,
+        amountLabel: info.amountLabel,
+        intervalLabel: info.intervalLabel,
+        endsLabel,
+        isTrial: info.isTrial,
+        reason: details.reason ?? null,
+        feedback: details.feedback ?? null,
+        comment: details.comment ?? null,
+        subscriptionId: subscription.id,
+        customerId: idOf(subscription.customer),
+      },
+      env,
+    );
+    if (!res.ok) console.error(`[stripe-webhook] ${kind} notice failed:`, res.error);
+  } catch (e) {
+    console.error(`[stripe-webhook] ${kind} notice threw:`, e);
+  }
 }
 
 /** Customer may arrive as an id or an expanded object, depending on the event. */

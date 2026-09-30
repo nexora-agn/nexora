@@ -1118,6 +1118,93 @@ export async function handleSendSubscriptionEmails(details, env) {
   return { ok: true };
 }
 
+/** Stripe's `cancellation_details` codes, in words the team can act on. */
+const CANCEL_REASONS = {
+  cancellation_requested: "Customer cancelled",
+  payment_failed: "Payment failed — all retries exhausted",
+  payment_disputed: "Payment disputed (chargeback)",
+};
+const CANCEL_FEEDBACK = {
+  too_expensive: "Too expensive",
+  missing_features: "Missing features",
+  switched_service: "Switched to another service",
+  unused: "Not using it",
+  customer_service: "Customer service",
+  too_complex: "Too complex",
+  low_quality: "Quality",
+  other: "Other",
+};
+
+/**
+ * Team-only notice when a subscription is cancelled (scheduled or ended) or a
+ * scheduled cancellation is undone. Customers cancel themselves in the Stripe
+ * portal, so without this the team would keep building a site nobody pays for.
+ *
+ * @param {{
+ *   kind: "cancel_scheduled" | "cancel_reverted" | "canceled" | "cancel_feedback",
+ *   email: string | null, planName: string, amountLabel: string, intervalLabel: string,
+ *   endsLabel?: string, isTrial?: boolean, reason?: string | null, feedback?: string | null,
+ *   comment?: string | null, subscriptionId?: string | null, customerId?: string | null,
+ * }} d
+ * @param {Record<string, string>} env
+ * @returns {Promise<{ ok: true } | { ok: false, error: string }>}
+ */
+export async function handleSendCancellationNotice(d, env) {
+  const apiKey = env.RESEND_API_KEY;
+  if (!apiKey) return { ok: false, error: "RESEND_API_KEY is not set on the server" };
+
+  const internalFrom = normalizeResendFrom(
+    env.RESEND_FROM_INTERNAL || env.NEXORA_TRANSACTIONAL_FROM || env.VITE_NEXORA_TRANSACTIONAL_FROM || DEFAULT_INTERNAL_RESEND_FROM,
+  );
+  const notifyTo = resolveNotifyTo(env, "start_project");
+  const siteOrigin = getPublicSiteOrigin(env);
+  const { logoImgSrc, attachments } = await resolveEmailImages(env);
+
+  const titles = {
+    cancel_scheduled: "Subscription cancelled — ends at period end",
+    cancel_reverted: "Cancellation undone — subscription continues",
+    canceled: "Subscription ended",
+    cancel_feedback: "Cancellation feedback",
+  };
+  const endsHeading = { cancel_scheduled: "Access ends", cancel_reverted: "Next charge", canceled: "Ended on" };
+  const customer = d.email || d.customerId || "unknown customer";
+
+  const blocks = [
+    { label: "Event", htmlValue: escapeHtml(titles[d.kind]) },
+    { label: "Customer", htmlValue: d.email ? leadEmailInInternalHtml(d.email) : escapeHtml(customer) },
+    { label: "Plan", htmlValue: escapeHtml(`${d.planName} — ${d.amountLabel} / ${d.intervalLabel}`) },
+    d.endsLabel ? { label: endsHeading[d.kind], htmlValue: escapeHtml(d.endsLabel) } : null,
+    d.isTrial && d.kind === "cancel_scheduled"
+      ? { label: "Billing", htmlValue: "Still in free trial — they will <strong>not</strong> be charged." }
+      : null,
+    d.isTrial && d.kind === "canceled"
+      ? { label: "Billing", htmlValue: "Cancelled during the free trial — never charged." }
+      : null,
+    d.reason ? { label: "Reason", htmlValue: escapeHtml(CANCEL_REASONS[d.reason] || d.reason) } : null,
+    d.feedback ? { label: "Feedback", htmlValue: escapeHtml(CANCEL_FEEDBACK[d.feedback] || d.feedback) } : null,
+    d.comment ? { label: "Customer comment", htmlValue: escapeHtml(d.comment) } : null,
+    d.subscriptionId ? { label: "Subscription", htmlValue: escapeHtml(d.subscriptionId) } : null,
+    d.customerId ? { label: "Stripe customer", htmlValue: escapeHtml(d.customerId) } : null,
+  ].filter(Boolean);
+
+  const resend = new Resend(apiKey);
+  const { error } = await resend.emails.send({
+    from: internalFrom,
+    ...(attachments ? { attachments } : {}),
+    to: [notifyTo],
+    subject: `[Nexora] ${
+      { cancel_reverted: "↺ Cancellation undone", cancel_feedback: "Cancellation reason" }[d.kind] || "✕ Cancelled"
+    }: ${d.planName} — ${customer}`,
+    html: emailDocument({ preheader: `${titles[d.kind]} — ${customer}`, title: titles[d.kind], blocks, siteOrigin, logoImgSrc }),
+    ...(d.email ? { replyTo: d.email } : {}),
+  });
+  if (error) {
+    console.error("[subscription-email] Cancellation notice error:", error);
+    return { ok: false, error: error.message || "Failed to send cancellation notice" };
+  }
+  return { ok: true };
+}
+
 function parseContact(body) {
   if (!isNonEmptyString(body.name)) return { error: "Missing name" };
   if (!isValidEmail(body.email)) return { error: "Invalid email" };
