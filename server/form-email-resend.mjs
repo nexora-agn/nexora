@@ -815,6 +815,40 @@ function ctaButton(href, label) {
     </table>`;
 }
 
+/** Stripe Customer Portal login page — customers sign in with their billing email to cancel or update their card. */
+const DEFAULT_CUSTOMER_PORTAL_URL = "https://billing.stripe.com/p/login/00w28jbAO2hVgF9320ds400";
+
+/** Portal login link with the customer's email pre-filled, so they only need the one-time code. */
+function customerPortalUrl(env, email) {
+  const base = String(env.STRIPE_CUSTOMER_PORTAL_URL || DEFAULT_CUSTOMER_PORTAL_URL).trim();
+  if (!base) return "";
+  if (!isValidEmail(email)) return base;
+  return `${base}${base.includes("?") ? "&" : "?"}prefilled_email=${encodeURIComponent(email)}`;
+}
+
+/**
+ * Self-serve cancellation, shown in every billing email. A customer who can't
+ * find how to cancel disputes the charge instead. With no portal configured,
+ * fall back to asking them to reply.
+ *
+ * @param {string} lead  sentence shown above the button, e.g. "Changed your mind? …"
+ */
+function cancelSection(cancelUrl, email, lead) {
+  if (!cancelUrl) {
+    return `<p style="margin:0 0 14px 0;font-size:14px;color:#475569;">${lead} Just reply to this email and we'll cancel it for you.</p>`;
+  }
+  return `
+    <p style="margin:0 0 10px 0;font-size:14px;color:#475569;">${lead}</p>
+    <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 8px 0;">
+      <tr>
+        <td style="border-radius:8px;border:1px solid #cbd5e1;background:#ffffff;">
+          <a href="${escapeHtml(cancelUrl)}" style="display:inline-block;padding:10px 22px;font-size:14px;font-weight:600;color:#0f172a;text-decoration:none;border-radius:8px;">Cancel subscription</a>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0 0 20px 0;font-size:12px;color:#64748b;">Sign in with <strong>${escapeHtml(email)}</strong> — Stripe will email you a one-time code.</p>`;
+}
+
 /** Numbered "what happens next" list — sets expectations so nobody feels dropped. */
 function nextStepsList(steps) {
   const items = steps
@@ -849,6 +883,7 @@ const SIGNOFF = `<p style="margin:0;color:#64748b;font-size:14px;">— The Nexor
  */
 function buildSubscriptionClient(d, ctx) {
   const hi = greetingFromEmail(d.email);
+  const cancelUrl = ctx.cancelUrl;
   const manage = d.manageUrl || `${ctx.siteOrigin}/contact`;
 
   if (d.kind === "trial_started") {
@@ -868,13 +903,13 @@ function buildSubscriptionClient(d, ctx) {
       { label: "Then", value: `${d.amountLabel} / ${d.intervalLabel}` },
       { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
     ])}
+    ${cancelSection(cancelUrl, d.email, `Changed your mind? Cancel any time before <strong>${escapeHtml(d.firstChargeLabel)}</strong> and you won't be charged a cent.`)}
     <p style="margin:0 0 10px 0;font-weight:600;color:#0f172a;">What happens next</p>
     ${nextStepsList([
       "We start building your site right away — no waiting for the trial to end.",
       "You'll hear from us within one business day to confirm your brand details.",
       `You'll get a reminder before your first payment on <strong>${escapeHtml(d.firstChargeLabel)}</strong>.`,
     ])}
-    <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">Changed your mind? Cancel any time before ${escapeHtml(d.firstChargeLabel)} and you won't be charged a cent — just reply to this email and we'll take care of it.</p>
     ${SUPPORT_LINE}
     ${SIGNOFF}`,
         siteOrigin: ctx.siteOrigin,
@@ -900,6 +935,7 @@ function buildSubscriptionClient(d, ctx) {
       { label: "Next charge", value: d.firstChargeLabel },
       { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
     ])}
+    ${cancelSection(cancelUrl, d.email, "No contracts — you can cancel your subscription whenever you like.")}
     <p style="margin:0 0 10px 0;font-weight:600;color:#0f172a;">What happens next</p>
     ${nextStepsList([
       "Our team begins production on your site immediately.",
@@ -932,7 +968,7 @@ function buildSubscriptionClient(d, ctx) {
       { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
     ])}
     ${d.manageUrl ? ctaButton(d.manageUrl, "View or download invoice") : ""}
-    <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">You'll get a receipt like this each month. Cancel any time — just reply and we'll handle it.</p>
+    ${cancelSection(cancelUrl, d.email, "You'll get a receipt like this each month. No contracts — cancel any time.")}
     ${SUPPORT_LINE}
     ${SIGNOFF}`,
         siteOrigin: ctx.siteOrigin,
@@ -958,7 +994,7 @@ function buildSubscriptionClient(d, ctx) {
       { label: "Appears on statement as", value: STATEMENT_DESCRIPTOR },
     ])}
     <p style="margin:0 0 14px 0;">No action needed if you'd like to continue — the payment runs automatically and your site work carries on.</p>
-    <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">If you'd rather not continue, reply before ${escapeHtml(d.firstChargeLabel)} and we'll cancel it, no questions asked.</p>
+    ${cancelSection(cancelUrl, d.email, `If you'd rather not continue, cancel before <strong>${escapeHtml(d.firstChargeLabel)}</strong> and you won't be charged — no questions asked.`)}
     ${SUPPORT_LINE}
     ${SIGNOFF}`,
         siteOrigin: ctx.siteOrigin,
@@ -983,6 +1019,7 @@ function buildSubscriptionClient(d, ctx) {
     ])}
     ${ctaButton(d.manageUrl, "Update payment method")}
     <p style="margin:0 0 14px 0;font-size:14px;color:#475569;">We'll retry automatically over the next few days. Your site stays online in the meantime — but please update your card so nothing gets interrupted.</p>
+    ${cancelSection(cancelUrl, d.email, "Rather stop your subscription instead?")}
     ${SUPPORT_LINE}
     ${SIGNOFF}`,
       siteOrigin: ctx.siteOrigin,
@@ -1045,7 +1082,7 @@ export async function handleSendSubscriptionEmails(details, env) {
   const notifyTo = resolveNotifyTo(env, "start_project");
   const siteOrigin = getPublicSiteOrigin(env);
   const { logoImgSrc, attachments } = await resolveEmailImages(env);
-  const ctx = { logoImgSrc, siteOrigin };
+  const ctx = { logoImgSrc, siteOrigin, cancelUrl: customerPortalUrl(env, details.email) };
 
   const client = buildSubscriptionClient(details, ctx);
   const internalHtml = buildSubscriptionInternal(details, ctx);

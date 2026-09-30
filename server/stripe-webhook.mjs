@@ -140,6 +140,17 @@ function describeSubscription(subscription, env, fallbackPrice = null) {
   };
 }
 
+/** Stripe sends ids or expanded objects depending on the event and API version. */
+function idOf(ref) {
+  if (typeof ref === "string") return ref;
+  return ref && typeof ref === "object" && typeof ref.id === "string" ? ref.id : null;
+}
+
+/** `invoice.subscription` moved to `invoice.parent.subscription_details` in API 2025-03-31.basil. */
+function invoiceSubscriptionId(invoice) {
+  return idOf(invoice.subscription) ?? idOf(invoice.parent?.subscription_details?.subscription);
+}
+
 /** Never let an email failure make Stripe retry and double-charge our sending. */
 async function sendSafely(details, env, tag) {
   try {
@@ -399,7 +410,7 @@ async function handleInvoicePaid(invoice, env, stripe) {
       paidOnLabel: formatDate(invoice.status_transitions?.paid_at || invoice.created),
       firstChargeLabel: formatDate(line?.period?.end),
       manageUrl: invoice.hosted_invoice_url || null,
-      subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
+      subscriptionId: invoiceSubscriptionId(invoice),
     },
     env,
     "invoice.paid",
@@ -434,7 +445,7 @@ async function handleInvoicePaymentFailed(invoice, env, stripe) {
       amountLabel: formatAmount(invoice.amount_due, invoice.currency),
       intervalLabel: line?.price?.recurring?.interval || "month",
       manageUrl: invoice.hosted_invoice_url || null,
-      subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
+      subscriptionId: invoiceSubscriptionId(invoice),
     },
     env,
     "invoice.payment_failed",
