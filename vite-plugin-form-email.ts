@@ -65,8 +65,9 @@ export function formEmailApiPlugin(): Plugin {
         const isForms = pathOnly.startsWith("/api/send-form-emails");
         const isStartProjectStripe = pathOnly.startsWith("/api/start-project-stripe");
         const isStripeWebhook = pathOnly.startsWith("/api/stripe-webhook");
+        const isStripeTrial = pathOnly.startsWith("/api/stripe-trial");
 
-        if (!isForms && !isStartProjectStripe && !isStripeWebhook) {
+        if (!isForms && !isStartProjectStripe && !isStripeWebhook && !isStripeTrial) {
           return next();
         }
 
@@ -90,6 +91,33 @@ export function formEmailApiPlugin(): Plugin {
             env: env as NodeJS.ProcessEnv,
           });
           writeJson(res, result.status ?? 200, result);
+          return;
+        }
+
+        if (isStripeTrial && (req.method === "GET" || req.method === "HEAD")) {
+          const planId = new URL(req.url || "/", "http://localhost").searchParams.get("plan") || "";
+          const reqOrigin =
+            typeof req.headers.origin === "string"
+              ? req.headers.origin
+              : typeof req.headers.host === "string"
+                ? `http://${req.headers.host}`
+                : undefined;
+          const { buildStripeTrialCheckoutUrl } = await import("./server/stripe-checkout.mjs");
+          const result = await buildStripeTrialCheckoutUrl(env as NodeJS.ProcessEnv, {
+            planId,
+            origin: reqOrigin,
+          });
+          if (!result.ok || !result.checkout_url) {
+            writeJson(res, result.status ?? 500, {
+              ok: false,
+              error: result.error || "Could not start trial checkout.",
+            });
+            return;
+          }
+          res.statusCode = 302;
+          res.setHeader("Location", result.checkout_url);
+          res.setHeader("Cache-Control", "no-store");
+          res.end();
           return;
         }
 

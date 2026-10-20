@@ -14,7 +14,7 @@ import { getWorkEmailError, WORK_EMAIL_MAX_LENGTH } from "@/lib/validateWorkEmai
 import type { MarketingPlanId } from "@/lib/pricingPlans";
 import type { PackageOnboardingPayload, ProjectRequestType } from "@/lib/supabase";
 import { PlanCardBody, PlanPopularBadge } from "@/components/landing/PlanCardBody";
-import { MARKETING_PLANS, PLAN_IDS, PLAN_TRIAL_LINKS } from "@/lib/pricingPlans";
+import { MARKETING_PLANS, PLAN_IDS, trialCheckoutPath } from "@/lib/pricingPlans";
 import { toast } from "sonner";
 
 type Step = 1 | 2 | 3 | 4;
@@ -480,7 +480,7 @@ const ProjectOnboardingWizard = () => {
                       </div>
                     </button>
                     <a
-                      href={PLAN_TRIAL_LINKS[plan.id]}
+                      href={trialCheckoutPath(plan.id)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="self-center text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"

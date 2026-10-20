@@ -134,3 +134,54 @@ export async function buildStripeCheckoutUrl(env, opts) {
     return { ok: false, status: 500, error: `Stripe error: ${message}` };
   }
 }
+
+const TRIAL_PLAN_IDS = new Set(["starter", "growth", "custom"]);
+
+/**
+ * Checkout for the public "Start 7-day free trial" buttons.
+ * Uses the current plan price IDs, not the old Stripe Payment Links.
+ *
+ * @param {NodeJS.ProcessEnv} env
+ * @param {{ planId: string, origin?: string }} opts
+ */
+export async function buildStripeTrialCheckoutUrl(env, opts) {
+  if (!TRIAL_PLAN_IDS.has(opts.planId)) {
+    return { ok: false, status: 400, error: "Unknown plan." };
+  }
+
+  const { secretKey } = getStripeConfig(env);
+  const siteOrigin = resolveSiteOrigin(env, opts.origin);
+
+  if (!secretKey) {
+    return { ok: false, status: 500, error: "Stripe is not configured — set STRIPE_SECRET_KEY and restart." };
+  }
+
+  const priceId = resolveStripePriceId(opts.planId, env);
+  if (!priceId) {
+    return {
+      ok: false,
+      status: 400,
+      error: `No Stripe price configured for plan "${opts.planId}".`,
+    };
+  }
+
+  const stripe = new Stripe(secretKey, { apiVersion: "2025-04-30.basil" });
+
+  /** @type {Stripe.Checkout.SessionCreateParams} */
+  const params = {
+    mode: "subscription",
+    line_items: [{ price: priceId, quantity: 1 }],
+    subscription_data: { trial_period_days: 7 },
+    success_url: `${siteOrigin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${siteOrigin}/payment/cancelled`,
+    metadata: { source: "free_trial" },
+  };
+
+  try {
+    const session = await stripe.checkout.sessions.create(params);
+    return { ok: true, checkout_url: session.url, session_id: session.id };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { ok: false, status: 500, error: `Stripe error: ${message}` };
+  }
+}

@@ -2,12 +2,10 @@
 export const PLAN_IDS = ["starter", "growth", "custom"] as const;
 export type MarketingPlanId = (typeof PLAN_IDS)[number];
 
-/** Stripe Payment Links with a 7-day free trial, per plan. */
-export const PLAN_TRIAL_LINKS: Record<MarketingPlanId, string> = {
-  starter: "https://buy.stripe.com/4gM6oz20eg8L88D9qods404",
-  growth: "https://buy.stripe.com/6oU28jdIWf4H9cH9qods405",
-  custom: "https://buy.stripe.com/eVq3cnfR47CfagL8mkds406",
-};
+/** Opens a Checkout Session on the current plan price, with a 7-day free trial. */
+export function trialCheckoutPath(planId: MarketingPlanId): string {
+  return `/api/stripe-trial?plan=${encodeURIComponent(planId)}`;
+}
 
 export const MARKETING_PLANS: {
   id: MarketingPlanId;

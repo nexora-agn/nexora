@@ -28,11 +28,12 @@ between the two in both directions:
 | Path | Entry point | Trial? | Collects |
 |------|-------------|--------|----------|
 | **Wizard** | `/start` → `/api/start-project-stripe` | No — charges today | Email, logo, brand colours, domain, content |
-| **Payment Link** | Buttons on the package cards | Yes — 7 days | Email only |
+| **Free trial** | “Start 7-day free trial” → `/api/stripe-trial` | Yes — 7 days | Email only |
 
-Payment Links (`PLAN_TRIAL_LINKS` in `src/lib/pricingPlans.ts`) are hosted by
-Stripe and never touch our server before payment. They therefore arrive with **no
-project data** — the webhook flags these rows `needs_onboarding_followup: true`
+The trial button creates a Checkout Session on the current `STRIPE_PRICE_ID_*`
+price with `trial_period_days: 7`. It does not use a Stripe Payment Link, so a
+price change does not leave the trial on the old amount. These sessions have no
+wizard order — the webhook flags the row `needs_onboarding_followup: true`
 so the team knows to chase the brand assets manually.
 
 ## The lifecycle
@@ -97,7 +98,7 @@ immediate purchase would send both "Payment confirmed" and a receipt. So
 | `server/public-start-project-stripe.mjs` | Wizard submit: saves order, creates checkout, notifies team |
 | `server/stripe-webhook.mjs` | Verifies signature, routes events, sends all customer billing email |
 | `server/form-email-resend.mjs` | Email templates (marketing forms **and** subscription lifecycle) |
-| `src/lib/pricingPlans.ts` | Plan copy + `PLAN_TRIAL_LINKS` |
+| `src/lib/pricingPlans.ts` | Plan copy + trial checkout path |
 | `api/stripe-webhook.mjs` | Vercel entry point → `handleStripeWebhook` |
 | `vite-plugin-form-email.ts` | Serves the same API routes on the dev server |
 

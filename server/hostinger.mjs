@@ -285,6 +285,30 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  // ── GET /api/stripe-trial — 7-day trial checkout at the current plan price ──
+  if (pathname === "/api/stripe-trial" && (method === "GET" || method === "HEAD")) {
+    try {
+      const reqOrigin =
+        typeof req.headers.origin === "string"
+          ? req.headers.origin
+          : req.headers.host
+            ? `${req.headers["x-forwarded-proto"] || "https"}://${req.headers.host}`
+            : undefined;
+      const planId = new URL(req.url || "/", "http://localhost").searchParams.get("plan") || "";
+      const { buildStripeTrialCheckoutUrl } = await import("./stripe-checkout.mjs");
+      const result = await buildStripeTrialCheckoutUrl(process.env, { planId, origin: reqOrigin });
+      if (!result.ok || !result.checkout_url) {
+        return sendJson(res, result.status ?? 500, { ok: false, error: result.error || "Could not start trial checkout." });
+      }
+      res.writeHead(302, { Location: result.checkout_url, "Cache-Control": "no-store" });
+      res.end();
+      return;
+    } catch (err) {
+      console.error("[hostinger] stripe-trial error:", err);
+      return sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : "Failed" });
+    }
+  }
+
   // ── POST /api/start-project-stripe — save request + Stripe Checkout URL ──
   if (pathname === "/api/start-project-stripe" && method === "POST") {
     try {
