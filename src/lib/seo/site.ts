@@ -7,7 +7,7 @@ export const SITE_NAME = "Nexora";
 export const DEFAULT_TITLE = "Nexora | We build your website, you preview it, then you decide.";
 
 export const DEFAULT_DESCRIPTION =
-  "Nexora builds hosted websites for local businesses. Preview your live site, then subscribe from $99 a month. Hosting, updates, and an AI assistant included.";
+  "Nexora builds hosted websites for local businesses. Preview your live site, then subscribe from $149 a month. Hosting, updates, and an AI assistant included.";
 
 export const COMPANY_PHONE_DISPLAY = "+1 (888) 535-9177";
 export const COMPANY_PHONE_TEL = "+18885359177";

@@ -42,7 +42,7 @@ const ServiceWebsites = () => {
     <SiteLayout>
       <PageSeo
         title="Business Website Design & Hosting Subscriptions | Nexora"
-        description="Nexora builds a branded website for your local business, lets you preview it live, then hosts it on a monthly plan from $99. Lead forms, hosting, SSL, and an AI assistant included."
+        description="Nexora builds a branded website for your local business, lets you preview it live, then hosts it on a monthly plan from $149. Lead forms, hosting, SSL, and an AI assistant included."
         path="/services/websites"
         robots={INDEX_ROBOTS}
         jsonLd={graph([

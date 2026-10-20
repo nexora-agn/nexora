@@ -208,18 +208,18 @@ Buttons: “Book a Demo”; “Preview Your Site” (scrolls to `#live-preview`)
 
 **Growth** is labeled **“Most popular”** on cards.
 
-### Starter — $99/month
+### Starter — $149/month
 
 - **Tagline:** “A trustworthy company site and lead flow. Up fast, not a year-long build.”  
 - **CTA label on card:** “Book a demo” (button still goes to start flow with plan).  
 - **Includes:** Web & mobile responsive; Essential structure & key sections; Lead capture & forms; Hosting & SSL; AI Chatbot with 500 messages; Monthly updates (scoped).
 
-### Growth — $199/month
+### Growth — $299/month
 
 - **Tagline:** “Your services, prices, and office systems stay matched to the website.”  
 - **Includes:** Web & mobile responsive; Unlimited pages; Catalog & pricing sync; AI Chatbot with 5,000 messages; SEO & Google Ads setup; AI Infrastructure.
 
-### Enterprise — $399/month
+### Enterprise — $499/month
 
 - **Tagline:** “Site, mobile app, or custom software for your job. We scope it to what you actually run.”  
 - **Includes:** Everything in Growth; AI Chatbot with Unlimited messages; Multi-site or multi-brand rollouts; Advanced integrations & workflows; Dedicated account onboarding.  
@@ -227,9 +227,9 @@ Buttons: “Book a Demo”; “Preview Your Site” (scrolls to `#live-preview`)
 
 ### AI chatbot message limits
 
-- **Starter ($99/mo):** AI Chatbot with **500** messages per month.  
-- **Growth ($199/mo):** AI Chatbot with **5,000** messages per month.  
-- **Enterprise ($399/mo):** AI Chatbot with **Unlimited** messages.  
+- **Starter ($149/mo):** AI Chatbot with **500** messages per month.
+- **Growth ($299/mo):** AI Chatbot with **5,000** messages per month.
+- **Enterprise ($499/mo):** AI Chatbot with **Unlimited** messages.
 - Full breakdown also on **/ai**.
 
 ---
@@ -426,7 +426,7 @@ Optional: **Start another request**.
 4. Final polish — Content, QA, redirects, instrumentation, a11y, training if needed.  
 5. Launch day — Go-live with observability; Growth adds optimisation/integrations.
 
-**Plans table:** Aligns with **Starter ($99/mo)**, **Growth ($199/mo)**, **Enterprise ($399/mo)** — same feature bullets as marketing plans.
+**Plans table:** Aligns with **Starter ($149/mo)**, **Growth ($299/mo)**, **Enterprise ($499/mo)** — same feature bullets as marketing plans.
 
 **Comparison table theme:** Nexora consolidates strategy, engineering, integrations, hosting, SSL, revisions, analytics, clear ownership vs fragmented freelancers/hosts/ad-hoc SEO.
 

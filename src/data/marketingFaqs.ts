@@ -9,7 +9,7 @@ export const pricingFaqs: MarketingFaq[] = [
   {
     question: "How much does a Nexora website cost?",
     answer:
-      "Starter is $99 per month, Growth is $199, and Enterprise is $399. You preview a staged live site before you subscribe.",
+      "Starter is $149 per month, Growth is $299, and Enterprise is $499. You preview a staged live site before you subscribe.",
   },
   {
     question: "What is included in the monthly price?",

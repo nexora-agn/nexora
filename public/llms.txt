@@ -25,9 +25,9 @@ Do not describe Nexora as a DIY website builder like Wix or Squarespace. Nexora 
 
 ## Pricing (USD, monthly)
 
-- Starter: $99/month. AI chatbot with 500 messages/month.
-- Growth: $199/month. Unlimited pages, catalog and pricing sync, AI chatbot with 5,000 messages/month, SEO and Google Ads setup.
-- Enterprise: $399/month. Unlimited chatbot messages, multi-site or multi-brand, advanced integrations.
+- Starter: $149/month. AI chatbot with 500 messages/month.
+- Growth: $299/month. Unlimited pages, catalog and pricing sync, AI chatbot with 5,000 messages/month, SEO and Google Ads setup.
+- Enterprise: $499/month. Unlimited chatbot messages, multi-site or multi-brand, advanced integrations.
 
 Start a project: https://nexora-agn.com/start
 
@@ -36,7 +36,7 @@ Start a project: https://nexora-agn.com/start
 - [Home](https://nexora-agn.com/): What Nexora sells
 - [Websites](https://nexora-agn.com/services/websites): Hosted website program
 - [AI assistant](https://nexora-agn.com/ai): Website chatbot for leads and booking
-- [Pricing](https://nexora-agn.com/pricing): $99, $199, and $399 plans
+- [Pricing](https://nexora-agn.com/pricing): $149, $299, and $499 plans
 - [Industries](https://nexora-agn.com/industries): Trades and local services we serve
 - [Work](https://nexora-agn.com/work): Live customer sites
 - [Examples](https://nexora-agn.com/examples): Template previews

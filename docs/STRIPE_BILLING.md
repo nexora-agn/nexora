@@ -10,9 +10,9 @@ the card, charges nothing, and converts automatically on day 7.
 
 | Plan | Internal id | Price | Env var |
 |------|-------------|-------|---------|
-| Starter | `starter` | $99/mo | `STRIPE_PRICE_ID_STARTER` |
-| Growth | `growth` | $199/mo | `STRIPE_PRICE_ID_GROWTH` |
-| Enterprise | `custom` | $399/mo | `STRIPE_PRICE_ID_ENTERPRISE` |
+| Starter | `starter` | $149/mo | `STRIPE_PRICE_ID_STARTER` |
+| Growth | `growth` | $299/mo | `STRIPE_PRICE_ID_GROWTH` |
+| Enterprise | `custom` | $499/mo | `STRIPE_PRICE_ID_ENTERPRISE` |
 
 > Enterprise is `custom` internally — a historical name from when that tier was
 > a contact-sales enquiry. `resolveStripePriceId()` maps it to the Enterprise price.
@@ -45,7 +45,7 @@ emails are not relied on (see "Why the webhook owns email").
 | 0 — trial starts | `checkout.session.completed` | "You're in — your free trial is active" | `in_progress`, `stripe_payment_status: trialing` |
 | 0 — pays today | `checkout.session.completed` | "Payment confirmed — your plan is active" | `in_progress`, `paid` |
 | 4 | `customer.subscription.trial_will_end` | "Your free trial ends soon" | — |
-| 7 — charge succeeds | `invoice.paid` | "Receipt — $99.00" | — |
+| 7 — charge succeeds | `invoice.paid` | "Receipt — $149.00" | — |
 | 7 — card declined | `invoice.payment_failed` | "Action needed — update your card" | — |
 | Monthly | `invoice.paid` | Receipt | — |
 
@@ -133,9 +133,9 @@ Server-side (never `VITE_`-prefixed — these must not reach the browser):
 ```
 STRIPE_SECRET_KEY=sk_live_…
 STRIPE_WEBHOOK_SECRET=whsec_…
-STRIPE_PRICE_ID_STARTER=price_…
-STRIPE_PRICE_ID_GROWTH=price_…
-STRIPE_PRICE_ID_ENTERPRISE=price_…
+STRIPE_PRICE_ID_STARTER=price_1USlAk1ePddzVKr0Q2bnH31y
+STRIPE_PRICE_ID_GROWTH=price_1USlBD1ePddzVKr05JIfLfyL
+STRIPE_PRICE_ID_ENTERPRISE=price_1USlBg1ePddzVKr0b2nIiQYm
 NEXORA_PUBLIC_URL=https://nexora-agn.com
 RESEND_API_KEY=re_…
 RESEND_FROM_EMAIL=info@nexora-agn.com

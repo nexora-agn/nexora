@@ -24,7 +24,7 @@ const Services = () => {
     <SiteLayout>
       <PageSeo
         title="Website & AI Assistant Services | Nexora"
-        description="Nexora services: hosted websites for local businesses and an on-site AI assistant for leads and booking. Preview your site, then subscribe from $99/month."
+        description="Nexora services: hosted websites for local businesses and an on-site AI assistant for leads and booking. Preview your site, then subscribe from $149/month."
         path="/services"
         robots={INDEX_ROBOTS}
         jsonLd={graph([

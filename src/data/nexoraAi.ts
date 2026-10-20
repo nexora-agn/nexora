@@ -164,9 +164,9 @@ export const aiPlanLimits = {
   intro:
     "Every plan includes the AI chatbot on your website. Message allowances depend on your tier:",
   plans: [
-    { name: "Starter ($99/mo)", limit: "AI Chatbot with 500 messages per month" },
-    { name: "Growth ($199/mo)", limit: "AI Chatbot with 5,000 messages per month" },
-    { name: "Enterprise ($399/mo)", limit: "AI Chatbot with Unlimited messages" },
+    { name: "Starter ($149/mo)", limit: "AI Chatbot with 500 messages per month" },
+    { name: "Growth ($299/mo)", limit: "AI Chatbot with 5,000 messages per month" },
+    { name: "Enterprise ($499/mo)", limit: "AI Chatbot with Unlimited messages" },
   ],
   note: "One message is a single reply from the chatbot to a visitor. Need more volume? Upgrade your plan.",
 };

@@ -85,7 +85,7 @@ export const whyStatStrip: WhyStatStrip[] = [
   },
   {
     icon: CalendarCheck,
-    headline: "Plans from $99/month",
+    headline: "Plans from $149/month",
     subline: "Starter, Growth, and Enterprise are published. No mystery quote.",
   },
   {

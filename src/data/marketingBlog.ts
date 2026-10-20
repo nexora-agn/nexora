@@ -31,7 +31,7 @@ export const marketingBlogPosts: MarketingBlogPost[] = [
     paragraphs: [
       "A typical website project sells a timeline and a mood board. You pay a deposit, wait, and hope the first reveal matches what you had in mind. Nexora sells the opposite sequence: we brand a working site, you preview it on desktop and mobile, and you subscribe only if you want that site to go live.",
       "The preview is not a PDF. It is a staged website with your logo, colors, and service story applied to a trade template. You can tap the phone number, open service pages, and see how the AI assistant behaves. If something is wrong, we change it before checkout — not after a six-month waterfall.",
-      "Starter and Growth plans are published: $99 and $199 a month. Enterprise is $399. Hosting and SSL are included. The AI assistant is included, with a message limit that matches the plan. Growth adds catalog sync and SEO plus Google Ads setup. You pick the plan in the project flow, share kickoff details, and complete Stripe checkout.",
+      "Starter and Growth plans are published: $149 and $299 a month. Enterprise is $499. Hosting and SSL are included. The AI assistant is included, with a message limit that matches the plan. Growth adds catalog sync and SEO plus Google Ads setup. You pick the plan in the project flow, share kickoff details, and complete Stripe checkout.",
       "This model only works if the preview is honest. Template demos on our examples page are sample companies. Live customer sites are listed on the work page. If you are comparing Nexora to a DIY builder, the difference is not “more templates.” It is that we handle design, launch, and hosting so you are not the project manager.",
     ],
   },

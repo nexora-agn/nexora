@@ -3,12 +3,19 @@
  *
  * Env:
  * - STRIPE_SECRET_KEY        — sk_live_… or sk_test_…
- * - STRIPE_PRICE_ID_STARTER    — recurring price for Starter plan ($99/mo)
- * - STRIPE_PRICE_ID_GROWTH     — recurring price for Growth plan ($199/mo)
- * - STRIPE_PRICE_ID_ENTERPRISE — recurring price for Enterprise plan ($399/mo)
+ * - STRIPE_PRICE_ID_STARTER    — recurring price for Starter plan ($149/mo)
+ * - STRIPE_PRICE_ID_GROWTH     — recurring price for Growth plan ($299/mo)
+ * - STRIPE_PRICE_ID_ENTERPRISE — recurring price for Enterprise plan ($499/mo)
  * - NEXORA_PUBLIC_URL        — canonical site origin (https://nexora-agn.com)
  */
 import Stripe from "stripe";
+
+/** Live monthly prices. Env vars override these when set. */
+const DEFAULT_STRIPE_PRICES = {
+  starter: "price_1USlAk1ePddzVKr0Q2bnH31y",
+  growth: "price_1USlBD1ePddzVKr05JIfLfyL",
+  enterprise: "price_1USlBg1ePddzVKr0b2nIiQYm",
+};
 
 function normalizeEnv(raw) {
   let s = String(raw ?? "").trim();
@@ -20,9 +27,9 @@ function normalizeEnv(raw) {
 
 export function getStripeConfig(env) {
   const secretKey = normalizeEnv(env.STRIPE_SECRET_KEY);
-  const priceStarter = normalizeEnv(env.STRIPE_PRICE_ID_STARTER);
-  const priceGrowth = normalizeEnv(env.STRIPE_PRICE_ID_GROWTH);
-  const priceEnterprise = normalizeEnv(env.STRIPE_PRICE_ID_ENTERPRISE);
+  const priceStarter = normalizeEnv(env.STRIPE_PRICE_ID_STARTER) || DEFAULT_STRIPE_PRICES.starter;
+  const priceGrowth = normalizeEnv(env.STRIPE_PRICE_ID_GROWTH) || DEFAULT_STRIPE_PRICES.growth;
+  const priceEnterprise = normalizeEnv(env.STRIPE_PRICE_ID_ENTERPRISE) || DEFAULT_STRIPE_PRICES.enterprise;
   // Configured canonical origin (set NEXORA_PUBLIC_URL in production). Empty in
   // local dev so we can fall back to the request origin instead.
   const configuredOrigin = normalizeEnv(env.NEXORA_PUBLIC_URL || env.VITE_PUBLIC_SITE_URL || "");

@@ -19,8 +19,8 @@ const Pricing = () => {
   return (
     <SiteLayout>
       <PageSeo
-        title="Website Pricing | $99–$399/month | Nexora"
-        description="Nexora website subscriptions: Starter $99, Growth $199, Enterprise $399 per month. Preview your staged site, then subscribe. Hosting, SSL, and an AI assistant included."
+        title="Website Pricing | $149–$499/month | Nexora"
+        description="Nexora website subscriptions: Starter $149, Growth $299, Enterprise $499 per month. Preview your staged site, then subscribe. Hosting, SSL, and an AI assistant included."
         path="/pricing"
         robots={INDEX_ROBOTS}
         jsonLd={graph([
@@ -29,7 +29,7 @@ const Pricing = () => {
           webPageSchema({
             path: "/pricing",
             title: "Nexora pricing",
-            description: "Monthly website subscriptions from $99.",
+            description: "Monthly website subscriptions from $149.",
           }),
           serviceSchema({
             name: "Nexora website subscriptions",
@@ -47,7 +47,7 @@ const Pricing = () => {
       <PageHeader
         breadcrumb={[{ label: "Home", to: "/" }, { label: "Pricing" }]}
         title="Pricing"
-        description="Monthly subscriptions from $99. Preview your staged website, then subscribe when you're ready."
+        description="Monthly subscriptions from $149. Preview your staged website, then subscribe when you're ready."
       />
       <PricingSection embedded={false} />
       <div className="mx-auto w-full max-w-6xl px-6 pb-16 md:pb-24">
